@@ -1,0 +1,4503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metal Extraction Quest — 3D Chemistry Game</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;height:100%;overflow:hidden;font-family:'Rajdhani',system-ui,sans-serif;background:#070b14;color:#e8eef7}
+    #canvas{display:block;width:100vw;height:100vh;background:#6eb6e0}
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(8,15,30,.88),rgba(3,6,14,.96));z-index:100;backdrop-filter:blur(6px)}
+    .hidden{display:none!important}
+    .overlay.hidden{display:none!important}
+    .panel{background:linear-gradient(160deg,rgba(22,32,52,.97),rgba(10,16,28,.98));border:1px solid rgba(56,189,248,.35);border-radius:16px;padding:1.75rem 1.9rem;max-width:580px;width:94%;max-height:90vh;overflow-y:auto;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 25px 60px rgba(0,0,0,.55),0 0 40px rgba(14,165,233,.08)}
+    .panel h1{color:#7dd3fc;font-size:1.65rem;margin-bottom:.45rem;font-weight:700;letter-spacing:.03em;text-shadow:0 0 20px rgba(56,189,248,.35)}
+    .panel h2{color:#38bdf8;font-size:1.05rem;margin:1rem 0 .45rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+    .panel p,.panel li{color:#b6c4d8;font-size:.92rem;line-height:1.55}
+    .panel ul{margin:.5rem 0 .5rem 1.2rem}
+    .btn{display:inline-block;background:linear-gradient(180deg,#0ea5e9,#0284c7);color:#fff;border:1px solid rgba(125,211,252,.4);padding:.7rem 1.4rem;border-radius:10px;font-size:.98rem;font-weight:700;cursor:pointer;margin:.3rem .2rem;font-family:inherit;letter-spacing:.03em;box-shadow:0 4px 14px rgba(2,132,199,.35);transition:transform .12s,filter .12s}
+    .btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn.sec{background:linear-gradient(180deg,#334155,#1e293b);border-color:#475569;box-shadow:none}
+    .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .quiz-opt,.pick-opt{display:block;width:100%;text-align:left;background:rgba(30,41,59,.9);border:1px solid #3d4f66;color:#e2e8f0;padding:.7rem 1rem;border-radius:10px;margin:.35rem 0;cursor:pointer;font-size:.9rem;font-family:inherit;transition:border-color .12s,background .12s}
+    .quiz-opt:hover,.pick-opt:hover{background:rgba(14,116,144,.45);border-color:#38bdf8}
+    .pick-opt.sel{border-color:#38bdf8;background:rgba(8,47,73,.8);box-shadow:0 0 12px rgba(56,189,248,.2)}
+    .msg{padding:.75rem;border-radius:10px;margin:.75rem 0;font-size:.88rem}
+    .msg.ok{background:rgba(6,78,59,.55);color:#6ee7b7;border:1px solid #059669}
+    .msg.err{background:rgba(69,10,10,.55);color:#fca5a5;border:1px solid #dc2626}
+    .msg.info{background:rgba(12,40,70,.65);color:#7dd3fc;border:1px solid #0284c7}
+    #hud{position:fixed;top:0;left:0;right:0;padding:.65rem 1rem .9rem;background:linear-gradient(180deg,rgba(7,11,20,.92) 0%,rgba(7,11,20,.55) 70%,transparent);z-index:50;pointer-events:none;display:none}
+    #hud.show{display:block}
+    #hud .obj{color:#7dd3fc;font-weight:600;font-size:.92rem;letter-spacing:.02em;max-width:min(720px,58vw);text-shadow:0 1px 4px #000}
+    #gameTimer{position:fixed;top:12px;right:12px;z-index:60;display:none;pointer-events:none;min-width:148px;padding:.55rem .85rem;background:linear-gradient(145deg,rgba(15,23,42,.94),rgba(8,12,22,.96));border:1px solid rgba(56,189,248,.45);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.06);text-align:center}
+    #gameTimer.show{display:block}
+    #gameTimer .t-label{font-size:.65rem;color:#64748b;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+    #gameTimer .t-val{font-family:'Share Tech Mono',monospace;font-size:1.55rem;color:#f8fafc;font-weight:700;letter-spacing:.06em;text-shadow:0 0 12px rgba(56,189,248,.4)}
+    #gameTimer .t-pen{font-size:.68rem;color:#fbbf24;margin-top:2px;min-height:1em}
+    #minimap{position:fixed;top:88px;right:12px;width:178px;background:linear-gradient(160deg,rgba(15,23,42,.92),rgba(8,12,22,.95));border:1px solid rgba(56,189,248,.3);border-radius:12px;padding:.55rem .7rem;font-size:.7rem;color:#94a3b8;z-index:50;display:none;pointer-events:none;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+    #minimap.show{display:block}
+    #minimap b{color:#7dd3fc;font-size:.78rem;letter-spacing:.04em}
+    #prompt{position:fixed;bottom:158px;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.9);border:1px solid rgba(56,189,248,.5);color:#7dd3fc;padding:.5rem 1.1rem;border-radius:999px;font-size:.88rem;font-weight:600;z-index:45;display:none;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+    #prompt.show{display:block}
+    #crosshair{position:fixed;top:50%;left:50%;width:18px;height:18px;margin:-9px 0 0 -9px;z-index:40;pointer-events:none;display:none;opacity:.85}
+    #crosshair::before,#crosshair::after{content:'';position:absolute;background:rgba(255,255,255,.92);box-shadow:0 0 4px #000}
+    #crosshair::before{width:2px;height:18px;left:8px;top:0}
+    #crosshair::after{width:18px;height:2px;top:8px;left:0}
+    #crosshair.show{display:block}
+    #crosshair.aim{width:32px;height:32px;margin:-16px 0 0 -16px;opacity:1}
+    #crosshair.aim::before{height:32px;left:15px;background:#fbbf24}
+    #crosshair.aim::after{width:32px;top:15px;background:#fbbf24}
+    #aimBanner{position:fixed;top:20%;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.92);border:1px solid #fbbf24;color:#fde68a;padding:.45rem 1rem;border-radius:999px;font-size:.88rem;font-weight:600;z-index:46;display:none;pointer-events:none}
+    #aimBanner.show{display:block}
+    #bottomUI{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:none;flex-direction:column;align-items:center;gap:8px;z-index:50;pointer-events:none}
+    #bottomUI.show{display:flex}
+    #itemBar,#hotbar{display:flex;gap:5px;pointer-events:auto;flex-wrap:wrap;justify-content:center;max-width:96vw}
+    .item-slot,.slot{width:54px;height:54px;background:linear-gradient(180deg,rgba(22,32,48,.95),rgba(10,16,28,.98));border:2px solid #334155;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;user-select:none;box-shadow:0 4px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05)}
+    .item-slot .ico,.slot .ico{font-size:1.2rem;line-height:1}
+    .item-slot .lbl{font-size:.55rem;color:#64748b;margin-top:1px;max-width:48px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-weight:600}
+    .item-slot .cnt,.slot .cnt{position:absolute;right:2px;bottom:1px;font-size:.72rem;font-weight:800;font-family:'Share Tech Mono',monospace;color:#f1f5f9;text-shadow:0 1px 3px #000;background:rgba(0,0,0,.55);padding:0 3px;border-radius:4px}
+    .item-slot.has{border-color:#0ea5e9;box-shadow:0 0 10px rgba(14,165,233,.2)}
+    .item-slot.empty{opacity:.5}
+    .slot{cursor:pointer;font-size:1.2rem}
+    .slot.active{border-color:#38bdf8;box-shadow:0 0 16px rgba(56,189,248,.45)}
+    .slot.empty{opacity:.4}
+    .slot .n{position:absolute;left:3px;top:1px;font-size:.58rem;color:#64748b;font-weight:700}
+    .bar-caption{font-size:.65rem;color:#64748b;letter-spacing:.12em;text-transform:uppercase;font-weight:600;pointer-events:none}
+    #bossHud{position:fixed;top:58px;left:50%;transform:translateX(-50%);width:min(420px,90vw);display:none;z-index:55;pointer-events:none;background:rgba(8,12,22,.75);padding:.55rem .75rem;border-radius:12px;border:1px solid rgba(239,68,68,.35)}
+    #bossHud.show{display:block}
+    .bar-bg{background:#1e293b;border-radius:8px;height:12px;overflow:hidden;margin:.2rem 0;border:1px solid #334155}
+    .bar-fill{height:100%;transition:width .2s}
+    .bar-boss .bar-fill{background:linear-gradient(90deg,#b91c1c,#f97316)}
+    .bar-player .bar-fill{background:linear-gradient(90deg,#0e7490,#22d3ee)}
+    .recipe{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem;background:rgba(30,41,59,.75);border:1px solid #334155;border-radius:12px;margin:.45rem 0;flex-direction:column}
+    .recipe:hover{border-color:#0ea5e9;background:rgba(30,41,59,.95)}
+    .recipe.locked{opacity:.42;cursor:not-allowed}
+    .recipe input[type=number]{font-family:inherit}
+    .hint{font-size:.8rem;color:#64748b;margin-top:.5rem}
+    .timer-bar{height:10px;background:#1e293b;border-radius:8px;overflow:hidden;margin:.75rem 0 .35rem;border:1px solid #334155}
+    .timer-bar>i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);transform-origin:left center;transition:none}
+    .timer-bar.urgent>i{background:#ef4444}
+    .timer-label{font-size:.88rem;color:#fde68a;font-weight:700;text-align:center;font-family:'Share Tech Mono',monospace}
+    .toast{position:fixed;top:16%;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.94);border:1px solid rgba(56,189,248,.5);color:#e2e8f0;padding:.65rem 1.25rem;border-radius:999px;z-index:80;display:none;font-size:.92rem;font-weight:600;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.45)}
+    .toast.show{display:block}
+    #mineReticle{position:fixed;bottom:148px;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.85);border:1px solid #475569;color:#94a3b8;padding:.28rem .75rem;border-radius:999px;font-size:.72rem;font-weight:600;z-index:45;display:none;pointer-events:none;white-space:nowrap}
+    #mineReticle.show{display:block}
+    #mineReticle.ore{border-color:#fbbf24;color:#fde68a}
+    #loadErr{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#070b14;z-index:9999;padding:2rem}
+    #loadErr.show{display:flex}
+    #loadErr .panel{border-color:#f87171}
+    #loadErr h1{color:#fca5a5}
+    .extract-flow{display:flex;flex-direction:column;gap:.75rem;margin:1rem 0}
+    .bag{display:flex;flex-wrap:wrap;gap:.45rem}
+    .bag-btn{background:rgba(30,41,59,.9);border:1px solid #3d4f66;color:#e2e8f0;border-radius:10px;padding:.5rem .7rem;cursor:pointer;font-size:.84rem;font-family:inherit;font-weight:600}
+    .bag-btn:hover{border-color:#38bdf8;background:rgba(14,116,144,.35)}
+    .bag-btn:disabled{opacity:.35;cursor:not-allowed}
+    .reactor{display:flex;align-items:center;justify-content:center;gap:.65rem;flex-wrap:wrap;padding:1.1rem;background:rgba(8,15,28,.7);border:2px dashed #3d4f66;border-radius:14px;min-height:110px}
+    .reactor.heating{border-color:#f97316;box-shadow:0 0 28px rgba(249,115,22,.4);animation:pulseHeat .55s ease-in-out infinite alternate}
+    @keyframes pulseHeat{from{box-shadow:0 0 10px rgba(249,115,22,.25)}to{box-shadow:0 0 30px rgba(251,191,36,.65)}}
+    .put-slot{width:88px;height:88px;background:rgba(15,23,42,.95);border:2px solid #3d4f66;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative}
+    .put-slot.filled{border-color:#0ea5e9;background:rgba(8,47,73,.65);box-shadow:0 0 12px rgba(14,165,233,.25)}
+    .put-slot .big{font-size:1.55rem}
+    .put-slot .sm{font-size:.66rem;color:#94a3b8;text-align:center;padding:0 4px;font-weight:600}
+    .put-slot .x{position:absolute;top:2px;right:5px;color:#f87171;font-weight:700;font-size:.75rem}
+    .plus-sign{font-size:1.35rem;color:#38bdf8;font-weight:700}
+    .arrow-sign{font-size:1.2rem;color:#fbbf24}
+    .heat-bar{height:12px;background:#1e293b;border-radius:8px;overflow:hidden;border:1px solid #334155}
+    .heat-bar>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ea580c,#fbbf24,#fef3c7);transition:width .05s linear}
+    .heat-label{font-size:.86rem;color:#fdba74;text-align:center;min-height:1.2em;font-weight:600}
+    .formula-strip{background:rgba(8,15,28,.9);border-left:4px solid #0ea5e9;padding:.6rem .8rem;border-radius:8px;font-size:.88rem;color:#7dd3fc;font-family:'Share Tech Mono',monospace}
+    #missionPad{position:fixed;top:56px;left:12px;width:220px;background:linear-gradient(160deg,rgba(15,23,42,.94),rgba(8,12,22,.96));border:1px solid rgba(56,189,248,.3);border-radius:12px;padding:.6rem .75rem;font-size:.72rem;color:#94a3b8;z-index:50;display:none;line-height:1.45;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+    #missionPad.show{display:block}
+    #missionPad b{color:#7dd3fc;font-size:.8rem;letter-spacing:.06em}
+    #missionPad li{list-style:none;margin:.22rem 0;padding-left:.1rem;font-weight:600}
+    #missionPad li.done{color:#6ee7b7}
+    #missionPad li.todo{color:#64748b}
+    .reactor.failing{border-color:#ef4444;box-shadow:0 0 22px rgba(239,68,68,.4);animation:pulseFail .5s ease-in-out infinite alternate}
+    @keyframes pulseFail{from{box-shadow:0 0 8px rgba(239,68,68,.3)}to{box-shadow:0 0 24px rgba(248,113,113,.65)}}
+    .think-box{background:rgba(12,40,70,.45);border:1px solid rgba(56,189,248,.35);border-radius:12px;padding:.8rem;margin:.5rem 0}
+    .think-box h2{margin-top:0;color:#7dd3fc;font-size:.95rem}
+    .exit-ticket{background:rgba(8,15,28,.9);border:1px solid rgba(251,191,36,.45);border-radius:12px;padding:.9rem;margin:1rem 0}
+    .exit-ticket label{display:block;color:#fde68a;font-size:.92rem;margin-bottom:.5rem;font-weight:600}
+    #winTimeBox{margin:.85rem 0;padding:.85rem 1rem;border-radius:12px;background:rgba(8,47,73,.5);border:1px solid rgba(56,189,248,.4);text-align:center}
+    #winTimeBox .big-time{font-family:'Share Tech Mono',monospace;font-size:2rem;color:#7dd3fc;font-weight:700;letter-spacing:.08em}
+    /* —— Touch / iPad controls —— */
+    #touchUI{position:fixed;inset:0;z-index:48;pointer-events:none;display:none}
+    #touchUI.show{display:block}
+    #joyZone{position:absolute;left:12px;bottom:100px;width:150px;height:150px;pointer-events:auto;touch-action:none;-webkit-user-select:none;user-select:none}
+    #joyBase{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:rgba(15,23,42,.45);border:2px solid rgba(56,189,248,.4);box-shadow:inset 0 0 20px rgba(0,0,0,.35)}
+    #joyKnob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#7dd3fc,#0284c7);border:2px solid rgba(255,255,255,.35);box-shadow:0 4px 12px rgba(0,0,0,.4);pointer-events:none}
+    #touchActions{position:absolute;right:10px;bottom:100px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:auto;touch-action:none}
+    #touchActions .trow{display:flex;gap:8px}
+    .tbtn{min-width:72px;min-height:56px;padding:.45rem .65rem;border-radius:14px;border:2px solid rgba(56,189,248,.4);background:rgba(15,23,42,.72);color:#e2e8f0;font-family:inherit;font-weight:700;font-size:.78rem;letter-spacing:.03em;box-shadow:0 4px 14px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;user-select:none}
+    .tbtn:active,.tbtn.on{background:rgba(14,165,233,.45);border-color:#38bdf8;transform:scale(.96)}
+    .tbtn.big{min-width:88px;min-height:72px;font-size:.9rem;background:rgba(14,116,144,.55);border-color:#22d3ee}
+    .tbtn.mine{background:rgba(180,83,9,.5);border-color:#fbbf24}
+    .tbtn.use{background:rgba(5,150,105,.45);border-color:#34d399}
+    .tbtn.aim{background:rgba(124,58,237,.4);border-color:#c084fc}
+    .tbtn.shoot{background:rgba(220,38,38,.45);border-color:#f87171}
+    #touchLookHint{position:absolute;right:18px;top:42%;transform:translateY(-50%);pointer-events:none;color:rgba(148,163,184,.55);font-size:.72rem;font-weight:600;text-align:right;max-width:110px;line-height:1.3}
+    @media (max-height:700px){
+      #joyZone{bottom:88px;transform:scale(.9);transform-origin:bottom left}
+      #touchActions{bottom:88px;transform:scale(.9);transform-origin:bottom right}
+      #bottomUI{bottom:6px}
+      .item-slot,.slot{width:48px;height:48px}
+    }
+    @media (pointer:coarse){
+      .item-slot,.slot{width:52px;height:52px}
+      .panel{max-height:85vh}
+      .btn,.quiz-opt,.pick-opt,.bag-btn{min-height:44px;font-size:.95rem}
+      #minimap{display:none!important}
+      #missionPad{width:160px;font-size:.65rem;top:50px;left:8px}
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="crosshair"></div>
+<div id="toast" class="toast"></div>
+<div id="mineReticle"></div>
+<div id="prompt"></div>
+
+<div id="hud">
+  <div class="obj" id="objective">1) Chop wood → 2) Burn to carbon → 3) Ore + carbon → metal → craft!</div>
+</div>
+
+<div id="gameTimer">
+  <div class="t-label">Mission time</div>
+  <div class="t-val" id="gameTimerVal">00:00</div>
+  <div class="t-pen" id="gameTimerPen"></div>
+</div>
+
+<div id="missionPad">
+  <b>LAB MISSION</b>
+  <ul id="missionList"></ul>
+  <p class="hint" style="margin:0;font-size:.62rem;color:#475569">Weapon unlocks boss · armour saves you</p>
+</div>
+
+<div id="minimap">
+  <b>MAP</b><br>
+  🟧 West — Iron ore<br>
+  🟩 East — Copper ore<br>
+  🌲 South — Wood<br>
+  ⬜ Al ore (scarce)<br>
+  ⬛ Kiln · 🟧 Furnace G1→G2<br>
+  🟩 Copper · 🟨 Anvil<br>
+  🟪 North — Boss<br>
+  <span style="color:#475569">Ag₂O + Au in corners</span>
+</div>
+
+<div id="aimBanner">🏹 Aiming — Shoot button (or left click) · Aim again to cancel</div>
+
+<!-- iPad / touch controls (auto-shown on touch devices) -->
+<div id="touchUI">
+  <div id="touchLookHint">Drag here<br>to look</div>
+  <div id="joyZone">
+    <div id="joyBase"><div id="joyKnob"></div></div>
+  </div>
+  <div id="touchActions">
+    <div class="trow">
+      <button type="button" class="tbtn aim" id="btnTouchAim">🎯 Aim</button>
+      <button type="button" class="tbtn shoot" id="btnTouchShoot">🏹 Shoot</button>
+    </div>
+    <div class="trow">
+      <button type="button" class="tbtn" id="btnTouchSprint">Sprint</button>
+      <button type="button" class="tbtn" id="btnTouchJump">Jump</button>
+    </div>
+    <div class="trow">
+      <button type="button" class="tbtn use" id="btnTouchUse">E Use</button>
+      <button type="button" class="tbtn mine big" id="btnTouchMine">⛏ Mine</button>
+    </div>
+  </div>
+</div>
+
+<div id="bottomUI">
+  <div class="bar-caption">Materials (count)</div>
+  <div id="itemBar"></div>
+  <div class="bar-caption">Weapons (tap to equip)</div>
+  <div id="hotbar"></div>
+</div>
+
+<div id="bossHud">
+  <div style="font-size:.8rem;margin-bottom:2px">🔥 Ore Beast</div>
+  <div class="bar-bg bar-boss"><div class="bar-fill" id="bossHpBar" style="width:100%"></div></div>
+  <div style="font-size:.8rem;margin:8px 0 2px">Your HP · <span id="equippedLabel">No weapon</span></div>
+  <div class="bar-bg bar-player"><div class="bar-fill" id="playerHpBar" style="width:100%"></div></div>
+</div>
+
+<div id="loadErr">
+  <div class="panel">
+    <h1>Game failed to load</h1>
+    <p id="loadErrMsg">Unknown error.</p>
+    <p class="hint">Keep <b>three.min.js</b> in the same folder as this HTML file.</p>
+  </div>
+</div>
+
+<div id="screenStart" class="overlay">
+  <div class="panel">
+    <h1>Metal Extraction Quest</h1>
+    <p style="margin-bottom:1rem">S3 chemistry adventure: <b>wood → carbon → metal</b>. Mine, burn charcoal, extract iron &amp; copper, craft a weapon, defeat the Ore Beast!</p>
+    <h2>How to extract metals (remember this!)</h2>
+    <ul>
+      <li><b>1.</b> Chop <b>wood</b> in the south forest</li>
+      <li><b>2.</b> Kiln: wood → carbon (think prompts once, then free to remake)</li>
+      <li><b>3.</b> Furnace G1: iron ore + carbon → iron; heat carbon alone → upgrade to <b>G2 + electricity</b></li>
+      <li><b>4.</b> Furnace G2: aluminium ore + electricity → Al metal → craft <b>armour</b></li>
+      <li><b>5.</b> Craft a <b>weapon</b> to unlock the boss · <b>Al armour</b> recommended (no armour = one-hit death)</li>
+      <li>Wrong answers add <b>+10 s</b> to your mission timer (top-right)</li>
+    </ul>
+    <h2>Controls</h2>
+    <ul>
+      <li><b>PC:</b> WASD move · mouse look · left-click mine · E stations · 1–6 weapons</li>
+      <li><b>iPad / touch:</b> left joystick move · drag right side to look · buttons Mine / Use / Jump / Sprint</li>
+      <li><b>Bow (touch):</b> Aim button then Shoot · (PC: right-click aim, left-click shoot)</li>
+      <li>Look <b>down</b> at ores to mine them</li>
+    </ul>
+    <h2>Metals look different</h2>
+    <ul>
+      <li><b>Iron ore</b> — rusty brown stripes (west) → needs carbon extraction</li>
+      <li><b>Copper ore</b> — green spots (east) → needs carbon extraction</li>
+      <li><b>Aluminium ore</b> — pale grey-white (scarce) — needs <b>Grade 2 furnace + electricity</b></li>
+      <li><b>Silver oxide (Ag₂O)</b> — rare corners; heat → silver metal (not free metal)</li>
+      <li><b>Gold</b> — free pure metal (rare corner); craft weapons directly</li>
+      <li>Electricity is shown as <b>⚡</b> (thunder)</li>
+    </ul>
+    <p class="hint" id="libStatus">Loading 3D engine…</p>
+    <button type="button" class="btn" id="btnStart" disabled>Start Game</button>
+  </div>
+</div>
+
+<!-- Shared extraction UI — put materials, predict, heat, explain -->
+<div id="screenExtract" class="overlay hidden">
+  <div class="panel" style="max-width:640px">
+    <h1 id="exTitle">Extraction</h1>
+    <p id="exIntro"></p>
+    <div class="formula-strip" id="exFormula"></div>
+
+    <h2>1. Your bag — click to put into the reactor</h2>
+    <div class="bag" id="exBag"></div>
+
+    <h2>2. Reactor (put the correct blocks here)</h2>
+    <div class="reactor" id="exReactor"></div>
+
+    <div id="exPredict" class="think-box hidden">
+      <h2>3. Predict before heating</h2>
+      <p id="exPredictQ"></p>
+      <div id="exPredictOpts"></div>
+      <p class="hint">Choose one answer, then click Heat.</p>
+    </div>
+
+    <div class="extract-flow">
+      <div class="heat-bar"><i id="exHeatFill"></i></div>
+      <div class="heat-label" id="exHeatLabel">Ready — add materials, then heat</div>
+      <div id="exMsg"></div>
+    </div>
+
+    <div id="exExplain" class="think-box hidden">
+      <h2>4. Explain what happened</h2>
+      <p id="exExplainQ"></p>
+      <div id="exExplainOpts"></div>
+    </div>
+
+    <button type="button" class="btn" id="btnHeat">🔥 Heat / Extract</button>
+    <button type="button" class="btn sec" id="btnClearReactor">Clear reactor</button>
+    <button type="button" class="btn sec" id="btnCloseExtract">Close</button>
+    <p class="hint" id="exHint"></p>
+  </div>
+</div>
+
+<div id="screenCraft" class="overlay hidden">
+  <div class="panel" style="max-width:580px">
+    <h1>Crafting Anvil</h1>
+    <p>Weapons from Cu/Fe/Ag/Au. <b>Al armour</b> (2 Al) is optional but without it a wrong boss answer is an instant defeat.</p>
+    <div id="recipes"></div>
+    <button type="button" class="btn sec" id="btnCloseCraft">Close</button>
+  </div>
+</div>
+
+<div id="screenGate" class="overlay hidden">
+  <div class="panel">
+    <h1>Boss Gate</h1>
+    <p id="gateText">You need at least one weapon to enter.</p>
+    <button type="button" class="btn" id="btnEnterBoss">Enter Boss Arena</button>
+    <button type="button" class="btn sec" id="btnCloseGate">Close</button>
+  </div>
+</div>
+
+<div id="screenDodge" class="overlay hidden">
+  <div class="panel">
+    <h1>Ore Beast attacks — answer in time!</h1>
+    <div class="timer-bar" id="dodgeTimerBar"><i id="dodgeTimerFill"></i></div>
+    <p class="timer-label" id="dodgeTimerLabel">10.0 s</p>
+    <p id="dodgeQ"></p>
+    <div id="dodgeOpts"></div>
+    <p class="hint">10 seconds · Correct = dodge + heal · Wrong = +10s on mission timer · <b>No armour = one-hit KO</b></p>
+  </div>
+</div>
+
+<div id="screenWin" class="overlay hidden">
+  <div class="panel">
+    <h1>Victory!</h1>
+    <p id="winStats"></p>
+    <div id="winTimeBox">
+      <div style="font-size:.75rem;color:#64748b;letter-spacing:.12em;text-transform:uppercase">Clear time</div>
+      <div class="big-time" id="winTimeVal">00:00</div>
+      <p class="hint" id="winTimeDetail" style="margin:0"></p>
+    </div>
+    <h2>Chemistry recap (S3)</h2>
+    <ul>
+      <li><b>Wood → carbon:</b> burn wood in a kiln to make charcoal (carbon).</li>
+      <li><b>Metal extraction needs two substances:</b> <b>ore + carbon</b>.</li>
+      <li><b>Iron:</b> iron ore + carbon → iron metal</li>
+      <li><b>Copper:</b> copper ore + carbon → copper metal</li>
+      <li>Carbon helps remove oxygen from the ore so pure metal is left.</li>
+      <li><b>Mining</b> digs ores up; <b>extraction</b> turns compounds into pure metal.</li>
+      <li><b>Gold</b> = free metal; <b>silver oxide</b> must be heated: 2Ag₂O → 4Ag + O₂.</li>
+      <li>Different metals, different methods: Fe/Cu + carbon; Ag₂O heat; Al + ⚡.</li>
+      <li>Word equations + balanced equations are tested in the mission.</li>
+      <li>Al armour changes your look and stops one-hit death. Timer: wrong answer +10 s.</li>
+    </ul>
+    <div class="exit-ticket">
+      <label for="exitTicketAns"><b>Exit ticket:</b> Why do we heat metal ore with carbon?</label>
+      <div id="exitTicketOpts"></div>
+      <div id="exitTicketMsg"></div>
+    </div>
+    <p class="hint" id="winMissionSummary"></p>
+    <button type="button" class="btn" id="btnRestart">Play Again</button>
+  </div>
+</div>
+
+<div id="screenLose" class="overlay hidden">
+  <div class="panel">
+    <h1>Defeated!</h1>
+    <p>Without <b>aluminium armour</b>, one wrong answer defeats you. Craft Al armour (G2 furnace → Al metal → anvil) and try again. Inventory is kept. Timer keeps running.</p>
+    <button type="button" class="btn" id="btnRetry">Return to World</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var CDNS = [
+    'three.min.js',
+    'https://unpkg.com/three@0.149.0/build/three.min.js',
+    'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js'
+  ];
+
+  function showLoadError(msg) {
+    var box = document.getElementById('loadErr');
+    var text = document.getElementById('loadErrMsg');
+    if (text) text.textContent = msg;
+    if (box) box.classList.add('show');
+    var st = document.getElementById('libStatus');
+    if (st) st.textContent = 'Failed to load 3D engine.';
+  }
+
+  function loadScript(url) {
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = url;
+      s.async = true;
+      s.onload = function () {
+        if (typeof window.THREE === 'undefined') reject(new Error('THREE missing after ' + url));
+        else resolve(url);
+      };
+      s.onerror = function () { reject(new Error('Network error: ' + url)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function loadThree(i) {
+    i = i || 0;
+    if (i >= CDNS.length) {
+      return Promise.reject(new Error('Could not load Three.js. Keep three.min.js next to this HTML file.'));
+    }
+    var st = document.getElementById('libStatus');
+    if (st) st.textContent = 'Loading 3D engine (' + (i + 1) + '/' + CDNS.length + ')…';
+    return loadScript(CDNS[i]).catch(function () { return loadThree(i + 1); });
+  }
+
+  function startApp(THREE) {
+    // 9=SILVER_OXIDE ore (Ag₂O — heat to get Ag), 10=GOLD (native free), 11=AL_ORE
+    var BLOCK = {
+      AIR: 0, GRASS: 1, DIRT: 2, STONE: 3, IRON_ORE: 4, COPPER_ORE: 5,
+      WOOD: 6, BEDROCK: 7, PATH: 8, SILVER_OXIDE: 9, GOLD: 10, AL_ORE: 11
+    };
+    var COLORS = {
+      1: 0x4ade80,
+      2: 0x92400e,
+      3: 0x94a3b8,
+      4: 0xd97706,
+      5: 0x22c55e,
+      6: 0x166534,
+      7: 0x1e293b,
+      8: 0xc4a574,
+      9: 0xc0c0c0,
+      10: 0xffd700,
+      11: 0xd4d4d8
+    };
+    var DIGGABLE = {};
+    DIGGABLE[BLOCK.GRASS] = 1;
+    DIGGABLE[BLOCK.DIRT] = 1;
+    DIGGABLE[BLOCK.STONE] = 1;
+    DIGGABLE[BLOCK.IRON_ORE] = 1;
+    DIGGABLE[BLOCK.COPPER_ORE] = 1;
+    DIGGABLE[BLOCK.WOOD] = 1;
+    DIGGABLE[BLOCK.PATH] = 1;
+    DIGGABLE[BLOCK.SILVER_OXIDE] = 1;
+    DIGGABLE[BLOCK.GOLD] = 1;
+    DIGGABLE[BLOCK.AL_ORE] = 1;
+
+    // Larger open world
+    var WX = 40, WY = 10, WZ = 40;
+    var PLAYER_R = 0.32;
+    var PLAYER_H = 1.7;
+    var CAM_DIST = 5.2;
+    var CAM_HEIGHT = 2.15;
+    var CAM_SMOOTH = 12;          // higher = snappier camera follow
+    var MOUSE_SENS = 0.0021;      // classroom-friendly (less twitchy)
+    var WALK_SPEED = 5.2;         // units per second (frame-rate independent)
+    var SPRINT_SPEED = 8.0;
+    var JUMP_V = 0.30;
+    var GRAVITY = 0.85;           // per second² scaled in movePlayer
+    var MINE_COOLDOWN = 140;      // ms between digs when holding click
+    var MINE_RANGE = 6.5;
+
+    // Village stations — spread out so students can tell them apart
+    var STATIONS = {
+      kiln:    { x: 11, z: 13, color: 0x78716c, label: 'Charcoal Kiln',  r: 3.4 },
+      furnace: { x: 13, z: 22, color: 0xff6b35, label: 'Blast Furnace G1', r: 3.4 },
+      copper:  { x: 29, z: 22, color: 0x22c55e, label: 'Copper Works',   r: 3.4 },
+      craft:   { x: 26, z: 13, color: 0xfbbf24, label: 'Crafting Anvil', r: 3.4 },
+      boss:    { x: 20, z: 34, color: 0xa855f7, label: 'Boss Gate',      r: 3.5 }
+    };
+    var furnaceGrade = 1; // 1 = chemical reduction only; 2 = electricity + aluminium
+    var BASE_FOV = 60;
+    var AIM_FOV = 32;
+    var currentFov = BASE_FOV;
+
+    // Craft: Fe/Cu/Ag need extraction first; gold is free native metal; Al armour from G2
+    var RECIPES = [
+      { id: 'copper_sword', name: 'Copper Sword', icon: '🗡️', need: { cu: 1 },              dmg: 8,  type: 'sword', speed: 450, tier: 'copper' },
+      { id: 'copper_knife', name: 'Copper Knife', icon: '🔪', need: { cu: 1 },              dmg: 4,  type: 'knife', speed: 180, tier: 'copper' },
+      { id: 'copper_bow',   name: 'Copper Bow',   icon: '🏹', need: { cu: 1, wood: 1 },     dmg: 6,  type: 'bow',   speed: 700, tier: 'copper' },
+      { id: 'iron_sword',   name: 'Iron Sword',   icon: '🗡️', need: { fe: 2 },              dmg: 15, type: 'sword', speed: 450, tier: 'iron' },
+      { id: 'iron_knife',   name: 'Iron Knife',   icon: '🔪', need: { fe: 1 },              dmg: 7,  type: 'knife', speed: 180, tier: 'iron' },
+      { id: 'iron_bow',     name: 'Iron Bow',     icon: '🏹', need: { fe: 1, wood: 1 },     dmg: 12, type: 'bow',   speed: 700, tier: 'iron' },
+      { id: 'silver_sword', name: 'Silver Sword', icon: '⚔️', need: { silver: 2 },          dmg: 22, type: 'sword', speed: 400, tier: 'silver' },
+      { id: 'silver_knife', name: 'Silver Knife', icon: '🔪', need: { silver: 1 },          dmg: 12, type: 'knife', speed: 160, tier: 'silver' },
+      { id: 'silver_bow',   name: 'Silver Bow',   icon: '🏹', need: { silver: 1, wood: 1 }, dmg: 18, type: 'bow',   speed: 600, tier: 'silver' },
+      { id: 'gold_sword',   name: 'Gold Sword',   icon: '⚔️', need: { gold: 1 },            dmg: 30, type: 'sword', speed: 380, tier: 'gold' },
+      { id: 'gold_knife',   name: 'Gold Knife',   icon: '🔪', need: { gold: 1 },            dmg: 16, type: 'knife', speed: 150, tier: 'gold' },
+      { id: 'gold_bow',     name: 'Gold Bow',     icon: '🏹', need: { gold: 1, wood: 1 },   dmg: 24, type: 'bow',   speed: 550, tier: 'gold' },
+      { id: 'al_armour', name: 'Aluminium Armour', icon: '🛡️', need: { al: 2 }, dmg: 0, type: 'armour', speed: 0, tier: 'aluminium' }
+    ];
+
+    var world = new Uint8Array(WX * WY * WZ);
+    var scene, camera, renderer, meshGroup, sharedGeo, playerRig;
+    var blockMeshes = [];
+    var player = { x: 20.5, y: 4, z: 20.5, vy: 0, onGround: false, facing: 0 };
+    // yaw: orbit around player (0 = look toward -Z)
+    // pitch: look up (+ve) / down (-ve). Natural mouse: right turns right, up looks up.
+    var yaw = 0;
+    var pitch = 0.28;
+    var keys = Object.create(null);
+    var pointerLocked = false;
+    var touchMode = false;
+    var touchStick = { x: 0, y: 0, active: false, id: null };
+    var touchLookId = null;
+    var touchLookLast = null;
+    var touchSprint = false;
+    var touchJump = false;
+    var TOUCH_LOOK_SENS = 0.0042;
+    var phase = 'menu';
+    var uiOpen = false;
+    var inv = {
+      feOre: 0, cuOre: 0, alOre: 0, agOre: 0, wood: 0, carbon: 0,
+      fe: 0, cu: 0, al: 0, silver: 0, gold: 0, electricity: 0
+    };
+    var weapons = [null, null, null, null, null, null];
+    var hotbarIdx = -1;
+    var hasArmour = false; // no armour = boss wrong answer is 1-hit KO
+    var runTimerActive = false;
+    var runStartMs = 0;
+    var runPenaltySec = 0;
+    var runTimerInterval = null;
+    var furnaceModel = null;
+    var furnaceLabelSprite = null;
+    var furnaceRing = null;
+    var furnaceG2Extra = null;
+    // Classroom session: slightly softer boss so lesson fits ~15–25 min
+    var boss = { hp: 48, maxHp: 48, x: 20.5, z: 30.5, mesh: null, lastAttack: 0, hits: 0, anim: 0 };
+    var playerHp = 100;
+    var lastMelee = 0;
+    var lastMine = 0;
+    var mineHeld = false;
+    var aimZoom = false;
+    var rmbDown = false;
+    var aimToggleLock = false; // true when aim entered with Q (release RMB won't cancel)
+    var lastBowShot = 0;
+    var arrows = [];
+    var dmgFloats = [];
+    var equippedWeaponId = null;
+    var toastTimer = 0;
+    var dodgeOpen = false;
+    var dodgeTimer = 0;
+    var dodgeMax = 10;
+    var dodgeAnswered = false;
+    var dodgeInterval = null;
+    var walkPhase = 0;
+    var lastFrameTs = 0;
+    var dt = 1 / 60;
+    var highlightMesh = null;
+    var camSmoothPos = null;
+    var armSwingT = 0;
+    var swingDur = 0.38;
+    var swingState = { active: false, t: 0, hitDone: false, dmg: 0, w: null };
+    var slashMesh = null;
+    var particles = [];
+    var furnaceFx = null;
+    var kilnFx = null;
+    var audioCtx = null;
+    var blockMats = {};
+
+    // Hands-on extraction + think prompts (predict / explain once; bonus Qs on repeats)
+    var extractRecipes = {
+      kiln: {
+        id: 'kiln',
+        title: '🔥 Charcoal Kiln',
+        intro: 'Burn wood to make carbon (charcoal). Carbon is needed later for iron/copper and to power up the furnace.',
+        formula: 'Wood → heat → Carbon (charcoal)',
+        slots: [{ key: 'wood', label: 'Wood', icon: '🪵' }],
+        need: { wood: 1 },
+        output: { carbon: 1 },
+        outputLabel: 'Carbon',
+        heatMs: 2000,
+        processCaptions: ['Heating wood carefully…', 'Gases leave the wood…', 'Carbon (charcoal) is left…'],
+        predictQ: 'Burning wood carefully in the kiln mainly makes…',
+        predictOpts: ['Carbon (charcoal)', 'Pure iron metal', 'Only neon gas'],
+        predictA: 0,
+        explainQ: 'Why do we make carbon before extracting iron or copper?',
+        explainOpts: [
+          'Carbon helps remove oxygen from the metal oxide so metal is left',
+          'Carbon only cools the furnace',
+          'Carbon turns the metal into plastic'
+        ],
+        explainA: 0,
+        missionFlag: 'madeCarbon',
+        bonusQs: [
+          { q: 'What is the chemical symbol for carbon?', opts: ['C', 'Ca', 'Cu'], a: 0 },
+          { q: 'Charcoal is mostly…', opts: ['Carbon', 'Gold', 'Salt'], a: 0 }
+        ]
+      },
+      furnace_iron: {
+        id: 'furnace_iron',
+        station: 'furnace',
+        title: '🔥 Blast Furnace — Iron (reduction by carbon)',
+        intro: 'Grade 1+: iron oxide ore + carbon → iron metal. Carbon reduces the oxide (removes oxygen).',
+        formula: 'Word: iron oxide + carbon → iron + carbon dioxide\n2FeO + C → 2Fe + CO₂',
+        slots: [
+          { key: 'feOre', label: 'Iron ore', icon: '🟧' },
+          { key: 'carbon', label: 'Carbon', icon: '⬛' }
+        ],
+        need: { feOre: 1, carbon: 1 },
+        output: { fe: 1 },
+        outputLabel: 'Iron metal',
+        heatMs: 2800,
+        minGrade: 1,
+        processCaptions: [
+          'Heating iron oxide with carbon…',
+          'Oxygen is removed from the oxide…',
+          'Iron metal forms…'
+        ],
+        predictQ: 'Word equation for iron extraction is…',
+        predictOpts: [
+          'iron oxide + carbon → iron + carbon dioxide',
+          'iron + oxygen → iron oxide only',
+          'gold → iron + carbon'
+        ],
+        predictA: 0,
+        explainQ: 'Which balanced equation matches that word equation?',
+        explainOpts: [
+          '2FeO + C → 2Fe + CO₂',
+          '2FeO + C → 2FeO + C (no change)',
+          'FeO + O₂ → Fe + CO₂'
+        ],
+        explainA: 0,
+        missionFlag: 'extractedIron',
+        bonusQs: [
+          { q: 'Balance: ? FeO + C → ? Fe + CO₂', opts: ['2 FeO + C → 2 Fe + CO₂', '1 FeO + C → 1 Fe + CO₂', '3 FeO + C → 1 Fe + CO₂'], a: 0 },
+          { q: 'Which product is the metal?', opts: ['Fe', 'CO₂', 'FeO'], a: 0 },
+          { q: 'What gas is made in 2FeO + C → 2Fe + CO₂?', opts: ['CO₂', 'O₂ only', 'N₂ only'], a: 0 }
+        ]
+      },
+      furnace_power: {
+        id: 'furnace_power',
+        station: 'furnace',
+        title: '⚡ Furnace power — Carbon → electricity',
+        intro: 'Put carbon only, then heat. On Grade 1 this upgrades the furnace to Grade 2 and makes electricity. On Grade 2 it adds more electricity for aluminium extraction.',
+        formula: 'C (fuel) → heat → Electricity  (+ G1→G2 upgrade first time)',
+        slots: [{ key: 'carbon', label: 'Carbon', icon: '⬛' }],
+        need: { carbon: 1 },
+        output: { electricity: 2 },
+        outputLabel: 'Electricity charges',
+        heatMs: 2200,
+        minGrade: 1,
+        processCaptions: ['Heating carbon as a fuel…', 'Energy released…', 'Electricity stored for electrolysis…'],
+        predictQ: 'Why make electricity before extracting aluminium?',
+        predictOpts: [
+          'Aluminium extraction needs electrical energy (electrolysis)',
+          'Electricity turns aluminium into wood',
+          'Electricity only cools iron ore'
+        ],
+        predictA: 0,
+        explainQ: 'Compared with iron (using carbon), aluminium extraction needs…',
+        explainOpts: [
+          'Electrical energy (electrolysis of Al₂O₃)',
+          'Only cold water',
+          'No energy at all'
+        ],
+        explainA: 0,
+        missionFlag: 'upgradedFurnace',
+        bonusQs: [
+          { q: 'Electrolysis of aluminium oxide needs…', opts: ['Electrical energy', 'Only sand', 'No energy'], a: 0 },
+          { q: 'Carbon heated alone for power is used as a…', opts: ['Fuel / energy source', 'Copper ore', 'Armour plate'], a: 0 }
+        ]
+      },
+      furnace_al: {
+        id: 'furnace_al',
+        station: 'furnace',
+        title: '⚡ Grade 2 — Aluminium (electric extraction)',
+        intro: 'Only Grade 2: aluminium ore + electricity. Equation for electrolysis of alumina. Uses 1⚡ from your bag.',
+        formula: '2Al₂O₃ → 4Al + 3O₂   (electrolysis of aluminium oxide)',
+        slots: [{ key: 'alOre', label: 'Al ore', icon: '⬜' }],
+        need: { alOre: 1 },
+        needInv: { electricity: 1 },
+        output: { al: 1 },
+        outputLabel: 'Aluminium metal',
+        heatMs: 3000,
+        minGrade: 2,
+        processCaptions: [
+          'Electric current through aluminium oxide…',
+          'Metal forms from the ore…',
+          'Aluminium metal is collected…'
+        ],
+        predictQ: 'Which balanced equation is correct for electrolysis of Al₂O₃?',
+        predictOpts: [
+          '2Al₂O₃ → 4Al + 3O₂',
+          '2Al₂O₃ → 2Al + O₂',
+          'Al₂O₃ → Al + O₂ (unbalanced)'
+        ],
+        predictA: 0,
+        explainQ: 'In 2Al₂O₃ → 4Al + 3O₂, the metal product is…',
+        explainOpts: [
+          'Aluminium (Al)',
+          'Only oxygen gas',
+          'Only more Al₂O₃'
+        ],
+        explainA: 0,
+        missionFlag: 'extractedAluminium',
+        bonusQs: [
+          { q: 'Balance: 2Al₂O₃ → 4Al + ? O₂', opts: ['3', '1', '6'], a: 0 },
+          { q: 'Why use electricity for aluminium (not only carbon like iron)?', opts: ['Al is harder to extract; needs electricity', 'Al is already pure gold', 'Carbon cannot burn'], a: 0 },
+          { q: 'The metal product is…', opts: ['Al', 'O₂', 'Al₂O₃'], a: 0 }
+        ]
+      },
+      copper: {
+        id: 'copper',
+        title: 'Copper Works — Copper extraction',
+        intro: 'Copper oxide + carbon → copper metal. Word equation: copper oxide + carbon → copper + carbon dioxide.',
+        formula: 'Word: copper oxide + carbon → copper + carbon dioxide\n2CuO + C → 2Cu + CO₂',
+        slots: [
+          { key: 'cuOre', label: 'Copper ore', icon: '🟩' },
+          { key: 'carbon', label: 'Carbon', icon: '⬛' }
+        ],
+        need: { cuOre: 1, carbon: 1 },
+        output: { cu: 1 },
+        outputLabel: 'Copper metal',
+        heatMs: 2600,
+        processCaptions: [
+          'Heating copper oxide with carbon…',
+          'Oxygen is removed from CuO…',
+          'Copper metal forms…'
+        ],
+        predictQ: 'Word equation for copper extraction is…',
+        predictOpts: [
+          'copper oxide + carbon → copper + carbon dioxide',
+          'copper + oxygen → copper oxide only',
+          'gold → copper + carbon'
+        ],
+        predictA: 0,
+        explainQ: 'Which balanced equation matches that word equation?',
+        explainOpts: [
+          '2CuO + C → 2Cu + CO₂',
+          '2CuO + C → 2CuO + CO₂',
+          'CuO + O₂ → Cu + CO₂'
+        ],
+        explainA: 0,
+        missionFlag: 'extractedCopper',
+        bonusQs: [
+          { q: 'Balance: ? CuO + C → ? Cu + CO₂', opts: ['2 CuO + C → 2 Cu + CO₂', '1 CuO + C → 3 Cu + CO₂', '4 CuO + C → 1 Cu + CO₂'], a: 0 },
+          { q: 'Mining copper ore is not the same as extraction because…', opts: ['Extraction turns the compound into metal', 'Mining already makes pure metal always', 'Mining only happens on the moon'], a: 0 }
+        ]
+      },
+      silver_roast: {
+        id: 'silver_roast',
+        station: 'copper',
+        title: 'Silver oxide — heat to get silver',
+        intro: 'Silver is mined as silver oxide (Ag₂O), NOT free metal. Heat decomposes it: silver oxide → silver + oxygen.',
+        formula: 'Word: silver oxide → silver + oxygen\n2Ag₂O → 4Ag + O₂',
+        slots: [{ key: 'agOre', label: 'Ag₂O ore', icon: '🩶' }],
+        need: { agOre: 1 },
+        output: { silver: 1 },
+        outputLabel: 'Silver metal',
+        heatMs: 2400,
+        processCaptions: [
+          'Heating silver oxide…',
+          'Silver oxide breaks down…',
+          'Silver metal + oxygen gas…'
+        ],
+        predictQ: 'Word equation for heating silver oxide is…',
+        predictOpts: [
+          'silver oxide → silver + oxygen',
+          'silver + carbon → silver oxide',
+          'gold → silver + oxygen'
+        ],
+        predictA: 0,
+        explainQ: 'Which balanced equation is correct?',
+        explainOpts: [
+          '2Ag₂O → 4Ag + O₂',
+          'Ag₂O → Ag + O₂',
+          '2Ag₂O → 2Ag + O₂'
+        ],
+        explainA: 0,
+        missionFlag: 'extractedSilver',
+        bonusQs: [
+          { q: 'Why can gold be used directly, but silver oxide cannot?', opts: ['Gold is found as free metal; silver here is a compound (oxide)', 'Silver is already pure gold', 'Gold always needs carbon'], a: 0 },
+          { q: 'Balance: 2Ag₂O → ? Ag + O₂', opts: ['4 Ag', '2 Ag', '1 Ag'], a: 0 }
+        ]
+      }
+    };
+    // Mastery: first success needs predict+explain once; later free or bonus Qs
+    var processMastery = {};
+    var processSuccessCount = {};
+    var pendingBonus = null; // { recId, q }
+
+    var extractActive = null; // recipe id
+    var furnacePickMode = null; // when opening furnace UI, which sub-recipe
+    var reactorSlots = [];
+    var heating = false;
+    var heatT = 0;
+    var heatMs = 2000;
+    var heatMode = 'success';
+    var predictChoice = -1;
+    var explainDone = false;
+    var pendingExplain = false;
+
+    // Lab mission: weapon + aluminium armour + boss
+    var mission = {
+      gotWood: false,
+      madeCarbon: false,
+      extractedIron: false,
+      extractedCopper: false,
+      upgradedFurnace: false,
+      extractedAluminium: false,
+      extractedSilver: false,
+      craftedWeapon: false,
+      craftedArmour: false,
+      defeatedBoss: false,
+      failedHeats: 0,
+      bossCorrect: 0,
+      bossWrong: 0
+    };
+
+    function idx(x, y, z) { return x + y * WX + z * WX * WY; }
+    function inBounds(x, y, z) { return x >= 0 && x < WX && y >= 0 && y < WY && z >= 0 && z < WZ; }
+    function getB(x, y, z) {
+      x = Math.floor(x); y = Math.floor(y); z = Math.floor(z);
+      if (!inBounds(x, y, z)) return BLOCK.BEDROCK;
+      return world[idx(x, y, z)];
+    }
+    function setB(x, y, z, t) {
+      x = Math.floor(x); y = Math.floor(y); z = Math.floor(z);
+      if (inBounds(x, y, z)) world[idx(x, y, z)] = t;
+    }
+    function isSolid(t) { return t !== BLOCK.AIR; }
+
+    function clearAbove(x, z, fromY) {
+      var y;
+      for (y = fromY; y < WY; y++) {
+        if (y === 0) continue;
+        setB(x, y, z, BLOCK.AIR);
+      }
+    }
+
+    function fillSurface(x0, z0, x1, z1, topBlock) {
+      var x, z;
+      for (x = x0; x <= x1; x++) {
+        for (z = z0; z <= z1; z++) {
+          if (!inBounds(x, 0, z)) continue;
+          clearAbove(x, z, 4);
+          setB(x, 1, z, BLOCK.DIRT);
+          setB(x, 2, z, BLOCK.DIRT);
+          setB(x, 3, z, topBlock);
+        }
+      }
+    }
+
+    function makeHill(cx, cz, radius, oreType) {
+      var x, z, y, dx, dz, dist, h;
+      for (x = cx - radius; x <= cx + radius; x++) {
+        for (z = cz - radius; z <= cz + radius; z++) {
+          if (!inBounds(x, 0, z)) continue;
+          dx = x - cx; dz = z - cz;
+          dist = Math.sqrt(dx * dx + dz * dz);
+          if (dist > radius) continue;
+          h = Math.floor((1 - dist / radius) * 3);
+          for (y = 4; y <= 3 + h; y++) {
+            if (y >= WY) break;
+            // shell of stone with ore inside
+            if (y >= 4 && Math.random() < 0.45 && oreType) setB(x, y, z, oreType);
+            else setB(x, y, z, BLOCK.STONE);
+          }
+          // expose some ore on sides for easy finding
+          if (h >= 1 && Math.random() < 0.35 && oreType) setB(x, 4, z, oreType);
+        }
+      }
+    }
+
+    function pathLine(x0, z0, x1, z1) {
+      var steps = Math.max(Math.abs(x1 - x0), Math.abs(z1 - z0), 1);
+      var i, t, x, z, dx, dz;
+      for (i = 0; i <= steps; i++) {
+        t = i / steps;
+        x = Math.round(x0 + (x1 - x0) * t);
+        z = Math.round(z0 + (z1 - z0) * t);
+        for (dx = -1; dx <= 1; dx++) {
+          for (dz = -1; dz <= 1; dz++) {
+            if (!inBounds(x + dx, 0, z + dz)) continue;
+            clearAbove(x + dx, z + dz, 4);
+            setB(x + dx, 3, z + dz, BLOCK.PATH);
+          }
+        }
+      }
+    }
+
+    function buildWorld() {
+      var i, x, z, y, trees, tries, key, s, dx, dz;
+
+      for (i = 0; i < world.length; i++) world[i] = BLOCK.AIR;
+
+      // Open flat plains everywhere — player is never boxed in
+      for (x = 0; x < WX; x++) {
+        for (z = 0; z < WZ; z++) {
+          setB(x, 0, z, BLOCK.BEDROCK);
+          setB(x, 1, z, BLOCK.DIRT);
+          setB(x, 2, z, BLOCK.DIRT);
+          setB(x, 3, z, BLOCK.GRASS);
+          // no stone roof / walls on surface
+        }
+      }
+
+      // West Iron Hills
+      makeHill(7, 20, 5, BLOCK.IRON_ORE);
+      makeHill(9, 12, 4, BLOCK.IRON_ORE);
+      makeHill(6, 28, 4, BLOCK.IRON_ORE);
+      // Surface ore samples (classroom: easy to find without climbing)
+      for (i = 0; i < 28; i++) {
+        x = 3 + Math.floor(Math.random() * 10);
+        z = 10 + Math.floor(Math.random() * 20);
+        clearAbove(x, z, 4);
+        setB(x, 3, z, BLOCK.IRON_ORE);
+      }
+
+      // East Copper Quarry
+      makeHill(33, 20, 5, BLOCK.COPPER_ORE);
+      makeHill(31, 12, 4, BLOCK.COPPER_ORE);
+      makeHill(34, 28, 4, BLOCK.COPPER_ORE);
+      for (i = 0; i < 28; i++) {
+        x = 27 + Math.floor(Math.random() * 10);
+        z = 10 + Math.floor(Math.random() * 20);
+        clearAbove(x, z, 4);
+        setB(x, 3, z, BLOCK.COPPER_ORE);
+      }
+
+      // South forest
+      trees = 0; tries = 0;
+      while (trees < 26 && tries < 140) {
+        tries++;
+        x = 8 + Math.floor(Math.random() * 24);
+        z = 2 + Math.floor(Math.random() * 10);
+        if (getB(x, 3, z) !== BLOCK.GRASS && getB(x, 3, z) !== BLOCK.PATH) continue;
+        clearAbove(x, z, 4);
+        for (y = 4; y <= 7; y++) setB(x, y, z, BLOCK.WOOD);
+        if (inBounds(x + 1, 6, z)) setB(x + 1, 6, z, BLOCK.WOOD);
+        if (inBounds(x - 1, 6, z)) setB(x - 1, 6, z, BLOCK.WOOD);
+        trees++;
+      }
+
+      // Village plaza (open)
+      fillSurface(16, 14, 24, 22, BLOCK.PATH);
+
+      // Guide paths from village hub to regions & stations
+      pathLine(20, 18, 8, 20);   // to iron
+      pathLine(20, 18, 32, 20);  // to copper
+      pathLine(20, 18, 20, 8);   // to forest
+      pathLine(20, 18, 20, 33);  // to boss
+      pathLine(20, 18, 11, 13);  // to kiln
+      pathLine(20, 18, 13, 22);  // to furnace
+      pathLine(20, 18, 29, 22);  // to copper works
+      pathLine(20, 18, 26, 13);  // to anvil
+
+      // Station clear pads
+      for (key in STATIONS) {
+        if (!STATIONS.hasOwnProperty(key)) continue;
+        s = STATIONS[key];
+        for (dx = -2; dx <= 2; dx++) {
+          for (dz = -2; dz <= 2; dz++) {
+            x = s.x + dx; z = s.z + dz;
+            if (!inBounds(x, 0, z)) continue;
+            clearAbove(x, z, 4);
+            setB(x, 3, z, BLOCK.PATH);
+          }
+        }
+      }
+
+      // Boss arena pad (still open)
+      fillSurface(15, 28, 25, 37, BLOCK.PATH);
+
+      // 2 silver oxide ores + 1 free gold on ground corners (no poles)
+      placeHiddenNative(1, 1, BLOCK.SILVER_OXIDE, false);
+      placeHiddenNative(1, 38, BLOCK.SILVER_OXIDE, false);
+      placeHiddenNative(38, 38, BLOCK.GOLD, false);
+
+      // Aluminium ore — scarce pale blocks (not free metal; needs G2 electricity)
+      placeScatteredAl(12);
+    }
+
+    function placeHiddenNative(x, z, blockType, underStone) {
+      if (!inBounds(x, 0, z)) return;
+      clearAbove(x, z, 3);
+      setB(x, 1, z, BLOCK.DIRT);
+      setB(x, 2, z, BLOCK.DIRT);
+      if (underStone) {
+        setB(x, 3, z, BLOCK.STONE);
+        setB(x, 4, z, blockType);
+      } else {
+        setB(x, 3, z, blockType);
+      }
+    }
+
+    function placeScatteredAl(count) {
+      var n = 0, tries = 0, x, z;
+      while (n < count && tries < 200) {
+        tries++;
+        // Prefer far edges / SE–NE fringe, avoid village
+        x = 30 + Math.floor(Math.random() * 9);
+        z = 24 + Math.floor(Math.random() * 14);
+        if (!inBounds(x, 0, z)) continue;
+        if (x >= 14 && x <= 26 && z >= 12 && z <= 26) continue;
+        if (getB(x, 3, z) !== BLOCK.GRASS && getB(x, 3, z) !== BLOCK.STONE) continue;
+        clearAbove(x, z, 4);
+        setB(x, 3, z, BLOCK.AL_ORE);
+        if (Math.random() < 0.35) setB(x, 4, z, BLOCK.AL_ORE);
+        n++;
+      }
+    }
+
+    function disposeMeshList() {
+      var i, m;
+      for (i = 0; i < blockMeshes.length; i++) {
+        m = blockMeshes[i];
+        meshGroup.remove(m);
+        // shared patterned materials are reused — only dispose plain mats if not in blockMats
+      }
+      blockMeshes = [];
+    }
+
+    /** Canvas texture patterns so iron / copper ores look different in class */
+    function makeOreTexture(kind) {
+      var cv = document.createElement('canvas');
+      cv.width = 64; cv.height = 64;
+      var ctx = cv.getContext('2d');
+      var i, j, x, y;
+      if (kind === 'iron') {
+        // Rusty brown base + dark diagonal stripes + black flecks
+        ctx.fillStyle = '#9a3412';
+        ctx.fillRect(0, 0, 64, 64);
+        ctx.fillStyle = '#7c2d12';
+        for (i = -64; i < 128; i += 10) {
+          ctx.beginPath();
+          ctx.moveTo(i, 0);
+          ctx.lineTo(i + 28, 64);
+          ctx.lineTo(i + 34, 64);
+          ctx.lineTo(i + 6, 0);
+          ctx.fill();
+        }
+        ctx.fillStyle = '#1c1917';
+        for (i = 0; i < 40; i++) {
+          ctx.fillRect((i * 17) % 64, (i * 29) % 64, 3, 3);
+        }
+        ctx.fillStyle = '#fbbf24';
+        for (i = 0; i < 12; i++) {
+          ctx.fillRect((i * 23 + 5) % 64, (i * 11 + 8) % 64, 2, 2);
+        }
+      } else if (kind === 'copper') {
+        // Green malachite base + bright teal spots + lighter veins
+        ctx.fillStyle = '#166534';
+        ctx.fillRect(0, 0, 64, 64);
+        ctx.fillStyle = '#15803d';
+        for (i = 0; i < 8; i++) {
+          for (j = 0; j < 8; j++) {
+            if ((i + j) % 2 === 0) ctx.fillRect(i * 8, j * 8, 8, 8);
+          }
+        }
+        ctx.fillStyle = '#4ade80';
+        for (i = 0; i < 18; i++) {
+          x = (i * 19 + 3) % 56;
+          y = (i * 27 + 7) % 56;
+          ctx.beginPath();
+          ctx.arc(x + 4, y + 4, 3 + (i % 3), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.strokeStyle = '#a7f3d0';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(4, 20); ctx.lineTo(60, 44);
+        ctx.moveTo(8, 50); ctx.lineTo(50, 10);
+        ctx.stroke();
+      } else if (kind === 'wood') {
+        ctx.fillStyle = '#5d4037';
+        ctx.fillRect(0, 0, 64, 64);
+        ctx.strokeStyle = '#3e2723';
+        ctx.lineWidth = 3;
+        for (i = 8; i < 64; i += 12) {
+          ctx.beginPath();
+          ctx.moveTo(0, i);
+          ctx.bezierCurveTo(20, i - 4, 40, i + 4, 64, i);
+          ctx.stroke();
+        }
+        ctx.strokeStyle = '#8d6e63';
+        ctx.beginPath();
+        ctx.arc(32, 32, 14, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (kind === 'silver') {
+        // Silver oxide ore Ag₂O — dark grey-brown oxide, not shiny free metal
+        ctx.fillStyle = '#4b5563';
+        ctx.fillRect(0, 0, 64, 64);
+        ctx.fillStyle = '#6b7280';
+        for (i = 0; i < 8; i++) {
+          for (j = 0; j < 8; j++) {
+            if ((i + j) % 2 === 0) ctx.fillRect(i * 8, j * 8, 8, 8);
+          }
+        }
+        ctx.fillStyle = '#9f1239';
+        for (i = 0; i < 14; i++) {
+          ctx.beginPath();
+          ctx.arc((i * 17) % 56 + 4, (i * 23) % 56 + 4, 2 + (i % 2), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.strokeStyle = '#d1d5db';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(4, 4, 56, 56);
+        ctx.fillStyle = '#e5e7eb';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('Ag₂O', 14, 38);
+      } else if (kind === 'gold') {
+        // Rich yellow + darker gold squares + bright sparkle stars
+        ctx.fillStyle = '#ca8a04';
+        ctx.fillRect(0, 0, 64, 64);
+        ctx.fillStyle = '#eab308';
+        for (i = 0; i < 8; i++) {
+          for (j = 0; j < 8; j++) {
+            if ((i + j) % 3 === 0) ctx.fillRect(i * 8, j * 8, 8, 8);
+          }
+        }
+        ctx.fillStyle = '#fde047';
+        for (i = 0; i < 14; i++) {
+          x = (i * 17 + 2) % 58;
+          y = (i * 23 + 5) % 58;
+          ctx.beginPath();
+          ctx.moveTo(x + 4, y);
+          ctx.lineTo(x + 5, y + 3);
+          ctx.lineTo(x + 8, y + 4);
+          ctx.lineTo(x + 5, y + 5);
+          ctx.lineTo(x + 4, y + 8);
+          ctx.lineTo(x + 3, y + 5);
+          ctx.lineTo(x, y + 4);
+          ctx.lineTo(x + 3, y + 3);
+          ctx.fill();
+        }
+        ctx.fillStyle = '#fffbeb';
+        for (i = 0; i < 8; i++) {
+          ctx.fillRect((i * 31 + 3) % 64, (i * 19) % 64, 2, 2);
+        }
+      } else if (kind === 'aluminium') {
+        // Pale grey-white ore with vertical white veins (bauxite-like for S3)
+        ctx.fillStyle = '#a1a1aa';
+        ctx.fillRect(0, 0, 64, 64);
+        ctx.fillStyle = '#d4d4d8';
+        for (i = 0; i < 6; i++) {
+          ctx.fillRect(i * 11, 0, 4, 64);
+        }
+        ctx.fillStyle = '#fafafa';
+        for (i = 0; i < 20; i++) {
+          ctx.fillRect((i * 13) % 64, (i * 19) % 64, 3, 3);
+        }
+        ctx.strokeStyle = '#71717a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(2, 2, 60, 60);
+      }
+      var tex = new THREE.CanvasTexture(cv);
+      tex.magFilter = THREE.NearestFilter;
+      tex.minFilter = THREE.NearestFilter;
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      return tex;
+    }
+
+    function getBlockMaterial(type) {
+      type = Number(type);
+      if (blockMats[type]) return blockMats[type];
+      var mat;
+      if (type === BLOCK.IRON_ORE) {
+        mat = new THREE.MeshLambertMaterial({ map: makeOreTexture('iron') });
+      } else if (type === BLOCK.COPPER_ORE) {
+        mat = new THREE.MeshLambertMaterial({ map: makeOreTexture('copper') });
+      } else if (type === BLOCK.WOOD) {
+        mat = new THREE.MeshLambertMaterial({ map: makeOreTexture('wood') });
+      } else if (type === BLOCK.SILVER_OXIDE) {
+        mat = new THREE.MeshLambertMaterial({
+          map: makeOreTexture('silver'),
+          emissive: 0x44403c,
+          emissiveIntensity: 0.12
+        });
+      } else if (type === BLOCK.GOLD) {
+        mat = new THREE.MeshLambertMaterial({
+          map: makeOreTexture('gold'),
+          emissive: 0xca8a04,
+          emissiveIntensity: 0.28
+        });
+      } else if (type === BLOCK.AL_ORE) {
+        mat = new THREE.MeshLambertMaterial({ map: makeOreTexture('aluminium') });
+      } else {
+        mat = new THREE.MeshLambertMaterial({ color: COLORS[type] || 0xffffff });
+      }
+      blockMats[type] = mat;
+      return mat;
+    }
+
+    function rebuildMesh() {
+      disposeMeshList();
+      var byType = {};
+      var type, x, y, z, t, list, i, mesh, dummy, count;
+
+      for (x = 0; x < WX; x++) {
+        for (y = 0; y < WY; y++) {
+          for (z = 0; z < WZ; z++) {
+            t = getB(x, y, z);
+            if (t === BLOCK.AIR) continue;
+            if (
+              isSolid(getB(x + 1, y, z)) && isSolid(getB(x - 1, y, z)) &&
+              isSolid(getB(x, y + 1, z)) && isSolid(getB(x, y - 1, z)) &&
+              isSolid(getB(x, y, z + 1)) && isSolid(getB(x, y, z - 1))
+            ) continue;
+            if (!byType[t]) byType[t] = [];
+            byType[t].push(x + 0.5, y + 0.5, z + 0.5);
+          }
+        }
+      }
+
+      dummy = new THREE.Object3D();
+      for (type in byType) {
+        if (!byType.hasOwnProperty(type)) continue;
+        list = byType[type];
+        count = list.length / 3;
+        if (count < 1) continue;
+        mesh = new THREE.InstancedMesh(sharedGeo, getBlockMaterial(type), count);
+        mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        for (i = 0; i < count; i++) {
+          dummy.position.set(list[i * 3], list[i * 3 + 1], list[i * 3 + 2]);
+          dummy.updateMatrix();
+          mesh.setMatrixAt(i, dummy.matrix);
+        }
+        mesh.instanceMatrix.needsUpdate = true;
+        meshGroup.add(mesh);
+        blockMeshes.push(mesh);
+      }
+    }
+
+    // --- Web Audio craft / fire / hit sounds (no external files) ---
+    function ensureAudio() {
+      if (audioCtx) return audioCtx;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      audioCtx = new AC();
+      return audioCtx;
+    }
+
+    function playTone(freq, dur, type, vol, slideTo) {
+      var ctx = ensureAudio();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') ctx.resume();
+      var t0 = ctx.currentTime;
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.type = type || 'square';
+      o.frequency.setValueAtTime(freq, t0);
+      if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(vol || 0.12, t0 + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t0); o.stop(t0 + dur + 0.02);
+    }
+
+    function playCraftSound() {
+      // Anvil: metallic clink + lower ring
+      playTone(880, 0.08, 'square', 0.1, 440);
+      setTimeout(function () { playTone(660, 0.12, 'triangle', 0.08, 220); }, 40);
+      setTimeout(function () { playTone(1320, 0.05, 'square', 0.06); }, 90);
+    }
+
+    function playBurnSound() {
+      playTone(120, 0.25, 'sawtooth', 0.06, 80);
+      playTone(200, 0.18, 'triangle', 0.04, 100);
+    }
+
+    function playSmeltSound() {
+      playTone(180, 0.2, 'sawtooth', 0.07, 90);
+      setTimeout(function () { playTone(320, 0.15, 'triangle', 0.08, 160); }, 80);
+    }
+
+    function playHitSound() {
+      playTone(150, 0.1, 'square', 0.09, 60);
+    }
+
+    function playCorrectSound() {
+      playTone(523, 0.1, 'sine', 0.08);
+      setTimeout(function () { playTone(659, 0.12, 'sine', 0.08); }, 90);
+    }
+
+    function playWrongSound() {
+      playTone(200, 0.15, 'sawtooth', 0.09, 90);
+    }
+
+    /** Flame + smoke particle systems for kiln / blast furnace */
+    function makeFireSmokeFx(x, z, intensity) {
+      var g = new THREE.Group();
+      g.position.set(x + 0.5, 4.05, z + 0.5);
+      var flames = [];
+      var smokes = [];
+      var i, m, col;
+      for (i = 0; i < 10; i++) {
+        col = i % 2 === 0 ? 0xff6b00 : 0xfbbf24;
+        m = new THREE.Mesh(
+          new THREE.SphereGeometry(0.12 + Math.random() * 0.1, 6, 6),
+          new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.85 })
+        );
+        m.userData = {
+          baseY: 0.2 + Math.random() * 0.3,
+          phase: Math.random() * Math.PI * 2,
+          speed: 1.5 + Math.random() * 1.5,
+          amp: 0.08 + Math.random() * 0.1
+        };
+        g.add(m);
+        flames.push(m);
+      }
+      for (i = 0; i < 8; i++) {
+        m = new THREE.Mesh(
+          new THREE.SphereGeometry(0.18 + Math.random() * 0.15, 6, 6),
+          new THREE.MeshBasicMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.35 })
+        );
+        m.userData = {
+          baseY: 0.8 + Math.random() * 0.5,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.6 + Math.random() * 0.5,
+          drift: (Math.random() - 0.5) * 0.4
+        };
+        g.add(m);
+        smokes.push(m);
+      }
+      // Glowing base
+      var glow = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.45, 0.55, 0.2, 10),
+        new THREE.MeshBasicMaterial({ color: 0xea580c, transparent: true, opacity: 0.7 })
+      );
+      glow.position.y = 0.05;
+      g.add(glow);
+      g.userData = { flames: flames, smokes: smokes, intensity: intensity || 1, t: 0 };
+      scene.add(g);
+      return g;
+    }
+
+    function updateFireSmokeFx(fx) {
+      if (!fx) return;
+      var ud = fx.userData;
+      ud.t += dt;
+      var i, p, f, s, bob;
+      for (i = 0; i < ud.flames.length; i++) {
+        f = ud.flames[i];
+        p = f.userData;
+        bob = Math.sin(ud.t * p.speed + p.phase);
+        f.position.x = Math.sin(ud.t * 2 + p.phase) * p.amp;
+        f.position.z = Math.cos(ud.t * 1.7 + p.phase) * p.amp;
+        f.position.y = p.baseY + (bob * 0.5 + 0.5) * 0.9 * ud.intensity;
+        f.scale.setScalar(0.7 + (bob * 0.5 + 0.5) * 0.6);
+        f.material.opacity = 0.55 + (bob * 0.5 + 0.5) * 0.4;
+      }
+      for (i = 0; i < ud.smokes.length; i++) {
+        s = ud.smokes[i];
+        p = s.userData;
+        bob = (ud.t * p.speed + p.phase) % 2.5;
+        s.position.x = p.drift * bob;
+        s.position.z = -p.drift * 0.5 * bob;
+        s.position.y = p.baseY + bob * 1.2;
+        s.scale.setScalar(0.8 + bob * 0.5);
+        s.material.opacity = Math.max(0.05, 0.4 - bob * 0.15);
+      }
+    }
+
+    function makeLabel(text, color) {
+      var cv = document.createElement('canvas');
+      cv.width = 320; cv.height = 72;
+      var ctx = cv.getContext('2d');
+      ctx.fillStyle = 'rgba(15,23,42,0.88)';
+      ctx.fillRect(0, 0, 320, 72);
+      ctx.strokeStyle = color || '#5eead4';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(2, 2, 316, 68);
+      ctx.fillStyle = color || '#5eead4';
+      ctx.font = 'bold 26px Segoe UI,sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, 160, 46);
+      var sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: new THREE.CanvasTexture(cv),
+        transparent: true,
+        depthTest: false
+      }));
+      sprite.scale.set(4.5, 1.0, 1);
+      return sprite;
+    }
+
+    function addGuidePole(x, z, color, label, height) {
+      height = height || 3.2;
+      var pole = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.12, 0.16, height, 8),
+        new THREE.MeshLambertMaterial({ color: color, emissive: color, emissiveIntensity: 0.35 })
+      );
+      pole.position.set(x + 0.5, 4 + height / 2, z + 0.5);
+      scene.add(pole);
+      var ball = new THREE.Mesh(
+        new THREE.SphereGeometry(0.35, 12, 12),
+        new THREE.MeshLambertMaterial({ color: color, emissive: color, emissiveIntensity: 0.5 })
+      );
+      ball.position.set(x + 0.5, 4 + height + 0.2, z + 0.5);
+      scene.add(ball);
+      var spr = makeLabel(label, '#' + ('000000' + color.toString(16)).slice(-6));
+      spr.position.set(x + 0.5, 4 + height + 1.1, z + 0.5);
+      scene.add(spr);
+    }
+
+    /** Build a recognizable building for each station (not just a coloured pole) */
+    function buildStationModel(kind) {
+      var g = new THREE.Group();
+      var brick = new THREE.MeshLambertMaterial({ color: 0x7c2d12 });
+      var darkBrick = new THREE.MeshLambertMaterial({ color: 0x44403c });
+      var metal = new THREE.MeshLambertMaterial({ color: 0x94a3b8, emissive: 0x334155, emissiveIntensity: 0.15 });
+      var iron = new THREE.MeshLambertMaterial({ color: 0x64748b });
+      var copper = new THREE.MeshLambertMaterial({ color: 0x16a34a, emissive: 0x14532d, emissiveIntensity: 0.2 });
+      var gold = new THREE.MeshLambertMaterial({ color: 0xfbbf24, emissive: 0xb45309, emissiveIntensity: 0.25 });
+      var purple = new THREE.MeshLambertMaterial({ color: 0x7c3aed, emissive: 0x4c1d95, emissiveIntensity: 0.35 });
+      var stone = new THREE.MeshLambertMaterial({ color: 0x78716c });
+      var m;
+
+      if (kind === 'kiln') {
+        // Dome kiln with door opening + chimney
+        m = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.25, 1.4, 12), darkBrick);
+        m.position.y = 0.7; g.add(m);
+        m = new THREE.Mesh(new THREE.SphereGeometry(1.05, 12, 10, 0, Math.PI * 2, 0, Math.PI / 2), brick);
+        m.position.y = 1.4; g.add(m);
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.35, 1.1, 8), darkBrick);
+        m.position.set(0.55, 2.2, 0.2); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.7, 0.2), new THREE.MeshBasicMaterial({ color: 0x1c1917 }));
+        m.position.set(0, 0.55, 1.15); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.25, 0.15), new THREE.MeshBasicMaterial({ color: 0xea580c }));
+        m.position.set(0, 0.4, 1.2); g.add(m);
+      } else if (kind === 'furnace') {
+        // Tall blast furnace tower + hopper + base
+        m = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.35, 3.2, 12), brick);
+        m.position.y = 1.6; g.add(m);
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.75, 1.4, 10), darkBrick);
+        m.position.y = 3.8; g.add(m);
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.4, 0.6, 10), iron);
+        m.position.y = 4.7; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.35, 2.4), stone);
+        m.position.y = 0.15; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.55, 0.2), new THREE.MeshBasicMaterial({ color: 0xf97316 }));
+        m.position.set(0, 0.55, 1.3); g.add(m);
+        // pipes
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 1.6, 6), metal);
+        m.rotation.z = Math.PI / 2; m.position.set(1.2, 2.2, 0); g.add(m);
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.8, 6), metal);
+        m.position.set(1.9, 1.9, 0); g.add(m);
+      } else if (kind === 'copper') {
+        // Workbench + green vat + ore pile
+        m = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.25, 1.3), new THREE.MeshLambertMaterial({ color: 0x5d4037 }));
+        m.position.y = 0.95; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.9, 0.2), darkBrick);
+        m.position.set(-0.9, 0.45, -0.45); g.add(m);
+        m = m.clone(); m.position.set(0.9, 0.45, -0.45); g.add(m);
+        m = m.clone(); m.position.set(-0.9, 0.45, 0.45); g.add(m);
+        m = m.clone(); m.position.set(0.9, 0.45, 0.45); g.add(m);
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.6, 0.9, 12), copper);
+        m.position.set(0.2, 0.55, -1.1); g.add(m);
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 0.15, 12), new THREE.MeshBasicMaterial({ color: 0x4ade80, transparent: true, opacity: 0.7 }));
+        m.position.set(0.2, 1.05, -1.1); g.add(m);
+        m = new THREE.Mesh(new THREE.SphereGeometry(0.28, 8, 8), copper);
+        m.position.set(-0.7, 1.25, 0.15); g.add(m);
+        m = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 8), copper);
+        m.position.set(-0.4, 1.2, 0.35); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.7, 0.15), iron);
+        m.position.set(0.85, 1.4, 0.2); g.add(m);
+      } else if (kind === 'craft') {
+        // Anvil on stump + hammer
+        m = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.8, 0.7, 10), new THREE.MeshLambertMaterial({ color: 0x5d4037 }));
+        m.position.y = 0.35; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.35, 0.55), iron);
+        m.position.y = 0.9; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.28, 0.45), iron);
+        m.position.set(-0.55, 0.88, 0); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.22, 0.35), iron);
+        m.position.set(0.55, 0.85, 0); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.55, 0.12), new THREE.MeshLambertMaterial({ color: 0x5d4037 }));
+        m.position.set(0.35, 1.25, 0.35); m.rotation.z = -0.5; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.18, 0.22), metal);
+        m.position.set(0.55, 1.45, 0.45); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.12, 1.6), gold);
+        m.position.y = 0.05; g.add(m);
+      } else if (kind === 'boss') {
+        // Stone gate arch with purple crystal
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.7, 3.2, 0.7), stone);
+        m.position.set(-1.4, 1.6, 0); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.7, 3.2, 0.7), stone);
+        m.position.set(1.4, 1.6, 0); g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.6, 0.75), stone);
+        m.position.y = 3.4; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.6, 0.15), purple);
+        m.position.set(0, 1.3, 0); g.add(m);
+        m = new THREE.Mesh(new THREE.OctahedronGeometry(0.45, 0), new THREE.MeshBasicMaterial({ color: 0xc084fc }));
+        m.position.set(0, 4.0, 0); g.add(m);
+      }
+      return g;
+    }
+
+    function addStationMarkers() {
+      var key, s, ring, spr, model;
+      for (key in STATIONS) {
+        if (!STATIONS.hasOwnProperty(key)) continue;
+        s = STATIONS[key];
+        model = buildStationModel(key);
+        model.position.set(s.x + 0.5, 4.0, s.z + 0.5);
+        scene.add(model);
+        if (key === 'furnace') furnaceModel = model;
+
+        ring = new THREE.Mesh(
+          new THREE.RingGeometry(s.r - 0.35, s.r, 48),
+          new THREE.MeshBasicMaterial({ color: s.color, side: THREE.DoubleSide, transparent: true, opacity: 0.4 })
+        );
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(s.x + 0.5, 4.06, s.z + 0.5);
+        scene.add(ring);
+        if (key === 'furnace') furnaceRing = ring;
+
+        spr = makeLabel(s.label, '#' + ('000000' + s.color.toString(16)).slice(-6));
+        spr.position.set(s.x + 0.5, 8.2, s.z + 0.5);
+        if (key === 'furnace') { spr.position.y = 9.4; furnaceLabelSprite = spr; }
+        if (key === 'boss') spr.position.y = 9.0;
+        scene.add(spr);
+      }
+
+      // Region guide poles
+      addGuidePole(12, 18, 0xff6b35, '← Iron Ore');
+      addGuidePole(28, 18, 0x22c55e, 'Copper Ore →');
+      addGuidePole(20, 9, 0x166534, '↓ Wood Forest');
+      addGuidePole(20, 27, 0xa855f7, '↑ Boss Gate');
+      addGuidePole(20, 18, 0xfbbf24, 'Village');
+      // Flame + smoke at kiln mouth and blast furnace base
+      kilnFx = makeFireSmokeFx(STATIONS.kiln.x, STATIONS.kiln.z, 0.9);
+      furnaceFx = makeFireSmokeFx(STATIONS.furnace.x, STATIONS.furnace.z, 1.25);
+    }
+
+    function updateArmourVisual() {
+      if (!playerRig) return;
+      var arm = playerRig.getObjectByName('armourMesh');
+      if (arm) arm.visible = !!hasArmour;
+    }
+
+    function updateFurnaceStationLabel() {
+      STATIONS.furnace.label = furnaceGrade >= 2
+        ? 'Blast Furnace G2 ⚡'
+        : 'Blast Furnace G1';
+      STATIONS.furnace.color = furnaceGrade >= 2 ? 0x22d3ee : 0xff6b35;
+      if (furnaceLabelSprite && furnaceLabelSprite.material && furnaceLabelSprite.material.map) {
+        // rebuild label sprite
+        var parentY = furnaceLabelSprite.position.y;
+        var parentPos = furnaceLabelSprite.position.clone();
+        scene.remove(furnaceLabelSprite);
+        if (furnaceLabelSprite.material.map) furnaceLabelSprite.material.map.dispose();
+        furnaceLabelSprite.material.dispose();
+        furnaceLabelSprite = makeLabel(STATIONS.furnace.label, furnaceGrade >= 2 ? '#22d3ee' : '#ff6b35');
+        furnaceLabelSprite.position.copy(parentPos);
+        furnaceLabelSprite.position.y = parentY;
+        scene.add(furnaceLabelSprite);
+      }
+      if (furnaceRing && furnaceRing.material) {
+        furnaceRing.material.color.setHex(STATIONS.furnace.color);
+        furnaceRing.material.opacity = furnaceGrade >= 2 ? 0.65 : 0.4;
+      }
+    }
+
+    /** Visual upgrade: electric coils, cyan glow, arcs on G2 furnace */
+    function applyFurnaceG2Visuals() {
+      if (!furnaceModel || furnaceG2Extra) return;
+      var g = new THREE.Group();
+      g.name = 'g2Extra';
+      var cyan = new THREE.MeshLambertMaterial({ color: 0x22d3ee, emissive: 0x0891b2, emissiveIntensity: 0.65 });
+      var bright = new THREE.MeshBasicMaterial({ color: 0x67e8f9 });
+      var coil, i, spark;
+      for (i = 0; i < 3; i++) {
+        coil = new THREE.Mesh(new THREE.TorusGeometry(0.95 + i * 0.08, 0.06, 8, 24), cyan);
+        coil.rotation.x = Math.PI / 2;
+        coil.position.y = 1.4 + i * 0.55;
+        g.add(coil);
+      }
+      // Antenna / electrode on top
+      coil = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 1.2, 8), cyan);
+      coil.position.y = 5.4;
+      g.add(coil);
+      spark = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 12), bright);
+      spark.position.y = 6.1;
+      spark.name = 'g2Spark';
+      g.add(spark);
+      // Side energy panels
+      for (i = -1; i <= 1; i += 2) {
+        coil = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 1.6, 0.5),
+          new THREE.MeshLambertMaterial({ color: 0x0e7490, emissive: 0x22d3ee, emissiveIntensity: 0.4 })
+        );
+        coil.position.set(i * 1.15, 2.2, 0);
+        g.add(coil);
+      }
+      furnaceModel.add(g);
+      furnaceG2Extra = g;
+      // Intensify furnace fire
+      if (furnaceFx && furnaceFx.userData) furnaceFx.userData.intensity = 1.6;
+      // Brighten tower materials
+      furnaceModel.traverse(function (ch) {
+        if (ch.material && ch.material.emissive) {
+          ch.material.emissiveIntensity = Math.max(ch.material.emissiveIntensity || 0, 0.25);
+        }
+      });
+    }
+
+    function formatRunTime(totalSec) {
+      totalSec = Math.max(0, Math.floor(totalSec));
+      var m = Math.floor(totalSec / 60);
+      var s = totalSec % 60;
+      return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function getRunElapsedSec() {
+      if (!runStartMs) return runPenaltySec;
+      return (performance.now() - runStartMs) / 1000 + runPenaltySec;
+    }
+
+    function updateRunTimerDisplay() {
+      var el = document.getElementById('gameTimerVal');
+      var pen = document.getElementById('gameTimerPen');
+      if (!el) return;
+      el.textContent = formatRunTime(getRunElapsedSec());
+      if (pen) {
+        pen.textContent = runPenaltySec > 0 ? ('+' + runPenaltySec + 's penalty') : '';
+      }
+    }
+
+    function addTimePenalty(sec, reason) {
+      runPenaltySec += sec;
+      updateRunTimerDisplay();
+      toast((reason || 'Wrong answer') + ' · +' + sec + 's', 1800);
+    }
+
+    function startRunTimer() {
+      runTimerActive = true;
+      runStartMs = performance.now();
+      runPenaltySec = 0;
+      document.getElementById('gameTimer').classList.add('show');
+      updateRunTimerDisplay();
+      if (runTimerInterval) clearInterval(runTimerInterval);
+      runTimerInterval = setInterval(function () {
+        if (runTimerActive) updateRunTimerDisplay();
+      }, 200);
+    }
+
+    function stopRunTimer() {
+      runTimerActive = false;
+      if (runTimerInterval) {
+        clearInterval(runTimerInterval);
+        runTimerInterval = null;
+      }
+    }
+
+    /** Floating damage / heal numbers in world */
+    function spawnDmgNumber(x, y, z, amount, isHeal) {
+      var cv = document.createElement('canvas');
+      cv.width = 128; cv.height = 64;
+      var ctx = cv.getContext('2d');
+      ctx.clearRect(0, 0, 128, 64);
+      ctx.font = 'bold 42px Segoe UI,sans-serif';
+      ctx.textAlign = 'center';
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = '#000';
+      ctx.fillStyle = isHeal ? '#4ade80' : '#f87171';
+      var text = (isHeal ? '+' : '−') + Math.abs(amount);
+      ctx.strokeText(text, 64, 46);
+      ctx.fillText(text, 64, 46);
+      var spr = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: new THREE.CanvasTexture(cv),
+        transparent: true,
+        depthTest: false
+      }));
+      spr.scale.set(1.4, 0.7, 1);
+      spr.position.set(x, y, z);
+      scene.add(spr);
+      dmgFloats.push({ mesh: spr, life: 1.0, vy: 1.6 });
+    }
+
+    function updateDmgFloats() {
+      var i, d;
+      for (i = dmgFloats.length - 1; i >= 0; i--) {
+        d = dmgFloats[i];
+        d.life -= dt;
+        d.mesh.position.y += d.vy * dt;
+        d.mesh.material.opacity = Math.max(0, d.life);
+        if (d.life <= 0) {
+          scene.remove(d.mesh);
+          if (d.mesh.material.map) d.mesh.material.map.dispose();
+          d.mesh.material.dispose();
+          dmgFloats.splice(i, 1);
+        }
+      }
+    }
+
+    /** 3D weapon models attached to player's right hand */
+    function makeWeaponMesh(w) {
+      var g = new THREE.Group();
+      var tier = (w && w.tier) || (w && w.id && w.id.split('_')[0]) || 'copper';
+      var bladeCol = 0xf59e0b;
+      var hiltCol = 0x92400e;
+      var emit = 0.15;
+      if (tier === 'iron') { bladeCol = 0xcbd5e1; hiltCol = 0x334155; }
+      else if (tier === 'silver') { bladeCol = 0xe5e7eb; hiltCol = 0x64748b; emit = 0.28; }
+      else if (tier === 'gold') { bladeCol = 0xfbbf24; hiltCol = 0xb45309; emit = 0.4; }
+      var m, blade, guard, grip;
+      if (!w) return g;
+      if (w.type === 'sword') {
+        grip = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.28, 0.08), new THREE.MeshLambertMaterial({ color: hiltCol }));
+        grip.position.y = -0.1; g.add(grip);
+        guard = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.06, 0.08), new THREE.MeshLambertMaterial({ color: tier === 'gold' ? 0xfde68a : 0xfbbf24 }));
+        guard.position.y = 0.06; g.add(guard);
+        blade = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.85, 0.04), new THREE.MeshLambertMaterial({ color: bladeCol, emissive: bladeCol, emissiveIntensity: emit }));
+        blade.position.y = 0.5; g.add(blade);
+        m = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.18, 4), new THREE.MeshLambertMaterial({ color: bladeCol }));
+        m.position.y = 0.98; g.add(m);
+      } else if (w.type === 'knife') {
+        grip = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.2, 0.07), new THREE.MeshLambertMaterial({ color: hiltCol }));
+        grip.position.y = -0.06; g.add(grip);
+        blade = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.42, 0.03), new THREE.MeshLambertMaterial({ color: bladeCol, emissive: bladeCol, emissiveIntensity: emit }));
+        blade.position.y = 0.28; g.add(blade);
+      } else if (w.type === 'bow') {
+        // Bow limbs + string (held upright)
+        var bowCol = tier === 'gold' ? 0xeab308 : (tier === 'silver' ? 0x94a3b8 : (tier === 'iron' ? 0x64748b : 0xb45309));
+        m = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.035, 6, 16, Math.PI), new THREE.MeshLambertMaterial({ color: bowCol, emissive: bowCol, emissiveIntensity: emit * 0.5 }));
+        m.rotation.y = Math.PI / 2; m.rotation.z = Math.PI / 2; g.add(m);
+        m = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.72, 0.02), new THREE.MeshBasicMaterial({ color: 0xe7e5e4 }));
+        m.position.z = 0.02; g.add(m);
+        // nocked arrow when aiming later
+        blade = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.7, 5), new THREE.MeshLambertMaterial({ color: 0xd6d3d1 }));
+        blade.rotation.x = Math.PI / 2; blade.position.set(0, 0, 0.35); blade.name = 'arrowVis'; g.add(blade);
+        m = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.1, 5), new THREE.MeshLambertMaterial({ color: bladeCol }));
+        m.rotation.x = Math.PI / 2; m.position.set(0, 0, 0.72); g.add(m);
+      }
+      return g;
+    }
+
+    function refreshHeldWeapon(force) {
+      if (!playerRig) return;
+      var hold = playerRig.getObjectByName('weaponHold');
+      if (!hold) return;
+      var w = getWeapon();
+      var id = w ? w.id : null;
+      if (!force && id === equippedWeaponId) return;
+      while (hold.children.length) {
+        var c = hold.children[0];
+        hold.remove(c);
+        c.traverse(function (ch) {
+          if (ch.geometry) ch.geometry.dispose();
+          if (ch.material) {
+            if (ch.material.map) ch.material.map.dispose();
+            ch.material.dispose();
+          }
+        });
+      }
+      equippedWeaponId = id;
+      if (!w) return;
+      var mesh = makeWeaponMesh(w);
+      // Pose relative to right arm
+      if (w.type === 'bow') {
+        mesh.rotation.set(0.2, 0, -0.2);
+        mesh.position.set(0.05, -0.15, 0.15);
+        mesh.scale.set(1.15, 1.15, 1.15);
+      } else if (w.type === 'knife') {
+        mesh.rotation.set(-0.2, 0, 0.15);
+        mesh.position.set(0.02, -0.35, 0.08);
+        mesh.scale.set(1.2, 1.2, 1.2);
+      } else {
+        mesh.rotation.set(-0.15, 0.1, 0.2);
+        mesh.position.set(0.02, -0.4, 0.1);
+        mesh.scale.set(1.15, 1.15, 1.15);
+      }
+      hold.add(mesh);
+    }
+
+    /** Multi-part Ore Beast boss (not a plain box) */
+    function createBossMonster() {
+      var g = new THREE.Group();
+      var bodyCol = 0x5b21b6;
+      var dark = 0x3b0764;
+      var glow = 0xf97316;
+      var claw = 0x1c1917;
+
+      var body = new THREE.Mesh(
+        new THREE.BoxGeometry(1.8, 2.0, 1.4),
+        new THREE.MeshLambertMaterial({ color: bodyCol, emissive: dark, emissiveIntensity: 0.25 })
+      );
+      body.position.y = 1.4;
+      body.name = 'body';
+      g.add(body);
+
+      var belly = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 0.9, 0.5),
+        new THREE.MeshLambertMaterial({ color: 0x7c3aed, emissive: glow, emissiveIntensity: 0.35 })
+      );
+      belly.position.set(0, 1.2, 0.55);
+      g.add(belly);
+
+      var head = new THREE.Mesh(
+        new THREE.BoxGeometry(1.3, 1.1, 1.2),
+        new THREE.MeshLambertMaterial({ color: bodyCol, emissive: dark, emissiveIntensity: 0.2 })
+      );
+      head.position.y = 2.85;
+      head.name = 'head';
+      g.add(head);
+
+      // Horns
+      var hornL = new THREE.Mesh(
+        new THREE.ConeGeometry(0.18, 0.7, 6),
+        new THREE.MeshLambertMaterial({ color: claw })
+      );
+      hornL.position.set(-0.45, 3.55, 0);
+      hornL.rotation.z = 0.35;
+      g.add(hornL);
+      var hornR = hornL.clone();
+      hornR.position.x = 0.45;
+      hornR.rotation.z = -0.35;
+      g.add(hornR);
+
+      // Glowing eyes
+      var eyeMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });
+      var eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), eyeMat);
+      eyeL.position.set(-0.32, 2.95, 0.55);
+      g.add(eyeL);
+      var eyeR = eyeL.clone();
+      eyeR.position.x = 0.32;
+      g.add(eyeR);
+
+      // Jaw / fangs
+      var jaw = new THREE.Mesh(
+        new THREE.BoxGeometry(0.9, 0.35, 0.5),
+        new THREE.MeshLambertMaterial({ color: dark })
+      );
+      jaw.position.set(0, 2.45, 0.45);
+      g.add(jaw);
+      var fangL = new THREE.Mesh(
+        new THREE.ConeGeometry(0.08, 0.28, 5),
+        new THREE.MeshLambertMaterial({ color: 0xf5f5f4 })
+      );
+      fangL.position.set(-0.2, 2.25, 0.65);
+      fangL.rotation.x = Math.PI;
+      g.add(fangL);
+      var fangR = fangL.clone();
+      fangR.position.x = 0.2;
+      g.add(fangR);
+
+      // Arms
+      var armL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.45, 1.4, 0.45),
+        new THREE.MeshLambertMaterial({ color: bodyCol })
+      );
+      armL.position.set(-1.25, 1.5, 0);
+      armL.name = 'armL';
+      g.add(armL);
+      var armR = armL.clone();
+      armR.position.x = 1.25;
+      armR.name = 'armR';
+      g.add(armR);
+
+      // Claws
+      var clawL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.55, 0.35, 0.7),
+        new THREE.MeshLambertMaterial({ color: claw })
+      );
+      clawL.position.set(-1.25, 0.7, 0.2);
+      g.add(clawL);
+      var clawR = clawL.clone();
+      clawR.position.x = 1.25;
+      g.add(clawR);
+
+      // Legs
+      var legL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.5, 1.0, 0.55),
+        new THREE.MeshLambertMaterial({ color: dark })
+      );
+      legL.position.set(-0.45, 0.5, 0);
+      g.add(legL);
+      var legR = legL.clone();
+      legR.position.x = 0.45;
+      g.add(legR);
+
+      // Spikes on back
+      var sp, si;
+      for (si = 0; si < 4; si++) {
+        sp = new THREE.Mesh(
+          new THREE.ConeGeometry(0.15, 0.45, 5),
+          new THREE.MeshLambertMaterial({ color: 0xa855f7 })
+        );
+        sp.position.set(0, 1.6 + si * 0.35, -0.75);
+        sp.rotation.x = -0.6;
+        g.add(sp);
+      }
+
+      return g;
+    }
+
+    /** Simple low-poly adventurer character */
+    function createPlayerCharacter() {
+      var g = new THREE.Group();
+      var skin = 0xf1c27d;
+      var shirt = 0x0f766e;
+      var pants = 0x1e3a5f;
+      var shoe = 0x292524;
+      var armourCol = 0xa8b0bc;
+      var armourEdge = 0x64748b;
+
+      var torso = new THREE.Mesh(
+        new THREE.BoxGeometry(0.55, 0.7, 0.32),
+        new THREE.MeshLambertMaterial({ color: shirt })
+      );
+      torso.position.y = 1.05;
+      g.add(torso);
+
+      var head = new THREE.Mesh(
+        new THREE.BoxGeometry(0.42, 0.42, 0.42),
+        new THREE.MeshLambertMaterial({ color: skin })
+      );
+      head.position.y = 1.65;
+      g.add(head);
+
+      // hair / hat
+      var hat = new THREE.Mesh(
+        new THREE.BoxGeometry(0.46, 0.14, 0.46),
+        new THREE.MeshLambertMaterial({ color: 0x134e4a })
+      );
+      hat.position.y = 1.9;
+      g.add(hat);
+
+      var armL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.18, 0.55, 0.18),
+        new THREE.MeshLambertMaterial({ color: shirt })
+      );
+      armL.position.set(-0.4, 1.05, 0);
+      armL.name = 'armL';
+      g.add(armL);
+
+      var armR = new THREE.Mesh(
+        new THREE.BoxGeometry(0.18, 0.55, 0.18),
+        new THREE.MeshLambertMaterial({ color: shirt })
+      );
+      armR.position.set(0.4, 1.05, 0);
+      armR.name = 'armR';
+      g.add(armR);
+
+      // Aluminium armour overlay (hidden until crafted)
+      var armour = new THREE.Group();
+      armour.name = 'armourMesh';
+      armour.visible = false;
+      var chest = new THREE.Mesh(
+        new THREE.BoxGeometry(0.62, 0.55, 0.4),
+        new THREE.MeshLambertMaterial({ color: armourCol, emissive: armourEdge, emissiveIntensity: 0.2 })
+      );
+      chest.position.y = 1.1;
+      armour.add(chest);
+      var plate = new THREE.Mesh(
+        new THREE.BoxGeometry(0.5, 0.28, 0.12),
+        new THREE.MeshLambertMaterial({ color: 0xcbd5e1, emissive: 0x94a3b8, emissiveIntensity: 0.25 })
+      );
+      plate.position.set(0, 1.15, 0.22);
+      armour.add(plate);
+      var shL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.28, 0.18, 0.28),
+        new THREE.MeshLambertMaterial({ color: armourCol, emissive: armourEdge, emissiveIntensity: 0.15 })
+      );
+      shL.position.set(-0.42, 1.35, 0);
+      armour.add(shL);
+      var shR = shL.clone();
+      shR.position.x = 0.42;
+      armour.add(shR);
+      var helm = new THREE.Mesh(
+        new THREE.BoxGeometry(0.48, 0.2, 0.48),
+        new THREE.MeshLambertMaterial({ color: armourCol })
+      );
+      helm.position.y = 1.92;
+      armour.add(helm);
+      // small cyan Al accent
+      var badge = new THREE.Mesh(
+        new THREE.BoxGeometry(0.14, 0.14, 0.04),
+        new THREE.MeshBasicMaterial({ color: 0x67e8f9 })
+      );
+      badge.position.set(0, 1.15, 0.28);
+      armour.add(badge);
+      g.add(armour);
+
+      // Weapon attach point at right hand
+      var weaponHold = new THREE.Group();
+      weaponHold.name = 'weaponHold';
+      weaponHold.position.set(0.42, 0.78, 0.12);
+      g.add(weaponHold);
+
+      var legL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.6, 0.22),
+        new THREE.MeshLambertMaterial({ color: pants })
+      );
+      legL.position.set(-0.14, 0.35, 0);
+      legL.name = 'legL';
+      g.add(legL);
+
+      var legR = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.6, 0.22),
+        new THREE.MeshLambertMaterial({ color: pants })
+      );
+      legR.position.set(0.14, 0.35, 0);
+      legR.name = 'legR';
+      g.add(legR);
+
+      var footL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.22, 0.12, 0.3),
+        new THREE.MeshLambertMaterial({ color: shoe })
+      );
+      footL.position.set(-0.14, 0.06, 0.04);
+      g.add(footL);
+      var footR = footL.clone();
+      footR.position.x = 0.14;
+      g.add(footR);
+
+      return g;
+    }
+
+    function initThree() {
+      var canvas = document.getElementById('canvas');
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+      renderer.setClearColor(0x87ceeb, 1);
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x87ceeb);
+      scene.fog = new THREE.Fog(0x87ceeb, 30, 70);
+
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 120);
+      meshGroup = new THREE.Group();
+      scene.add(meshGroup);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.88));
+      var sun = new THREE.DirectionalLight(0xffffff, 0.8);
+      sun.position.set(30, 40, 20);
+      scene.add(sun);
+      var fill = new THREE.DirectionalLight(0xb0d0ff, 0.35);
+      fill.position.set(-20, 12, -15);
+      scene.add(fill);
+
+      sharedGeo = new THREE.BoxGeometry(1, 1, 1);
+      buildWorld();
+      rebuildMesh();
+
+      var ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(120, 120),
+        new THREE.MeshLambertMaterial({ color: 0x3f6212 })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.set(WX / 2, -0.01, WZ / 2);
+      scene.add(ground);
+
+      addStationMarkers();
+
+      playerRig = createPlayerCharacter();
+      scene.add(playerRig);
+
+      updateCamera();
+      updatePlayerVisual(false);
+      renderer.render(scene, camera);
+
+      window.addEventListener('resize', function () {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight, false);
+      });
+    }
+
+    /** Forward direction on XZ from camera yaw (third-person) */
+    function flatForward() {
+      return { x: Math.sin(yaw), z: -Math.cos(yaw) };
+    }
+
+    /** Aim direction from player eyes — used for mining & bows (matches mouse look) */
+    function lookDir() {
+      var cp = Math.cos(pitch);
+      return new THREE.Vector3(Math.sin(yaw) * cp, Math.sin(pitch), -Math.cos(yaw) * cp);
+    }
+
+    function setAimZoom(on, quiet) {
+      var w = getWeapon();
+      var aimBtn = document.getElementById('btnTouchAim');
+      if (on) {
+        if (phase !== 'boss') {
+          if (!quiet) toast('Bow aim only works in the boss fight');
+          return false;
+        }
+        if (!w || w.type !== 'bow') {
+          if (!quiet) toast(touchMode ? 'Equip a bow (tap weapon slot)' : 'Equip a bow first (keys 1–6)');
+          return false;
+        }
+        aimZoom = true;
+        document.getElementById('crosshair').classList.add('aim', 'show');
+        document.getElementById('aimBanner').classList.add('show');
+        if (aimBtn) aimBtn.classList.add('on');
+        if (!quiet) toast(touchMode ? 'Aiming — tap Shoot' : 'Aiming — left click to shoot', 1200);
+        return true;
+      }
+      aimZoom = false;
+      aimToggleLock = false;
+      document.getElementById('crosshair').classList.remove('aim');
+      document.getElementById('aimBanner').classList.remove('show');
+      if (aimBtn) aimBtn.classList.remove('on');
+      return true;
+    }
+
+    function updateCamera() {
+      // Orbit camera behind character — third person (closer when bow aiming)
+      var dist = aimZoom ? 2.4 : CAM_DIST;
+      var height = aimZoom ? 1.85 : CAM_HEIGHT;
+      var cp = Math.cos(pitch);
+      var sp = Math.sin(pitch);
+      var ox = Math.sin(yaw) * cp;
+      var oy = sp;
+      var oz = -Math.cos(yaw) * cp;
+      var lookY = player.y + (aimZoom ? 1.45 : 1.35);
+      // Slight shoulder offset when aiming
+      var side = aimZoom ? 0.55 : 0;
+      var rx = Math.cos(yaw) * side;
+      var rz = Math.sin(yaw) * side;
+
+      var desired = new THREE.Vector3(
+        player.x - ox * dist + rx,
+        player.y + height - oy * dist * 0.55,
+        player.z - oz * dist + rz
+      );
+      if (desired.y < player.y + 0.6) desired.y = player.y + 0.6;
+
+      var i, t, bx, by, bz, pivotY = lookY;
+      for (i = 0; i < 10; i++) {
+        t = i / 10;
+        bx = player.x + (desired.x - player.x) * t;
+        by = pivotY + (desired.y - pivotY) * t;
+        bz = player.z + (desired.z - player.z) * t;
+        if (isSolid(getB(bx, by, bz))) {
+          var pull = Math.max(0.12, t - 0.1);
+          desired.set(
+            player.x + (desired.x - player.x) * pull,
+            pivotY + (desired.y - pivotY) * pull,
+            player.z + (desired.z - player.z) * pull
+          );
+          break;
+        }
+      }
+
+      if (!camSmoothPos) camSmoothPos = desired.clone();
+      var k = 1 - Math.exp(-CAM_SMOOTH * dt);
+      camSmoothPos.x += (desired.x - camSmoothPos.x) * k;
+      camSmoothPos.y += (desired.y - camSmoothPos.y) * k;
+      camSmoothPos.z += (desired.z - camSmoothPos.z) * k;
+      camera.position.copy(camSmoothPos);
+
+      // Smooth FOV zoom for bow aim
+      var targetFov = aimZoom ? AIM_FOV : BASE_FOV;
+      currentFov += (targetFov - currentFov) * Math.min(1, 10 * dt);
+      if (camera.fov !== currentFov) {
+        camera.fov = currentFov;
+        camera.updateProjectionMatrix();
+      }
+
+      if (aimZoom) {
+        var dir = lookDir();
+        camera.lookAt(player.x + dir.x * 12, lookY + dir.y * 12, player.z + dir.z * 12);
+      } else {
+        camera.lookAt(player.x, lookY, player.z);
+      }
+    }
+
+    function updatePlayerVisual(moving) {
+      if (!playerRig) return;
+      playerRig.position.set(player.x, player.y, player.z);
+      // Face look direction while aiming; face movement when walking
+      if (aimZoom || (!moving && (phase === 'play' || phase === 'boss'))) {
+        player.facing = yaw;
+      }
+      playerRig.rotation.y = player.facing;
+
+      var armL = playerRig.getObjectByName('armL');
+      var armR = playerRig.getObjectByName('armR');
+      var legL = playerRig.getObjectByName('legL');
+      var legR = playerRig.getObjectByName('legR');
+      var hold = playerRig.getObjectByName('weaponHold');
+      var w = getWeapon();
+      // Keep 3D weapon mesh in sync with hotbar
+      if ((w ? w.id : null) !== equippedWeaponId) refreshHeldWeapon();
+
+      // Full sword swing arc (raise → slash across)
+      var swinging = swingState.active && swingState.t < swingDur;
+      var sp = swinging ? Math.min(1, swingState.t / swingDur) : 0;
+
+      if (aimZoom && w && w.type === 'bow') {
+        if (armL) { armL.rotation.x = -1.15; armL.rotation.z = 0.45; }
+        if (armR) { armR.rotation.x = -0.95; armR.rotation.z = -0.35; }
+        if (hold) hold.rotation.set(-0.55, 0.4, 0.1);
+      } else if (swinging) {
+        // Visible melee slash animation
+        var raise = Math.sin(sp * Math.PI);
+        if (armR) {
+          armR.rotation.x = -1.4 + sp * 2.4;
+          armR.rotation.z = -1.1 + sp * 2.0;
+          armR.rotation.y = sp * 0.6;
+        }
+        if (armL) { armL.rotation.x = -0.3; armL.rotation.z = 0.2; }
+        if (hold) {
+          hold.rotation.set(-0.3 + sp * 1.4, sp * 0.8, -0.5 + sp * 1.6);
+        }
+        if (legL) legL.rotation.x = 0.15;
+        if (legR) legR.rotation.x = -0.1;
+        updateSlashTrail(sp, raise);
+      } else if (moving) {
+        walkPhase += 10 * dt;
+        var s = Math.sin(walkPhase) * 0.55;
+        if (legL) legL.rotation.x = s;
+        if (legR) legR.rotation.x = -s;
+        if (armL) { armL.rotation.x = -s * 0.7; armL.rotation.z = 0; armL.rotation.y = 0; }
+        if (armR) { armR.rotation.x = s * 0.7; armR.rotation.z = 0; armR.rotation.y = 0; }
+        if (hold) hold.rotation.set(0, 0, 0);
+        hideSlashTrail();
+      } else {
+        walkPhase *= Math.pow(0.001, dt);
+        if (legL) legL.rotation.x *= 0.7;
+        if (legR) legR.rotation.x *= 0.7;
+        if (armL) { armL.rotation.x *= 0.7; armL.rotation.z *= 0.7; armL.rotation.y = 0; }
+        if (armR) {
+          var idleRaise = w ? 0.4 : 0;
+          armR.rotation.x = -idleRaise;
+          armR.rotation.z *= 0.7;
+          armR.rotation.y = 0;
+        }
+        if (hold) hold.rotation.set(0, 0, 0);
+        hideSlashTrail();
+      }
+    }
+
+    function ensureSlashTrail() {
+      if (slashMesh) return;
+      slashMesh = new THREE.Mesh(
+        new THREE.TorusGeometry(1.1, 0.06, 6, 20, Math.PI * 0.9),
+        new THREE.MeshBasicMaterial({ color: 0xfde68a, transparent: true, opacity: 0.85, side: THREE.DoubleSide })
+      );
+      slashMesh.visible = false;
+      scene.add(slashMesh);
+    }
+
+    function updateSlashTrail(sp, raise) {
+      ensureSlashTrail();
+      slashMesh.visible = true;
+      slashMesh.position.set(
+        player.x + Math.sin(player.facing) * 0.9,
+        player.y + 1.2 + raise * 0.3,
+        player.z + Math.cos(player.facing) * 0.9
+      );
+      slashMesh.rotation.set(0.4, player.facing, sp * 1.8 - 0.6);
+      slashMesh.material.opacity = 0.9 * Math.sin(sp * Math.PI);
+      slashMesh.scale.setScalar(0.7 + sp * 0.6);
+    }
+
+    function hideSlashTrail() {
+      if (slashMesh) slashMesh.visible = false;
+    }
+
+    function updateSwingCombat() {
+      if (!swingState.active) return;
+      swingState.t += dt;
+      // Hit lands mid-swing so students see the action first
+      if (!swingState.hitDone && swingState.t >= swingDur * 0.38) {
+        swingState.hitDone = true;
+        applyMeleeHit();
+      }
+      if (swingState.t >= swingDur) {
+        swingState.active = false;
+        hideSlashTrail();
+      }
+    }
+
+    function collides(px, py, pz) {
+      var minX = px - PLAYER_R, maxX = px + PLAYER_R;
+      var minY = py, maxY = py + PLAYER_H - 0.01;
+      var minZ = pz - PLAYER_R, maxZ = pz + PLAYER_R;
+      var x0 = Math.floor(minX), x1 = Math.floor(maxX);
+      var y0 = Math.floor(minY), y1 = Math.floor(maxY);
+      var z0 = Math.floor(minZ), z1 = Math.floor(maxZ);
+      var x, y, z;
+      for (x = x0; x <= x1; x++) {
+        for (y = y0; y <= y1; y++) {
+          for (z = z0; z <= z1; z++) {
+            if (isSolid(getB(x, y, z))) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function raycastBlock(maxDist) {
+      maxDist = maxDist || MINE_RANGE;
+      // Cast from player eyes in mouse-look direction (reliable in 3rd person)
+      var dir = lookDir();
+      var ox = player.x;
+      var oy = player.y + 1.45;
+      var oz = player.z;
+      var t, x, y, z, b, prevX = -1, prevY = -1, prevZ = -1;
+      for (t = 0.2; t < maxDist; t += 0.08) {
+        x = Math.floor(ox + dir.x * t);
+        y = Math.floor(oy + dir.y * t);
+        z = Math.floor(oz + dir.z * t);
+        if (x === prevX && y === prevY && z === prevZ) continue;
+        prevX = x; prevY = y; prevZ = z;
+        b = getB(x, y, z);
+        if (b !== BLOCK.AIR) return { x: x, y: y, z: z, b: b, hit: true, dist: t };
+      }
+      return { hit: false };
+    }
+
+    function ensureHighlight() {
+      if (highlightMesh) return;
+      highlightMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1.05, 1.05, 1.05),
+        new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          transparent: true,
+          opacity: 0.22,
+          depthWrite: false
+        })
+      );
+      var edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(1.06, 1.06, 1.06)),
+        new THREE.LineBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.95 })
+      );
+      highlightMesh.add(edges);
+      highlightMesh.visible = false;
+      scene.add(highlightMesh);
+    }
+
+    function blockLabel(b) {
+      if (b === BLOCK.IRON_ORE) return 'Iron ore (rusty stripes) — needs carbon to extract';
+      if (b === BLOCK.COPPER_ORE) return 'Copper ore (green spots) — needs carbon to extract';
+      if (b === BLOCK.SILVER_OXIDE) return 'Silver oxide ore (Ag₂O) — heat to get silver metal';
+      if (b === BLOCK.GOLD) return 'Gold — free pure metal! craft weapons directly';
+      if (b === BLOCK.AL_ORE) return 'Aluminium ore — Grade 2 furnace + ⚡ electricity';
+      if (b === BLOCK.WOOD) return 'Wood → burn at kiln for carbon';
+      if (b === BLOCK.STONE) return 'Stone';
+      if (b === BLOCK.GRASS || b === BLOCK.DIRT) return 'Dirt / grass';
+      if (b === BLOCK.PATH) return 'Path';
+      if (b === BLOCK.BEDROCK) return 'Bedrock (unbreakable)';
+      return '';
+    }
+
+    function updateTargetHighlight() {
+      var el = document.getElementById('mineReticle');
+      if (phase !== 'play' || uiOpen) {
+        if (highlightMesh) highlightMesh.visible = false;
+        if (el) el.classList.remove('show', 'ore');
+        return;
+      }
+      ensureHighlight();
+      var hit = raycastBlock(MINE_RANGE);
+      if (!hit.hit || !DIGGABLE[hit.b]) {
+        highlightMesh.visible = false;
+        if (el) el.classList.remove('show', 'ore');
+        return;
+      }
+      highlightMesh.visible = true;
+      highlightMesh.position.set(hit.x + 0.5, hit.y + 0.5, hit.z + 0.5);
+      var isOre = hit.b === BLOCK.IRON_ORE || hit.b === BLOCK.COPPER_ORE ||
+        hit.b === BLOCK.WOOD || hit.b === BLOCK.SILVER_OXIDE || hit.b === BLOCK.GOLD ||
+        hit.b === BLOCK.AL_ORE;
+      highlightMesh.material.color.setHex(isOre ? 0xfbbf24 : 0xffffff);
+      highlightMesh.material.opacity = isOre ? 0.28 : 0.16;
+      if (el) {
+        el.textContent = blockLabel(hit.b);
+        el.classList.add('show');
+        if (isOre) el.classList.add('ore');
+        else el.classList.remove('ore');
+      }
+    }
+
+    function spawnMineBurst(x, y, z, color) {
+      var i, m, ang, sp;
+      for (i = 0; i < 6; i++) {
+        m = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 0.12, 0.12),
+          new THREE.MeshBasicMaterial({ color: color })
+        );
+        m.position.set(x + 0.5, y + 0.5, z + 0.5);
+        scene.add(m);
+        ang = Math.random() * Math.PI * 2;
+        sp = 1.5 + Math.random() * 2;
+        particles.push({
+          mesh: m,
+          vx: Math.cos(ang) * sp * 0.35,
+          vy: 1.2 + Math.random() * 1.5,
+          vz: Math.sin(ang) * sp * 0.35,
+          life: 0.35 + Math.random() * 0.2
+        });
+      }
+    }
+
+    function updateParticles() {
+      var i, p;
+      for (i = particles.length - 1; i >= 0; i--) {
+        p = particles[i];
+        p.life -= dt;
+        p.vy -= 6 * dt;
+        p.mesh.position.x += p.vx * dt * 8;
+        p.mesh.position.y += p.vy * dt;
+        p.mesh.position.z += p.vz * dt * 8;
+        if (p.life <= 0) {
+          scene.remove(p.mesh);
+          p.mesh.geometry.dispose();
+          p.mesh.material.dispose();
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+    function toast(msg, ms) {
+      var el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { el.classList.remove('show'); }, ms || 1600);
+    }
+
+    function mineBlock() {
+      if (uiOpen || phase !== 'play') return;
+      var now = performance.now();
+      if (now - lastMine < MINE_COOLDOWN) return;
+      var hit = raycastBlock(MINE_RANGE);
+      if (!hit.hit) return;
+      if (hit.b === BLOCK.BEDROCK) {
+        if (now - lastMine > 500) toast('Bedrock cannot be mined');
+        lastMine = now;
+        return;
+      }
+      if (!DIGGABLE[hit.b]) return;
+      lastMine = now;
+      armSwingT = 0.22;
+
+      var col = COLORS[hit.b] || 0x94a3b8;
+      if (hit.b === BLOCK.IRON_ORE) { inv.feOre++; toast('+1 Iron ore (needs extraction)'); col = 0xd97706; }
+      else if (hit.b === BLOCK.COPPER_ORE) { inv.cuOre++; toast('+1 Copper ore (needs extraction)'); col = 0x22c55e; }
+      else if (hit.b === BLOCK.SILVER_OXIDE) {
+        inv.agOre++;
+        toast('+1 Silver oxide (Ag₂O) — heat at Copper Works to get silver metal', 2800);
+        col = 0x6b7280;
+      } else if (hit.b === BLOCK.GOLD) {
+        inv.gold++;
+        toast('+1 Gold! Free pure metal — craft weapons directly (no extraction)', 2600);
+        col = 0xffd700;
+      } else if (hit.b === BLOCK.AL_ORE) {
+        inv.alOre++;
+        toast('+1 Aluminium ore — extract at Grade 2 furnace with ⚡', 2600);
+        col = 0xd4d4d8;
+      } else if (hit.b === BLOCK.WOOD) {
+        inv.wood++;
+        mission.gotWood = true;
+        toast('+1 Wood — burn at kiln!');
+        col = 0x166534;
+        updateMissionPad();
+      }
+
+      spawnMineBurst(hit.x, hit.y, hit.z, col);
+      setB(hit.x, hit.y, hit.z, BLOCK.AIR);
+      rebuildMesh();
+      updateHud();
+    }
+
+    function nearStation() {
+      var k, s, sx, sz, dx, dz;
+      for (k in STATIONS) {
+        if (!STATIONS.hasOwnProperty(k)) continue;
+        s = STATIONS[k];
+        sx = s.x + 0.5; sz = s.z + 0.5;
+        dx = player.x - sx; dz = player.z - sz;
+        if (dx * dx + dz * dz < s.r * s.r && player.y >= 3 && player.y < 8) return k;
+      }
+      return null;
+    }
+
+    function updatePrompt() {
+      var el = document.getElementById('prompt');
+      if (phase !== 'play' || uiOpen) { el.classList.remove('show'); return; }
+      var s = nearStation();
+      if (!s) { el.classList.remove('show'); return; }
+      var labels = {
+        kiln: 'Press E — Charcoal Kiln (wood → carbon)',
+        furnace: 'Press E — Blast Furnace G' + furnaceGrade + (furnaceGrade >= 2 ? ' ⚡' : ''),
+        copper: 'Press E — Copper Works (Cu extract / Ag₂O heat)',
+        craft: 'Press E — Anvil (weapon + Al armour)',
+        boss: 'Press E — Boss Gate'
+      };
+      el.textContent = labels[s] || 'Press E';
+      el.classList.add('show');
+    }
+
+    function getWeapon() {
+      if (hotbarIdx < 0 || hotbarIdx > 5) return null;
+      return weapons[hotbarIdx] || null;
+    }
+
+    function updateHud() {
+      renderItemBar();
+      var obj = document.getElementById('objective');
+      if (phase === 'boss') {
+        obj.textContent = aimZoom
+          ? '🏹 Aiming — left click shoot · right click cancel zoom'
+          : 'Ore Beast! Melee LMB · Bow: RMB zoom then LMB shoot · quizzes 10s';
+      } else if (!mission.madeCarbon) {
+        obj.textContent = 'Mission: wood → kiln → carbon (answer think prompts once).';
+      } else if (furnaceGrade < 2) {
+        obj.textContent = 'Mission: furnace power mode — carbon alone → heat → G2 + ⚡.';
+      } else if (!mission.extractedAluminium) {
+        obj.textContent = 'Mission: mine Al ore → G2 furnace (Al ore + ⚡) → aluminium.';
+      } else if (!mission.craftedWeapon) {
+        obj.textContent = 'Mission: craft a weapon at the anvil to unlock the boss.';
+      } else if (!mission.craftedArmour) {
+        obj.textContent = 'Boss unlocked! Optional: craft Al armour or one wrong answer = instant KO.';
+      } else {
+        obj.textContent = 'Boss unlocked with armour — head north. Wrong answers still cost +10s.';
+      }
+      if (phase === 'boss') {
+        obj.textContent = (aimZoom ? '🏹 Aiming · ' : '') +
+          (hasArmour ? 'Al armour ON · ' : '⚠ NO ARMOUR — 1 wrong = death · ') +
+          'answer in 10s';
+      }
+      renderHotbar();
+      refreshHeldWeapon();
+      var w = getWeapon();
+      var eq = w ? (w.icon + ' ' + w.name + ' · ' + w.dmg + ' dmg') : 'No weapon';
+      if (hasArmour) eq += ' · 🛡️ Al armour ON';
+      document.getElementById('equippedLabel').textContent = eq;
+      updateArmourVisual();
+    }
+
+    function renderItemBar() {
+      var bar = document.getElementById('itemBar');
+      if (!bar) return;
+      var items = [
+        { key: 'wood', icon: '🪵', label: 'Wood', n: inv.wood },
+        { key: 'carbon', icon: '⬛', label: 'Carbon', n: inv.carbon },
+        { key: 'feOre', icon: '🟧', label: 'Fe ore', n: inv.feOre },
+        { key: 'cuOre', icon: '🟩', label: 'Cu ore', n: inv.cuOre },
+        { key: 'alOre', icon: '⬜', label: 'Al ore', n: inv.alOre },
+        { key: 'agOre', icon: '🩶', label: 'Ag₂O', n: inv.agOre },
+        { key: 'fe', icon: '⚙️', label: 'Iron', n: inv.fe },
+        { key: 'cu', icon: '🔶', label: 'Copper', n: inv.cu },
+        { key: 'al', icon: '🔩', label: 'Al', n: inv.al },
+        { key: 'silver', icon: '⚪', label: 'Ag', n: inv.silver },
+        { key: 'gold', icon: '🟡', label: 'Au', n: inv.gold },
+        { key: 'electricity', icon: '⚡', label: '⚡', n: inv.electricity }
+      ];
+      bar.innerHTML = '';
+      items.forEach(function (it) {
+        var d = document.createElement('div');
+        d.className = 'item-slot' + (it.n > 0 ? ' has' : ' empty');
+        d.title = it.label + ': ' + it.n;
+        d.innerHTML =
+          '<span class="ico">' + it.icon + '</span>' +
+          '<span class="lbl">' + it.label + '</span>' +
+          '<span class="cnt">' + it.n + '</span>';
+        bar.appendChild(d);
+      });
+    }
+
+    function renderHotbar() {
+      var hb = document.getElementById('hotbar');
+      hb.innerHTML = '';
+      var i, w, d;
+      for (i = 0; i < 6; i++) {
+        w = weapons[i];
+        d = document.createElement('div');
+        d.className = 'slot' + (i === hotbarIdx ? ' active' : '') + (w ? '' : ' empty');
+        d.innerHTML =
+          (w ? '<span class="ico">' + w.icon + '</span>' : '') +
+          '<span class="n">' + (i + 1) + '</span>' +
+          (w ? '<span class="cnt">' + w.dmg + '</span>' : '');
+        d.title = w ? (w.name + ' · ' + w.dmg + ' damage') : 'Empty slot ' + (i + 1);
+        (function (slot, weapon) {
+          d.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (weapon) {
+              hotbarIdx = slot;
+              if (aimZoom && weapon.type !== 'bow') setAimZoom(false);
+              renderHotbar();
+              updateHud();
+              toast(weapon.name + ' equipped');
+            }
+          });
+        })(i, w);
+        hb.appendChild(d);
+      }
+    }
+
+    function showScreen(id) {
+      var els = document.querySelectorAll('.overlay');
+      var i;
+      for (i = 0; i < els.length; i++) els[i].classList.add('hidden');
+      if (id) {
+        document.getElementById(id).classList.remove('hidden');
+        uiOpen = true;
+        exitPointer();
+        mineHeld = false;
+        touchStick.x = 0; touchStick.y = 0; touchStick.active = false;
+        if (touchMode) setTouchUIVisible(false);
+      } else {
+        uiOpen = false;
+        if (touchMode && (phase === 'play' || phase === 'boss')) setTouchUIVisible(true);
+      }
+    }
+
+    function exitPointer() {
+      if (document.pointerLockElement) document.exitPointerLock();
+    }
+
+    function isTouchDevice() {
+      return ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+    }
+
+    /** True when player can move/look/mine (PC pointer lock OR touch mode) */
+    function canControlGame() {
+      return !uiOpen && (phase === 'play' || phase === 'boss') && (pointerLocked || touchMode);
+    }
+
+    function requestPointer() {
+      if (touchMode) return; // iPad: no pointer lock
+      if (uiOpen || phase === 'menu' || phase === 'win') return;
+      var c = renderer.domElement;
+      if (document.pointerLockElement !== c && c.requestPointerLock) {
+        try {
+          var p = c.requestPointerLock();
+          if (p && p.catch) p.catch(function () {});
+        } catch (e) {}
+      }
+    }
+
+    function tryInteractStation() {
+      if (phase !== 'play' || uiOpen) return;
+      var s = nearStation();
+      if (s === 'kiln') openKiln();
+      else if (s === 'furnace') openFurnace();
+      else if (s === 'copper') openCopper();
+      else if (s === 'craft') openCraft();
+      else if (s === 'boss') openGate();
+      else toast('Walk into a station ring, then Use');
+    }
+
+    function equipWeaponSlot(n) {
+      if (n < 0 || n > 5 || !weapons[n]) return;
+      hotbarIdx = n;
+      if (aimZoom && weapons[n].type !== 'bow') setAimZoom(false);
+      renderHotbar();
+      updateHud();
+      toast(weapons[n].name + ' equipped');
+    }
+
+    function setTouchUIVisible(on) {
+      var el = document.getElementById('touchUI');
+      if (!el) return;
+      if (on) el.classList.add('show');
+      else el.classList.remove('show');
+    }
+
+    function invLabel(key) {
+      var map = {
+        wood: 'Wood', carbon: 'Carbon', feOre: 'Iron ore', cuOre: 'Copper ore', alOre: 'Al ore',
+        agOre: 'Silver oxide', fe: 'Iron', cu: 'Copper', al: 'Aluminium', silver: 'Silver',
+        gold: 'Gold', electricity: 'Electricity ⚡'
+      };
+      return map[key] || key;
+    }
+    function invIcon(key) {
+      var map = {
+        wood: '🪵', carbon: '⬛', feOre: '🟧', cuOre: '🟩', alOre: '⬜', agOre: '🩶',
+        fe: '⚙️', cu: '🔶', al: '🔩', silver: '⚪', gold: '🟡', electricity: '⚡'
+      };
+      return map[key] || '📦';
+    }
+
+    function missionReadyForBoss() {
+      // Weapon required; armour optional but without it wrong answer = 1-hit KO
+      return mission.craftedWeapon;
+    }
+
+    function updateMissionPad() {
+      var list = document.getElementById('missionList');
+      if (!list) return;
+      var items = [
+        { ok: mission.gotWood, text: 'Got wood' },
+        { ok: mission.madeCarbon, text: 'Made carbon' },
+        { ok: mission.upgradedFurnace || furnaceGrade >= 2, text: 'Furnace → Grade 2 ⚡' },
+        { ok: mission.extractedAluminium, text: 'Extracted aluminium (G2)' },
+        { ok: mission.extractedSilver, text: 'Extracted silver (Ag₂O heat)' },
+        { ok: mission.craftedWeapon, text: 'Crafted a weapon (unlock boss)' },
+        { ok: mission.craftedArmour, text: 'Al armour (survive hits)' },
+        { ok: mission.defeatedBoss, text: 'Defeated Ore Beast' }
+      ];
+      list.innerHTML = '';
+      items.forEach(function (it) {
+        var li = document.createElement('li');
+        li.className = it.ok ? 'done' : 'todo';
+        li.textContent = (it.ok ? '☑ ' : '☐ ') + it.text;
+        list.appendChild(li);
+      });
+    }
+
+    function isMastered(recId) {
+      return !!processMastery[recId];
+    }
+
+    function openExtract(kind) {
+      var rec = extractRecipes[kind];
+      if (!rec) return;
+      if (heating) return;
+      if (rec.minGrade && furnaceGrade < rec.minGrade) {
+        toast('Need Grade ' + rec.minGrade + ' furnace (heat carbon alone to upgrade)');
+        return;
+      }
+      extractActive = kind;
+      reactorSlots = rec.slots.map(function () { return null; });
+      heatT = 0;
+      heatMode = 'success';
+      predictChoice = -1;
+      explainDone = false;
+      pendingExplain = false;
+      pendingBonus = null;
+      document.getElementById('exHeatFill').style.width = '0%';
+      document.getElementById('exReactor').classList.remove('heating', 'failing');
+      document.getElementById('exTitle').textContent = rec.title +
+        (rec.station === 'furnace' ? '  ·  G' + furnaceGrade : '');
+      document.getElementById('exIntro').textContent = rec.intro +
+        (rec.needInv && rec.needInv.electricity
+          ? ' You have ⚡ ' + inv.electricity + ' electricity.'
+          : '');
+      document.getElementById('exFormula').textContent = rec.formula;
+      document.getElementById('exHint').textContent = isMastered(kind)
+        ? 'You already mastered this process — heat freely. Bonus questions may appear on repeats.'
+        : 'First time: put blocks → predict → heat → explain. Later heats skip the same questions.';
+      document.getElementById('exMsg').innerHTML = '';
+      document.getElementById('exHeatLabel').textContent = 'Ready — put materials in, then heat';
+      document.getElementById('btnHeat').disabled = false;
+      document.getElementById('exPredict').classList.add('hidden');
+      document.getElementById('exExplain').classList.add('hidden');
+      refreshExtractUI();
+      showScreen('screenExtract');
+    }
+
+    function openKiln() { openExtract('kiln'); }
+
+    /** Copper works: copper extraction OR silver oxide heat */
+    function openCopper() {
+      if (heating) return;
+      extractActive = null;
+      showScreen('screenExtract');
+      document.getElementById('exTitle').textContent = 'Copper Works / Silver oxide';
+      document.getElementById('exIntro').textContent =
+        'Choose a process: extract copper with carbon, OR heat silver oxide to get silver metal (no carbon).';
+      document.getElementById('exFormula').textContent =
+        'Cu: copper oxide + carbon → copper + CO₂  |  Ag: silver oxide → silver + oxygen';
+      document.getElementById('exHint').textContent = 'Different metals → different methods.';
+      document.getElementById('exHeatLabel').textContent = 'Choose a process below';
+      document.getElementById('exHeatFill').style.width = '0%';
+      document.getElementById('exReactor').innerHTML = '';
+      document.getElementById('exPredict').classList.add('hidden');
+      document.getElementById('exExplain').classList.add('hidden');
+      document.getElementById('btnHeat').disabled = true;
+      var bag = document.getElementById('exBag');
+      bag.innerHTML = '';
+      function addMode(id, label, desc) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'bag-btn';
+        b.style.minWidth = '100%';
+        b.style.textAlign = 'left';
+        b.innerHTML = '<b>' + label + '</b><br><small style="color:#94a3b8">' + desc + '</small>';
+        b.addEventListener('click', function () { openExtract(id); });
+        bag.appendChild(b);
+      }
+      addMode('copper', '① Copper extraction', '2CuO + C → 2Cu + CO₂ (needs carbon)');
+      addMode('silver_roast', '② Silver oxide heat', '2Ag₂O → 4Ag + O₂ (heat only — no carbon)');
+      document.getElementById('exMsg').innerHTML =
+        '<div class="msg info">Mining digs rocks up. Extraction turns ores/compounds into metal.</div>';
+    }
+
+    /** Furnace: choose G1 iron / power upgrade / G2 aluminium */
+    function openFurnace() {
+      if (heating) return;
+      var panel = document.getElementById('exMsg');
+      extractActive = null;
+      showScreen('screenExtract');
+      document.getElementById('exTitle').textContent = '🔥 Blast Furnace — Grade ' + furnaceGrade;
+      document.getElementById('exIntro').textContent =
+        furnaceGrade < 2
+          ? 'Grade 1: extract iron (ore + carbon), OR heat carbon alone to create electricity and unlock Grade 2.'
+          : 'Grade 2 ⚡: iron (ore + carbon), more electricity (carbon alone), or aluminium (Al ore + electricity).';
+      document.getElementById('exFormula').textContent =
+        'G1: Fe ore+C → Fe  |  C → ⚡ (+upgrade)  |  G2: Al ore+⚡ → Al';
+      document.getElementById('exHint').textContent = 'Pick a process, then load the reactor.';
+      document.getElementById('exHeatLabel').textContent = 'Choose a furnace process below';
+      document.getElementById('exHeatFill').style.width = '0%';
+      document.getElementById('exReactor').innerHTML = '';
+      document.getElementById('exBag').innerHTML = '';
+      document.getElementById('exPredict').classList.add('hidden');
+      document.getElementById('exExplain').classList.add('hidden');
+      document.getElementById('btnHeat').disabled = true;
+
+      var bag = document.getElementById('exBag');
+      bag.innerHTML = '';
+      function addMode(id, label, desc, locked) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'bag-btn';
+        b.style.minWidth = '100%';
+        b.style.textAlign = 'left';
+        b.disabled = !!locked;
+        b.innerHTML = '<b>' + label + '</b><br><small style="color:#94a3b8">' + desc +
+          (locked ? ' (locked)' : '') + '</small>';
+        b.addEventListener('click', function () { openExtract(id); });
+        bag.appendChild(b);
+      }
+      addMode('furnace_iron', '① Iron extraction', 'Iron ore + carbon → iron metal', false);
+      addMode(
+        'furnace_power',
+        furnaceGrade < 2 ? '② Power / upgrade to G2' : '② Make more electricity',
+        'Carbon alone → heat → ⚡ electricity' + (furnaceGrade < 2 ? ' + Grade 2' : ''),
+        false
+      );
+      addMode(
+        'furnace_al',
+        '③ Aluminium extraction (G2)',
+        'Al ore + 1⚡ → aluminium metal (for armour)',
+        furnaceGrade < 2 || inv.electricity < 1
+      );
+      document.getElementById('exMsg').innerHTML =
+        '<div class="msg info">Furnace grade: <b>G' + furnaceGrade +
+        '</b> · Electricity: <b>⚡ ' + inv.electricity + '</b></div>';
+    }
+
+    function countInReactor(key) {
+      var n = 0, i;
+      for (i = 0; i < reactorSlots.length; i++) if (reactorSlots[i] === key) n++;
+      return n;
+    }
+
+    function freeBagCount(key) {
+      return (inv[key] || 0) - countInReactor(key);
+    }
+
+    function reactorHasAny() {
+      var i;
+      for (i = 0; i < reactorSlots.length; i++) if (reactorSlots[i]) return true;
+      return false;
+    }
+
+    function renderPickOpts(containerId, opts, selected, onPick) {
+      var box = document.getElementById(containerId);
+      box.innerHTML = '';
+      opts.forEach(function (o, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'pick-opt' + (selected === i ? ' sel' : '');
+        b.textContent = o;
+        b.addEventListener('click', function () { onPick(i); });
+        box.appendChild(b);
+      });
+    }
+
+    function updatePredictPanel() {
+      var rec = extractRecipes[extractActive];
+      var panel = document.getElementById('exPredict');
+      // Mastered process: no predict needed
+      if (!rec || isMastered(rec.id) || !reactorMatchesNeed(rec) || heating || pendingExplain || pendingBonus) {
+        panel.classList.add('hidden');
+        return;
+      }
+      panel.classList.remove('hidden');
+      document.getElementById('exPredictQ').textContent = rec.predictQ;
+      renderPickOpts('exPredictOpts', rec.predictOpts, predictChoice, function (i) {
+        predictChoice = i;
+        updatePredictPanel();
+        document.getElementById('exMsg').innerHTML =
+          i === rec.predictA
+            ? '<div class="msg ok">Good prediction — now click Heat!</div>'
+            : '<div class="msg info">Prediction saved — heat and see if you were right.</div>';
+      });
+    }
+
+    function reactorMatchesNeed(rec) {
+      var need = rec.need;
+      var k, have, i;
+      for (k in need) {
+        if (!need.hasOwnProperty(k)) continue;
+        have = countInReactor(k);
+        if (have < need[k]) return false;
+      }
+      for (i = 0; i < reactorSlots.length; i++) {
+        if (reactorSlots[i] && !need[reactorSlots[i]]) return false;
+      }
+      for (i = 0; i < reactorSlots.length; i++) {
+        if (!reactorSlots[i]) return false;
+      }
+      if (rec.needInv) {
+        for (k in rec.needInv) {
+          if ((inv[k] || 0) < rec.needInv[k]) return false;
+        }
+      }
+      return true;
+    }
+
+    function refreshExtractUI() {
+      var rec = extractRecipes[extractActive];
+      if (!rec) return;
+      var bag = document.getElementById('exBag');
+      var reactor = document.getElementById('exReactor');
+      var keys = ['wood', 'carbon', 'feOre', 'cuOre', 'alOre', 'agOre', 'fe', 'cu', 'al', 'silver', 'gold', 'electricity'];
+      var locked = heating || pendingExplain || pendingBonus;
+      bag.innerHTML = '';
+      keys.forEach(function (k) {
+        var free = freeBagCount(k);
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'bag-btn';
+        b.disabled = locked || free < 1;
+        b.textContent = invIcon(k) + ' ' + invLabel(k) + ' ×' + free;
+        b.title = 'Click to put into reactor';
+        b.addEventListener('click', function () { addToReactor(k); });
+        bag.appendChild(b);
+      });
+
+      reactor.innerHTML = '';
+      rec.slots.forEach(function (slotDef, idx) {
+        if (idx > 0) {
+          var plus = document.createElement('div');
+          plus.className = 'plus-sign';
+          plus.textContent = '+';
+          reactor.appendChild(plus);
+        }
+        var slot = document.createElement('div');
+        var filled = reactorSlots[idx];
+        slot.className = 'put-slot' + (filled ? ' filled' : '');
+        if (filled) {
+          slot.innerHTML =
+            '<span class="x">✕</span>' +
+            '<span class="big">' + invIcon(filled) + '</span>' +
+            '<span class="sm">' + invLabel(filled) + '</span>';
+          slot.title = 'Click to remove';
+          slot.addEventListener('click', function () {
+            if (locked) return;
+            reactorSlots[idx] = null;
+            predictChoice = -1;
+            refreshExtractUI();
+          });
+        } else {
+          slot.innerHTML =
+            '<span class="big">+</span>' +
+            '<span class="sm">Need ' + slotDef.icon + ' ' + slotDef.label + '</span>';
+          slot.title = 'Put ' + slotDef.label + ' here from your bag';
+        }
+        reactor.appendChild(slot);
+      });
+      var arr = document.createElement('div');
+      arr.className = 'arrow-sign';
+      arr.textContent = '→';
+      reactor.appendChild(arr);
+      var out = document.createElement('div');
+      out.className = 'put-slot';
+      out.style.borderStyle = 'dashed';
+      out.innerHTML =
+        '<span class="big">✨</span>' +
+        '<span class="sm">' + rec.outputLabel + '</span>';
+      reactor.appendChild(out);
+      updatePredictPanel();
+    }
+
+    function addToReactor(key) {
+      if (heating || pendingExplain || !extractActive) return;
+      var rec = extractRecipes[extractActive];
+      if (freeBagCount(key) < 1) {
+        toast('Not enough ' + invLabel(key));
+        return;
+      }
+      var i, placed = false;
+      for (i = 0; i < rec.slots.length; i++) {
+        if (!reactorSlots[i] && rec.slots[i].key === key) {
+          reactorSlots[i] = key;
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        for (i = 0; i < reactorSlots.length; i++) {
+          if (!reactorSlots[i]) {
+            reactorSlots[i] = key;
+            placed = true;
+            break;
+          }
+        }
+      }
+      if (!placed) toast('Reactor is full — remove a block first');
+      else {
+        playTone(420, 0.06, 'sine', 0.05);
+        predictChoice = -1;
+      }
+      refreshExtractUI();
+    }
+
+    function clearReactor() {
+      if (heating || pendingExplain || pendingBonus) return;
+      reactorSlots = (extractRecipes[extractActive] ? extractRecipes[extractActive].slots : []).map(function () { return null; });
+      predictChoice = -1;
+      document.getElementById('exMsg').innerHTML = '';
+      document.getElementById('exHeatLabel').textContent = 'Reactor cleared';
+      document.getElementById('exHeatFill').style.width = '0%';
+      document.getElementById('exPredict').classList.add('hidden');
+      document.getElementById('exExplain').classList.add('hidden');
+      refreshExtractUI();
+    }
+
+    /** Science reason when process is wrong (productive failure) */
+    function diagnoseWrongReactor(rec) {
+      var has = function (k) { return countInReactor(k) > 0; };
+      if (!reactorHasAny()) {
+        return 'Reactor is empty. Put the materials from the formula into the slots first.';
+      }
+      if (rec.id === 'kiln') {
+        if (has('feOre') || has('cuOre') || has('alOre')) {
+          return 'Ore does not belong in the kiln. Burn <b>wood</b> here to make carbon.';
+        }
+        if (has('carbon')) return 'The kiln turns <b>wood → carbon</b>, not more carbon.';
+        if (has('fe') || has('cu') || has('silver') || has('gold') || has('al')) {
+          return 'Metal is the product, not the fuel. Put <b>wood</b> in the kiln.';
+        }
+        return 'The kiln needs <b>wood only</b>.';
+      }
+      if (rec.id === 'furnace_iron') {
+        if (has('carbon') && !has('feOre') && reactorSlots.filter(Boolean).length === 1) {
+          return 'Carbon alone is the <b>power / upgrade</b> mode — pick that process from the furnace menu, or add iron ore for iron extraction.';
+        }
+        if (has('alOre')) return 'Aluminium needs <b>Grade 2 + electricity</b> — open furnace menu → aluminium process.';
+        if (has('feOre') && !has('carbon')) return 'Add <b>carbon</b> — ore alone keeps metal locked with oxygen.';
+        if (has('carbon') && !has('feOre')) return 'Add <b>iron ore</b>, or use power mode with carbon alone.';
+        if (has('cuOre')) return 'Copper ore goes to the <b>Copper Works</b>.';
+        if (has('silver') || has('gold')) return 'Silver/gold are free metals — craft at the <b>anvil</b>.';
+        return 'Need <b>iron ore + carbon</b>.';
+      }
+      if (rec.id === 'furnace_power') {
+        if (has('feOre') || has('cuOre') || has('alOre')) {
+          return 'Power mode uses <b>carbon only</b>. Ore belongs in iron / aluminium processes.';
+        }
+        if (!has('carbon')) return 'Put <b>carbon</b> alone to make electricity' + (furnaceGrade < 2 ? ' and upgrade to G2' : '') + '.';
+        return 'Power mode: <b>carbon only</b> → heat → ⚡.';
+      }
+      if (rec.id === 'furnace_al') {
+        if (furnaceGrade < 2) return 'Upgrade to <b>Grade 2</b> first (heat carbon alone in power mode).';
+        if ((inv.electricity || 0) < 1) return 'Need <b>⚡ electricity</b> in your bag (make it with carbon power mode).';
+        if (!has('alOre')) return 'Put <b>aluminium ore</b> (pale grey-white blocks) in the reactor.';
+        if (has('feOre') || has('cuOre')) return 'This process is for <b>aluminium ore only</b>.';
+        return 'Need Al ore in reactor + electricity in bag (G2).';
+      }
+      if (rec.id === 'copper') {
+        if (has('cuOre') && !has('carbon')) return 'Add <b>carbon</b> so copper can be freed.';
+        if (has('carbon') && !has('cuOre')) return 'Add <b>copper ore</b> (green spots).';
+        if (has('agOre')) return 'Silver oxide uses process ② (heat only). Not copper + carbon.';
+        if (has('feOre')) return 'Iron ore → Blast Furnace. Here: copper ore + carbon.';
+        if (has('alOre')) return 'Aluminium needs Grade 2 furnace, not copper works.';
+        return 'Need <b>copper ore + carbon</b>.';
+      }
+      if (rec.id === 'silver_roast') {
+        if (has('cuOre') || has('feOre') || has('alOre')) {
+          return 'This process is for <b>silver oxide (Ag₂O)</b> only. Other ores use different methods.';
+        }
+        if (has('carbon')) {
+          return 'Silver oxide is decomposed by <b>heat alone</b> — no carbon needed. Put only Ag₂O.';
+        }
+        if (has('silver') || has('gold')) {
+          return 'Put <b>silver oxide ore</b> (not pure metal) in the reactor.';
+        }
+        if (!has('agOre')) return 'Put <b>silver oxide ore (Ag₂O)</b> — rare grey-red blocks in corners.';
+        return 'Need <b>silver oxide</b> only. Word equation: silver oxide → silver + oxygen.';
+      }
+      return 'Check the formula strip and put the correct blocks.';
+    }
+
+    function startHeating() {
+      if (heating || pendingExplain || pendingBonus || !extractActive) return;
+      var rec = extractRecipes[extractActive];
+      var k;
+
+      if (rec.minGrade && furnaceGrade < rec.minGrade) {
+        document.getElementById('exMsg').innerHTML =
+          '<div class="msg err">Need furnace Grade ' + rec.minGrade + '.</div>';
+        return;
+      }
+
+      if (!reactorHasAny()) {
+        document.getElementById('exMsg').innerHTML =
+          '<div class="msg err">' + diagnoseWrongReactor(rec) + '</div>';
+        playWrongSound();
+        return;
+      }
+
+      if (!reactorMatchesNeed(rec)) {
+        heating = true;
+        heatMode = 'fail';
+        heatT = 0;
+        heatMs = 1400;
+        mission.failedHeats++;
+        document.getElementById('exReactor').classList.remove('heating');
+        document.getElementById('exReactor').classList.add('failing');
+        document.getElementById('exHeatLabel').textContent = 'Heating… something is wrong…';
+        document.getElementById('exMsg').innerHTML =
+          '<div class="msg info">🔥 Trying to heat — watch what fails…</div>';
+        document.getElementById('btnHeat').disabled = true;
+        document.getElementById('exPredict').classList.add('hidden');
+        playBurnSound();
+        refreshExtractUI();
+        return;
+      }
+
+      // First-time mastery: require prediction
+      if (!isMastered(rec.id) && predictChoice < 0) {
+        updatePredictPanel();
+        document.getElementById('exMsg').innerHTML =
+          '<div class="msg info">First time on this process — make a <b>prediction</b>, then heat.</div>';
+        playTone(300, 0.08, 'sine', 0.05);
+        return;
+      }
+
+      for (k in rec.need) {
+        if ((inv[k] || 0) < rec.need[k]) {
+          document.getElementById('exMsg').innerHTML =
+            '<div class="msg err">Not enough materials in bag.</div>';
+          return;
+        }
+      }
+      if (rec.needInv) {
+        for (k in rec.needInv) {
+          if ((inv[k] || 0) < rec.needInv[k]) {
+            document.getElementById('exMsg').innerHTML =
+              '<div class="msg err">Need more ' + invLabel(k) + ' (in bag).</div>';
+            return;
+          }
+        }
+      }
+
+      heating = true;
+      heatMode = 'success';
+      heatT = 0;
+      heatMs = rec.heatMs;
+      document.getElementById('exReactor').classList.remove('failing');
+      document.getElementById('exReactor').classList.add('heating');
+      document.getElementById('exHeatLabel').textContent = rec.processCaptions[0] || 'Heating…';
+      var predNote = isMastered(rec.id)
+        ? 'Mastered process — running freely.'
+        : (predictChoice === rec.predictA
+          ? 'Your prediction matches the expected product.'
+          : 'Watch carefully to check your prediction.');
+      document.getElementById('exMsg').innerHTML =
+        '<div class="msg info">🔥 Heating… ' + predNote + '</div>';
+      document.getElementById('btnHeat').disabled = true;
+      document.getElementById('exPredict').classList.add('hidden');
+      playBurnSound();
+      refreshExtractUI();
+    }
+
+    function finishFailHeat() {
+      var rec = extractRecipes[extractActive];
+      heating = false;
+      heatT = 0;
+      document.getElementById('exReactor').classList.remove('failing', 'heating');
+      document.getElementById('exHeatFill').style.width = '0%';
+      document.getElementById('exHeatLabel').textContent = 'Process failed — fix materials and try again';
+      document.getElementById('exMsg').innerHTML =
+        '<div class="msg err"><b>Why it failed:</b> ' + diagnoseWrongReactor(rec) +
+        '<br><span style="color:#94a3b8">Materials were not used up.</span></div>';
+      document.getElementById('btnHeat').disabled = false;
+      playWrongSound();
+      refreshExtractUI();
+      updateMissionPad();
+    }
+
+    function applyProcessOutputs(rec) {
+      var k;
+      for (k in rec.need) {
+        if (rec.need.hasOwnProperty(k)) inv[k] -= rec.need[k];
+      }
+      if (rec.needInv) {
+        for (k in rec.needInv) {
+          if (rec.needInv.hasOwnProperty(k)) inv[k] -= rec.needInv[k];
+        }
+      }
+      for (k in rec.output) {
+        if (rec.output.hasOwnProperty(k)) inv[k] = (inv[k] || 0) + rec.output[k];
+      }
+      // Power mode upgrades furnace on first successful carbon→electricity
+      if (rec.id === 'furnace_power' && furnaceGrade < 2) {
+        furnaceGrade = 2;
+        mission.upgradedFurnace = true;
+        updateFurnaceStationLabel();
+        applyFurnaceG2Visuals();
+        toast('Furnace upgraded to Grade 2! Look for cyan coils & electricity.', 3200);
+      }
+    }
+
+    function showExplainPanel(rec) {
+      pendingExplain = true;
+      document.getElementById('exExplain').classList.remove('hidden');
+      document.getElementById('exExplainQ').textContent = rec.explainQ;
+      renderPickOpts('exExplainOpts', rec.explainOpts, -1, function (i) {
+        if (i === rec.explainA) {
+          playCorrectSound();
+          document.getElementById('exMsg').innerHTML =
+            '<div class="msg ok">✅ Good explanation! You will not need the same questions again for this process.</div>';
+          if (rec.missionFlag) mission[rec.missionFlag] = true;
+          processMastery[rec.id] = true;
+          explainDone = true;
+          pendingExplain = false;
+          document.getElementById('exExplain').classList.add('hidden');
+          document.getElementById('btnHeat').disabled = false;
+          predictChoice = -1;
+          updateHud();
+          updateMissionPad();
+          refreshExtractUI();
+        } else {
+          playWrongSound();
+          addTimePenalty(10, 'Wrong explanation');
+          document.getElementById('exMsg').innerHTML =
+            '<div class="msg err">Not quite — read the formula strip and try again. (+10 s)</div>';
+        }
+      });
+    }
+
+    function showBonusQuestion(rec) {
+      if (!rec.bonusQs || !rec.bonusQs.length) {
+        document.getElementById('btnHeat').disabled = false;
+        return;
+      }
+      var pool = rec.bonusQs;
+      var q = pool[Math.floor(Math.random() * pool.length)];
+      pendingBonus = { recId: rec.id, q: q };
+      document.getElementById('exExplain').classList.remove('hidden');
+      document.getElementById('exExplainQ').textContent = 'Bonus (repeat heat): ' + q.q;
+      renderPickOpts('exExplainOpts', q.opts, -1, function (i) {
+        if (i === q.a) {
+          playCorrectSound();
+          inv.electricity = (inv.electricity || 0) + 1;
+          document.getElementById('exMsg').innerHTML =
+            '<div class="msg ok">✅ Bonus correct! +1 ⚡ electricity</div>';
+        } else {
+          playWrongSound();
+          addTimePenalty(10, 'Wrong bonus answer');
+          document.getElementById('exMsg').innerHTML =
+            '<div class="msg info">Bonus missed (+10 s). Product already collected.</div>';
+        }
+        pendingBonus = null;
+        document.getElementById('exExplain').classList.add('hidden');
+        document.getElementById('btnHeat').disabled = false;
+        updateHud();
+        refreshExtractUI();
+      });
+    }
+
+    function finishSuccessHeat() {
+      var rec = extractRecipes[extractActive];
+      if (!rec) { heating = false; return; }
+      applyProcessOutputs(rec);
+      playSmeltSound();
+      playCorrectSound();
+      reactorSlots = rec.slots.map(function () { return null; });
+      heating = false;
+      heatT = 0;
+      processSuccessCount[rec.id] = (processSuccessCount[rec.id] || 0) + 1;
+      document.getElementById('exReactor').classList.remove('heating', 'failing');
+      document.getElementById('exHeatFill').style.width = '100%';
+      document.getElementById('exHeatLabel').textContent = 'Done! Got ' + rec.outputLabel +
+        (rec.id === 'furnace_power' && furnaceGrade >= 2 ? ' · Furnace G' + furnaceGrade : '');
+
+      // First success: require explain (marks mastery)
+      if (!isMastered(rec.id)) {
+        var predLine = predictChoice === rec.predictA
+          ? ' Prediction correct.'
+          : ' Product is ' + rec.outputLabel + '.';
+        document.getElementById('exMsg').innerHTML =
+          '<div class="msg ok">✅ <b>' + rec.formula + '</b> → ' + rec.outputLabel + '!' + predLine +
+          ' Now explain (once only for this process).</div>';
+        showExplainPanel(rec);
+      } else {
+        // Already mastered: free product; bonus Q on every 2nd+ success
+        if (rec.missionFlag) mission[rec.missionFlag] = true;
+        document.getElementById('exMsg').innerHTML =
+          '<div class="msg ok">✅ Got ' + rec.outputLabel + ' (process already mastered).</div>';
+        if (processSuccessCount[rec.id] >= 2 && rec.bonusQs && rec.bonusQs.length) {
+          showBonusQuestion(rec);
+        } else {
+          document.getElementById('btnHeat').disabled = false;
+        }
+      }
+      updateHud();
+      updateMissionPad();
+      refreshExtractUI();
+      setTimeout(function () {
+        if (!heating) document.getElementById('exHeatFill').style.width = '0%';
+      }, 900);
+    }
+
+    function finishHeating() {
+      if (heatMode === 'fail') finishFailHeat();
+      else finishSuccessHeat();
+    }
+
+    function updateHeating() {
+      if (!heating) return;
+      var rec = extractRecipes[extractActive];
+      heatT += dt * 1000;
+      var pct = Math.min(100, (heatT / heatMs) * 100);
+      document.getElementById('exHeatFill').style.width = pct + '%';
+      if (heatMode === 'success' && rec && rec.processCaptions) {
+        var idx = Math.min(rec.processCaptions.length - 1, Math.floor((pct / 100) * rec.processCaptions.length));
+        document.getElementById('exHeatLabel').textContent = rec.processCaptions[idx];
+      }
+      if (Math.random() < 0.08) playTone(90 + Math.random() * 40, 0.04, 'sawtooth', 0.02);
+      if (heatT >= heatMs) finishHeating();
+    }
+
+    function canCraft(r, qty) {
+      qty = qty || 1;
+      return inv.fe >= (r.need.fe || 0) * qty &&
+        inv.cu >= (r.need.cu || 0) * qty &&
+        inv.al >= (r.need.al || 0) * qty &&
+        inv.wood >= (r.need.wood || 0) * qty &&
+        inv.silver >= (r.need.silver || 0) * qty &&
+        inv.gold >= (r.need.gold || 0) * qty;
+    }
+
+    /** How many copies can be crafted with current inventory */
+    function maxCraftable(r) {
+      if (r.type === 'armour' && hasArmour) return 0;
+      var m = Infinity;
+      var keys = ['fe', 'cu', 'al', 'wood', 'silver', 'gold'];
+      var i, k, need;
+      for (i = 0; i < keys.length; i++) {
+        k = keys[i];
+        need = r.need[k] || 0;
+        if (need > 0) m = Math.min(m, Math.floor((inv[k] || 0) / need));
+      }
+      if (m === Infinity || m < 0) m = 0;
+      // Weapons limited by empty hotbar slots (or overwrite last)
+      if (r.type !== 'armour') {
+        var empty = 0, s;
+        for (s = 0; s < 6; s++) if (!weapons[s]) empty++;
+        if (empty < 1) empty = 1; // can still overwrite slot 5
+        m = Math.min(m, empty > 0 ? Math.max(empty, 1) : 1);
+        m = Math.min(m, 6);
+      } else {
+        m = Math.min(m, 1);
+      }
+      return m;
+    }
+
+    function doCraft(r, qty) {
+      qty = Math.max(1, Math.floor(qty || 1));
+      if (!canCraft(r, qty)) {
+        toast('Not enough materials for ×' + qty);
+        return false;
+      }
+      var n;
+      for (n = 0; n < qty; n++) {
+        if (r.need.fe) inv.fe -= r.need.fe;
+        if (r.need.cu) inv.cu -= r.need.cu;
+        if (r.need.al) inv.al -= r.need.al;
+        if (r.need.wood) inv.wood -= r.need.wood;
+        if (r.need.silver) inv.silver -= r.need.silver;
+        if (r.need.gold) inv.gold -= r.need.gold;
+        if (r.type === 'armour') {
+          hasArmour = true;
+          mission.craftedArmour = true;
+        } else {
+          var slot = -1, i;
+          for (i = 0; i < 6; i++) if (!weapons[i]) { slot = i; break; }
+          if (slot < 0) slot = Math.min(5, n);
+          weapons[slot] = {
+            id: r.id, name: r.name, icon: r.icon, need: r.need,
+            dmg: r.dmg, type: r.type, speed: r.speed, tier: r.tier
+          };
+          hotbarIdx = slot;
+          mission.craftedWeapon = true;
+        }
+      }
+      playCraftSound();
+      if (r.type === 'armour') {
+        updateArmourVisual();
+        toast('🛡️ Aluminium armour on! Look at your character — wrong answers no longer one-hit KO.', 3000);
+      } else {
+        refreshHeldWeapon(true);
+        toast('Clang! Crafted ' + (qty > 1 ? ('×' + qty + ' ') : '') + r.name + '!', 2000);
+      }
+      updateHud();
+      updateMissionPad();
+      refreshRecipes();
+      return true;
+    }
+
+    function openCraft() {
+      refreshRecipes();
+      showScreen('screenCraft');
+    }
+
+    function refreshRecipes() {
+      var el = document.getElementById('recipes');
+      el.innerHTML = '';
+      RECIPES.forEach(function (r) {
+        var maxQ = maxCraftable(r);
+        var can = maxQ >= 1;
+        var parts = [];
+        if (r.need.fe) parts.push(r.need.fe + ' Fe');
+        if (r.need.cu) parts.push(r.need.cu + ' Cu');
+        if (r.need.al) parts.push(r.need.al + ' Al');
+        if (r.need.silver) parts.push(r.need.silver + ' Ag metal');
+        if (r.need.gold) parts.push(r.need.gold + ' Au (free metal)');
+        if (r.need.wood) parts.push(r.need.wood + ' wood');
+        var tierNote = '';
+        if (r.tier === 'gold') tierNote = ' · free metal (no extraction)';
+        if (r.tier === 'silver') tierNote = ' · from Ag₂O heat';
+        if (r.type === 'armour') tierNote = ' · changes look + defence';
+        var div = document.createElement('div');
+        div.className = 'recipe' + (can ? '' : ' locked');
+        div.style.flexWrap = 'wrap';
+        var info = document.createElement('div');
+        info.style.flex = '1';
+        info.style.minWidth = '180px';
+        info.innerHTML =
+          '<span style="font-size:1.5rem;margin-right:8px">' + r.icon + '</span>' +
+          '<b>' + r.name + '</b><br><small>' + parts.join(' + ') +
+          (r.type === 'armour' ? ' → armour' : (' → ' + r.dmg + ' dmg · ' + r.type)) +
+          tierNote + '</small>' +
+          (can ? '<br><small style="color:#5eead4">Can craft up to ×' + maxQ + '</small>' : '');
+        div.appendChild(info);
+
+        if (can) {
+          var controls = document.createElement('div');
+          controls.style.display = 'flex';
+          controls.style.alignItems = 'center';
+          controls.style.gap = '6px';
+          controls.style.marginTop = '6px';
+
+          var qtyInput = document.createElement('input');
+          qtyInput.type = 'number';
+          qtyInput.min = '1';
+          qtyInput.max = String(maxQ);
+          qtyInput.value = '1';
+          qtyInput.style.width = '52px';
+          qtyInput.style.padding = '4px';
+          qtyInput.style.borderRadius = '6px';
+          qtyInput.style.border = '1px solid #475569';
+          qtyInput.style.background = '#0f172a';
+          qtyInput.style.color = '#f8fafc';
+
+          var btn1 = document.createElement('button');
+          btn1.type = 'button';
+          btn1.className = 'btn';
+          btn1.style.padding = '0.4rem 0.7rem';
+          btn1.style.fontSize = '0.85rem';
+          btn1.textContent = 'Craft ×1';
+          btn1.addEventListener('click', function (e) {
+            e.stopPropagation();
+            doCraft(r, 1);
+          });
+
+          var btnN = document.createElement('button');
+          btnN.type = 'button';
+          btnN.className = 'btn';
+          btnN.style.padding = '0.4rem 0.7rem';
+          btnN.style.fontSize = '0.85rem';
+          btnN.style.background = '#0e7490';
+          btnN.textContent = 'Craft ×N';
+          btnN.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var q = parseInt(qtyInput.value, 10) || 1;
+            if (q < 1) q = 1;
+            if (q > maxQ) q = maxQ;
+            doCraft(r, q);
+          });
+
+          var btnMax = document.createElement('button');
+          btnMax.type = 'button';
+          btnMax.className = 'btn sec';
+          btnMax.style.padding = '0.4rem 0.7rem';
+          btnMax.style.fontSize = '0.8rem';
+          btnMax.textContent = 'Max (' + maxQ + ')';
+          btnMax.addEventListener('click', function (e) {
+            e.stopPropagation();
+            doCraft(r, maxQ);
+          });
+
+          controls.appendChild(qtyInput);
+          controls.appendChild(btn1);
+          controls.appendChild(btnN);
+          controls.appendChild(btnMax);
+          div.appendChild(controls);
+        }
+
+        el.appendChild(div);
+      });
+    }
+
+    function openGate() {
+      var ready = missionReadyForBoss();
+      if (ready) {
+        document.getElementById('gateText').textContent = hasArmour
+          ? 'Ready! Weapon + Al armour equipped. Wrong answers hurt less. Answer chemistry questions in 10s.'
+          : 'You can enter with a weapon only — but WITHOUT armour, one wrong answer will defeat you instantly. Craft Al armour if you can!';
+        document.getElementById('btnEnterBoss').style.display = 'inline-block';
+      } else {
+        document.getElementById('gateText').textContent =
+          'Boss locked. Craft at least one weapon at the anvil first. (Al armour is optional but strongly recommended.)';
+        document.getElementById('btnEnterBoss').style.display = 'none';
+      }
+      showScreen('screenGate');
+    }
+
+    function disposeObject3D(obj) {
+      if (!obj) return;
+      scene.remove(obj);
+      obj.traverse(function (ch) {
+        if (ch.geometry) ch.geometry.dispose();
+        if (ch.material) {
+          if (ch.material.map) ch.material.map.dispose();
+          ch.material.dispose();
+        }
+      });
+    }
+
+    function clearArrows() {
+      arrows.forEach(function (a) {
+        if (a.mesh) disposeObject3D(a.mesh);
+      });
+      arrows = [];
+    }
+
+    function startBoss() {
+      var x, z;
+      phase = 'boss';
+      player.x = 20.5; player.y = 4; player.z = 28.5; player.vy = 0;
+
+      for (x = 15; x <= 25; x++) {
+        for (z = 28; z <= 37; z++) {
+          clearAbove(x, z, 4);
+          setB(x, 3, z, BLOCK.PATH);
+        }
+      }
+      rebuildMesh();
+
+      boss.hp = boss.maxHp; boss.x = 20.5; boss.z = 32.5;
+      boss.hits = 0; boss.lastAttack = performance.now(); boss.anim = 0;
+      playerHp = 100; dodgeOpen = false; dodgeAnswered = false; clearArrows();
+      clearDodgeTimer();
+
+      if (boss.mesh) { scene.remove(boss.mesh); boss.mesh = null; }
+      boss.mesh = createBossMonster();
+      boss.mesh.position.set(boss.x, 3.05, boss.z);
+      scene.add(boss.mesh);
+
+      showScreen(null);
+      document.getElementById('bossHud').classList.add('show');
+      updateBossBars();
+      updateHud();
+      setTimeout(requestPointer, 50);
+    }
+
+    function updateBossBars() {
+      document.getElementById('bossHpBar').style.width = Math.max(0, (boss.hp / boss.maxHp) * 100) + '%';
+      document.getElementById('playerHpBar').style.width = Math.max(0, playerHp) + '%';
+    }
+
+    function clearDodgeTimer() {
+      if (dodgeInterval) {
+        clearInterval(dodgeInterval);
+        dodgeInterval = null;
+      }
+    }
+
+    function resolveDodge(correct) {
+      if (!dodgeOpen || dodgeAnswered) return;
+      dodgeAnswered = true;
+      dodgeOpen = false;
+      clearDodgeTimer();
+      if (correct) {
+        mission.bossCorrect++;
+        playCorrectSound();
+        playerHp = Math.min(100, playerHp + 8);
+        toast('Dodged! +8 HP');
+        spawnDmgNumber(player.x, player.y + 2.4, player.z, 8, true);
+      } else {
+        mission.bossWrong++;
+        playWrongSound();
+        runPenaltySec += 10;
+        updateRunTimerDisplay();
+        // No armour = one-hit KO; with armour = survivable hits
+        var dmg = hasArmour ? 12 : 100;
+        playerHp -= dmg;
+        if (!hasArmour) {
+          toast('No armour! One hit KO · +10 s');
+        } else {
+          toast((dodgeTimer <= 0.05 ? 'Too slow! ' : 'Wrong! ') + '−' + dmg + ' HP · +10 s');
+        }
+        spawnDmgNumber(player.x, player.y + 2.4, player.z, hasArmour ? dmg : 99, false);
+        if (playerHp <= 0) {
+          updateBossBars();
+          loseBoss();
+          return;
+        }
+      }
+      updateBossBars();
+      showScreen(null);
+      document.getElementById('bossHud').classList.add('show');
+      setTimeout(requestPointer, 50);
+    }
+
+    function bossAttack() {
+      if (phase !== 'boss' || dodgeOpen || uiOpen) return;
+      dodgeOpen = true;
+      dodgeAnswered = false;
+      dodgeTimer = dodgeMax;
+      // Lesson LOs: mining vs extraction, free metal, different methods, word/symbol equations
+      var questions = [
+        { q: 'What is the key difference between mining and metal extraction?', opts: ['Mining digs up rocks/ores; extraction turns them into pure metal', 'They mean exactly the same thing', 'Mining only happens after extraction'], a: 0 },
+        { q: 'Why can gold be used directly after mining?', opts: ['It is found as free pure metal in nature', 'It is always an oxide that needs carbon', 'It is a gas'], a: 0 },
+        { q: 'Why can silver oxide NOT be used as metal until heated?', opts: ['It is a compound (oxide), not free metal', 'It is already pure gold', 'It is only wood'], a: 0 },
+        { q: 'Different metals need different extraction methods. Which pair is correct?', opts: ['Iron/copper need carbon; Al needs electricity; Ag₂O needs heat only', 'All metals only need water', 'All metals are free pure gold'], a: 0 },
+        { q: 'Word equation for iron extraction is…', opts: ['iron oxide + carbon → iron + carbon dioxide', 'iron + carbon → iron oxide', 'gold → iron + oxygen'], a: 0 },
+        { q: 'Word equation for copper extraction is…', opts: ['copper oxide + carbon → copper + carbon dioxide', 'copper → wood + oxygen', 'silver → copper + carbon'], a: 0 },
+        { q: 'Word equation for heating silver oxide is…', opts: ['silver oxide → silver + oxygen', 'silver + carbon → silver oxide', 'gold → silver + carbon'], a: 0 },
+        { q: 'Which balanced equation is correct for silver oxide?', opts: ['2Ag₂O → 4Ag + O₂', 'Ag₂O → Ag + O₂', '2Ag₂O → 2Ag + O₂'], a: 0 },
+        { q: 'Which balanced equation is correct for iron oxide + carbon?', opts: ['2FeO + C → 2Fe + CO₂', 'FeO + C → Fe + CO₂', '2FeO + C → Fe + 2CO₂'], a: 0 },
+        { q: 'Which balanced equation is correct for copper oxide + carbon?', opts: ['2CuO + C → 2Cu + CO₂', 'CuO + C → 2Cu + CO₂', '2CuO + C → Cu + CO₂'], a: 0 },
+        { q: 'Which balanced equation is for aluminium oxide (electrolysis)?', opts: ['2Al₂O₃ → 4Al + 3O₂', 'Al₂O₃ → Al + O₂', '2Al₂O₃ → 2Al + O₂'], a: 0 },
+        { q: 'Without aluminium armour, a wrong boss answer will…', opts: ['Defeat you in one hit', 'Give free gold', 'Heal you fully'], a: 0 }
+      ];
+      var q = questions[Math.floor(Math.random() * questions.length)];
+      document.getElementById('dodgeQ').textContent = q.q;
+      var fill = document.getElementById('dodgeTimerFill');
+      var lab = document.getElementById('dodgeTimerLabel');
+      var bar = document.getElementById('dodgeTimerBar');
+      fill.style.transform = 'scaleX(1)';
+      fill.style.transition = 'none';
+      bar.classList.remove('urgent');
+      lab.textContent = '10.0 s';
+      var opts = document.getElementById('dodgeOpts');
+      opts.innerHTML = '';
+      q.opts.forEach(function (o, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'quiz-opt';
+        b.textContent = o;
+        b.addEventListener('click', function () {
+          resolveDodge(i === q.a);
+        });
+        opts.appendChild(b);
+      });
+      showScreen('screenDodge');
+      document.getElementById('bossHud').classList.add('show');
+
+      clearDodgeTimer();
+      var start = performance.now();
+      dodgeInterval = setInterval(function () {
+        if (!dodgeOpen || dodgeAnswered) { clearDodgeTimer(); return; }
+        var left = Math.max(0, dodgeMax - (performance.now() - start) / 1000);
+        dodgeTimer = left;
+        var pct = left / dodgeMax;
+        fill.style.transform = 'scaleX(' + pct + ')';
+        lab.textContent = left.toFixed(1) + ' s';
+        if (left <= 3) bar.classList.add('urgent');
+        if (left <= 0) {
+          resolveDodge(false);
+        }
+      }, 50);
+    }
+
+    function meleeBoss() {
+      if (phase !== 'boss' || uiOpen || aimZoom) return;
+      if (swingState.active) return;
+      var w = getWeapon();
+      var now = performance.now();
+      if (!w || w.type === 'bow') {
+        if (now - lastMelee > 700) {
+          lastMelee = now;
+          if (w && w.type === 'bow') toast('Hold RIGHT-CLICK to aim bow, LEFT-CLICK to shoot');
+          else toast('Equip a sword/knife (1–6)');
+        }
+        return;
+      }
+      if (now - lastMelee < w.speed) return;
+      var dx = player.x - boss.x, dz = player.z - boss.z;
+      if (dx * dx + dz * dz > 28) {
+        if (now - lastMelee > 700) {
+          lastMelee = now;
+          toast('Too far — walk closer, then left-click to swing');
+        }
+        return;
+      }
+      // Face the boss when swinging
+      player.facing = Math.atan2(boss.x - player.x, boss.z - player.z);
+      lastMelee = now;
+      armSwingT = swingDur;
+      swingState = { active: true, t: 0, hitDone: false, dmg: w.dmg, w: w };
+      playTone(180, 0.08, 'sawtooth', 0.06, 90);
+    }
+
+    function applyMeleeHit() {
+      if (phase !== 'boss' || !swingState.w) return;
+      var w = swingState.w;
+      var dx = player.x - boss.x, dz = player.z - boss.z;
+      if (dx * dx + dz * dz > 32) {
+        toast('Missed — too far');
+        return;
+      }
+      playHitSound();
+      boss.hp -= w.dmg;
+      boss.hits++;
+      spawnDmgNumber(boss.x, 5.2, boss.z, w.dmg, false);
+      toast(w.name + ' swing −' + w.dmg + ' HP', 900);
+      // Hit spark particles
+      spawnMineBurst(Math.floor(boss.x), 4, Math.floor(boss.z), 0xfbbf24);
+      if (boss.mesh) {
+        boss.mesh.traverse(function (ch) {
+          if (ch.material && ch.material.emissive) ch.material.emissiveIntensity = 0.95;
+        });
+        setTimeout(function () {
+          if (!boss.mesh) return;
+          boss.mesh.traverse(function (ch) {
+            if (ch.material && ch.material.emissive) {
+              ch.material.emissiveIntensity = ch.name === 'body' ? 0.25 : 0.2;
+            }
+          });
+        }, 140);
+      }
+      updateBossBars();
+      if (boss.hp <= 0) winBoss(w);
+    }
+
+    function shootBow() {
+      if (phase !== 'boss' || uiOpen) return false;
+      var w = getWeapon();
+      if (!w || w.type !== 'bow') {
+        toast('Equip a bow (1–6) first');
+        return false;
+      }
+      if (!aimZoom) {
+        // Auto-enter aim if student forgot right-click
+        setAimZoom(true, true);
+      }
+      var now = performance.now();
+      if (now - lastBowShot < Math.min(w.speed, 450)) return false;
+      lastBowShot = now;
+      var dir = lookDir().normalize();
+      var speed = 28;
+      var ox = player.x + dir.x * 0.6;
+      var oy = player.y + 1.4;
+      var oz = player.z + dir.z * 0.6;
+
+      // Large visible arrow so students see it fly
+      var group = new THREE.Group();
+      var shaft = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.05, 0.05, 0.85, 8),
+        new THREE.MeshBasicMaterial({ color: 0xf5f5f4 })
+      );
+      shaft.rotation.x = Math.PI / 2;
+      group.add(shaft);
+      var tip = new THREE.Mesh(
+        new THREE.ConeGeometry(0.1, 0.22, 8),
+        new THREE.MeshBasicMaterial({ color: 0xfbbf24 })
+      );
+      tip.rotation.x = Math.PI / 2;
+      tip.position.z = 0.5;
+      group.add(tip);
+      var fletch = new THREE.Mesh(
+        new THREE.BoxGeometry(0.16, 0.02, 0.12),
+        new THREE.MeshBasicMaterial({ color: 0xef4444 })
+      );
+      fletch.position.z = -0.38;
+      group.add(fletch);
+      group.position.set(ox, oy, oz);
+      group.lookAt(ox + dir.x, oy + dir.y, oz + dir.z);
+      scene.add(group);
+      playTone(520, 0.06, 'square', 0.07, 200);
+      toast('Arrow fired!', 700);
+      arrows.push({
+        x: ox, y: oy, z: oz,
+        vx: dir.x * speed, vy: dir.y * speed, vz: dir.z * speed,
+        dmg: w.dmg, life: 2.5, mesh: group, trail: 0
+      });
+      return true;
+    }
+
+    function setupExitTicket() {
+      var opts = [
+        'Mining digs up ores; extraction turns compounds into pure metal',
+        'Mining and extraction are always the same thing',
+        'Extraction only paints the rocks green'
+      ];
+      var box = document.getElementById('exitTicketOpts');
+      var msg = document.getElementById('exitTicketMsg');
+      box.innerHTML = '';
+      msg.innerHTML = '';
+      opts.forEach(function (o, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'pick-opt';
+        b.textContent = o;
+        b.addEventListener('click', function () {
+          if (i === 0) {
+            playCorrectSound();
+            msg.innerHTML = '<div class="msg ok">Excellent — that is the key S3 idea!</div>';
+          } else {
+            playWrongSound();
+            msg.innerHTML = '<div class="msg err">Try again: mining digs ores; extraction makes pure metal.</div>';
+          }
+        });
+        box.appendChild(b);
+      });
+      var total = getRunElapsedSec();
+      document.getElementById('winMissionSummary').textContent =
+        'Lab stats: failed heats ' + mission.failedHeats +
+        ' · boss correct ' + mission.bossCorrect +
+        ' / wrong ' + mission.bossWrong +
+        ' · armour ' + (hasArmour ? 'yes' : 'no');
+      document.getElementById('winTimeVal').textContent = formatRunTime(total);
+      document.getElementById('winTimeDetail').textContent =
+        'Elapsed with penalties: ' + formatRunTime(total) +
+        (runPenaltySec > 0 ? (' (includes +' + runPenaltySec + 's from wrong answers)') : ' (no time penalties)');
+    }
+
+    function winBoss(w) {
+      phase = 'win';
+      dodgeOpen = false;
+      dodgeAnswered = true;
+      mission.defeatedBoss = true;
+      stopRunTimer();
+      if (aimZoom) setAimZoom(false);
+      clearDodgeTimer();
+      playCorrectSound();
+      document.getElementById('winStats').innerHTML =
+        'You defeated the Ore Beast with <b>' + (w ? w.name : 'Unknown') + '</b> (' + boss.hits + ' hits)' +
+        (hasArmour ? ' wearing Al armour' : ' with no armour (risky!)') + '.';
+      if (boss.mesh) { scene.remove(boss.mesh); boss.mesh = null; }
+      clearArrows();
+      document.getElementById('bossHud').classList.remove('show');
+      updateMissionPad();
+      setupExitTicket();
+      showScreen('screenWin');
+    }
+
+    function loseBoss() {
+      dodgeOpen = false;
+      dodgeAnswered = true;
+      if (aimZoom) setAimZoom(false);
+      clearDodgeTimer();
+      phase = 'play';
+      if (boss.mesh) { scene.remove(boss.mesh); boss.mesh = null; }
+      clearArrows();
+      document.getElementById('bossHud').classList.remove('show');
+      player.x = 20.5; player.y = 4; player.z = 20.5; player.vy = 0;
+      playerHp = 100;
+      showScreen('screenLose');
+    }
+
+    function closeUI() {
+      if (heating) {
+        toast('Wait for heating to finish!');
+        return;
+      }
+      if (pendingExplain) {
+        toast('Finish the explain step before closing!');
+        return;
+      }
+      if (pendingBonus) {
+        toast('Answer the bonus question first!');
+        return;
+      }
+      showScreen(null);
+      if (phase === 'play' || phase === 'boss') setTimeout(requestPointer, 50);
+    }
+
+    // Extraction process UI (put blocks → heat → metal)
+    document.getElementById('btnHeat').addEventListener('click', startHeating);
+    document.getElementById('btnClearReactor').addEventListener('click', clearReactor);
+    document.getElementById('btnCloseExtract').addEventListener('click', function () {
+      if (heating) {
+        toast('Wait — heating is still running!');
+        return;
+      }
+      if (pendingExplain) {
+        toast('Explain what happened first (step 4)!');
+        return;
+      }
+      if (pendingBonus) {
+        toast('Answer the bonus question first!');
+        return;
+      }
+      closeUI();
+    });
+    document.getElementById('btnCloseCraft').addEventListener('click', closeUI);
+    document.getElementById('btnCloseGate').addEventListener('click', closeUI);
+    document.getElementById('btnEnterBoss').addEventListener('click', function () {
+      showScreen(null);
+      startBoss();
+    });
+    document.getElementById('btnRestart').addEventListener('click', function () { location.reload(); });
+    document.getElementById('btnRetry').addEventListener('click', function () {
+      showScreen(null);
+      phase = 'play';
+      updateHud();
+      setTimeout(requestPointer, 50);
+    });
+
+    document.getElementById('btnStart').addEventListener('click', function () {
+      showScreen(null);
+      phase = 'play';
+      player.x = 20.5; player.y = 4; player.z = 20.5; player.vy = 0;
+      weapons = [null, null, null, null, null, null];
+      hotbarIdx = -1;
+      aimZoom = false;
+      equippedWeaponId = null;
+      document.getElementById('hud').classList.add('show');
+      document.getElementById('crosshair').classList.add('show');
+      document.getElementById('crosshair').classList.remove('aim');
+      document.getElementById('bottomUI').classList.add('show');
+      document.getElementById('minimap').classList.add('show');
+      document.getElementById('missionPad').classList.add('show');
+      document.getElementById('aimBanner').classList.remove('show');
+      mission.gotWood = false;
+      mission.madeCarbon = false;
+      mission.extractedIron = false;
+      mission.extractedCopper = false;
+      mission.upgradedFurnace = false;
+      mission.extractedAluminium = false;
+      mission.extractedSilver = false;
+      mission.craftedWeapon = false;
+      mission.craftedArmour = false;
+      mission.defeatedBoss = false;
+      mission.failedHeats = 0;
+      mission.bossCorrect = 0;
+      mission.bossWrong = 0;
+      furnaceGrade = 1;
+      hasArmour = false;
+      processMastery = {};
+      processSuccessCount = {};
+      inv.electricity = 0;
+      inv.al = 0;
+      inv.alOre = 0;
+      inv.agOre = 0;
+      inv.silver = 0;
+      if (furnaceG2Extra && furnaceModel) {
+        furnaceModel.remove(furnaceG2Extra);
+        furnaceG2Extra = null;
+      }
+      updateFurnaceStationLabel();
+      updateMissionPad();
+      updateHud();
+      ensureAudio();
+      startRunTimer();
+      touchMode = isTouchDevice();
+      setTouchUIVisible(touchMode && (phase === 'play' || phase === 'boss'));
+      if (touchMode) {
+        toast('Touch: joystick move · drag right to look · Mine / Use buttons', 4000);
+      } else {
+        toast('Timer started. Wrong answers +10s. Weapon unlocks boss!', 3600);
+        setTimeout(requestPointer, 50);
+      }
+    });
+
+    var canvas = document.getElementById('canvas');
+    canvas.addEventListener('click', function () {
+      if (phase === 'menu' || uiOpen) return;
+      if (touchMode) return;
+      if (!pointerLocked) {
+        requestPointer();
+        toast('Click again if mouse is free — Esc unlocks mouse', 2200);
+      }
+    });
+
+    document.addEventListener('pointerlockchange', function () {
+      pointerLocked = document.pointerLockElement === canvas;
+      if (!pointerLocked && !touchMode) {
+        mineHeld = false;
+        if (aimZoom) setAimZoom(false);
+      }
+    });
+
+    // Natural mouse (not inverted): right turns right; up looks up; down aims at ores
+    document.addEventListener('mousemove', function (e) {
+      if (touchMode || !pointerLocked || uiOpen) return;
+      var sens = aimZoom ? MOUSE_SENS * 0.55 : MOUSE_SENS;
+      yaw += e.movementX * sens;
+      pitch -= e.movementY * sens;
+      if (pitch < -1.05) pitch = -1.05;
+      if (pitch > 1.2) pitch = 1.2;
+    });
+
+    document.addEventListener('keydown', function (e) {
+      keys[e.code] = true;
+      if ((phase === 'play' || phase === 'boss') && !uiOpen) {
+        if (e.code === 'Space' || e.code === 'Tab' || e.code.indexOf('Arrow') === 0) {
+          e.preventDefault();
+        }
+      }
+      if (e.code === 'KeyE' && phase === 'play' && !uiOpen) tryInteractStation();
+      if (e.code.indexOf('Digit') === 0 && (phase === 'play' || phase === 'boss') && !uiOpen) {
+        var n = parseInt(e.code.replace('Digit', ''), 10) - 1;
+        equipWeaponSlot(n);
+      }
+      if (e.code === 'KeyR' && (phase === 'play' || phase === 'boss') && !uiOpen) {
+        pitch = 0.2;
+        toast('Camera pitch reset');
+      }
+      if (e.code === 'KeyQ' && phase === 'boss' && !uiOpen) {
+        if (aimZoom) {
+          setAimZoom(false);
+        } else if (setAimZoom(true)) {
+          aimToggleLock = true;
+        }
+      }
+      if (e.code === 'Escape' && aimZoom) setAimZoom(false);
+    });
+    document.addEventListener('keyup', function (e) { keys[e.code] = false; });
+
+    window.addEventListener('blur', function () {
+      keys = Object.create(null);
+      mineHeld = false;
+      touchJump = false;
+      touchSprint = false;
+      touchStick.x = 0; touchStick.y = 0; touchStick.active = false;
+      if (aimZoom) setAimZoom(false);
+    });
+
+    function onMouseDown(e) {
+      if (phase === 'menu' || uiOpen || touchMode) return;
+      if (e.button === 2) e.preventDefault();
+      if (!pointerLocked) { requestPointer(); return; }
+
+      if (e.button === 2) {
+        rmbDown = true;
+        if (phase === 'boss') {
+          var w = getWeapon();
+          if (w && w.type === 'bow') setAimZoom(true);
+          else toast('Equip a bow (1–6), then hold right-click to aim');
+        }
+        return;
+      }
+      if (e.button === 0) {
+        e.preventDefault();
+        if (phase === 'boss' && (aimZoom || rmbDown)) {
+          shootBow();
+          return;
+        }
+        mineHeld = true;
+        if (phase === 'play') mineBlock();
+        else if (phase === 'boss') meleeBoss();
+      }
+    }
+    function onMouseUp(e) {
+      if (e.button === 0) mineHeld = false;
+      if (e.button === 2) {
+        rmbDown = false;
+        if (aimZoom && !aimToggleLock) setAimZoom(false, true);
+      }
+    }
+    canvas.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mousedown', function (e) {
+      if (touchMode) return;
+      if (e.button === 2 && pointerLocked && phase === 'boss' && !uiOpen) {
+        e.preventDefault();
+        rmbDown = true;
+        var w = getWeapon();
+        if (w && w.type === 'bow') setAimZoom(true, true);
+      }
+    });
+    canvas.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    document.addEventListener('contextmenu', function (e) {
+      if (phase === 'play' || phase === 'boss') e.preventDefault();
+    });
+
+    // —— Touch / iPad control system ——
+    (function setupTouchControls() {
+      var joyZone = document.getElementById('joyZone');
+      var joyKnob = document.getElementById('joyKnob');
+      var joyBase = document.getElementById('joyBase');
+      var maxR = 48;
+      var TOUCH_SENS = TOUCH_LOOK_SENS;
+
+      function setKnob(dx, dy) {
+        var len = Math.hypot(dx, dy);
+        if (len > maxR) {
+          dx = (dx / len) * maxR;
+          dy = (dy / len) * maxR;
+          len = maxR;
+        }
+        joyKnob.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        touchStick.x = dx / maxR;
+        touchStick.y = dy / maxR;
+      }
+      function resetKnob() {
+        joyKnob.style.transform = 'translate(0,0)';
+        touchStick.x = 0;
+        touchStick.y = 0;
+        touchStick.active = false;
+        touchStick.id = null;
+      }
+
+      joyZone.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (uiOpen || (phase !== 'play' && phase !== 'boss')) return;
+        var t = e.changedTouches[0];
+        touchStick.id = t.identifier;
+        touchStick.active = true;
+        var rect = joyBase.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        setKnob(t.clientX - cx, t.clientY - cy);
+      }, { passive: false });
+
+      function moveJoy(e) {
+        if (touchStick.id === null) return;
+        var i, t, rect, cx, cy;
+        for (i = 0; i < e.changedTouches.length; i++) {
+          t = e.changedTouches[i];
+          if (t.identifier !== touchStick.id) continue;
+          e.preventDefault();
+          rect = joyBase.getBoundingClientRect();
+          cx = rect.left + rect.width / 2;
+          cy = rect.top + rect.height / 2;
+          setKnob(t.clientX - cx, t.clientY - cy);
+        }
+      }
+      function endJoy(e) {
+        var i, t;
+        for (i = 0; i < e.changedTouches.length; i++) {
+          t = e.changedTouches[i];
+          if (t.identifier === touchStick.id) resetKnob();
+        }
+      }
+      // Document-level so stick keeps working if finger slides outside the pad
+      document.addEventListener('touchmove', moveJoy, { passive: false });
+      document.addEventListener('touchend', endJoy, { passive: false });
+      document.addEventListener('touchcancel', endJoy, { passive: false });
+
+      // Look: drag on canvas (not on UI buttons)
+      function isTouchUITarget(el) {
+        if (!el || !el.closest) return false;
+        return !!(el.closest('#touchUI') || el.closest('#bottomUI') || el.closest('.overlay') ||
+          el.closest('#missionPad') || el.closest('#gameTimer') || el.closest('#hotbar') || el.closest('#itemBar'));
+      }
+
+      canvas.style.touchAction = 'none';
+      document.body.style.touchAction = 'none';
+
+      canvas.addEventListener('touchstart', function (e) {
+        if (uiOpen || phase === 'menu' || phase === 'win') return;
+        if (isTouchUITarget(e.target)) return;
+        // Only start look with first finger not used by joystick
+        var t = e.changedTouches[0];
+        if (touchStick.id !== null && t.identifier === touchStick.id) return;
+        if (touchLookId !== null) return;
+        e.preventDefault();
+        touchLookId = t.identifier;
+        touchLookLast = { x: t.clientX, y: t.clientY };
+      }, { passive: false });
+
+      canvas.addEventListener('touchmove', function (e) {
+        if (touchLookId === null || uiOpen) return;
+        var i, t, dx, dy, sens;
+        for (i = 0; i < e.changedTouches.length; i++) {
+          t = e.changedTouches[i];
+          if (t.identifier !== touchLookId) continue;
+          e.preventDefault();
+          if (!touchLookLast) {
+            touchLookLast = { x: t.clientX, y: t.clientY };
+            continue;
+          }
+          dx = t.clientX - touchLookLast.x;
+          dy = t.clientY - touchLookLast.y;
+          touchLookLast = { x: t.clientX, y: t.clientY };
+          sens = aimZoom ? TOUCH_SENS * 0.55 : TOUCH_SENS;
+          yaw += dx * sens;
+          pitch -= dy * sens;
+          if (pitch < -1.05) pitch = -1.05;
+          if (pitch > 1.2) pitch = 1.2;
+        }
+      }, { passive: false });
+
+      function endLook(e) {
+        var i, t;
+        for (i = 0; i < e.changedTouches.length; i++) {
+          t = e.changedTouches[i];
+          if (t.identifier === touchLookId) {
+            touchLookId = null;
+            touchLookLast = null;
+          }
+        }
+      }
+      canvas.addEventListener('touchend', endLook, { passive: false });
+      canvas.addEventListener('touchcancel', endLook, { passive: false });
+
+      // Hold buttons
+      function bindHold(id, onStart, onEnd) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('touchstart', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          el.classList.add('on');
+          onStart();
+        }, { passive: false });
+        el.addEventListener('touchend', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          el.classList.remove('on');
+          onEnd();
+        }, { passive: false });
+        el.addEventListener('touchcancel', function (e) {
+          el.classList.remove('on');
+          onEnd();
+        }, { passive: false });
+      }
+
+      bindHold('btnTouchMine', function () {
+        if (!canControlGame()) return;
+        mineHeld = true;
+        if (phase === 'play') mineBlock();
+        else if (phase === 'boss' && !aimZoom) meleeBoss();
+      }, function () { mineHeld = false; });
+
+      bindHold('btnTouchSprint', function () {
+        touchSprint = true;
+        document.getElementById('btnTouchSprint').classList.add('on');
+      }, function () {
+        touchSprint = false;
+        document.getElementById('btnTouchSprint').classList.remove('on');
+      });
+
+      bindHold('btnTouchJump', function () {
+        touchJump = true;
+      }, function () {
+        touchJump = false;
+      });
+
+      document.getElementById('btnTouchUse').addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        tryInteractStation();
+      }, { passive: false });
+
+      document.getElementById('btnTouchAim').addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (phase !== 'boss' || uiOpen) {
+          toast('Aim only in boss fight with a bow equipped');
+          return;
+        }
+        if (aimZoom) {
+          setAimZoom(false);
+          aimToggleLock = false;
+          document.getElementById('btnTouchAim').classList.remove('on');
+        } else if (setAimZoom(true)) {
+          aimToggleLock = true;
+          document.getElementById('btnTouchAim').classList.add('on');
+        }
+      }, { passive: false });
+
+      document.getElementById('btnTouchShoot').addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (phase !== 'boss' || uiOpen) return;
+        if (!aimZoom) setAimZoom(true, true);
+        shootBow();
+      }, { passive: false });
+
+      // Prevent page scroll/zoom while playing
+      document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+      document.addEventListener('touchmove', function (e) {
+        if (phase === 'play' || phase === 'boss') {
+          if (!isTouchUITarget(e.target) && e.target !== canvas && !e.target.closest('#touchUI')) {
+            // allow scrolling inside overlay panels
+            if (e.target.closest && e.target.closest('.overlay:not(.hidden) .panel')) return;
+          }
+        }
+      }, { passive: false });
+    })();
+
+    function movePlayer() {
+      // Frame-rate independent movement (keyboard + touch stick)
+      var sprinting = keys.ShiftLeft || keys.ShiftRight || touchSprint;
+      var base = sprinting ? SPRINT_SPEED : WALK_SPEED;
+      if (aimZoom) base *= 0.45;
+      var speed = base * dt;
+      var f = flatForward();
+      var rx = Math.cos(yaw);
+      var rz = Math.sin(yaw);
+      var mx = 0, mz = 0, len, tryY, guard, moving = false;
+      var stepH = 1.05;
+      var sx, sy;
+
+      if (keys.KeyW) { mx += f.x; mz += f.z; }
+      if (keys.KeyS) { mx -= f.x; mz -= f.z; }
+      if (keys.KeyA) { mx -= rx; mz -= rz; }
+      if (keys.KeyD) { mx += rx; mz += rz; }
+      // Touch joystick: up = forward, right = strafe right
+      if (touchMode && touchStick.active) {
+        sx = touchStick.x;
+        sy = touchStick.y;
+        if (Math.hypot(sx, sy) > 0.12) {
+          mx += (-sy) * f.x + sx * rx;
+          mz += (-sy) * f.z + sx * rz;
+        }
+      }
+      len = Math.hypot(mx, mz);
+      if (len > 0) {
+        moving = true;
+        mx = (mx / len) * speed;
+        mz = (mz / len) * speed;
+        // face movement direction
+        player.facing = Math.atan2(mx, mz);
+        // Axis-separated collision + 1-block step-up (smooth on hills/ore)
+        if (!collides(player.x + mx, player.y, player.z)) player.x += mx;
+        else if (player.onGround && !collides(player.x + mx, player.y + stepH, player.z)) {
+          player.x += mx; player.y += stepH;
+        }
+        if (!collides(player.x, player.y, player.z + mz)) player.z += mz;
+        else if (player.onGround && !collides(player.x, player.y + stepH, player.z + mz)) {
+          player.z += mz; player.y += stepH;
+        }
+      }
+
+      player.vy -= GRAVITY * dt;
+      if (player.vy < -0.55) player.vy = -0.55;
+      tryY = player.y + player.vy;
+      if (!collides(player.x, tryY, player.z)) {
+        player.y = tryY;
+        player.onGround = false;
+      } else {
+        if (player.vy < 0) {
+          player.y = Math.floor(player.y + 0.0001);
+          guard = 0;
+          while (collides(player.x, player.y, player.z) && guard++ < 40) player.y += 0.05;
+          player.onGround = collides(player.x, player.y - 0.08, player.z);
+        } else {
+          player.onGround = false;
+        }
+        player.vy = 0;
+      }
+
+      if ((keys.Space || touchJump) && player.onGround) {
+        player.vy = JUMP_V;
+        player.onGround = false;
+        touchJump = false; // one jump per press
+      }
+
+      if (player.y < 1) { player.y = 1; player.vy = 0; }
+      player.x = Math.max(0.5, Math.min(WX - 0.5, player.x));
+      player.z = Math.max(0.5, Math.min(WZ - 0.5, player.z));
+      guard = 0;
+      while (collides(player.x, player.y, player.z) && guard++ < 40) player.y += 0.1;
+
+      updatePlayerVisual(moving);
+    }
+
+    function updateBoss() {
+      if (!boss.mesh) return;
+      var dx = player.x - boss.x, dz = player.z - boss.z;
+      var dist = Math.hypot(dx, dz) || 1;
+      var now, i, a, bd, armL, armR, bob;
+      boss.x += (dx / dist) * 1.4 * dt;
+      boss.z += (dz / dist) * 1.4 * dt;
+      boss.anim += dt;
+      bob = Math.sin(boss.anim * 3) * 0.08;
+      boss.mesh.position.set(boss.x, 3.05 + bob, boss.z);
+      boss.mesh.lookAt(player.x, 3.05, player.z);
+      armL = boss.mesh.getObjectByName('armL');
+      armR = boss.mesh.getObjectByName('armR');
+      if (armL) armL.rotation.x = Math.sin(boss.anim * 4) * 0.35;
+      if (armR) armR.rotation.x = Math.sin(boss.anim * 4 + Math.PI) * 0.35;
+
+      now = performance.now();
+      if (now - boss.lastAttack > 5500) {
+        boss.lastAttack = now;
+        bossAttack();
+      }
+
+      for (i = arrows.length - 1; i >= 0; i--) {
+        a = arrows[i];
+        // Integrate flight through the air
+        a.x += a.vx * dt;
+        a.y += a.vy * dt;
+        a.z += a.vz * dt;
+        a.vy -= 9 * dt; // light gravity arc
+        a.life -= dt;
+        a.trail = (a.trail || 0) + dt;
+        if (a.mesh) {
+          a.mesh.position.set(a.x, a.y, a.z);
+          a.mesh.lookAt(a.x + a.vx, a.y + a.vy, a.z + a.vz);
+        }
+        // Light spark trail
+        if (a.trail > 0.09) {
+          a.trail = 0;
+          var spark = new THREE.Mesh(
+            new THREE.SphereGeometry(0.06, 4, 4),
+            new THREE.MeshBasicMaterial({ color: 0xfde68a })
+          );
+          spark.position.set(a.x, a.y, a.z);
+          scene.add(spark);
+          particles.push({
+            mesh: spark, vx: 0, vy: 0.2, vz: 0, life: 0.18
+          });
+        }
+        // Hit test against boss body volume
+        bd = Math.hypot(a.x - boss.x, a.z - boss.z);
+        var by = a.y - 3.2;
+        if (bd < 2.2 && by > -2.2 && by < 2.5) {
+          boss.hp -= a.dmg; boss.hits++;
+          spawnDmgNumber(boss.x, 5.6, boss.z, a.dmg, false);
+          spawnMineBurst(Math.floor(boss.x), 4, Math.floor(boss.z), 0xf97316);
+          toast('Arrow hit −' + a.dmg + ' HP', 900);
+          playHitSound();
+          updateBossBars();
+          if (a.mesh) disposeObject3D(a.mesh);
+          arrows.splice(i, 1);
+          if (boss.hp <= 0) winBoss(getWeapon());
+        } else if (a.life <= 0 || a.y < 0 || a.y > 30) {
+          if (a.mesh) disposeObject3D(a.mesh);
+          arrows.splice(i, 1);
+        }
+      }
+    }
+
+    function gameLoop(ts) {
+      requestAnimationFrame(gameLoop);
+      try {
+        if (!lastFrameTs) lastFrameTs = ts || performance.now();
+        var now = ts || performance.now();
+        dt = Math.min(0.05, Math.max(0.001, (now - lastFrameTs) / 1000));
+        lastFrameTs = now;
+
+        var playing = canControlGame();
+        // Keep touch pad visible only while exploring/fighting
+        if (touchMode) {
+          setTouchUIVisible((phase === 'play' || phase === 'boss') && !uiOpen);
+        }
+        if (playing) {
+          movePlayer();
+          updateSwingCombat();
+          if (mineHeld && phase === 'play' && !aimZoom) mineBlock();
+          if (mineHeld && phase === 'boss' && !aimZoom && !swingState.active) meleeBoss();
+        }
+        if (phase === 'boss' && !uiOpen) updateBoss();
+        if (uiOpen) updateHeating();
+        if (phase === 'menu') {
+          if (playerRig) {
+            playerRig.position.set(player.x, player.y, player.z);
+            playerRig.rotation.y += 0.5 * dt;
+          }
+        }
+        updateParticles();
+        updateDmgFloats();
+        updateFireSmokeFx(furnaceFx);
+        updateFireSmokeFx(kilnFx);
+        updatePrompt();
+        updateTargetHighlight();
+        updateCamera();
+        renderer.render(scene, camera);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    initThree();
+    touchMode = isTouchDevice();
+    document.getElementById('libStatus').textContent = touchMode
+      ? 'Ready for iPad/touch — tap Start Game (joystick + buttons will appear)'
+      : 'Ready — PC controls or touch if available. Click Start Game!';
+    document.getElementById('btnStart').disabled = false;
+    gameLoop(performance.now());
+  }
+
+  loadThree()
+    .then(function () {
+      try { startApp(window.THREE); }
+      catch (err) {
+        console.error(err);
+        showLoadError('3D init failed: ' + (err && err.message ? err.message : String(err)));
+      }
+    })
+    .catch(function (err) {
+      showLoadError(err && err.message ? err.message : String(err));
+    });
+})();
+</script>
+</body>
+</html>
