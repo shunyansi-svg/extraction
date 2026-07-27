@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel IAL Chemistry Unit 1 - Interactive Revision Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        chem: {
+                            purple: '#8b5cf6',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                            cyan: '#06b6d4',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-active {
+            border-bottom: 3px solid #38bdf8;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+        
+        /* Fixed 3D Flashcard flip styles with guaranteed answer visibility */
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .card-front {
+            transform: rotateY(0deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-front {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-back {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-slate-900/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                        <span class="text-xl">🧪</span>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-white leading-tight">Edexcel IAL Chemistry Unit 1</h1>
+                        <p class="text-xs text-sky-400 font-medium">Master Revision Hub & 3D Flashcard Suite</p>
+                    </div>
+                </div>
+
+                <!-- Progress Pill -->
+                <div class="hidden md:flex items-center space-x-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                    <div class="text-xs font-medium text-slate-300">
+                        Mastery Progress: <span id="progress-text" class="text-sky-400 font-bold">0 / 70</span>
+                    </div>
+                    <div class="w-32 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-sky-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs Container -->
+            <nav class="flex space-x-1 overflow-x-auto no-scrollbar border-t border-slate-800/50 pt-1 text-sm font-medium">
+                <button onclick="switchTab('syllabus')" id="tab-syllabus" class="tab-btn tab-active px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-list-check text-xs"></i> <span>Syllabus Explorer</span>
+                </button>
+                <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                </button>
+                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Interactive Tools</span>
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-brain text-purple-400 text-xs"></i> <span>3D Flashcards (50) & Quiz</span>
+                </button>
+                <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Glossary & MCQs (37)</span>
+                </button>
+                <button onclick="switchTab('essays')" id="tab-essays" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-pen-nib text-rose-400 text-xs"></i> <span>6-Mark Essay Models (7)</span>
+                </button>
+                <button onclick="switchTab('misconceptions')" id="tab-misconceptions" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-comments text-amber-400 text-xs"></i> <span>Web Misconceptions (20)</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: SYLLABUS EXPLORER -->
+        <section id="view-syllabus" class="tab-view space-y-6">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="syllabus-search" oninput="filterSyllabus()" placeholder="Search spec point, topic, or keyword (e.g. 2.10, carbocation, ionization)..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 w-full md:w-auto">
+                    <button onclick="filterTopic('ALL')" class="topic-filter-btn bg-sky-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all" data-topic="ALL">All Topics</button>
+                    <button onclick="filterTopic('1')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="1">T1: Formulae & Moles</button>
+                    <button onclick="filterTopic('2')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="2">T2: Atomic & Periodic</button>
+                    <button onclick="filterTopic('3')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="3">T3: Bonding & Structure</button>
+                    <button onclick="filterTopic('4')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="4">T4: Alkanes & Org Intro</button>
+                    <button onclick="filterTopic('5')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="5">T5: Alkenes</button>
+                </div>
+            </div>
+
+            <div id="syllabus-container" class="space-y-4">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- TAB 2: EXAMINER PITFALLS -->
+        <section id="view-pitfalls" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-lightbulb text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">Examiner Pitfalls & Student Misconception Vault (10 Key Cards)</h2>
+                        <p class="text-sm text-slate-300 mt-1">Sourced from student forum threads (X, Discord, Student Room) and official Pearson Edexcel Mark Schemes. **Click any blurred card to reveal the mark scheme truth!**</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pitfalls-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- TAB 3: CALCULATORS & TOOLS -->
+        <section id="view-calculators" class="tab-view space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Gas Law Calculator -->
+                <div class="glass-panel p-6 rounded-2xl border border-sky-500/20">
+                    <h3 class="text-lg font-bold text-sky-400 flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-wind"></i> <span>Ideal Gas Law Solver ($pV = nRT$)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Solve for any target variable. Auto converts units to SI ($p$ in Pa, $V$ in $\text{m}^3$, $T$ in K).</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Target Variable</label>
+                            <select id="gas-target" onchange="calculateGas()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2 focus:ring-sky-500">
+                                <option value="V">Volume (V)</option>
+                                <option value="p">Pressure (p)</option>
+                                <option value="n">Moles (n)</option>
+                                <option value="T">Temperature (T)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Pressure (p)</label>
+                            <div class="flex space-x-1">
+                                <input type="number" id="gas-p" value="101325" oninput="calculateGas()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                                <span class="text-xs text-slate-400 self-center">Pa</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Volume ($V$ in $\text{dm}^3$)</label>
+                            <input type="number" id="gas-v" value="24" oninput="calculateGas()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Moles (n)</label>
+                            <input type="number" id="gas-n" value="1" oninput="calculateGas()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Temperature ($^\circ\text{C}$)</label>
+                            <input type="number" id="gas-t" value="25" oninput="calculateGas()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Gas Constant R</label>
+                            <input type="text" value="8.314 J mol⁻¹ K⁻¹" disabled class="w-full bg-slate-800 border border-slate-700 text-slate-400 rounded-lg p-2">
+                        </div>
+                    </div>
+
+                    <div id="gas-result" class="p-4 bg-sky-950/40 border border-sky-500/30 rounded-xl text-center font-mono text-sky-300 font-bold text-lg">
+                        Calculation Output
+                    </div>
+                </div>
+
+                <!-- Atom Economy & Yield Calculator -->
+                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20">
+                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-leaf"></i> <span>Atom Economy & Yield Calculator</span>
+                    </h3>
+                    
+                    <div class="space-y-4 text-sm">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h4 class="font-semibold text-emerald-300 mb-2">1. % Atom Economy</h4>
+                            <div class="grid grid-cols-2 gap-3 mb-2">
+                                <div>
+                                    <label class="block text-xs text-slate-400">Desired Product Mr</label>
+                                    <input type="number" id="ae-desired" value="60" oninput="calcAtomEconomy()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400">Sum of All Products Mr</label>
+                                    <input type="number" id="ae-total" value="69" oninput="calcAtomEconomy()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2">
+                                </div>
+                            </div>
+                            <div id="ae-output" class="font-mono text-xs text-emerald-400 font-semibold">Atom Economy: 86.96%</div>
+                        </div>
+
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h4 class="font-semibold text-emerald-300 mb-2">2. Percentage Yield</h4>
+                            <div class="grid grid-cols-2 gap-3 mb-2">
+                                <div>
+                                    <label class="block text-xs text-slate-400">Actual Mass Obtained (g)</label>
+                                    <input type="number" id="yield-actual" value="12.5" oninput="calcYield()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-400">Theoretical Mass Max (g)</label>
+                                    <input type="number" id="yield-theo" value="15.0" oninput="calcYield()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2">
+                                </div>
+                            </div>
+                            <div id="yield-output" class="font-mono text-xs text-emerald-400 font-semibold">Percentage Yield: 83.33%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Relative Atomic Mass (RAM) Calculator -->
+                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20 lg:col-span-2">
+                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-atom"></i> <span>Relative Atomic Mass ($A_r$) Isotope Calculator</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-3">Calculate weighted average atomic mass from isotopic percentages or abundances.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="text-xs font-semibold text-purple-300">Isotope 1</span>
+                            <div class="flex space-x-2 mt-1">
+                                <input type="number" id="iso1-mass" placeholder="Mass" value="78.92" oninput="calcRAM()" class="w-1/2 bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2 text-xs">
+                                <input type="number" id="iso1-abun" placeholder="Abund %" value="50.69" oninput="calcRAM()" class="w-1/2 bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2 text-xs">
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="text-xs font-semibold text-purple-300">Isotope 2</span>
+                            <div class="flex space-x-2 mt-1">
+                                <input type="number" id="iso2-mass" placeholder="Mass" value="80.92" oninput="calcRAM()" class="w-1/2 bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2 text-xs">
+                                <input type="number" id="iso2-abun" placeholder="Abund %" value="49.31" oninput="calcRAM()" class="w-1/2 bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2 text-xs">
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="text-xs font-semibold text-purple-300">Isotope 3 (Optional)</span>
+                            <div class="flex space-x-2 mt-1">
+                                <input type="number" id="iso3-mass" placeholder="Mass" value="" oninput="calcRAM()" class="w-1/2 bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2 text-xs">
+                                <input type="number" id="iso3-abun" placeholder="Abund %" value="" oninput="calcRAM()" class="w-1/2 bg-slate-950 border border-slate-700 text-slate-200 rounded-lg p-2 text-xs">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ram-output" class="p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl text-center font-mono text-purple-300 font-bold">
+                        Calculated Relative Atomic Mass ($A_r$): 79.91
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: 3D FLASHCARDS (50) & QUIZ -->
+        <section id="view-quiz" class="tab-view space-y-6 hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-900 p-4 rounded-2xl border border-slate-800 gap-3">
+                <div class="flex space-x-2">
+                    <button id="quiz-mode-cards" onclick="setQuizMode('cards')" class="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-layer-group"></i> <span>🎴 3D Flashcard Deck (50)</span>
+                    </button>
+                    <button id="quiz-mode-test" onclick="setQuizMode('test')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-list-ul"></i> <span>📝 Active List View</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-3 text-xs text-slate-400 font-medium">
+                    <button onclick="shuffleDeck()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-purple-300 border border-purple-500/30 rounded-lg font-semibold transition-all">
+                        <i class="fa-solid fa-shuffle"></i> <span>Shuffle Deck</span>
+                    </button>
+                    <div>
+                        Card <span id="card-index" class="text-purple-400 font-bold">1</span> of <span id="card-total" class="font-bold">50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 3D Interactive Flip Component -->
+            <div id="flashcard-view" class="max-w-2xl mx-auto space-y-6">
+                <div class="card-flip w-full h-96 cursor-pointer select-none" onclick="flipCard()">
+                    <div id="card-inner-el" class="card-inner relative w-full h-full rounded-2xl border border-purple-500/30 bg-slate-900/95 shadow-2xl transition-transform duration-500">
+                        
+                        <!-- Front Face (Question) -->
+                        <div class="card-front absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 rounded-2xl border border-purple-500/30">
+                            <div class="flex items-center justify-between border-b border-purple-500/20 pb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span id="card-front-topic" class="text-[11px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20">Topic 1</span>
+                                    <span id="card-front-spec" class="text-[11px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 font-mono">Spec 1.1</span>
+                                </div>
+                                <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-mono">Click to Flip</span>
+                            </div>
+
+                            <div class="text-base sm:text-lg font-bold text-slate-100 my-auto text-center px-2 leading-relaxed" id="card-question">
+                                Loading Question...
+                            </div>
+
+                            <div class="text-xs text-slate-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-purple-400"></i>
+                                <span>Click card to reveal Edexcel Mark Scheme Answer</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face (Answer) -->
+                        <div class="card-back absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/98 rounded-2xl border border-emerald-500/50 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                                <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                    <span>Edexcel Mark Scheme Answer</span>
+                                </span>
+                                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Answer Revealed</span>
+                            </div>
+
+                            <div class="text-xs sm:text-sm text-slate-200 my-auto leading-relaxed overflow-y-auto max-h-56 px-2 py-1 custom-scrollbar whitespace-pre-line text-left bg-emerald-950/30 rounded-xl border border-emerald-500/20 p-3" id="card-answer">
+                                Loading Answer...
+                            </div>
+
+                            <div class="text-xs text-emerald-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                                <span>Click again to flip back to question</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center px-2 gap-2">
+                    <button onclick="prevCard()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Previous</span>
+                    </button>
+
+                    <button onclick="nextCard()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <span>Next</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Mode View -->
+            <div id="test-view" class="max-w-2xl mx-auto space-y-6 hidden">
+                <div id="quiz-questions-container" class="space-y-6">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: GLOSSARY -->
+        <section id="view-glossary" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="relative w-full">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Filter all 37 glossary terms & attached exam MCQs (e.g., Electronegativity, Carbocation, VSEPR)..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div class="text-xs text-slate-400 whitespace-nowrap">
+                    Total Terms: <span id="glossary-count" class="font-bold text-cyan-400">37</span>
+                </div>
+            </div>
+
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- TAB 6: 6-MARK ESSAYS -->
+        <section id="view-essays" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-rose-500/20">
+                <h2 class="text-xl font-bold text-rose-400 flex items-center space-x-2 mb-2">
+                    <i class="fa-solid fa-file-pen"></i> <span>Level 3 (6-Mark) High-Yield Essay Models (7 Exemplars)</span>
+                </h2>
+                <p class="text-xs text-slate-300">Complete mark scheme breakdowns for long-answer essay prompts in Pearson Edexcel Paper 1 (Structure, Bonding & Organic Chemistry).</p>
+            </div>
+
+            <div id="essays-container" class="space-y-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- TAB 7: WEB MISCONCEPTIONS -->
+        <section id="view-misconceptions" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-comments text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">20 Common Misconceptions from Student Communities (X, Discord, TSR)</h2>
+                        <p class="text-sm text-slate-300 mt-1">Real-world confusion points gathered from active A-Level chemistry revision groups. **Click any blurred box to reveal the Mark Scheme Explanation!**</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="web-misconceptions-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ==================== COMPLETE SYLLABUS DATA (TOPICS 1 to 5) ==================== */
+        const SYLLABUS_DATA = [
+            // TOPIC 1
+            { id: "1.1", topic: 1, title: "Key Chemical Terms", content: "Know the terms 'atom', 'element', 'ion', 'molecule', 'compound', 'empirical formula', and 'molecular formula'.", tip: "Empirical formula is the simplest WHOLE NUMBER ratio of atoms of each element in a compound. Do not leave ratios as decimals!", misconception: "Students often confuse ionic compounds with molecules. Ionic structures form giant lattices, NOT discrete molecules." },
+            { id: "1.2", topic: 1, title: "The Mole & Avogadro Constant", content: "Know that the mole (mol) is the unit for the amount of substance and perform calculations using L = 6.02 × 10²³ mol⁻¹.", tip: "To find total IONS in a salt like Fe₂(SO₄)₃, calculate moles of Fe₂(SO₄)₃, multiply by 5 (2 Fe³⁺ + 3 SO₄²⁻), then multiply by L.", misconception: "Forgetting to multiply Avogadro's constant by the number of atoms/ions per formula unit." },
+            { id: "1.3", topic: 1, title: "Balanced & Ionic Equations", content: "Write balanced full and ionic equations, including state symbols (s, l, g, aq), for chemical reactions.", tip: "In ionic equations, cancel spectator ions. Solids, liquids, and gases NEVER split into ions; only soluble aqueous compounds split.", misconception: "Writing state symbols as capital letters (e.g., (AQ) instead of (aq)) or omitting state symbols when explicitly requested." },
+            { id: "1.4", topic: 1, title: "Relative Masses & Molar Mass & ppm", content: "Understand RAM based on ¹²C scale, Mr, relative formula mass (for giant structures), molar mass (g mol⁻¹), and parts per million (ppm).", tip: "1 ppm = 1 mg of solute per 1 kg (or 1 dm³) of solution/solvent. RAM is relative to 1/12th the mass of a Carbon-12 atom.", misconception: "Confusing relative formula mass (dimensionless) with molar mass (has units g mol⁻¹)." },
+            { id: "1.5", topic: 1, title: "Solution Concentrations", content: "Calculate concentration of a solution in mol dm⁻³ and g dm⁻³.", tip: "Convert cm³ to dm³ by dividing by 1000. To convert mol dm⁻³ to g dm⁻³, multiply by Molar Mass (Mr).", misconception: "Dividing by volume in cm³ directly without converting to dm³." },
+            { id: "1.6", topic: 1, title: "Empirical & Molecular Formula Calculations", content: "Use experimental data to calculate empirical and molecular formulae.", tip: "Divide mass/% by Ar -> Divide all by smallest mole value -> Round to nearest whole integer -> Multiply empirical formula by (Mr / empirical Mr).", misconception: "Rounding fractional ratios like 1.5 or 1.33 prematurely to 2 or 1 instead of multiplying by 2 or 3." },
+            { id: "1.7", topic: 1, title: "Reacting Mass Calculations", content: "Use chemical equations to calculate reacting masses and vice versa using molar mass.", tip: "Always convert mass to moles first (n = m/M), use stoichiometric mole ratios from equation, then convert back to mass.", misconception: "Using initial balancing numbers inside the molar mass calculation." },
+            { id: "1.8", topic: 1, title: "Gas Calculations & Ideal Gas Equation", content: "Calculate gas volumes using molar volume and pV = nRT for gases and volatile liquids.", tip: "MUST USE SI UNITS: Pressure in Pa (kPa × 1000), Volume in m³ (dm³ / 1000 or cm³ / 1,000,000), Temperature in K (°C + 273.15).", misconception: "Plugging temperature in °C directly into pV = nRT." },
+            { id: "1.9", topic: 1, title: "Percentage Yield & Atom Economy", content: "Calculate percentage yield and percentage atom economies: Atom Economy = (Mr desired product / Sum of Mr all products) × 100.", tip: "High percentage yield does NOT mean high atom economy! Atom economy depends strictly on stoichiometry of desired vs waste products.", misconception: "Including unreacted starting materials in atom economy calculations." },
+            { id: "1.10", topic: 1, title: "Determining Formulae by Experiment", content: "Determine a formula or confirm an equation by experiment (e.g., water of crystallisation in hydrates MgSO₄·xH₂O).", tip: "To find x: calculate mass of anhydrous salt and mass of water lost upon heating to constant mass -> convert both to moles -> ratio.", misconception: "Assuming heating once is sufficient. Must heat to 'constant mass' to ensure complete reaction/dehydration." },
+            { id: "1.11", topic: 1, title: "Core Practical 1: Molar Volume of a Gas", content: "Measure the molar volume of a gas (e.g., reaction of acid with carbonate).", tip: "Major sources of error: Gas escaping before bung is replaced, tube displacement error, solubility of CO₂ in water.", misconception: "Forgetting to correct for atmospheric pressure or room temperature." },
+            { id: "1.12", topic: 1, title: "Test-Tube Reactions & Ionic Equations", content: "Relate ionic equations with state symbols to displacement, acid, and precipitation reactions.", tip: "Precipitation example: Ag⁺(aq) + Cl⁻(aq) → AgCl(s). Neutralisation: H⁺(aq) + OH⁻(aq) → H₂O(l).", misconception: "Splitting insoluble solid precipitates into aqueous ions in ionic equations." },
+
+            // TOPIC 2
+            { id: "2.1", topic: 2, title: "Subatomic Structure of Atoms", content: "Know the structure of an atom in terms of electrons, protons, and neutrons.", tip: "Protons and neutrons reside in the dense nucleus; electrons occupy orbitals around the nucleus.", misconception: "Believing electrons travel in fixed planetary orbits rather than 3D probability clouds (orbitals)." },
+            { id: "2.2", topic: 2, title: "Relative Mass & Charge", content: "Relative masses: proton = 1, neutron = 1, electron = 1/1836. Relative charges: proton = +1, neutron = 0, electron = -1.", tip: "Always specify 'relative' when asked for particle mass/charge unless absolute SI units are requested.", misconception: "Stating the mass of an electron is zero instead of 1/1836 or negligible." },
+            { id: "2.3", topic: 2, title: "Atomic Number & Mass Number", content: "Atomic (proton) number Z determines the element. Mass number A = protons + neutrons.", tip: "The number of protons uniquely identifies the element.", misconception: "Confusing atomic number with relative atomic mass." },
+            { id: "2.4", topic: 2, title: "Deducing Subatomic Particles in Ions", content: "Determine number of protons, neutrons, and electrons in an atom or ion.", tip: "In a 2+ cation, subtract 2 from the atomic number for electrons. In an anion (e.g. N³⁻), add 3 to protons.", misconception: "Changing proton numbers when forming ions." },
+            { id: "2.5", topic: 2, title: "Isotopes Definition", content: "Atoms of the SAME element with the SAME number of protons but DIFFERENT number of neutrons.", tip: "Mark scheme requires both 'same number of protons / atomic number' AND 'different number of neutrons / mass number'.", misconception: "Stating isotopes have different chemical properties. They have IDENTICAL chemical properties!" },
+            { id: "2.6", topic: 2, title: "Mass Spectrometer Principles & Spectra", content: "Analyze mass spectra: Ionisation -> Acceleration -> Deflection -> Detection. Vacuum prevents collisions with air molecules.", tip: "Vacuum is essential to prevent sample ions from colliding with air/water molecules.", misconception: "Thinking 2+ ions show up at double mass; a 2+ ion appears at HALF its m/z value!" },
+            { id: "2.7", topic: 2, title: "Mass Spectra of Diatomic Molecules (Br₂, Cl₂)", content: "Predict peak heights for Br₂ and Cl₂ molecules.", tip: "For Br₂ (⁷⁹Br & ⁸¹Br, 1:1 ratio), molecular ion peaks at m/z 158, 160, 162 occur in a 1:2:1 ratio. m/z 160 peak is double because both (79-81) and (81-79) exist.", misconception: "Forgetting the central peak of Br₂ or Cl₂ is taller due to combination probability." },
+            { id: "2.8", topic: 2, title: "Ionisation Energy Definitions", content: "First IE: Energy required to remove 1 mole of electrons from 1 mole of gaseous atoms to form 1 mole of 1+ gaseous ions.", tip: "MUST include state symbols (g) in equations: X(g) → X⁺(g) + e⁻.", misconception: "Forgetting gaseous state symbols (g) or defining for single atoms." },
+            { id: "2.9", topic: 2, title: "Orbital Definition", content: "An orbital is a region within an atom that can hold up to TWO electrons with OPPOSITE spins.", tip: "Opposite spins minimize electrostatic repulsion between the two negative electrons.", misconception: "Describing an orbital as a 2D circular path." },
+            { id: "2.10", topic: 2, title: "Factors Affecting Ionisation Energy", content: "1. Nuclear charge (protons). 2. Atomic radius (distance). 3. Electron shielding (inner shells).", tip: "Across a period: Nuclear charge increases, shielding remains constant -> IE increases. Down a group: Atomic radius & shielding increase -> IE decreases.", misconception: "Claiming shielding increases across a period." },
+            { id: "2.11", topic: 2, title: "Evidence for Quantum Shells & Sub-shells", content: "Successive IEs give group number. Anomalies across period give sub-shell evidence (Be->B drop, N->O / P->S drop).", tip: "Be to B drop: Boron's outer e⁻ is in 2p sub-shell (higher energy level, more shielded). P to S drop: Sulfur has paired e⁻ in 3p orbital experiencing spin-pair repulsion.", misconception: "Explaining B/Be drop by saying 2s is 'full and stable'. Edexcel requires reference to sub-shell energy levels!" },
+            { id: "2.12", topic: 2, title: "Shapes of s and p Orbitals", content: "s orbital is spherical. p orbital is dumbbell-shaped (px, py, pz at right angles).", tip: "Draw p-orbital with two clear symmetrical lobes meeting at the origin node.", misconception: "Drawing a p orbital as two separate circles that don't touch." },
+            { id: "2.13", topic: 2, title: "Orbital Filling Rules", content: "Hund's rule: Orbitals in a sub-shell fill singly before pairing up. Pauli principle: Paired electrons have opposite spins.", tip: "Represent spin with up and down half-arrows in electron-in-boxes notation.", misconception: "Pairing up electrons in 2p sub-shell before all three orbitals have 1 electron each." },
+            { id: "2.14", topic: 2, title: "Electronic Configurations (H to Kr)", content: "Write s, p, d notation and electron-in-boxes for atoms and ions.", tip: "EXCEPTIONS: Cr = [Ar] 4s¹ 3d⁵ and Cu = [Ar] 4s¹ 3d¹⁰. When forming transition metal cations, 4s electrons are lost BEFORE 3d electrons!", misconception: "Removing 3d electrons before 4s electrons when forming d-block cations." },
+            { id: "2.15", topic: 2, title: "Electronic Structure Determines Properties", content: "Elements in the same group have identical valence shell electron configurations.", tip: "Group number = number of valence outer shell electrons.", misconception: "Assuming chemical reactivity is governed by neutrons." },
+            { id: "2.16", topic: 2, title: "Periodic Blocks & Shell Capacities", content: "s block (Groups 1-2), p block (Groups 3-8), d block. Max capacity: n=1 (2e), n=2 (8e), n=3 (18e), n=4 (32e).", tip: "Subshell capacities: s=2, p=6, d=10, f=14.", misconception: "Believing the 3rd quantum shell can only hold 8 electrons." },
+            { id: "2.17", topic: 2, title: "Graphical Periodicity & Log IE", content: "Plotting log₁₀(IE) shows clear shell boundaries as distinct jumps.", tip: "Using logarithms compresses large numerical scales to show quantum shell jumps clearly.", misconception: "Not recognizing that large vertical jumps represent changing quantum shells." },
+            { id: "2.18", topic: 2, title: "Periodic Trends in Melting Point & IE", content: "Period 2 & 3 MPs: Metals increase (Na<Mg<Al) -> Giant covalent peak (Si / C) -> Simple molecular drop (P₄, S∸, Cl₂, Ar).", tip: "S∸ has higher melting point than P₄ because S∸ is a larger molecule with MORE ELECTRONS -> stronger London dispersion forces!", misconception: "Stating S∸ has higher melting point than P₄ because S-S covalent bonds are broken during melting." },
+
+            // TOPIC 3
+            { id: "3.1", topic: 3, title: "Evidence for Existence of Ions", content: "Evidence includes physical properties, electron density maps, and ion migration experiments (e.g. CuCrO₄).", tip: "In CuCrO₄ electrolysis, blue Cu²⁺ ions migrate toward cathode (-), yellow CrO₄²⁻ ions migrate toward anode (+).", misconception: "Thinking covalent compounds show zero electron density between atoms." },
+            { id: "3.2", topic: 3, title: "Ion Formation", content: "Metals lose electrons to form positive cations; non-metals gain electrons to form negative anions.", tip: "Focus on achieving noble gas electron configuration.", misconception: "Describing ion formation as 'atoms wanting to be stable'." },
+            { id: "3.3", topic: 3, title: "Dot-and-Cross Diagrams for Ions", content: "Draw valence electrons for cations and anions in square brackets with charge.", tip: "Always put square brackets around ions and show charge outside upper right: [Na]⁺ and [:F:]⁻.", misconception: "Forgetting brackets or charges on dot-and-cross diagrams." },
+            { id: "3.4", topic: 3, title: "Ionic Giant Crystal Lattices", content: "Ionic compounds exist as 3D giant lattices of alternating positive cations and negative anions.", tip: "State that electrostatic attraction acts in ALL directions throughout the lattice.", misconception: "Referring to individual 'NaCl molecules'." },
+            { id: "3.5", topic: 3, title: "Ionic Bonding Definition", content: "Strong electrostatic attraction between oppositely charged ions in a giant lattice.", tip: "Mark scheme required words: 'electrostatic attraction' AND 'oppositely charged ions'.", misconception: "Defining ionic bonding merely as 'transfer of electrons'." },
+            { id: "3.6", topic: 3, title: "Factors Affecting Ionic Bond Strength", content: "Strongest ionic bonding occurs with SMALLER ionic radii and HIGHER ionic charges.", tip: "Mg²⁺O²⁻ has much stronger ionic bonding and higher melting point than Na⁺F⁻.", misconception: "Comparing ionic strength based on atomic radius instead of IONIC radius." },
+            { id: "3.7", topic: 3, title: "Trends in Ionic Radii & Isoelectronic Series", content: "Isoelectronic ions have same electron count. Size decreases as proton number increases.", tip: "Na⁺ is smaller than F⁻ because Na⁺ has 11 protons pulling 10 electrons vs F⁻ (9 protons).", misconception: "Thinking isoelectronic ions have the same radius." },
+            { id: "3.8", topic: 3, title: "Polarisation in Ionic Bonds", content: "Cation distorts electron cloud of anion, leading to partial covalent character.", tip: "Polarisation causes ionic compounds to have lower melting points than pure ionic model predicts.", misconception: "Confusing cation polarisation power with anion polarisability." },
+            { id: "3.9", topic: 3, title: "Polarising Power & Polarisability", content: "Cation polarising power is highest with SMALL radius and LARGE charge. Anion polarisability is highest with LARGE radius and LARGE charge.", tip: "Al³⁺ highly polarises I⁻ -> significant covalent character.", misconception: "Stating small anions are easily polarised." },
+            { id: "3.10", topic: 3, title: "Covalent Bonding Definition & Evidence", content: "Strong electrostatic attraction between two positive nuclei and the shared pair of electrons between them.", tip: "Must mention attraction between BOTH nuclei and the SHARED pair of electrons.", misconception: "Defining covalent bond simply as 'sharing electrons'." },
+            { id: "3.11", topic: 3, title: "Covalent & Dative Dot-and-Cross Diagrams", content: "Draw single, double, triple, and dative covalent bonds (e.g., Al₂Cl₆, NH₄⁺, H₃O⁺).", tip: "In a dative covalent bond, BOTH shared electrons originate from ONE atom.", misconception: "Drawing dative bonds with different electron symbols that imply each atom contributed one." },
+            { id: "3.12", topic: 3, title: "Giant Covalent Structures (Diamond, Graphite, Graphene)", content: "Diamond: 4 bonds per C (hard, insulator). Graphite: 3 bonds per C in planar layers, 1 delocalised e⁻ (conductor).", tip: "Graphite conducts electricity parallel to layers because delocalised electrons are free to move.", misconception: "Thinking diamond conducts electricity or that graphite breaks covalent bonds when sliding." },
+            { id: "3.13", topic: 3, title: "Electronegativity Definition", content: "The ability of an atom to attract a bonding pair of electrons in a covalent bond.", tip: "Fluorine is the most electronegative element.", misconception: "Confusing electronegativity with electron affinity or ionisation energy." },
+            { id: "3.14", topic: 3, title: "Bonding Continuum & Bond Polarity", content: "Bonding is a spectrum from pure non-polar covalent -> polar covalent -> ionic.", tip: "Large electronegativity difference (>2.0) leads to ionic bonding.", misconception: "Viewing ionic and covalent as strictly separate categories with no overlap." },
+            { id: "3.15", topic: 3, title: "Polar Bonds vs Polar Molecules", content: "A molecule with polar bonds can be NON-POLAR overall if dipoles cancel out due to symmetrical geometry (e.g., CCl₄, BF₃).", tip: "CCl₄ is non-polar because tetrahedral symmetry causes C-Cl bond dipoles to cancel.", misconception: "Assuming any molecule containing polar bonds must be a polar molecule." },
+            { id: "3.16", topic: 3, title: "VSEPR Theory Principles", content: "Electron pairs (bonding & lone) around central atom repel each other to achieve MAXIMUM separation and MINIMUM repulsion.", tip: "Repulsion strength: LP-LP > LP-BP > BP-BP.", misconception: "Forgetting lone pairs repel more strongly than bonding pairs." },
+            { id: "3.17", topic: 3, title: "Bond Length and Bond Angle", content: "Bond length: distance between centers of two bonded nuclei. Bond angle: angle between two covalent bonds.", tip: "Multiple bonds (C=C) are shorter and stronger than single bonds (C-C).", misconception: "Believing double bonds are twice as long as single bonds." },
+            { id: "3.18", topic: 3, title: "Predicting Shapes and Angles", content: "Linear (180°), Trigonal Planar (120°), Tetrahedral (109.5°), Trigonal Pyramidal (107°), Non-linear (104.5°), SF₆ (90°).", tip: "State BP and LP count, repulsion to max separation, shape name, and exact angle.", misconception: "Quoting tetrahedral angle for ammonia (NH₃)." },
+            { id: "3.19", topic: 3, title: "Analogous Shapes (SF₄, ClF₃)", content: "SF₄ has 4 BP + 1 LP -> See-saw shape (~89°, 119°). ClF₃ has 3 BP + 2 LP -> T-shape (~87.5°).", tip: "Count total valence electrons + attached atoms -> subtract bonds to find lone pairs.", misconception: "Predicting SF₄ is planar square or tetrahedral." },
+            { id: "3.20", topic: 3, title: "Metallic Bonding Structure", content: "Giant lattice of positive metal ions (cations) surrounded by a 'sea' of delocalised electrons.", tip: "Delocalised electrons are free to move throughout the entire metallic structure.", misconception: "Describing metal structure as metal 'atoms' in electrons." },
+            { id: "3.21", topic: 3, title: "Electrostatic Attraction in Metals", content: "Metallic bond is the strong electrostatic attraction between metal cations and delocalised electrons.", tip: "Strength depends on cation charge and cation radius.", misconception: "Attributing metallic bond strength to intermolecular forces." },
+            { id: "3.22", topic: 3, title: "Properties of Metals (Mg vs Na)", content: "Metals conduct electricity in solid & liquid states. Mg has higher MP than Na because Mg²⁺ has higher charge and smaller radius.", tip: "Mg²⁺ exerts stronger electrostatic attraction on more delocalised electrons than Na⁺.", misconception: "Saying metals conduct electricity because 'ions move' in solid state." },
+
+            // TOPIC 4
+            { id: "4.1", topic: 4, title: "Hazard vs Risk", content: "Hazard: Potential of a substance/procedure to cause harm. Risk: Likelihood that harm will occur under specific conditions.", tip: "Hazard is intrinsic; risk can be minimized by safety controls.", misconception: "Using hazard and risk interchangeably." },
+            { id: "4.2", topic: 4, title: "Hazards of Organic Compounds", content: "Organic compounds are often flammable, toxic, volatile, or harmful to environment.", tip: "Flammability is a major hazard; volatility increases vapor exposure risk.", misconception: "Assuming all organic compounds are non-hazardous." },
+            { id: "4.3", topic: 4, title: "Reducing Reaction Risks", content: "1. Work on a smaller scale. 2. Fume cupboard for toxic vapors. 3. Heating mantle instead of Bunsen flame for flammable liquids.", tip: "Always suggest heating organic liquids with a water bath or electric mantle, NEVER an open flame!", misconception: "Suggesting open Bunsen flames to heat highly flammable solvents." },
+            { id: "4.4", topic: 4, title: "Homologous Series & Functional Groups", content: "Homologous series: Family of organic compounds with same functional group, same general formula, similar chemical properties, differing by -CH₂-.", tip: "Physical properties show a GRADUAL TREND down a homologous series.", misconception: "Stating members of a homologous series have 'identical' physical properties." },
+            { id: "4.5", topic: 4, title: "IUPAC Nomenclature & Formulae Types", content: "Name and draw up to C₁₀ using structural, displayed, and skeletal formulae.", tip: "Find longest continuous carbon chain first. Alphabetical order for substituents.", misconception: "Choosing a shorter chain because it's drawn horizontally." },
+            { id: "4.6", topic: 4, title: "Classification of Reaction Types", content: "Addition, Substitution, Oxidation, Reduction, Polymerisation.", tip: "Addition: 2 reactants -> 1 product (100% atom economy). Substitution: An atom/group is replaced.", misconception: "Confusing addition with substitution." },
+            { id: "4.7", topic: 4, title: "Homolytic & Heterolytic Fission", content: "Homolytic: Bond breaks symmetrically -> RADICALS. Heterolytic: Unsymmetrical breaking -> IONS.", tip: "Use single-headed curly half-arrows for homolytic and double-headed arrows for heterolytic.", misconception: "Using full curly arrows to represent single electron movement." },
+            { id: "4.8", topic: 4, title: "Free Radical & Electrophile Definitions", content: "Free Radical: Species with a single UNPAIRED electron (•). Electrophile: An electron pair ACCEPTOR.", tip: "Electrophiles are electron-deficient species attracted to electron-rich C=C bonds.", misconception: "Defining a free radical as 'a charged ion'." },
+            { id: "4.9", topic: 4, title: "Alkanes & Cycloalkanes Formulas", content: "Alkanes: CₙH₂ₙ₊₂. Cycloalkanes: CₙH₂ₙ. Both are saturated hydrocarbons.", tip: "Saturated = contains ONLY single C-C and C-H bonds.", misconception: "Thinking cycloalkanes are unsaturated because they share formula CₙH₂ₙ with alkenes." },
+            { id: "4.10", topic: 4, title: "Structural Isomerism", content: "Compounds with the SAME molecular formula but DIFFERENT structural formulae.", tip: "Three types: Chain, Position, Functional group isomerism.", misconception: "Drawing the same molecule bent into a different shape on paper." },
+            { id: "4.11", topic: 4, title: "Isomers of Alkanes & Cycloalkanes", content: "Draw/name all isomers for C₄H₁₀ (2), C₅H₁₂ (3), C₆H₁₄ (5), and cycloalkanes.", tip: "C₄H₁₀ has 2 isomers; C₄H₉Br has 4 structural isomers.", misconception: "Forgetting cyclic isomers when asked for structural isomers of formula CₙH₂ₙ." },
+            { id: "4.12", topic: 4, title: "Industrial Processing of Crude Oil", content: "Fractional distillation separates by BP. Cracking breaks long alkanes -> shorter alkanes + alkenes. Reforming converts straight chains -> branched/cyclic.", tip: "Cracking uses high temp/catalyst (Al₂O₃) -> decreases average carbon chain length.", misconception: "Thinking fractional distillation breaks covalent bonds." },
+            { id: "4.13", topic: 4, title: "Combustion Pollutants", content: "Emits CO, NOₓ, SOₓ, soot particulates, and unburnt hydrocarbons.", tip: "NOₓ forms inside engine because high temperatures provide energy for N₂ and O₂ from air to react!", misconception: "Claiming NOₓ comes from nitrogen impurities in fuel." },
+            { id: "4.14", topic: 4, title: "Toxicity of CO & Acidity of SO₂/NOₓ", content: "CO binds irreversibly to hemoglobin, reducing oxygen transport. SO₂ & NOₓ cause acid rain.", tip: "CO is odorless, colorless, and toxic.", misconception: "Stating CO causes global warming or acid rain." },
+            { id: "4.15", topic: 4, title: "Alternative Fuels & Sustainability", content: "Bioethanol, biodiesel, and hydrogen to reduce fossil fuel CO₂ emissions.", tip: "Combustion of hydrogen produces ONLY water vapor.", misconception: "Claiming biofuels produce zero CO₂ during combustion." },
+            { id: "4.16", topic: 4, title: "Carbon Neutrality Concept", content: "Net absorption of CO₂ during growth equals CO₂ emitted during combustion.", tip: "Transporting/processing biofuels uses fossil fuels, so full life-cycle is rarely 100% neutral.", misconception: "Assuming zero carbon emissions across full supply chain." },
+            { id: "4.17", topic: 4, title: "Reactions of Alkanes (Combustion & Halogens)", content: "Complete combustion -> CO₂ + H₂O. Halogenation under UV light.", tip: "Alkanes are unreactive towards acids/alkalis due to strong non-polar C-C and C-H bonds.", misconception: "Attempting alkane reactions without UV light." },
+            { id: "4.18", topic: 4, title: "Free Radical Substitution Mechanism", content: "Initiation (UV: Cl₂ → 2Cl•) -> Propagation (Cl• + CH₄ → •CH₃ + HCl; •CH₃ + Cl₂ → CH₃Cl + Cl•) -> Termination.", tip: "LIMITATION: Further substitution occurs, producing mixtures (CH₂Cl₂, CHCl₃, CCl₄).", misconception: "Writing HCl in initiation step or forgetting dot • on free radicals." },
+
+            // TOPIC 5
+            { id: "5.1", topic: 5, title: "Alkenes Unsaturation & Bonds", content: "C=C double bond composed of one sigma (σ) bond and one pi (π) bond.", tip: "Sigma: Head-on overlap. Pi: Sideways overlap of p-orbitals above/below internuclear axis.", misconception: "Claiming pi bonds are stronger than sigma bonds." },
+            { id: "5.2", topic: 5, title: "Geometric (E/Z) Isomerism Causes", content: "Requires: 1. Restricted rotation around C=C. 2. TWO DIFFERENT groups attached to EACH carbon of C=C.", tip: "Chloroethene does NOT show E/Z isomerism because one carbon has 2 identical H atoms!", misconception: "Stating C=C double bonds can rotate at room temperature." },
+            { id: "5.3", topic: 5, title: "E/Z CIP Priority Naming System", content: "CIP priority rules: Priority determined by HIGHER ATOMIC NUMBER of attached atom.", tip: "Z (together): High priority on SAME side. E (opposite): High priority on OPPOSITE sides.", misconception: "Using molecular mass instead of ATOMIC NUMBER of the immediately attached atom." },
+            { id: "5.4", topic: 5, title: "Reactions of Alkenes Overview", content: "Addition of H₂ (Ni, 150°C), halogens, HX, steam (H₃PO₄), acidified KMnO₄ (diol).", tip: "KMnO₄ test: Purple solution turns COLOURLESS (or brown ppt MnO₂).", misconception: "Forgetting nickel catalyst or heating for hydrogenation." },
+            { id: "5.5", topic: 5, title: "Qualitative Test for C=C Double Bond", content: "Shake with bromine water (Br₂(aq)). Positive result: Orange solution decolourises to COLOURLESS.", tip: "Do NOT write 'turns clear'. Must write 'turns COLOURLESS'!", misconception: "Writing 'turns clear' instead of 'turns colourless'." },
+            { id: "5.6", topic: 5, title: "Electrophilic Addition Mechanism & Markovnikov", content: "Electron-rich C=C attacks δ+ electrophile -> forms carbocation intermediate -> anion attacks carbocation.", tip: "MARKOVNIKOV: Major product formed via MORE STABLE carbocation (secondary > primary due to electron-donating alkyl groups).", misconception: "Drawing curly arrows starting from charges instead of electron pairs." },
+            { id: "5.7", topic: 5, title: "Addition Polymerisation", content: "Alkenes form addition polymers. Repeat unit has single C-C bonds with open brackets and 'n'.", tip: "Convert C=C to C-C, extend side bonds outside square brackets, add subscript 'n'.", misconception: "Leaving the double bond inside repeat unit." },
+            { id: "5.8", topic: 5, title: "Polymer Waste Disposal Problems & Solutions", content: "Solutions: Biodegradable polymers, Incineration with toxic gas scrubbers (CaO for HCl from PVC).", tip: "Incinerating PVC releases toxic acidic HCl gas, which MUST be neutralized with alkali scrubbers.", misconception: "Believing addition polymers readily biodegrade in soil." }
+        ];
+
+        /* ==================== 10 EXAMINER PITFALLS DATA ==================== */
+        const PITFALLS_DATA = [
+            {
+                title: "1. First Ionisation Energy Definition & State Symbols",
+                topic: "Topic 2: Atomic Structure",
+                badge: "Definitions & Equations",
+                misconception: "Ionisation energy is the energy required to remove an electron from an atom in a solid or liquid state.",
+                truth: "You MUST state '1 mole of gaseous atoms' forming '1 mole of 1+ gaseous ions'. State symbols (g) are strictly mandatory: X(g) → X⁺(g) + e⁻.",
+                keywords: "1 mole, gaseous atoms, 1+ ions, (g) state symbols mandatory"
+            },
+            {
+                title: "2. Bromine Water Test Colour Change Description",
+                topic: "Topic 5: Alkenes Lab Test",
+                badge: "Lab Practical Terminology",
+                misconception: "When bromine water reacts with an alkene, the solution 'turns clear' or 'disappears'.",
+                truth: "'Clear' is NOT a colour (a solution can be clear yellow!). You MUST state that the solution turns from 'ORANGE to COLOURLESS'.",
+                keywords: "Orange to colourless (NEVER write 'turns clear')"
+            },
+            {
+                title: "3. Curly Arrow Rules in Reaction Mechanisms",
+                topic: "Topic 4 & 5: Mechanisms",
+                badge: "Mechanism Guardrail",
+                misconception: "Curly arrows can start from positive charges (+), element symbols, or random empty space.",
+                truth: "A curly arrow represents the movement of a PAIR of electrons. It MUST start directly from a covalent bond line OR a lone pair of electrons, pointing to an electron-deficient nucleus.",
+                keywords: "Pair of electrons, start from bond or lone pair"
+            },
+            {
+                title: "4. Melting Point Trend: Sulfur (S₈) vs Phosphorus (P₄)",
+                topic: "Topic 2 & 3: Periodicity",
+                badge: "Intermolecular Forces Trap",
+                misconception: "Sulfur (S₈) has a higher melting point than Phosphorus (P₄) because S-S covalent bonds are stronger than P-P bonds.",
+                truth: "Covalent bonds DO NOT break during melting of simple molecular structures! S₈ has a higher melting point because it is a LARGER molecule with MORE ELECTRONS, creating STRONGER London dispersion forces.",
+                keywords: "S₈ has more electrons, stronger London dispersion forces"
+            },
+            {
+                title: "5. Markovnikov's Rule & Carbocation Stability Explanation",
+                topic: "Topic 5: Electrophilic Addition",
+                badge: "Regioselectivity Explanation",
+                misconception: "2-bromopropane is the major product simply because 'Markovnikov's rule says hydrogen goes to the carbon with more hydrogens'.",
+                truth: "Markovnikov's rule is a mnemonic, NOT an explanation! You MUST state: 'Reaction proceeds via a secondary carbocation intermediate, which is MORE STABLE than a primary carbocation due to the electron-donating effect of adjacent alkyl groups.'",
+                keywords: "Secondary carbocation intermediate, greater stability, electron-donating alkyl groups"
+            },
+            {
+                title: "6. Ideal Gas Equation Unit Conversions ($pV = nRT$)",
+                topic: "Topic 1: Quantitative Chemistry",
+                badge: "Calculation Trap",
+                misconception: "Plugging pressure in kPa, volume in dm³, and temperature in °C directly into pV = nRT.",
+                truth: "SI units are mandatory: Pressure in Pa (kPa × 1000), Volume in m³ (dm³ ÷ 1000 or cm³ ÷ 1,000,000), Temperature in Kelvin (°C + 273.15).",
+                keywords: "Pressure in Pa, Volume in m³, Temperature in Kelvin"
+            },
+            {
+                title: "7. Mass Spectrum of Diatomic Molecules (Br₂ / Cl₂)",
+                topic: "Topic 2: Analytical Spectroscopy",
+                badge: "Isotope Peak Ratios",
+                misconception: "The mass spectrum of Br₂ only shows two peaks at m/z 79 and m/z 81.",
+                truth: "The molecular ion spectrum of Br₂ shows THREE peaks at m/z 158 (⁷⁹Br-⁷⁹Br), 160 (⁷⁹Br-⁸¹Br & ⁸¹Br-⁷⁹Br), and 162 (⁸¹Br-⁸¹Br) in a 1:2:1 ratio. The 160 peak is double because two isotopic combinations form it.",
+                keywords: "m/z 158, 160, 162; 1:2:1 height ratio; combination probability"
+            },
+            {
+                title: "8. Polar Bonds vs Polar Molecules (CCl₄ vs OF₂)",
+                topic: "Topic 3: Molecular Symmetry",
+                badge: "Dipole Cancellation",
+                misconception: "Any molecule containing polar covalent bonds is automatically a polar molecule overall.",
+                truth: "CCl₄ contains polar C-Cl bonds, but its symmetrical tetrahedral geometry causes individual bond dipoles to CANCEL OUT symmetrically, making CCl₄ non-polar overall.",
+                keywords: "Symmetrical geometry, dipoles cancel out, no net dipole moment"
+            },
+            {
+                title: "9. Free Radical Substitution Limitations & Initiation",
+                topic: "Topic 4: Alkanes Synthesis",
+                badge: "Organic Mechanism Yield",
+                misconception: "Free radical chlorination of methane yields 100% pure chloromethane (CH₃Cl).",
+                truth: "Free radical substitution produces a MIXTURE of organic products due to FURTHER SUBSTITUTION (forming CH₂Cl₂, CHCl₃, CCl₄) and multi-position substitution, reducing synthetic yield.",
+                keywords: "Further substitution, mixture of products, homolytic fission under UV"
+            },
+            {
+                title: "10. Metallic vs Ionic Electrical Conductivity & Isoelectronic Radii",
+                topic: "Topic 2 & 3: Bonding & Radii",
+                badge: "Structure & Property Rules",
+                misconception: "Solid metals conduct electricity because positive metal ions move; Na⁺ is larger than F⁻ because sodium is a metal.",
+                truth: "In solid metals, ONLY delocalised electrons move! For isoelectronic species (Na⁺ vs F⁻), Na⁺ is SMALLER because it has MORE PROTONS (11 vs 9), pulling 10 electrons closer to nucleus.",
+                keywords: "Delocalised electrons carry charge; higher nuclear charge pulls electrons closer"
+            }
+        ];
+
+        /* ==================== 50 FLASHCARDS DECK DATA (10 PER TOPIC) ==================== */
+        const QUIZ_DATA = [
+            /* TOPIC 1: FORMULAE, EQUATIONS & MOLES (10 CARDS) */
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.1",
+                q: "1. Define 'empirical formula' and 'molecular formula'.",
+                a: "• Empirical Formula: The simplest whole-number ratio of atoms of each element in a compound.\n• Molecular Formula: The actual number of atoms of each element present in one molecule of a compound."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.2",
+                q: "2. How many total ions are present in 10.0 g of iron(III) sulfate, Fe₂(SO₄)₃? (Molar mass = 399.9 g mol⁻¹)",
+                a: "1. Moles of Fe₂(SO₄)₃ = 10.0 / 399.9 = 0.0250 mol.\n2. Each formula unit contains 5 ions (2 Fe³⁺ + 3 SO₄²⁻).\n3. Total moles of ions = 0.0250 × 5 = 0.125 mol.\n4. Total ions = 0.125 × 6.02 × 10²³ = 7.53 × 10²² ions."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.3",
+                q: "3. What state symbols split into ions when writing a full ionic equation?",
+                a: "• ONLY soluble aqueous compounds with (aq) state symbols split into free ions.\n• Solids (s), liquids (l), gases (g), and insoluble precipitates NEVER split into ions in ionic equations."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.4",
+                q: "4. Define 'relative atomic mass' (Aᵣ) and 'parts per million' (ppm).",
+                a: "• Relative Atomic Mass (Aᵣ): The weighted average mass of an atom of an element compared to 1/12th the mass of a Carbon-12 atom.\n• Parts per million (ppm): Mass of solute in mg per 1 kg (or 1 dm³) of solution/solvent."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.5",
+                q: "5. How do you convert solution concentration from mol dm⁻³ to g dm⁻³?",
+                a: "• Multiply the concentration in mol dm⁻³ by the Molar Mass (Mᵣ) of the solute:\nConcentration (g dm⁻³) = Concentration (mol dm⁻³) × Molar Mass (g mol⁻¹)."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.6",
+                q: "6. State the step-by-step procedure to determine an empirical formula from percentage mass composition.",
+                a: "1. Divide each element's mass/% by its relative atomic mass (Aᵣ) to find mole amounts.\n2. Divide all mole values by the smallest mole value to obtain a mole ratio.\n3. Simplify to nearest whole integers (multiply by 2 if 0.5 or by 3 if 0.33/0.67)."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.7",
+                q: "7. Why must stoichiometry coefficients from a balanced equation be ignored when calculating molar mass Mᵣ?",
+                a: "• Molar mass (Mᵣ) is an intrinsic physical property of 1 mole of a substance (g mol⁻¹).\n• Balancing coefficients reflect reaction mole ratios, NOT the mass per mole of an individual compound."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.8",
+                q: "8. What mandatory SI unit conversions are required before using pV = nRT?",
+                a: "• Pressure p: kPa → Pa (multiply by 1000).\n• Volume V: dm³ → m³ (divide by 1000) or cm³ → m³ (divide by 1,000,000).\n• Temperature T: °C → K (add 273.15)."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.9",
+                q: "9. State the formula for % Atom Economy and explain why addition reactions have 100% atom economy.",
+                a: "• Atom Economy = (Molar mass of desired product / Sum of molar masses of ALL products) × 100%.\n• Addition reactions form only ONE single product with no byproducts, so 100% of reactant atoms are incorporated."
+            },
+            {
+                topic: "Topic 1: Formulae & Moles",
+                spec: "Spec Point 1.10",
+                q: "10. Why must a hydrated salt sample (e.g. MgSO₄·xH₂O) be heated 'to constant mass' in a crucible?",
+                a: "• To ensure that ALL water of crystallisation has been completely driven off as steam, preventing underestimation of water loss and errors in calculating x."
+            },
+
+            /* TOPIC 2: ATOMIC STRUCTURE & PERIODIC TABLE (10 CARDS) */
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.5",
+                q: "11. Define 'isotopes' and explain why isotopes have identical chemical properties.",
+                a: "• Definition: Atoms of the SAME element with the SAME number of protons (atomic number) but DIFFERENT number of neutrons (mass number).\n• Reactivity: Chemical properties are determined entirely by outer shell electron configuration, which is identical for all isotopes of an element."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.6",
+                q: "12. Why is a vacuum required in a mass spectrometer, and where does a 2+ ion appear on the spectrum?",
+                a: "• Vacuum: Prevents sample ions from colliding with air or water molecules, which would deflect flight paths or neutralize charges.\n• 2+ Ion: Appears at HALF its actual mass value on the m/z axis (because m/z = mass ÷ 2)."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.7",
+                q: "13. Describe the molecular ion peak heights for Br₂ gas (⁷⁹Br and ⁸¹Br in 1:1 abundance).",
+                a: "• Three peaks appear at m/z 158 (⁷⁹Br-⁷⁹Br), 160 (⁷⁹Br-⁸¹Br & ⁸¹Br-⁷⁹Br), and 162 (⁸¹Br-⁸¹Br) in a 1:2:1 ratio.\n• The m/z 160 peak is twice as tall because two isotopic combinations form it."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.8",
+                q: "14. Define 'First Ionisation Energy' and write the equation for Chlorine.",
+                a: "• Definition: The energy required to remove 1 mole of electrons from 1 mole of gaseous atoms to form 1 mole of 1+ gaseous ions.\n• Equation: Cl(g) → Cl⁺(g) + e⁻ (gaseous state symbols are mandatory!)."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.10",
+                q: "15. What three factors govern the magnitude of First Ionisation Energy?",
+                a: "1. Nuclear charge (number of protons in nucleus).\n2. Atomic radius (distance between outer electron and nucleus).\n3. Electron shielding (repulsion from inner filled quantum shells)."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.11a",
+                q: "16. Explain the drop in First Ionisation Energy from Beryllium (1s² 2s²) to Boron (1s² 2s² 2p¹).",
+                a: "• Boron's outer electron is in a 2p sub-shell, which is at a higher energy level and more shielded by 2s electrons than Beryllium's 2s outer electron.\n• Less energy is required to remove Boron's 2p electron."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.11b",
+                q: "17. Explain the drop in First Ionisation Energy from Phosphorus (3p³) to Sulfur (3p⁴).",
+                a: "• Phosphorus has 3 singly occupied 3p orbitals.\n• Sulfur has two paired electrons in one 3p orbital, experiencing spin-pair repulsion between electrons in the same orbital, making the outer electron easier to remove."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.14a",
+                q: "18. State the anomalous electron configurations of Chromium (Cr, Z=24) and Copper (Cu, Z=29).",
+                a: "• Chromium (Cr): [Ar] 4s¹ 3d⁵ (half-filled 3d subshell provides extra stability).\n• Copper (Cu): [Ar] 4s¹ 3d¹⁰ (fully filled 3d subshell provides extra stability)."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.14b",
+                q: "19. Which subshell electrons are lost FIRST when transition metal cations are formed?",
+                a: "• 4s electrons are lost BEFORE 3d electrons when forming transition metal ions.\n• Example: Fe ([Ar] 4s² 3d⁶) forms Fe²⁺ as [Ar] 3d⁶."
+            },
+            {
+                topic: "Topic 2: Atomic & Periodic",
+                spec: "Spec Point 2.18",
+                q: "20. Why does Sulfur (S₈) have a higher melting point than Phosphorus (P₄)?",
+                a: "• Both S₈ and P₄ are simple molecular structures.\n• S₈ is a larger molecule with MORE ELECTRONS (128e⁻ vs 60e⁻), creating STRONGER London dispersion forces between molecules requiring more energy to overcome."
+            },
+
+            /* TOPIC 3: BONDING & STRUCTURE (10 CARDS) */
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.1",
+                q: "21. Describe the electrolysis observation of copper(II) chromate(VI) (CuCrO₄) solution.",
+                a: "• Green solution separates into two colored bands:\n1. Blue Cu²⁺ cations migrate towards the negative cathode (-).\n2. Yellow CrO₄²⁻ anions migrate towards the positive anode (+)."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.5",
+                q: "22. Define 'Ionic Bonding' and describe the lattice directionality.",
+                a: "• Definition: The strong electrostatic attraction between oppositely charged ions.\n• Directionality: Electrostatic attraction acts equally in ALL directions throughout the 3D giant crystal lattice."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.7",
+                q: "23. Explain why Na⁺ is smaller than F⁻ despite both having 10 electrons (isoelectronic).",
+                a: "• Na⁺ has 11 protons pulling 10 electrons, whereas F⁻ has only 9 protons pulling 10 electrons.\n• Higher nuclear charge in Na⁺ exerts a stronger pull on electron shells, drawing them closer."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.9",
+                q: "24. What factors maximize cation polarising power and anion polarisability?",
+                a: "• Cation Polarising Power: Highest with SMALL cation radius and HIGH positive charge (high charge density).\n• Anion Polarisability: Highest with LARGE anion radius and HIGH negative charge (weakly held outer electrons)."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.10",
+                q: "25. Define 'Covalent Bonding' based on electrostatic forces.",
+                a: "• Covalent Bond: The strong electrostatic attraction between TWO positive nuclei and the SHARED pair of electrons between them."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.11",
+                q: "26. Define 'Dative Covalent Bond' and give two examples.",
+                a: "• Definition: A covalent bond in which BOTH shared electrons originate from the SAME atom (lone pair donor).\n• Examples: Ammonium ion (NH₄⁺), Hydronium ion (H₃O⁺), Aluminium chloride dimer (Al₂Cl₆)."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.15",
+                q: "27. Why is CCl₄ a non-polar molecule despite containing polar C-Cl covalent bonds?",
+                a: "• CCl₄ has symmetrical tetrahedral geometry.\n• Individual C-Cl bond dipoles cancel each other out symmetrically in 3D space, resulting in NO net dipole moment."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.16",
+                q: "28. State the VSEPR electron pair repulsion hierarchy and explain why lone pairs reduce bond angles.",
+                a: "• Hierarchy: Lone Pair - Lone Pair (LP-LP) > Lone Pair - Bonding Pair (LP-BP) > Bonding Pair - Bonding Pair (BP-BP).\n• Lone pairs are closer to nucleus and exert greater repulsive force, compressing bonding pair angles by ~2.5° per lone pair."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.19",
+                q: "29. State the shapes and bond angles for SF₄ and SF₆.",
+                a: "• SF₄ (4 BP + 1 LP): See-saw shape with bond angles ~89° and 119°.\n• SF₆ (6 BP + 0 LP): Octahedral shape with all bond angles exactly 90°."
+            },
+            {
+                topic: "Topic 3: Bonding & Structure",
+                spec: "Spec Point 3.22",
+                q: "30. Why does Magnesium have a higher melting point and electrical conductivity than Sodium?",
+                a: "• Mg²⁺ has a higher charge (+2 vs +1) and smaller ionic radius than Na⁺.\n• Mg contributes TWICE as many delocalised electrons per ion to the metallic sea, creating much stronger electrostatic attraction."
+            },
+
+            /* TOPIC 4: ALKANES & ORGANIC INTRO (10 CARDS) */
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.1",
+                q: "31. Differentiate between 'Hazard' and 'Risk' in a chemistry laboratory.",
+                a: "• Hazard: An intrinsic property of a substance or procedure with potential to cause harm (e.g. flammability).\n• Risk: The likelihood that harm will occur under specific experimental conditions."
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.3",
+                q: "32. How should flammable organic solvents be heated safely in a laboratory?",
+                a: "• Heat using an electric heating mantle or a water bath.\n• NEVER heat organic liquids over an open Bunsen burner flame!"
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.4",
+                q: "33. State four defining characteristics of a 'Homologous Series'.",
+                a: "1. Same functional group.\n2. Same general formula.\n3. Similar chemical properties.\n4. Successive members differ by a -CH₂- unit with gradual trends in physical properties."
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.7",
+                q: "34. Differentiate between Homolytic and Heterolytic Bond Fission.",
+                a: "• Homolytic Fission: Symmetrical bond breaking where each atom retains one electron, forming FREE RADICALS (single-headed half-arrows).\n• Heterolytic Fission: Unsymmetrical bond breaking where one atom takes both electrons, forming IONS (double-headed arrows)."
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.8",
+                q: "35. Define a 'Free Radical' and an 'Electrophile'.",
+                a: "• Free Radical: An atom or molecule possessing a single UNPAIRED electron (•).\n• Electrophile: An electron-deficient species that accepts an electron pair to form a new covalent bond."
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.10",
+                q: "36. Define 'Structural Isomerism' and list the 4 structural isomers of C₄H₉Br.",
+                a: "• Definition: Compounds with the same molecular formula but different structural formulae.\n• C₄H₉Br Isomers: 1-bromobutane, 2-bromobutane, 1-bromo-2-methylpropane, 2-bromo-2-methylpropane."
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.12",
+                q: "37. Compare Fractional Distillation, Catalytic Cracking, and Reforming of crude oil.",
+                a: "• Fractional Distillation: Physical separation of hydrocarbons by boiling point differences.\n• Cracking: Thermal/catalytic breakdown of long alkanes into shorter alkanes + alkenes.\n• Reforming: Conversion of straight-chain alkanes into branched/cyclic alkanes for smoother combustion."
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.13",
+                q: "38. How is toxic Nitrogen Monoxide (NO) gas formed inside internal combustion engines?",
+                a: "• High engine temperatures and pressures provide energy for atmospheric Nitrogen (N₂) and Oxygen (O₂) from air to react: N₂ + O₂ → 2NO."
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.18a",
+                q: "39. Write equations for Initiation and Propagation steps during chlorination of ethane.",
+                a: "• Initiation (UV light): Cl₂ → 2Cl•\n• Propagation 1: Cl• + CH₃CH₃ → •CH₂CH₃ + HCl\n• Propagation 2: •CH₂CH₃ + Cl₂ → CH₃CH₂Cl + Cl•"
+            },
+            {
+                topic: "Topic 4: Alkanes & Org Intro",
+                spec: "Spec Point 4.18b",
+                q: "40. Why does free radical substitution have limited synthetic utility for preparing chloromethane?",
+                a: "• Further substitution reactions occur (forming CH₂Cl₂, CHCl₃, CCl₄), resulting in a complex mixture of organic products that reduces yield and requires separation."
+            },
+
+            /* TOPIC 5: ALKENES (10 CARDS) */
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.1",
+                q: "41. Describe the structure and orbital overlap of a C=C double bond.",
+                a: "• One Sigma (σ) Bond: Formed by head-on overlap of sp² orbitals along internuclear axis.\n• One Pi (π) Bond: Formed by sideways overlap of parallel p-orbitals above and below internuclear axis."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.2",
+                q: "42. What two necessary structural conditions are required for E/Z geometric isomerism?",
+                a: "1. Restricted rotation around C=C double bond.\n2. TWO DIFFERENT atoms or groups attached to EACH carbon atom involved in the C=C double bond."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.3",
+                q: "43. How are Cahn-Ingold-Prelog (CIP) priority rules applied to name Z and E isomers?",
+                a: "1. Priority is determined by HIGHER ATOMIC NUMBER of attached atom directly on C=C.\n2. Z-isomer (zusammen): High priority groups on SAME side.\n3. E-isomer (entgegen): High priority groups on OPPOSITE sides."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.4",
+                q: "44. What observation occurs when propene reacts with acidified potassium manganate(VII) (KMnO₄)?",
+                a: "• Purple solution turns COLOURLESS (or forms brown MnO₂ precipitate) as alkene is oxidized to a diol (propane-1,2-diol)."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.5",
+                q: "45. State the exact required observation for a positive bromine water test with an alkene.",
+                a: "• Solution changes from ORANGE to COLOURLESS.\n• (NEVER write 'turns clear' in Edexcel exams!)."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.6a",
+                q: "46. Describe the first step in the mechanism of electrophilic addition of HBr to propene.",
+                a: "• Electron-rich π-bond attacks Hδ+ of polar H-Br.\n• Curly arrow starts from C=C bond pointing to Hδ+.\n• H-Br bond breaks heterolytically (curly arrow from bond to Br)."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.6b",
+                q: "47. Why is 2-bromopropane the major product when HBr reacts with propene?",
+                a: "• Proceeds via secondary carbocation intermediate (CH₃-CH⁺-CH₃).\n• Secondary carbocations are MORE STABLE than primary carbocations due to the greater electron-donating inductive effect of two adjacent alkyl groups."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.6c",
+                q: "48. How does non-polar Chlorine (Cl₂) react with an alkene double bond?",
+                a: "• High electron density of alkene π-bond repels electron cloud in Cl₂, inducing a temporary dipole (Clδ+—Clδ-).\n• C=C attacks partially positive Clδ+ end to initiate addition."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.7",
+                q: "49. Draw the repeat unit of poly(propene).",
+                a: "• Open single bond C-C backbone with brackets:\n  —[— CH(CH₃) — CH₂ —]n—\n• C=C double bond converted to single bond; side bonds extend outside square brackets."
+            },
+            {
+                topic: "Topic 5: Alkenes",
+                spec: "Spec Point 5.8",
+                q: "50. How are toxic acidic HCl fumes scrubbed when PVC polymer waste is incinerated?",
+                a: "• Toxic HCl gas is passed through an alkaline scrubber containing Calcium Oxide (CaO) or Calcium Carbonate (CaCO₃) to neutralize acid fumes."
+            }
+        ];
+
+        /* ==================== COMPLETE 37 GLOSSARY TERMS WITH ATTACHED IAL MCQS ==================== */
+        const GLOSSARY_DATA = [
+            {
+                term: "Atom Economy",
+                def: "A measure of the efficiency of a chemical reaction, calculated as (Molar mass of desired product / Sum of molar masses of all products) × 100%. High atom economy minimizes waste.",
+                q: "Edexcel IAL MCQ: Propene reacts with steam to form propan-2-ol: C₃H₆ + H₂O → C₃H₇OH. What is the percentage atom economy for this reaction?",
+                options: ["A: 50.0%", "B: 70.0%", "C: 86.9%", "D: 100%"],
+                ans: "Correct Answer: D (100%). Explanation: Addition reactions have a single product, so all reactant atoms are incorporated into the desired product!"
+            },
+            {
+                term: "Atomic Number (Z)",
+                def: "The number of protons in the nucleus of an atom, which uniquely identifies an element and determines its position in the Periodic Table.",
+                q: "Edexcel IAL MCQ: Which fundamental property determines the order of elements in the modern Periodic Table?",
+                options: ["A: Relative atomic mass", "B: Number of protons in nucleus", "C: Number of neutrons", "D: Total subatomic mass"],
+                ans: "Correct Answer: B. Explanation: The modern Periodic Table is arranged strictly in order of increasing atomic number (proton count)."
+            },
+            {
+                term: "Bond Angle",
+                def: "The internal angle formed between two adjacent covalent bonds originating from the same central atom in a molecule.",
+                q: "Edexcel IAL MCQ: What is the H-O-H bond angle in a water molecule (H₂O)?",
+                options: ["A: 109.5°", "B: 107.0°", "C: 104.5°", "D: 180.0°"],
+                ans: "Correct Answer: C (104.5°). Explanation: Water has 2 bonding pairs and 2 lone pairs. Repulsion from 2 lone pairs reduces the ideal tetrahedral angle from 109.5° by 5° to 104.5°."
+            },
+            {
+                term: "Carbocation",
+                def: "An organic cation in which a carbon atom carries a positive charge (+1) and possesses three bonding pairs, acting as an electron-deficient intermediate.",
+                q: "Edexcel IAL MCQ: Which carbocation intermediate is the most stable during electrophilic addition?",
+                options: ["A: Primary CH₃-CH₂-CH₂⁺", "B: Secondary CH₃-CH⁺-CH₃", "C: Methyl ⁺CH₃", "D: All equal stability"],
+                ans: "Correct Answer: B. Explanation: Secondary carbocations have two adjacent alkyl groups providing electron-donating inductive effects to stabilize the positive charge."
+            },
+            {
+                term: "Cracking",
+                def: "The industrial thermal breakdown of long-chain alkane molecules into shorter, more useful alkanes and alkenes using high temperature and catalysts (e.g. Al₂O₃).",
+                q: "Edexcel IAL MCQ: Cracking of C₁₂H₂₆ produces one molecule of ethene, one molecule of propene, and one alkane. What is the formula of the alkane?",
+                options: ["A: C₇H₁₆", "B: C₇H₁₄", "C: C₈H₁₈", "D: C₅H₁₂"],
+                ans: "Correct Answer: A (C₇H₁₆). Explanation: C₁₂H₂₆ → C₂H₄ (ethene) + C₃H₆ (propene) + C₇H₁₆ (heptane). Balance carbon and hydrogen counts."
+            },
+            {
+                term: "Dative Covalent Bond",
+                def: "A type of covalent bond (coordinate bond) in which both shared electrons in the bonding pair originate from a single atom (lone pair donor).",
+                q: "Edexcel IAL MCQ: Which species contains a dative covalent bond formed by a lone pair donor?",
+                options: ["A: CH₄", "B: NH₄⁺", "C: H₂O", "D: Cl₂"],
+                ans: "Correct Answer: B (NH₄⁺). Explanation: The lone pair on ammonia's nitrogen is donated into the empty 1s orbital of H⁺ to form NH₄⁺."
+            },
+            {
+                term: "Delocalised Electrons",
+                def: "Electrons that are not localized to a single atom or bond but are free to move throughout an entire structure (e.g. metals or graphite layers).",
+                q: "Edexcel IAL MCQ: Why does graphite conduct electricity parallel to its layers?",
+                options: ["A: Mobile positive carbon ions move", "B: Delocalised electrons move between layers", "C: Strong covalent bonds break easily", "D: Carbon atoms rotate"],
+                ans: "Correct Answer: B. Explanation: Each carbon in graphite forms 3 covalent bonds, leaving 1 unbonded delocalised electron per carbon free to drift."
+            },
+            {
+                term: "Dipole Moment",
+                def: "A quantitative measure of the overall polarity of a molecule resulting from asymmetrical spatial distribution of bond dipoles.",
+                q: "Edexcel IAL MCQ: Which molecule has a permanent net dipole moment (is polar overall)?",
+                options: ["A: CCl₄", "B: BF₃", "C: OF₂", "D: SF₆"],
+                ans: "Correct Answer: C (OF₂). Explanation: OF₂ has non-linear (bent) geometry with 2 lone pairs on oxygen, preventing bond dipole cancellation."
+            },
+            {
+                term: "E/Z Isomerism (Geometric)",
+                def: "A form of stereoisomerism in alkenes resulting from restricted rotation around a C=C double bond where each double-bonded carbon has two different groups attached.",
+                q: "Edexcel IAL MCQ: Which alkene displays E/Z (geometric) isomerism?",
+                options: ["A: Ethene", "B: Propene", "C: But-2-ene", "D: 2-Methylpropene"],
+                ans: "Correct Answer: C (But-2-ene). Explanation: Each C of the C=C double bond in CH₃-CH=CH-CH₃ is attached to two different groups (-H and -CH₃)."
+            },
+            {
+                term: "Electronegativity",
+                def: "The power of an atom to attract a bonding pair of electrons in a covalent bond towards itself.",
+                q: "Edexcel IAL MCQ: Which halogen has the highest electronegativity?",
+                options: ["A: Fluorine", "B: Chlorine", "C: Bromine", "D: Iodine"],
+                ans: "Correct Answer: A (Fluorine). Explanation: Fluorine is the most electronegative element (4.0 Pauling scale) due to its small atomic radius and high effective nuclear charge."
+            },
+            {
+                term: "Electrophilic Addition",
+                def: "An organic reaction mechanism where an electron-deficient electrophile attacks an electron-dense double bond (π-bond) in an alkene, forming a single saturated compound.",
+                q: "Edexcel IAL MCQ: What is the initial attacking species in the reaction of propene with HBr?",
+                options: ["A: Nucleophilic Br⁻ ion", "B: Electrophilic Hδ+ from HBr", "C: Free radical Br•", "D: Carbocation"],
+                ans: "Correct Answer: B. Explanation: The electron-rich π-bond of propene attacks the partially positive Hδ+ (electrophile) of HBr."
+            },
+            {
+                term: "Empirical Formula",
+                def: "The simplest whole-number ratio of atoms of each element present in a chemical compound.",
+                q: "Edexcel IAL MCQ: A hydrocarbon contains 85.7% carbon and 14.3% hydrogen by mass. What is its empirical formula?",
+                options: ["A: CH", "B: CH₂", "C: CH₃", "D: C₂H₅"],
+                ans: "Correct Answer: B (CH₂). Explanation: Moles C = 85.7/12 = 7.14; Moles H = 14.3/1 = 14.3. Ratio H:C = 14.3/7.14 = 2:1 -> CH₂."
+            },
+            {
+                term: "Free Radical",
+                def: "An atom, molecule, or ion that possesses an unpaired electron, making it extremely reactive (e.g. Cl•, •CH₃).",
+                q: "Edexcel IAL MCQ: Homolytic fission of a chlorine molecule (Cl₂) produces:",
+                options: ["A: Cl⁺ and Cl⁻ ions", "B: Two Cl• free radicals", "C: Two Cl⁻ chloride ions", "D: HCl gas"],
+                ans: "Correct Answer: B. Explanation: Homolytic fission splits the covalent bond symmetrically, giving each Cl atom one electron -> 2 Cl• radicals."
+            },
+            {
+                term: "Homologous Series",
+                def: "A family of organic compounds with the same functional group, same general formula, similar chemical properties, and differing successive members by a -CH₂- group.",
+                q: "Edexcel IAL MCQ: Which pair belongs to the same homologous series?",
+                options: ["A: Ethane and Ethene", "B: Chloroethene and 1-chloropropene", "C: Ethanol and Ethanoic acid", "D: Methane and Methanol"],
+                ans: "Correct Answer: B. Explanation: Both chloroethene and 1-chloropropene are chloroalkenes containing C=C and Cl with general formula CₙH₂ₙ₋₁Cl."
+            },
+            {
+                term: "Homolytic Fission",
+                def: "The breaking of a covalent bond where each bonded atom retains one of the shared electrons, forming two free radicals.",
+                q: "Edexcel IAL MCQ: What type of bond fission occurs during the initiation step of alkane chlorination?",
+                options: ["A: Heterolytic fission under heat", "B: Homolytic fission caused by UV light", "C: Ionic dissociation", "D: Electrophilic cleavage"],
+                ans: "Correct Answer: B. Explanation: UV radiation supplies energy for symmetrical homolytic fission of Cl-Cl covalent bonds into radicals."
+            },
+            {
+                term: "Ideal Gas Law (pV=nRT)",
+                def: "The equation describing ideal gas behavior, where p is pressure (Pa), V is volume (m³), n is moles, R is 8.314 J mol⁻¹ K⁻¹, and T is temperature (K).",
+                q: "Edexcel IAL MCQ: What is the volume occupied by 0.50 mol of gas at 300 K and 100 kPa? (R = 8.314 J mol⁻¹ K⁻¹)",
+                options: ["A: 0.0125 m³", "B: 12.5 dm³", "C: Both A and B are correct", "D: 1250 m³"],
+                ans: "Correct Answer: C. Explanation: V = nRT/p = (0.50 × 8.314 × 300) / 100,000 = 0.01247 m³ = 12.47 dm³."
+            },
+            {
+                term: "Induced Dipole",
+                def: "A temporary dipole created in a non-polar molecule when an approaching electron-dense or charged species distorts its electron cloud.",
+                q: "Edexcel IAL MCQ: Non-polar Br₂ reacts with ethene because:",
+                options: ["A: Br₂ has a permanent dipole", "B: The electron-dense π-bond in ethene induces a dipole in Br₂", "C: Br₂ undergoes homolytic fission first", "D: Ethene is a strong acid"],
+                ans: "Correct Answer: B. Explanation: The high electron density of C=C repels electron density in Br-Br, inducing a Brδ+—Brδ- temporary dipole."
+            },
+            {
+                term: "Ionisation Energy (1st)",
+                def: "The minimum energy required to remove 1 mole of electrons from 1 mole of gaseous atoms to form 1 mole of 1+ gaseous ions.",
+                q: "Edexcel IAL MCQ: Which equation correctly represents the first ionisation energy of iodine?",
+                options: ["A: ½ I₂(s) → I⁺(g) + e⁻", "B: I(s) → I⁺(g) + e⁻", "C: I(g) → I⁺(g) + e⁻", "D: I(g) + e⁻ → I⁻(g)"],
+                ans: "Correct Answer: C. Explanation: First IE MUST be defined for 1 mole of gaseous ATOMS: I(g) → I⁺(g) + e⁻."
+            },
+            {
+                term: "Ionic Bonding",
+                def: "The strong electrostatic attraction between oppositely charged ions arranged in a 3D giant crystal lattice.",
+                q: "Edexcel IAL MCQ: Which ionic salt has the highest lattice melting point?",
+                options: ["A: NaCl", "B: NaF", "C: MgO", "D: KCl"],
+                ans: "Correct Answer: C (MgO). Explanation: Mg²⁺ and O²⁻ have higher charges (+2/-2) and smaller radii than Na⁺/F⁻, creating much stronger ionic attraction."
+            },
+            {
+                term: "Isoelectronic",
+                def: "Chemical species (atoms or ions) that possess the exact same number of electrons and identical ground-state electron configurations.",
+                q: "Edexcel IAL MCQ: Which list contains species that are ALL isoelectronic with Argon (18 electrons)?",
+                options: ["A: Na⁺, Mg²⁺, F⁻", "B: K⁺, Ca²⁺, Cl⁻, S²⁻", "C: Ar, Kr, Xe", "D: Cl⁻, Br⁻, I⁻"],
+                ans: "Correct Answer: B. Explanation: K⁺ (19-1=18), Ca²⁺ (20-2=18), Cl⁻ (17+1=18), S²⁻ (16+2=18) all have 18 electrons."
+            },
+            {
+                term: "Isotopes",
+                def: "Atoms of the same element with the same number of protons (atomic number) but different numbers of neutrons (mass number).",
+                q: "Edexcel IAL MCQ: Chlorine has two isotopes, ³⁵Cl and ³⁷Cl. Why do both isotopes have identical chemical properties?",
+                options: ["A: They have the same mass number", "B: They have the same relative mass", "C: They have identical electron configurations", "D: They have different neutron counts"],
+                ans: "Correct Answer: C. Explanation: Chemical reactivity is determined entirely by electron configuration, which is identical for isotopes."
+            },
+            {
+                term: "Lone Pair",
+                def: "A non-bonding pair of valence electrons located on a central atom that is not involved in covalent bonding.",
+                q: "Edexcel IAL MCQ: How many lone pairs of electrons are present on the central sulfur atom in SF₄?",
+                options: ["A: 0", "B: 1", "C: 2", "D: 3"],
+                ans: "Correct Answer: B (1 lone pair). Explanation: Sulfur has 6 valence electrons; 4 are used in S-F bonds, leaving 2 non-bonding electrons = 1 lone pair."
+            },
+            {
+                term: "Markovnikov's Rule",
+                def: "In electrophilic addition to unsymmetrical alkenes, the major product is formed via the most stable carbocation intermediate, with hydrogen adding to the carbon with more attached hydrogens.",
+                q: "Edexcel IAL MCQ: What is the major organic product formed when propene reacts with hydrogen bromide (HBr)?",
+                options: ["A: 1-bromopropane", "B: 2-bromopropane", "C: 1,2-dibromopropane", "D: Propane"],
+                ans: "Correct Answer: B (2-bromopropane). Explanation: Reaction proceeds via the more stable secondary carbocation CH₃-CH⁺-CH₃."
+            },
+            {
+                term: "Mass Spectrometry",
+                def: "An analytical technique used to measure the mass-to-charge ratio (m/z) of gaseous ions to determine isotopic abundances and molecular structure.",
+                q: "Edexcel IAL MCQ: What are the main sequential operational stages in a mass spectrometer?",
+                options: ["A: Vaporisation -> Deflection -> Acceleration -> Detection", "B: Ionisation -> Acceleration -> Deflection -> Detection", "C: Acceleration -> Ionisation -> Detection", "D: Deflection -> Ionisation -> Acceleration"],
+                ans: "Correct Answer: B. Explanation: Sample is ionised to positive ions, accelerated by electric field, deflected by magnetic field, and detected."
+            },
+            {
+                term: "Metallic Bonding",
+                def: "The strong electrostatic attraction between a 3D lattice of positive metal cations and a surrounding 'sea' of delocalised valence electrons.",
+                q: "Edexcel IAL MCQ: Why does magnesium have a higher melting point than sodium?",
+                options: ["A: Mg forms larger atoms", "B: Mg²⁺ has higher charge density and contributes twice as many delocalised electrons per ion", "C: Na has stronger covalent character", "D: Na is more reactive"],
+                ans: "Correct Answer: B. Explanation: Mg²⁺ ions have higher charge (+2 vs +1) and smaller ionic radius, attracting a higher density of delocalised electrons."
+            },
+            {
+                term: "Molecular Formula",
+                def: "The formula showing the actual number of atoms of each element present in one molecule of a compound.",
+                q: "Edexcel IAL MCQ: A compound has empirical formula CH₂O and molar mass Mr = 60 g mol⁻¹. What is its molecular formula?",
+                options: ["A: CH₂O", "B: C₂H₄O₂", "C: C₃H₆O₃", "D: C₄H₈O₄"],
+                ans: "Correct Answer: B (C₂H₄O₂). Explanation: Empirical mass CH₂O = 12+2+16 = 30. Multiplier = 60 / 30 = 2 -> (CH₂O)₂ = C₂H₄O₂."
+            },
+            {
+                term: "Neutralisation Reaction",
+                def: "A chemical reaction between an acid and a base forming a salt and water: H⁺(aq) + OH⁻(aq) → H₂O(l).",
+                q: "Edexcel IAL MCQ: What is the ionic equation with state symbols for neutralisation of HCl(aq) with NaOH(aq)?",
+                options: ["A: HCl(aq) + NaOH(aq) → NaCl(aq) + H₂O(l)", "B: H⁺(aq) + OH⁻(aq) → H₂O(l)", "C: Na⁺(aq) + Cl⁻(aq) → NaCl(s)", "D: H⁺(aq) + Cl⁻(aq) → HCl(g)"],
+                ans: "Correct Answer: B. Explanation: Spectator ions Na⁺(aq) and Cl⁻(aq) cancel out, leaving H⁺(aq) + OH⁻(aq) → H₂O(l)."
+            },
+            {
+                term: "Pi (π) Bond",
+                def: "A covalent bond formed by the sideways overlap of parallel p-orbitals, creating two electron density regions above and below the internuclear axis.",
+                q: "Edexcel IAL MCQ: How many sigma (σ) and pi (π) bonds are present in one molecule of ethene (C₂H₄)?",
+                options: ["A: 4 σ and 1 π", "B: 5 σ and 1 π", "C: 5 σ and 2 π", "D: 6 σ and 0 π"],
+                ans: "Correct Answer: B. Explanation: Ethene has 4 single C-H σ bonds + 1 C-C σ bond (total 5 σ bonds) + 1 C=C π bond."
+            },
+            {
+                term: "Polarising Power",
+                def: "The ability of a cation to distort the electron cloud of an adjacent anion, highest for cations with a small ionic radius and high positive charge.",
+                q: "Edexcel IAL MCQ: Which cation has the GREATEST polarising power?",
+                options: ["A: Na⁺", "B: K⁺", "C: Mg²⁺", "D: Al³⁺"],
+                ans: "Correct Answer: D (Al³⁺). Explanation: Al³⁺ has the highest positive charge (+3) and smallest ionic radius, giving it maximum charge density."
+            },
+            {
+                term: "Propagation Step",
+                def: "A step in a free-radical chain reaction where a radical reacts with a non-radical molecule to form a new product and regenerate a new free radical.",
+                q: "Edexcel IAL MCQ: Which reaction represents a valid propagation step during chlorination of methane?",
+                options: ["A: Cl₂ → 2Cl•", "B: Cl• + CH₄ → •CH₃ + HCl", "C: •CH₃ + Cl• → CH₃Cl", "D: Cl• + Cl• → Cl₂"],
+                ans: "Correct Answer: B. Explanation: A radical + molecule -> new molecule + new radical (propagates the chain)."
+            },
+            {
+                term: "Relative Atomic Mass (Ar)",
+                def: "The weighted average mass of an atom of an element compared to 1/12th the mass of a carbon-12 atom.",
+                q: "Edexcel IAL MCQ: Naturally occurring Bromine consists of 50.7% ⁷⁹Br and 49.3% ⁸¹Br. Calculate its Ar value.",
+                options: ["A: 79.0", "B: 79.99", "C: 80.0", "D: 81.0"],
+                ans: "Correct Answer: B (79.99). Explanation: Ar = [(79 × 50.7) + (81 × 49.3)] / 100 = 79.986."
+            },
+            {
+                term: "Relative Molecular Mass (Mr)",
+                def: "The weighted average mass of a molecule compared to 1/12th the mass of a carbon-12 atom (calculated by summing relative atomic masses).",
+                q: "Edexcel IAL MCQ: What is the relative molecular mass (Mr) of hydrated copper(II) sulfate, CuSO₄·5H₂O? (Cu=63.5, S=32.1, O=16.0, H=1.0)",
+                options: ["A: 159.6", "B: 249.6", "C: 177.6", "D: 213.6"],
+                ans: "Correct Answer: B (249.6). Explanation: Mr = 63.5 + 32.1 + (4×16) + 5×(18) = 159.6 + 90 = 249.6."
+            },
+            {
+                term: "Restricted Rotation",
+                def: "The inability of atoms to rotate freely around a chemical bond, caused by the presence of a π-bond in C=C double bonds or cyclic structures.",
+                q: "Edexcel IAL MCQ: What prevents free rotation around the C=C double bond in alkenes?",
+                options: ["A: High strength of sigma bond", "B: Sideways electron overlap of p-orbitals in the π-bond", "C: Repulsion between hydrogen atoms", "D: High electronegativity of carbon"],
+                ans: "Correct Answer: B. Explanation: Rotating around C=C would require breaking the sideways p-orbital overlap of the π-bond, which requires high energy."
+            },
+            {
+                term: "Sigma (σ) Bond",
+                def: "A covalent bond formed by the direct head-on (axial) overlap of atomic orbitals along the internuclear axis.",
+                q: "Edexcel IAL MCQ: Where is electron density highest in a sigma (σ) bond?",
+                options: ["A: Above and below the internuclear axis", "B: Directly along the internuclear axis between the two nuclei", "C: Outside the atoms", "D: In a circular ring"],
+                ans: "Correct Answer: B. Explanation: Head-on axial orbital overlap concentrates electron density along the line connecting the two nuclei."
+            },
+            {
+                term: "Structural Isomers",
+                def: "Compounds sharing the exact same molecular formula but possessing different structural formulae (atoms connected in a different order).",
+                q: "Edexcel IAL MCQ: How many structural isomers exist for the halogenoalkane molecular formula C₄H₉Br?",
+                options: ["A: 2", "B: 3", "C: 4", "D: 5"],
+                ans: "Correct Answer: C (4 structural isomers). Explanation: 1-bromobutane, 2-bromobutane, 1-bromo-2-methylpropane, and 2-bromo-2-methylpropane."
+            },
+            {
+                term: "Termination Step",
+                def: "A step in a free-radical substitution reaction where two free radicals combine to form a stable non-radical molecule, stopping the chain reaction.",
+                q: "Edexcel IAL MCQ: Which reaction represents a termination step during free radical chlorination of ethane?",
+                options: ["A: Cl₂ → 2Cl•", "B: •C₂H₅ + Cl₂ → C₂H₅Cl + Cl•", "C: •C₂H₅ + •C₂H₅ → C₄H₁₀", "D: Cl• + C₂H₆ → •C₂H₅ + HCl"],
+                ans: "Correct Answer: C. Explanation: Two free radicals (•C₂H₅ + •C₂H₅) react together to form a stable neutral alkane molecule (butane), terminating radicals."
+            },
+            {
+                term: "VSEPR Theory",
+                def: "Valence Shell Electron Pair Repulsion theory: electron pairs around a central atom repel each other to achieve maximum separation and minimum repulsion, dictating 3D geometry.",
+                q: "Edexcel IAL MCQ: What is the principal order of electron pair repulsion strength according to VSEPR theory?",
+                options: ["A: BP-BP > LP-BP > LP-LP", "B: LP-LP > LP-BP > BP-BP", "C: LP-BP > BP-BP > LP-LP", "D: All repulsions are equal"],
+                ans: "Correct Answer: B. Explanation: Lone pair - Lone pair repulsion is the strongest, followed by Lone pair - Bonding pair, and Bonding pair - Bonding pair is weakest."
+            }
+        ];
+
+        /* ==================== 7 COMPREHENSIVE LEVEL 3 6-MARK ESSAY MODELS ==================== */
+        const ESSAYS_DATA = [
+            {
+                title: "1. Factors Governing Periodicity in 1st Ionisation Energy & All Anomalies",
+                question: "Discuss the factors influencing first ionisation energy trends across Period 3 and down Group 2. Explain the specific anomalies observed between Beryllium and Boron, and between Phosphorus and Sulfur.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Factors Influencing IE:</strong> 1. Nuclear charge (number of protons). 2. Atomic radius (distance of outer electron from nucleus). 3. Electron shielding by inner filled quantum shells.<br>
+                • <strong>Across Period 3 Trend:</strong> First ionisation energy generally <em>increases</em> across Period 3 because nuclear charge increases (more protons) while electron shielding remains approximately constant (electrons added to the same 3rd quantum shell). This pulls outer electrons closer, increasing nuclear attraction.<br>
+                • <strong>Anomaly 1 (Be to B / Mg to Al drop):</strong> Boron's outer electron is in a 2p sub-shell, which is at a higher energy level and more shielded from the nucleus by 2s electrons than Beryllium's 2s outer electron. Less energy is required to remove the 2p electron.<br>
+                • <strong>Anomaly 2 (P to S drop):</strong> Phosphorus has three singly occupied 3p orbitals (3p³). Sulfur has paired electrons in one 3p orbital (3p⁴). The spin-pair repulsion between the two electrons sharing the same 3p orbital in Sulfur makes its outer electron easier to remove.<br>
+                • <strong>Down Group 2 Trend:</strong> First ionisation energy <em>decreases</em> down Group 2 because atomic radius increases and electron shielding increases (more inner quantum shells). The weaker effective nuclear attraction outweighs the increase in proton number.`
+            },
+            {
+                title: "2. Concept of Polarising Power and Polarisability in Ionic Bonding",
+                question: "Explain what is meant by the terms 'polarising power' of a cation and 'polarisability' of an anion. Describe how these factors lead to partial covalent character in ionic compounds, using Lithium Iodide (LiI) and Aluminium Chloride (AlCl₃) as examples.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Definitions:</strong> Polarising power is the ability of a positive cation to distort the spherical electron density cloud of an adjacent negative anion. Polarisability is the ease with which an anion's electron cloud can be distorted.<br>
+                • <strong>Cation Polarising Power Factors:</strong> High polarising power requires a <em>small cation radius</em> and a <em>high positive charge</em> (high charge density).<br>
+                • <strong>Anion Polarisability Factors:</strong> High polarisability requires a <em>large anion radius</em> and a <em>high negative charge</em> (outer electrons are weakly held by nucleus).<br>
+                • <strong>Distortion & Partial Covalent Character:</strong> When a highly polarising cation distorts a polarisable anion, electron density is pulled into the region between the two nuclei. This electron sharing introduces significant <em>partial covalent character</em> into the ionic bond.<br>
+                • <strong>Examples:</strong> 1. <em>AlCl₃:</em> Al³⁺ has a high +3 charge and very small radius (high polarising power), distorting Cl⁻ to impart strong covalent character (sublimes as Al₂Cl₆ dimer). 2. <em>LiI:</em> Small Li⁺ cation distorts the very large, polarisable I⁻ anion, giving LiI covalent character and low melting point.`
+            },
+            {
+                title: "3. Factors Affecting Ionic Radius & Trends in Polarisability",
+                question: "Explain the trends in ionic radii across the isoelectronic series N³⁻, O²⁻, F⁻, Na⁺, Mg²⁺, Al³⁺. Describe how anion size affects the trend in polarisability down Group 7 (Halides: F⁻ to I⁻).",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Isoelectronic Concept:</strong> All ions N³⁻, O²⁻, F⁻, Na⁺, Mg²⁺, Al³⁺ possess exactly 10 electrons (configuration 1s² 2s² 2p⁶).<br>
+                • <strong>Nuclear Pull Explanation:</strong> Ionic radius <em>decreases steadily</em> from N³⁻ to Al³⁺. As atomic number increases from N (7 protons) to Al (13 protons), the higher nuclear charge exerts a much stronger electrostatic attraction on the identical 10-electron cloud, pulling electron shells closer to the nucleus.<br>
+                • <strong>Cation vs Anion Size:</strong> Cations (Na⁺, Mg²⁺, Al³⁺) are smaller than anions (N³⁻, O²⁻, F⁻) because cations have lost their outer valence shell and have more protons than electrons.<br>
+                • <strong>Polarisability Trend down Halides (F⁻ to I⁻):</strong> Down Group 7, ionic radius increases from F⁻ to I⁻ as new quantum shells are added. The valence electron cloud of I⁻ is much further from its nucleus and heavily shielded.<br>
+                • <strong>Consequence:</strong> Polarisability <em>increases down Group 7</em> (I⁻ is the most polarisable halide anion).`
+            },
+            {
+                title: "4. VSEPR Model Predicting 3D Molecular Shapes & Exact Angles",
+                question: "Describe the principles of Valence Shell Electron Pair Repulsion (VSEPR) theory. Use VSEPR theory to predict and explain the 3D shapes and bond angles of CH₄, NH₃, H₂O, SF₄, and SF₆.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>VSEPR Core Principles:</strong> 1. Electron pairs (bonding & lone pairs) around a central atom repel each other to achieve maximum separation and minimum repulsion. 2. Repulsion order: Lone Pair - Lone Pair (LP-LP) > Lone Pair - Bonding Pair (LP-BP) > Bonding Pair - Bonding Pair (BP-BP).<br>
+                • <strong>Methane (CH₄):</strong> 4 BP + 0 LP on Carbon. Tetrahedral shape, bond angle 109.5°.<br>
+                • <strong>Ammonia (NH₃):</strong> 3 BP + 1 LP on Nitrogen. LP-BP repulsion reduces bond angle by ~2.5°. Trigonal Pyramidal shape, bond angle 107.0°.<br>
+                • <strong>Water (H₂O):</strong> 2 BP + 2 LP on Oxygen. 2 lone pairs exert strong LP-LP repulsion, further reducing angle. Non-linear / Bent shape, bond angle 104.5°.<br>
+                • <strong>Sulfur Tetrafluoride (SF₄):</strong> 4 BP + 1 LP on Sulfur (5 electron pairs). See-saw shape, bond angles ~89° and 119°.<br>
+                • <strong>Sulfur Hexafluoride (SF₆):</strong> 6 BP + 0 LP on Sulfur (6 electron pairs). Octahedral shape, all F-S-F bond angles exactly 90°.`
+            },
+            {
+                title: "5. Free Radical Substitution Mechanism & Synthetic Limitations",
+                question: "Describe the complete free radical substitution mechanism for the reaction between ethane and chlorine under UV light. Explain why this reaction has limited synthetic utility for producing pure chloroethane.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Initiation:</strong> UV light provides energy for <em>homolytic fission</em> of Cl-Cl covalent bond: Cl₂ → 2Cl• (chlorine free radicals formed with unpaired electrons).<br>
+                • <strong>Propagation Step 1:</strong> Cl• + CH₃CH₃ → •CH₂CH₃ + HCl (chlorine radical abstracts H atom forming ethyl radical and HCl).<br>
+                • <strong>Propagation Step 2:</strong> •CH₂CH₃ + Cl₂ → CH₃CH₂Cl + Cl• (ethyl radical reacts with Cl₂ forming chloroethane product and regenerating Cl• radical to continue chain).<br>
+                • <strong>Termination Steps:</strong> Two radicals combine to form stable molecules, ending chain: 1. Cl• + Cl• → Cl₂; 2. •CH₂CH₃ + Cl• → CH₃CH₂Cl; 3. •CH₂CH₃ + •CH₂CH₃ → C₄H₁₀ (butane impurity).<br>
+                • <strong>Synthetic Limitations:</strong> 1. <em>Further Substitution:</em> Chloroethane product reacts with excess Cl• radicals to form 1,1-dichloroethane, 1,2-dichloroethane, trichloroethane, etc. 2. <em>Mixture of Products:</em> Yield of pure mono-chloroethane is low, requiring fractional distillation separation.`
+            },
+            {
+                title: "6. Electrophilic Addition Mechanism in Alkenes & Markovnikov's Rule",
+                question: "Describe the mechanism for the reaction between propene and hydrogen bromide (HBr). Explain why 2-bromopropane is formed as the major product rather than 1-bromopropane.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Mechanism Step 1:</strong> The electron-rich C=C double bond (π-bond) of propene acts as a nucleophile, attacking the partially positive Hδ+ of polar H-Br. The H-Br covalent bond breaks heterolytically, transferring both electrons to Br⁻.<br>
+                • <strong>Mechanism Step 2:</strong> A curly arrow starts from the C=C double bond pointing to Hδ+, and another curly arrow starts from H-Br bond to Br.<br>
+                • <strong>Carbocation Intermediates:</strong> H⁺ can add to C1 to form secondary carbocation (CH₃-CH⁺-CH₃) OR add to C2 to form primary carbocation (CH₃-CH₂-CH₂⁺).<br>
+                • <strong>Mechanism Step 3:</strong> Nucleophilic bromide anion (Br⁻) attacks positive carbon of carbocation using a lone pair. Curly arrow starts from lone pair on Br⁻ pointing to C⁺.<br>
+                • <strong>Explanation of Major Product (Markovnikov's Rule):</strong> 2-bromopropane is the major product because it proceeds via the <em>secondary carbocation intermediate</em>. Secondary carbocations are MORE STABLE than primary carbocations due to the greater <em>electron-donating inductive effect</em> of two adjacent methyl alkyl groups (+I effect), lowering activation energy.`
+            },
+            {
+                title: "7. Comparative Analysis of Structure, Bonding & Physical Properties",
+                question: "Compare and contrast the bonding, 3D structure, melting points, and electrical conductivity of Sodium (metal), Sodium Fluoride (ionic), Diamond (giant covalent), and Sulfur S₈ (simple molecular).",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Sodium (Na):</strong> Giant metallic lattice of Na⁺ cations in a sea of delocalised electrons. High electrical conductivity in solid and liquid states due to mobile delocalised electrons. Moderate melting point.<br>
+                • <strong>Sodium Fluoride (NaF):</strong> Giant ionic crystal lattice held by strong electrostatic attractions between Na⁺ and F⁻ ions in all directions. High melting point (requires large energy to break lattice). Conducts electricity ONLY when molten or aqueous when ions are free to move.<br>
+                • <strong>Diamond (C):</strong> Giant 3D covalent network structure where each C atom is covalently bonded to 4 others tetrahedrally. Extremely high melting point (strong covalent bonds must be broken). Electrical INSULATOR because all valence electrons are fixed in localized single covalent bonds.<br>
+                • <strong>Sulfur (S₈):</strong> Simple molecular structure consisting of discrete S₈ crown molecules held by weak London dispersion forces between molecules. Low melting point (only weak intermolecular forces broken, S-S covalent bonds remain intact). Electrical INSULATOR (no mobile ions or delocalised electrons).`
+            }
+        ];
+
+        /* ==================== 20 COMMON WEB MISCONCEPTIONS (X, DISCORD, TSR) ==================== */
+        const WEB_MISCONCEPTIONS_DATA = [
+            {
+                source: "Discord (#chem-help) & TSR",
+                topic: "Topic 2: Atomic Structure",
+                title: "1. Na⁺ vs F⁻ Isoelectronic Size",
+                misconception: "Na⁺ and F⁻ have identical electron counts (10e⁻), so Na⁺ is larger because sodium sits in Period 3.",
+                explanation: "FALSE! Na⁺ has 11 protons pulling 10 electrons, whereas F⁻ has only 9 protons pulling 10 electrons. The higher nuclear charge in Na⁺ exerts a much stronger electrostatic pull, drawing outer electrons closer and making Na⁺ significantly smaller than F⁻."
+            },
+            {
+                source: "X (@ALevelChemTips) & Reddit",
+                topic: "Topic 3: Bonding & Structure",
+                title: "2. Boiling Simple Molecular Liquids",
+                misconception: "Boiling water or liquid iodine breaks the strong covalent O-H or I-I bonds inside the molecules.",
+                explanation: "FALSE! Covalent bonds inside discrete molecules NEVER break during melting or boiling! Heating only provides energy to overcome weak intermolecular forces (hydrogen bonds in water, London dispersion forces in I₂)."
+            },
+            {
+                source: "Student Room (Edexcel Megathread)",
+                topic: "Topic 5: Alkenes Practical",
+                title: "3. 'Turns Clear' in Bromine Water Test",
+                misconception: "When bromine water reacts with an alkene, the solution 'turns clear'.",
+                explanation: "INCORRECT TERMINOLOGY! 'Clear' means transparent (not cloudy). A solution can be clear orange! The required Edexcel mark scheme description is 'turns COLOURLESS' or 'decolourised'."
+            },
+            {
+                source: "Discord Chemistry Study VC",
+                topic: "Topic 2: Mass Spectrometry",
+                title: "4. m/z Values for Doubly Charged (2+) Ions",
+                misconception: "If a ²⁴Mg atom forms a ²⁴Mg²⁺ ion in a mass spectrometer, its peak appears at double mass (m/z = 48).",
+                explanation: "FALSE! Mass-to-charge ratio m/z = mass ÷ charge. For ²⁴Mg²⁺, m/z = 24 ÷ 2 = 12! The peak appears at HALF the m/z value (12)."
+            },
+            {
+                source: "Reddit r/6thForm",
+                topic: "Topic 3: Ionic Bonding",
+                title: "5. Cation Polarising Power Factors",
+                misconception: "Cation polarising power is highest when the cation has a large radius and small charge.",
+                explanation: "FALSE! Polarising power is the ability to distort an adjacent electron cloud. Cations have maximum polarising power when they have a SMALL ionic radius and HIGH positive charge (high charge density, e.g. Al³⁺)."
+            },
+            {
+                source: "Discord Chem Bot QA",
+                topic: "Topic 2: Electron Configuration",
+                title: "6. Removal of Electrons in Transition Metal Cations",
+                misconception: "When Iron (Fe: [Ar] 4s² 3d⁶) forms Fe²⁺, two 3d electrons are lost first to give [Ar] 4s² 3d⁴.",
+                explanation: "FALSE! 4s electrons are ALWAYS lost BEFORE 3d electrons when transition element cations are formed. Fe²⁺ has configuration [Ar] 3d⁶ 4s⁰."
+            },
+            {
+                source: "X (Chemistry Teacher Thread)",
+                topic: "Topic 4: Mechanisms",
+                title: "7. Curly Arrow Types for Homolytic Fission",
+                misconception: "In initiation (Cl₂ → 2Cl•), double-headed curly arrows are used pointing to each chlorine atom.",
+                explanation: "WRONG SYMBOL! Double-headed curly arrows represent the movement of an electron PAIR. Homolytic fission splits a single electron to each atom, requiring single-headed (fishhook) curly half-arrows."
+            },
+            {
+                source: "Student Room Discussion",
+                topic: "Topic 1: Quantitative Chemistry",
+                title: "8. Percentage Yield vs Atom Economy",
+                misconception: "A reaction with a 99% percentage yield is guaranteed to be environmentally friendly with high atom economy.",
+                explanation: "FALSE! Percentage yield measures practical percentage recovery. A reaction can have 99% yield but terrible atom economy (e.g. 15%) if 85% of the total product mass consists of unwanted waste byproduct."
+            },
+            {
+                source: "Discord A-Level Hub",
+                topic: "Topic 2: Periodicity",
+                title: "9. Shielding Across a Period",
+                misconception: "First ionisation energy increases across Period 3 because electron shielding increases as electrons are added.",
+                explanation: "FALSE! Across a period, electrons are added to the SAME outer quantum shell, so shielding remains roughly CONSTANT. IE increases because nuclear charge (protons) increases while shielding stays constant."
+            },
+            {
+                source: "Reddit r/ALevel",
+                topic: "Topic 5: Alkenes Isomerism",
+                title: "10. E/Z Isomerism in Propene",
+                misconception: "Propene (CH₃-CH=CH₂) exhibits E/Z geometric isomerism because it has a C=C double bond.",
+                explanation: "FALSE! C1 of propene has two identical -H atoms attached. E/Z isomerism strictly requires restricted rotation AND TWO DIFFERENT groups attached to EACH carbon of the C=C double bond."
+            },
+            {
+                source: "X Revision Space",
+                topic: "Topic 4: Isomerism",
+                title: "11. Single Bond Rotation & Stereoisomerism",
+                misconception: "Alkane single bonds (C-C) exhibit E/Z isomerism because substituents can sit on opposite sides.",
+                explanation: "FALSE! Single C-C sigma bonds rotate freely at room temperature, making spatial configurations interconvert instantly. E/Z isomerism REQUIRES restricted rotation around a C=C double bond or ring."
+            },
+            {
+                source: "Discord Past Paper Help",
+                topic: "Topic 2: Ionisation Energy Equations",
+                title: "12. Missing State Symbols in IE Definitions",
+                misconception: "The equation for the 1st IE of sodium can be written as Na(s) → Na⁺(s) + e⁻.",
+                explanation: "DEFINITIONAL ERROR! Ionisation energy MUST be defined for 1 mole of GASEOUS atoms: Na(g) → Na⁺(g) + e⁻. Using solid (s) or liquid (l) state symbols results in zero marks."
+            },
+            {
+                source: "Student Room Thread",
+                topic: "Topic 1: Gas Calculations",
+                title: "13. Molar Gas Constant R vs Molar Volume",
+                misconception: "In the ideal gas equation pV = nRT, the value of R is always 24 dm³ mol⁻¹.",
+                explanation: "CONFUSION OF CONSTANTS! R is the ideal gas constant (8.314 J mol⁻¹ K⁻¹). 24 dm³ mol⁻¹ is the molar volume of gas at RTP ($25^\circ\text{C}$ and $1\text{ atm}$)."
+            },
+            {
+                source: "Reddit Chemistry Homework",
+                topic: "Topic 3: Molecular Polarity",
+                title: "14. Polar Bonds vs Polar Molecules (CCl₄)",
+                misconception: "CCl₄ is a polar molecule because chlorine is significantly more electronegative than carbon.",
+                explanation: "FALSE! CCl₄ contains 4 polar C-Cl bonds, but its symmetrical tetrahedral geometry causes all 4 individual bond dipoles to cancel out completely in 3D space, leaving zero net dipole moment (non-polar)."
+            },
+            {
+                source: "Discord Revision Server",
+                topic: "Topic 5: Electrophilic Addition",
+                title: "15. Misinterpreting Markovnikov's Rule Attachment",
+                misconception: "When HBr adds to propene, Markovnikov's rule says Br attaches to C1 because C1 has more hydrogen atoms.",
+                explanation: "FALSE! Hydrogen (Hδ+) attaches to C1 (the carbon with more H's), forming the more stable secondary carbocation CH₃-CH⁺-CH₃. Br⁻ then attacks the positive C2, making 2-bromopropane the major product!"
+            },
+            {
+                source: "X A-Level Thread",
+                topic: "Topic 3: Metallic Conductivity",
+                title: "16. Electrical Conduction in Solid Metals",
+                misconception: "Solid metals conduct electricity because positive metal cations move towards the negative terminal.",
+                explanation: "FALSE! Metal cations are fixed in regular positions in the giant metallic lattice and only vibrate. Electrical conductivity in solid metals is strictly due to mobile DELOCALISED ELECTRONS."
+            },
+            {
+                source: "Student Room Forum",
+                topic: "Topic 3: Graphite Structure",
+                title: "17. Sliding Layers in Graphite",
+                misconception: "Graphite is soft and slippery because covalent bonds between carbon layers break easily when shear force is applied.",
+                explanation: "FALSE! Covalent bonds in graphite exist ONLY WITHIN the 2D planar hexagonal layers. Between layers, only weak London dispersion forces exist, which easily break to allow layers to slide."
+            },
+            {
+                source: "Discord Exam Chat",
+                topic: "Topic 1: Gas Law Temperatures",
+                title: "18. Temperature Units in pV = nRT",
+                misconception: "When calculating volume with pV = nRT at 25 °C, plug in T = 25.",
+                explanation: "UNIT ERROR! Temperature in pV = nRT MUST ALWAYS be in Kelvin (K). Convert by adding 273.15: T = 25 + 273.15 = 298.15 K."
+            },
+            {
+                source: "Reddit Study Group",
+                topic: "Topic 4: Industrial Cracking",
+                title: "19. Catalytic Cracking Bond Breaking",
+                misconception: "Cracking long alkanes selectively breaks C-H bonds to generate hydrogen gas and alkenes.",
+                explanation: "FALSE! Thermal and catalytic cracking primarily breaks strong C-C single bonds in long-chain hydrocarbon alkane backbones to generate shorter alkanes and alkenes."
+            },
+            {
+                source: "X Chem Community",
+                topic: "Topic 4: Free Radical Substitution",
+                title: "20. Free Radical Substitution Purity",
+                misconception: "Free radical chlorination of methane yields 100% pure monochloromethane (CH₃Cl).",
+                explanation: "FALSE! CH₃Cl still contains reactive C-H bonds. Free radicals attack CH₃Cl further to produce CH₂Cl₂, CHCl₃, and CCl₄ in a complex mixture of substitution products."
+            }
+        ];
+
+        /* ==================== APP STATE & NAVIGATION ==================== */
+        let currentTab = 'syllabus';
+        let currentTopicFilter = 'ALL';
+        let cardIndex = 0;
+
+        // Local Storage for Progress Tracking
+        let masteredItems = JSON.parse(localStorage.getItem('chem_unit1_mastered') || '[]');
+
+        function updateProgress() {
+            const count = masteredItems.length;
+            const total = SYLLABUS_DATA.length;
+            document.getElementById('progress-text').innerText = `${count} / ${total}`;
+            const pct = (count / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+
+        function toggleMastered(id) {
+            if (masteredItems.includes(id)) {
+                masteredItems = masteredItems.filter(i => i !== id);
+            } else {
+                masteredItems.push(id);
+            }
+            localStorage.setItem('chem_unit1_mastered', JSON.stringify(masteredItems));
+            updateProgress();
+            renderSyllabus();
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-sky-400');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-sky-400');
+                activeBtn.classList.remove('text-slate-400');
+            }
+        }
+
+        /* ==================== SYLLABUS RENDERER ==================== */
+        function renderSyllabus() {
+            const container = document.getElementById('syllabus-container');
+            const searchVal = document.getElementById('syllabus-search').value.toLowerCase();
+
+            const filtered = SYLLABUS_DATA.filter(item => {
+                const matchTopic = (currentTopicFilter === 'ALL') || (item.topic.toString() === currentTopicFilter);
+                const matchSearch = item.id.toLowerCase().includes(searchVal) ||
+                                    item.title.toLowerCase().includes(searchVal) ||
+                                    item.content.toLowerCase().includes(searchVal) ||
+                                    item.tip.toLowerCase().includes(searchVal);
+                return matchTopic && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl">No specification points found matching your search.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isMastered = masteredItems.includes(item.id);
+                return `
+                <div class="glass-panel p-5 rounded-2xl border ${isMastered ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800'} transition-all hover:border-slate-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono text-xs font-bold rounded-lg">Spec ${item.id}</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">Topic ${item.topic}</span>
+                            <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+                        </div>
+                        <button onclick="toggleMastered('${item.id}')" class="self-start sm:self-auto px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${isMastered ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                            <i class="fa-solid ${isMastered ? 'fa-check' : 'fa-circle-check'} text-xs"></i>
+                            <span>${isMastered ? 'Mastered' : 'Mark as Mastered'}</span>
+                        </button>
+                    </div>
+
+                    <p class="text-sm text-slate-300 leading-relaxed mb-4 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">${item.content}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-emerald-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-emerald-400">
+                                <i class="fa-solid fa-lightbulb"></i> <span>Examiner Tip / Key Phrasing</span>
+                            </div>
+                            <p>${item.tip}</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 text-amber-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-amber-400">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <span>Common Misconception</span>
+                            </div>
+                            <p>${item.misconception}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function filterTopic(topic) {
+            currentTopicFilter = topic;
+            document.querySelectorAll('.topic-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-topic') === topic) {
+                    btn.classList.add('bg-sky-600', 'text-white');
+                    btn.classList.remove('bg-slate-800', 'text-slate-300');
+                } else {
+                    btn.classList.remove('bg-sky-600', 'text-white');
+                    btn.classList.add('bg-slate-800', 'text-slate-300');
+                }
+            });
+            renderSyllabus();
+        }
+
+        function filterSyllabus() {
+            renderSyllabus();
+        }
+
+        /* ==================== PITFALLS RENDERER ==================== */
+        function renderPitfalls() {
+            const container = document.getElementById('pitfalls-container');
+            container.innerHTML = PITFALLS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden group">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.badge}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <!-- Student Misconception Quote Box -->
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Common Student Misconception (Discord / X / Forums):</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <!-- Explanation Container with Interactive Blur -->
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <!-- Unblurred Mark Scheme Truth -->
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Examiner Mark Scheme Secret:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.truth}</p>
+                            <div class="pt-1 text-[11px] font-mono text-sky-300">
+                                <strong class="text-slate-400">Mark Scheme Keywords:</strong> ${item.keywords}
+                            </div>
+                        </div>
+
+                        <!-- Blur Overlay element -->
+                        <div id="blur-overlay-${idx}" onclick="toggleBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Examiner Truth</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleBlur(idx) {
+            const overlay = document.getElementById(`blur-overlay-${idx}`);
+            if (overlay) {
+                if (overlay.classList.contains('opacity-0')) {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }
+        }
+
+        /* ==================== CALCULATOR LOGIC ==================== */
+        function calculateGas() {
+            const target = document.getElementById('gas-target').value;
+            let p = parseFloat(document.getElementById('gas-p').value) || 101325;
+            let v_dm3 = parseFloat(document.getElementById('gas-v').value) || 24;
+            let n = parseFloat(document.getElementById('gas-n').value) || 1;
+            let t_c = parseFloat(document.getElementById('gas-t').value) || 25;
+            const R = 8.314;
+
+            let t_k = t_c + 273.15;
+            let v_m3 = v_dm3 / 1000;
+
+            let out = "";
+            if (target === 'V') {
+                v_m3 = (n * R * t_k) / p;
+                let res_dm3 = v_m3 * 1000;
+                out = `Calculated Volume V = ${res_dm3.toFixed(3)} dm³ (${(v_m3 * 1e6).toFixed(1)} cm³)`;
+            } else if (target === 'p') {
+                p = (n * R * t_k) / v_m3;
+                out = `Calculated Pressure p = ${(p / 1000).toFixed(2)} kPa (${p.toFixed(0)} Pa)`;
+            } else if (target === 'n') {
+                n = (p * v_m3) / (R * t_k);
+                out = `Calculated Amount n = ${n.toFixed(4)} moles`;
+            } else if (target === 'T') {
+                t_k = (p * v_m3) / (n * R);
+                out = `Calculated Temperature T = ${(t_k - 273.15).toFixed(2)} °C (${t_k.toFixed(2)} K)`;
+            }
+
+            document.getElementById('gas-result').innerText = out;
+        }
+
+        function calcAtomEconomy() {
+            const desired = parseFloat(document.getElementById('ae-desired').value) || 0;
+            const total = parseFloat(document.getElementById('ae-total').value) || 1;
+            const ae = (desired / total) * 100;
+            document.getElementById('ae-output').innerText = `Atom Economy: ${ae.toFixed(2)}%`;
+        }
+
+        function calcYield() {
+            const actual = parseFloat(document.getElementById('yield-actual').value) || 0;
+            const theo = parseFloat(document.getElementById('yield-theo').value) || 1;
+            const py = (actual / theo) * 100;
+            document.getElementById('yield-output').innerText = `Percentage Yield: ${py.toFixed(2)}%`;
+        }
+
+        function calcRAM() {
+            const m1 = parseFloat(document.getElementById('iso1-mass').value) || 0;
+            const a1 = parseFloat(document.getElementById('iso1-abun').value) || 0;
+            const m2 = parseFloat(document.getElementById('iso2-mass').value) || 0;
+            const a2 = parseFloat(document.getElementById('iso2-abun').value) || 0;
+            const m3 = parseFloat(document.getElementById('iso3-mass').value) || 0;
+            const a3 = parseFloat(document.getElementById('iso3-abun').value) || 0;
+
+            const totalAbun = a1 + a2 + a3;
+            if (totalAbun === 0) return;
+
+            const ram = ((m1 * a1) + (m2 * a2) + (m3 * a3)) / totalAbun;
+            document.getElementById('ram-output').innerText = `Calculated Relative Atomic Mass (Aᵣ): ${ram.toFixed(2)}`;
+        }
+
+        /* ==================== QUIZ & 3D FLASHCARD ENGINE LOGIC ==================== */
+        function updateCard() {
+            const item = QUIZ_DATA[cardIndex];
+            document.getElementById('card-front-topic').innerText = item.topic;
+            document.getElementById('card-front-spec').innerText = item.spec;
+            document.getElementById('card-question').innerText = item.q;
+            document.getElementById('card-answer').innerText = item.a;
+            document.getElementById('card-index').innerText = cardIndex + 1;
+            document.getElementById('card-total').innerText = QUIZ_DATA.length;
+
+            // Reset card flip state to show question
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.remove('card-flipped');
+        }
+
+        function flipCard() {
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.toggle('card-flipped');
+        }
+
+        function nextCard() {
+            cardIndex = (cardIndex + 1) % QUIZ_DATA.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            cardIndex = (cardIndex - 1 + QUIZ_DATA.length) % QUIZ_DATA.length;
+            updateCard();
+        }
+
+        function shuffleDeck() {
+            QUIZ_DATA.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (!document.getElementById('test-view').classList.contains('hidden')) {
+                renderTestMode();
+            }
+        }
+
+        function setQuizMode(mode) {
+            if (mode === 'cards') {
+                document.getElementById('flashcard-view').classList.remove('hidden');
+                document.getElementById('test-view').classList.add('hidden');
+                document.getElementById('quiz-mode-cards').className = 'px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+                document.getElementById('quiz-mode-test').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+            } else {
+                document.getElementById('flashcard-view').classList.add('hidden');
+                document.getElementById('test-view').classList.remove('hidden');
+                document.getElementById('quiz-mode-test').className = 'px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+                document.getElementById('quiz-mode-cards').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+                renderTestMode();
+            }
+        }
+
+        function renderTestMode() {
+            const container = document.getElementById('quiz-questions-container');
+            container.innerHTML = QUIZ_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-bold text-purple-400">${item.topic}</span>
+                            <span class="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 font-mono">${item.spec}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">#${idx + 1}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-sm leading-relaxed">${item.q}</h4>
+                    <button onclick="document.getElementById('ans-${idx}').classList.toggle('hidden')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold">
+                        Toggle Mark Scheme Answer
+                    </button>
+                    <div id="ans-${idx}" class="hidden p-3 bg-emerald-950/20 border border-emerald-500/20 text-emerald-300 text-xs rounded-xl leading-relaxed whitespace-pre-line">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==================== GLOSSARY RENDERER (37 TERMS WITH EXAM MCQS) ==================== */
+        function renderGlossary() {
+            const container = document.getElementById('glossary-container');
+            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const filtered = GLOSSARY_DATA.filter(g => g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search) || g.q.toLowerCase().includes(search));
+
+            document.getElementById('glossary-count').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching glossary terms found.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((g, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="font-bold text-cyan-400 text-base mb-1.5 flex items-center space-x-2">
+                            <i class="fa-solid fa-bookmark text-xs"></i>
+                            <span>${g.term}</span>
+                        </h4>
+                        <p class="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded-xl border border-slate-800">${g.def}</p>
+                    </div>
+
+                    <!-- Attached Past Paper MCQ Question -->
+                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60 space-y-2">
+                        <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center space-x-1">
+                            <i class="fa-solid fa-file-circle-question"></i>
+                            <span>Attached Edexcel IAL Past Paper Question:</span>
+                        </div>
+                        <p class="text-xs text-slate-200 font-medium">${g.q}</p>
+                        
+                        <div class="grid grid-cols-2 gap-1.5 pt-1 text-[11px] text-slate-300">
+                            ${g.options.map(opt => `<div class="bg-slate-950 p-1.5 rounded border border-slate-800">${opt}</div>`).join('')}
+                        </div>
+
+                        <button onclick="document.getElementById('mcq-ans-${idx}').classList.toggle('hidden')" class="w-full mt-2 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition-all">
+                            Show / Hide Exam Solution
+                        </button>
+
+                        <div id="mcq-ans-${idx}" class="hidden p-2.5 bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs rounded-lg font-mono">
+                            ${g.ans}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterGlossary() {
+            renderGlossary();
+        }
+
+        /* ==================== ESSAY MODELS RENDERER ==================== */
+        function renderEssays() {
+            const container = document.getElementById('essays-container');
+            container.innerHTML = ESSAYS_DATA.map((e, idx) => `
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                        <h3 class="text-lg font-bold text-rose-300">${e.title}</h3>
+                        <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30">6 Marks - Level 3</span>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
+                        <strong class="text-rose-400">Official Exam Question Prompt:</strong> ${e.question}
+                    </div>
+
+                    <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
+                        ${e.answer}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderWebMisconceptions() {
+            const container = document.getElementById('web-misconceptions-container');
+            container.innerHTML = WEB_MISCONCEPTIONS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.source}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <!-- Student Misconception Quote Box -->
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Web Misconception Post:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <!-- Explanation Container with Interactive Blur -->
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <!-- Unblurred Mark Scheme Truth -->
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Scientific Truth & Examiner Reasoning:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.explanation}</p>
+                        </div>
+
+                        <!-- Blur Overlay element -->
+                        <div id="web-blur-overlay-${idx}" onclick="toggleWebBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Explanation</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleWebBlur(idx) {
+            const overlay = document.getElementById(`web-blur-overlay-${idx}`);
+            if (overlay) {
+                if (overlay.classList.contains('opacity-0')) {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }
+        }
+
+        /* ==================== ON LOAD INITIALIZATION ==================== */
+        window.onload = function() {
+            updateProgress();
+            renderSyllabus();
+            renderPitfalls();
+            renderGlossary();
+            renderEssays();
+            renderWebMisconceptions();
+            updateCard();
+            calculateGas();
+            calcAtomEconomy();
+            calcYield();
+            calcRAM();
+        };
+    </script>
+</body>
+</html>
