@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel IAL Chemistry Paper 4 - Interactive Master Revision Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-active {
+            border-bottom: 3px solid #38bdf8;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+        
+        /* 3D Flashcard flip styles */
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .card-front {
+            transform: rotateY(0deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-front {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-back {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-slate-900/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                        <span class="text-xl">🧪</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-white leading-tight">Edexcel IAL Chemistry Paper 4</h1>
+                            <span class="text-[10px] font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full">WCH14/01</span>
+                        </div>
+                        <p class="text-xs text-sky-400 font-medium">Rates, Equilibria & Further Organic Chemistry Master Hub</p>
+                    </div>
+                </div>
+
+                <!-- Mastery Progress Pill -->
+                <div class="hidden md:flex items-center space-x-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                    <div class="text-xs font-medium text-slate-300">
+                        Paper 4 Mastery: <span id="progress-text" class="text-sky-400 font-bold">0 / 40</span>
+                    </div>
+                    <div class="w-32 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-sky-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex space-x-1 overflow-x-auto no-scrollbar border-t border-slate-800/50 pt-1 text-sm font-medium">
+                <button onclick="switchTab('syllabus')" id="tab-syllabus" class="tab-btn tab-active px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-list-check text-xs"></i> <span>Syllabus Explorer</span>
+                </button>
+                <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                </button>
+                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Interactive Calculators</span>
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (50)</span>
+                </button>
+                <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Master Glossary (35)</span>
+                </button>
+                <button onclick="switchTab('essays')" id="tab-essays" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-pen-nib text-rose-400 text-xs"></i> <span>6-Mark Essay Models (10)</span>
+                </button>
+                <button onclick="switchTab('misconceptions')" id="tab-misconceptions" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-comments text-amber-400 text-xs"></i> <span>Web Misconceptions (20)</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: SYLLABUS EXPLORER -->
+        <section id="view-syllabus" class="tab-view space-y-6">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="syllabus-search" oninput="filterSyllabus()" placeholder="Search spec point, topic, or keyword (e.g. 11.10, Arrhenius, buffer)..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 w-full md:w-auto">
+                    <button onclick="filterTopic('ALL')" class="topic-filter-btn bg-sky-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all" data-topic="ALL">All Topics</button>
+                    <button onclick="filterTopic('11')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="11">T11: Kinetics</button>
+                    <button onclick="filterTopic('12')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="12">T12: Entropy & Energetics</button>
+                    <button onclick="filterTopic('13')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="13">T13: Equilibria</button>
+                    <button onclick="filterTopic('14')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="14">T14: Acids & Bases</button>
+                    <button onclick="filterTopic('15')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="15">T15: Carbonyls & Spectra</button>
+                </div>
+            </div>
+
+            <div id="syllabus-container" class="space-y-4">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- TAB 2: EXAMINER PITFALLS (10 CARDS) -->
+        <section id="view-pitfalls" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">Paper 4 Examiner Pitfalls & Exam Traps (10 Key Cards)</h2>
+                        <p class="text-sm text-slate-300 mt-1">High-frequency calculation and theory mistakes identified in Pearson Edexcel Paper 4 examiner reports. **Click any blurred card to reveal the mark scheme truth!**</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pitfalls-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated with 10 blur-effect cards -->
+            </div>
+        </section>
+
+        <!-- TAB 3: INTERACTIVE CALCULATORS -->
+        <section id="view-calculators" class="tab-view space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Calculator 1: Arrhenius Activation Energy Solver -->
+                <div class="glass-panel p-6 rounded-2xl border border-sky-500/20">
+                    <h3 class="text-lg font-bold text-sky-400 flex items-center space-x-2 mb-3">
+                        <i class="fa-solid fa-chart-line"></i> <span>Arrhenius Equation Solver (ln <i>k</i> vs 1/<i>T</i>)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Calculate activation energy (<i>E</i><sub>a</sub>) and pre-exponential factor (<i>A</i>) from two temperature-rate constant data points.</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 text-xs mb-4">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="font-bold text-sky-300 block mb-2">State 1</span>
+                            <label class="block text-slate-400">Temp 1 (<i>T</i>₁ in K):</label>
+                            <input type="number" id="arr-t1" value="298" oninput="calcArrhenius()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5 mb-2">
+                            <label class="block text-slate-400">Rate Constant 1 (<i>k</i>₁):</label>
+                            <input type="number" id="arr-k1" value="0.0025" step="any" oninput="calcArrhenius()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="font-bold text-sky-300 block mb-2">State 2</span>
+                            <label class="block text-slate-400">Temp 2 (<i>T</i>₂ in K):</label>
+                            <input type="number" id="arr-t2" value="318" oninput="calcArrhenius()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5 mb-2">
+                            <label class="block text-slate-400">Rate Constant 2 (<i>k</i>₂):</label>
+                            <input type="number" id="arr-k2" value="0.0210" step="any" oninput="calcArrhenius()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
+                        </div>
+                    </div>
+
+                    <div id="arr-output" class="p-3 bg-sky-950/40 border border-sky-500/30 rounded-xl font-mono text-xs text-sky-300 space-y-1">
+                        Calculating Arrhenius parameters...
+                    </div>
+                </div>
+
+                <!-- Calculator 2: Entropy & Feasibility Solver -->
+                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20">
+                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2 mb-3">
+                        <i class="fa-solid fa-fire-flame-curved"></i> <span>Entropy & Feasibility Solver (Δ<i>S</i><sub>total</sub>)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Determine thermodynamic feasibility (Δ<i>S</i><sub>total</sub> &gt; 0) and minimum temperature for feasibility.</p>
+
+                    <div class="space-y-3 text-xs mb-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Δ<i>H</i> Reaction (kJ mol⁻¹)</label>
+                                <input type="number" id="ent-dh" value="45.0" oninput="calcEntropy()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Δ<i>S</i><sub>system</sub> (J K⁻¹ mol⁻¹)</label>
+                                <input type="number" id="ent-ds-sys" value="125.0" oninput="calcEntropy()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Temperature (<i>T</i> in Kelvin)</label>
+                            <input type="number" id="ent-temp" value="298" oninput="calcEntropy()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                    </div>
+
+                    <div id="ent-output" class="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl font-mono text-xs text-emerald-300 space-y-1">
+                        Calculating entropy parameters...
+                    </div>
+                </div>
+
+                <!-- Calculator 3: pH & Buffer Solution Solver -->
+                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20">
+                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2 mb-3">
+                        <i class="fa-solid fa-vial"></i> <span>pH & Buffer Solution Calculator</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Calculate pH for weak acids and buffer mixtures (pH = p<i>K</i><sub>a</sub> + log([A⁻]/[HA])).</p>
+
+                    <div class="space-y-3 text-xs mb-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1"><i>K</i><sub>a</sub> of Weak Acid (mol dm⁻³)</label>
+                                <input type="number" id="ph-ka" value="1.74e-5" step="any" oninput="calcPH()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Acid Conc [HA] (mol dm⁻³)</label>
+                                <input type="number" id="ph-ha" value="0.10" oninput="calcPH()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Conjugate Base Conc [A⁻] (mol dm⁻³) [0 for plain weak acid]</label>
+                            <input type="number" id="ph-salt" value="0.15" oninput="calcPH()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                    </div>
+
+                    <div id="ph-output" class="p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl font-mono text-xs text-purple-300">
+                        Calculating pH...
+                    </div>
+                </div>
+
+                <!-- Calculator 4: Kc / Kp & ΔStotal Relationship -->
+                <div class="glass-panel p-6 rounded-2xl border border-cyan-500/20">
+                    <h3 class="text-lg font-bold text-cyan-400 flex items-center space-x-2 mb-3">
+                        <i class="fa-solid fa-scale-balanced"></i> <span>Equilibrium <i>K</i> & Δ<i>S</i><sub>total</sub> Solver</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Convert between equilibrium constant <i>K</i> and total entropy change (Δ<i>S</i><sub>total</sub> = <i>R</i> ln <i>K</i>).</p>
+
+                    <div class="space-y-3 text-xs mb-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Equilibrium Constant (<i>K</i>)</label>
+                                <input type="number" id="k-val" value="150" step="any" oninput="calcKRel()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                            </div>
+                            <div>
+                                <label class="block text-slate-300 font-semibold mb-1">Temperature (<i>T</i> in Kelvin)</label>
+                                <input type="number" id="k-temp" value="298" oninput="calcKRel()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="k-output" class="p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-xl font-mono text-xs text-cyan-300">
+                        Calculating equilibrium relationship...
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: 3D FLASHCARDS (50 CARDS) -->
+        <section id="view-quiz" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <button id="card-view-mode-deck" onclick="setCardViewMode('deck')" class="px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all">🎴 3D Flip Deck</button>
+                    <button id="card-view-mode-list" onclick="setCardViewMode('list')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all">📝 Active List View</button>
+                    <button onclick="shuffleDeck()" class="px-3 py-2 bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shuffle"></i> <span>Shuffle Deck</span>
+                    </button>
+                </div>
+
+                <div class="relative w-full md:w-72">
+                    <input type="text" id="card-search" oninput="filterCards()" placeholder="Search flashcards..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-sky-500">
+                </div>
+            </div>
+
+            <!-- Deck View Container -->
+            <div id="deck-view-container" class="max-w-2xl mx-auto space-y-6">
+                
+                <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+                    <div>
+                        Card <span id="deck-current-index" class="text-sky-400 font-bold text-sm">1</span> of <span id="deck-total-count" class="font-bold text-sm">50</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>Jump to:</span>
+                        <input type="number" id="jump-card-input" min="1" max="50" onchange="jumpToCard(this.value)" class="w-16 bg-slate-900 border border-slate-700 text-sky-300 text-center rounded p-1 text-xs font-mono">
+                    </div>
+                </div>
+
+                <!-- 3D Card Interactive Component -->
+                <div class="card-flip w-full h-96 cursor-pointer select-none" onclick="flipCard()">
+                    <div id="card-inner-el" class="card-inner relative w-full h-full rounded-2xl border border-sky-500/30 bg-slate-900/95 shadow-2xl transition-transform duration-500">
+                        
+                        <!-- Front Face (Question) -->
+                        <div class="card-front absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 rounded-2xl border border-sky-500/30">
+                            <div class="flex items-center justify-between border-b border-sky-500/20 pb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span id="card-front-topic" class="text-[11px] font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20">Topic 11</span>
+                                    <span id="card-front-spec" class="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">Spec 11.2</span>
+                                </div>
+                                <span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full font-mono">Click to Flip</span>
+                            </div>
+
+                            <div class="text-base sm:text-lg font-bold text-slate-100 my-auto text-center px-2 leading-relaxed" id="card-front-question">
+                                Loading Question...
+                            </div>
+
+                            <div class="text-xs text-slate-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-sky-400"></i>
+                                <span>Click card to reveal Edexcel Mark Scheme Answer</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face (Answer) -->
+                        <div class="card-back absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/98 rounded-2xl border border-emerald-500/50 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                                <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                    <span>Edexcel Mark Scheme Answer</span>
+                                </span>
+                                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Answer Revealed</span>
+                            </div>
+
+                            <div class="text-xs sm:text-sm text-slate-200 my-auto leading-relaxed overflow-y-auto max-h-56 px-2 py-1 custom-scrollbar whitespace-pre-line text-left bg-emerald-950/30 rounded-xl border border-emerald-500/20 p-3" id="card-back-answer">
+                                Loading Answer...
+                            </div>
+
+                            <div class="text-xs text-emerald-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                                <span>Click again to flip back to question</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center px-2 gap-2">
+                    <button onclick="prevCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Previous</span>
+                    </button>
+
+                    <button onclick="nextCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <span>Next</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- List View Container -->
+            <div id="list-view-container" class="max-w-4xl mx-auto space-y-4 hidden">
+                <div id="list-cards-holder" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: MASTER GLOSSARY (35 TERMS WITH MCQS) -->
+        <section id="view-glossary" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="relative w-full">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Filter Paper 4 glossary terms & attached exam MCQs (e.g. Rate constant, Buffer, Enantiomer, Chemical shift)..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div class="text-xs text-slate-400 whitespace-nowrap">
+                    Total Terms: <span id="glossary-count" class="font-bold text-cyan-400">35</span>
+                </div>
+            </div>
+
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated with all 35 terms and attached IAL past paper MCQs -->
+            </div>
+        </section>
+
+        <!-- TAB 6: 6-MARK ESSAY MODELS (10 EXEMPLARS) -->
+        <section id="view-essays" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-rose-500/20">
+                <h2 class="text-xl font-bold text-rose-400 flex items-center space-x-2 mb-2">
+                    <i class="fa-solid fa-file-pen"></i> <span>Paper 4 Level 3 (6-Mark) High-Yield Essay Models (10 Exemplars)</span>
+                </h2>
+                <p class="text-xs text-slate-300">Complete mark scheme breakdowns for long-answer essay prompts in Pearson Edexcel Paper 4 (Kinetics, Energetics, Equilibria, Acids, Carbonyls, Spectroscopy).</p>
+            </div>
+
+            <div id="essays-container" class="space-y-6">
+                <!-- Dynamically populated with 10 essays -->
+            </div>
+        </section>
+
+        <!-- TAB 7: 20 WEB MISCONCEPTIONS -->
+        <section id="view-misconceptions" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-comments text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">20 Common Paper 4 Misconceptions from Student Communities</h2>
+                        <p class="text-sm text-slate-300 mt-1">Real student confusion points gathered from active A-Level revision groups (Discord, X, TSR, Reddit r/6thForm). **Click any blurred box to reveal the Mark Scheme Explanation!**</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="web-misconceptions-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated with 20 blur-effect cards -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ==================== PAPER 4 SYLLABUS DATASET (TOPICS 11 to 15) ==================== */
+        const SYLLABUS_DATA = [
+            // TOPIC 11: KINETICS
+            { id: "11.1", topic: 11, title: "Key Kinetics Terminology", content: "Understand rate of reaction, rate equation (rate = k[A]ᵐ[B]ⁿ), order of reaction, overall order, rate constant (k), half-life (t½), rate-determining step, activation energy (Eₐ), and catalysts.", tip: "Rate constant k changes ONLY with temperature. Catalysts and concentration changes do NOT alter k!", misconception: "Assuming overall order is equal to the stoichiometric balancing numbers in the full equation." },
+            { id: "11.2", topic: 11, title: "Half-Life & First Order Reactions", content: "Calculate half-life from a concentration-time graph and identify first-order reactions by their constant half-life (t½ = ln 2 / k).", tip: "First-order reactions have a CONSTANT half-life regardless of starting concentration.", misconception: "Thinking second-order reactions have a constant half-life (second-order half-life doubles as concentration halves)." },
+            { id: "11.3", topic: 11, title: "Experimental Rate Data Collection", content: "Select suitable experimental techniques: titrations (quenching), colorimetry, mass loss, volume of gas evolved, or electrical conductivity.", tip: "Quenching involves stopping the reaction (e.g. adding excess cold water or NaHCO₃) before titrating with iodine/thiosulfate.", misconception: "Using mass loss for gas evolution reactions producing light gas like H₂ (mass change is too small to detect accurately)." },
+            { id: "11.4", topic: 11, title: "Initial Rates & Continuous Methods", content: "Understand initial-rate methods (including 'clock reactions' like Harcourt-Esson iodine clock) and continuous monitoring concentration-time plots.", tip: "In clock reactions, the scavenger (e.g. thiosulfate) must be in small fixed concentration so it is consumed before the color change occurs.", misconception: "Assuming a clock reaction gives the average rate over the entire reaction; it approximates the INITIAL rate." },
+            { id: "11.5", topic: 11, title: "Deducing Reaction Orders", content: "Deduce orders (0, 1, or 2) using concentration-time graphs, rate-concentration graphs, or initial-rate experimental data tables.", tip: "Zero order: rate-conc graph is a horizontal line. First order: straight line through origin. Second order: quadratic curve through origin.", misconception: "Confusing concentration-time graph shape with rate-concentration graph shape." },
+            { id: "11.6", topic: 11, title: "Acid-Catalysed Iodination of Propanone", content: "Understand the iodination of propanone (CH₃COCH₃ + I₂ → CH₃COCH₂I + HI under H⁺ catalyst) where rate is zero order in [I₂], first order in [propanone] and [H⁺].", tip: "Zero order in [I₂] means I₂ is NOT involved in or before the rate-determining step!", misconception: "Thinking the iodine color change means iodine is in the rate equation." },
+            { id: "11.7", topic: 11, title: "Rate-Determining Step (RDS)", content: "Deduce the rate-determining step (slowest step) from a rate equation and vice versa.", tip: "Species in the rate equation appear in the rate-determining step (or steps prior to it) in amounts matching their reaction orders.", misconception: "Believing the rate-determining step is always the first step in a reaction mechanism." },
+            { id: "11.8", topic: 11, title: "Proposing Reaction Mechanisms", content: "Deduce multi-step mechanisms using knowledge of the rate equation and stoichiometric equation.", tip: "Sum of mechanism steps MUST equal the overall balanced chemical equation.", misconception: "Including intermediates in the final overall stoichiometric equation." },
+            { id: "11.9", topic: 11, title: "Hydrolysis Kinetics: S<sub>N</sub>1 vs S<sub>N</sub>2 Mechanisms", content: "Understand rate equations for tertiary (S<sub>N</sub>1: rate = k[R-X]) and primary (S<sub>N</sub>2: rate = k[R-X][OH⁻]) halogenoalkanes.", tip: "S<sub>N</sub>1 is unimolecular (1 reactant in RDS); S<sub>N</sub>2 is bimolecular (2 reactants in RDS).", misconception: "Assuming primary halogenoalkanes react via S<sub>N</sub>1." },
+            { id: "11.10", topic: 11, title: "Arrhenius Equation & Activation Energy (Eₐ)", content: "Find Eₐ using calculations and graphical plots of ln k versus 1/T (gradient = -Eₐ/R).", tip: "Slope of ln k vs 1/T is negative! Eₐ = -gradient × 8.314 J mol⁻¹ K⁻¹. Divide by 1000 for kJ mol⁻¹!", misconception: "Forgetting to convert temperature to Kelvin or forgetting to convert Eₐ from Joules to kJ." },
+            { id: "11.11", topic: 11, title: "Heterogeneous Catalysis Surface Mechanism", content: "Understand heterogeneous catalysts in gas reactions: Adsorption onto solid surface -> Reaction -> Desorption of products.", tip: "Adsorption weakens bonds in reactants, lowering Eₐ. Too strong adsorption poisons the catalyst surface.", misconception: "Stating catalysts alter ΔH or equilibrium constants." },
+
+            // TOPIC 12: ENTROPY & ENERGETICS
+            { id: "12.1", topic: 12, title: "Spontaneity & Endothermic Reactions", content: "Understand that endothermic reactions can occur spontaneously at room temperature because enthalpy changes alone do not control spontaneity.", tip: "Spontaneity is controlled by Total Entropy (ΔS<sub>total</sub>), NOT enthalpy (ΔH) alone!", misconception: "Thinking endothermic reactions can never occur spontaneously." },
+            { id: "12.2", topic: 12, title: "Entropy (S) Definition", content: "Define entropy as a measure of disorder of a system in terms of random dispersal of molecules and energy quanta.", tip: "Gases have much higher standard entropy (Sᵉ) than liquids, which are higher than solids.", misconception: "Defining entropy as heat or thermal energy." },
+            { id: "12.3", topic: 12, title: "Entropy Trends & Third Law", content: "Entropy increases as solid → liquid → gas. Perfect crystals at 0 K have zero entropy (Sᵉ = 0).", tip: "Entropy jumps dramatically during phase changes, especially liquid to gas.", misconception: "Assuming Sᵉ can be negative for a pure substance at room temp." },
+            { id: "12.4", topic: 12, title: "Natural Direction of Change", content: "Natural direction of change is in the direction of increasing total entropy (ΔS<sub>total</sub> > 0).", tip: "For any spontaneous process, ΔS<sub>total</sub> MUST be positive.", misconception: "Confusing system entropy (ΔS<sub>system</sub>) with total entropy (ΔS<sub>total</sub>)." },
+            { id: "12.5", topic: 12, title: "Reasons for System Entropy Changes", content: "Predict ΔS<sub>system</sub> changes during state changes, ionic lattice dissolving, and reactions with gas mole changes.", tip: "If moles of gas INCREASE (Δn<sub>gas</sub> > 0), ΔS<sub>system</sub> is strongly POSITIVE.", misconception: "Assuming dissolving always increases system entropy (highly charged small ions can structure water, decreasing entropy!)." },
+            { id: "12.6", topic: 12, title: "Total Entropy Equation", content: "Understand ΔS<sub>total</sub> = ΔS<sub>system</sub> + ΔS<sub>surroundings</sub>.", tip: "ΔS<sub>surroundings</sub> accounts for heat exchanged with surroundings.", misconception: "Forgetting that ΔS<sub>surroundings</sub> depends on temperature in Kelvin." },
+            { id: "12.7", topic: 12, title: "Calculating System Entropy (ΔS<sub>system</sub>)", content: "Calculate ΔS<sub>system</sub> = ΣSᵉ(products) - ΣSᵉ(reactants).", tip: "Always multiply standard entropy values by stoichiometric coefficients!", misconception: "Subtracting products from reactants." },
+            { id: "12.8", topic: 12, title: "Calculating Surroundings Entropy (ΔS<sub>surroundings</sub>)", content: "Calculate ΔS<sub>surroundings</sub> = -ΔH / T where ΔH is in J mol⁻¹ and T in Kelvin.", tip: "Convert ΔH from kJ mol⁻¹ to J mol⁻¹ by multiplying by 1000 BEFORE dividing by T!", misconception: "Dividing ΔH in kJ by T without converting to Joules." },
+            { id: "12.9", topic: 12, title: "Feasibility & Temperature Calculation", content: "Determine feasibility (ΔS<sub>total</sub> > 0) and calculate minimum temperature for feasibility (T = ΔH / ΔS<sub>system</sub>).", tip: "At the threshold temperature of feasibility, ΔS<sub>total</sub> = 0.", misconception: "Using ΔG = ΔH - TΔS units incorrectly when converting to entropy equations." },
+            { id: "12.10", topic: 12, title: "Compensating Entropy Contributions", content: "Understand that a reaction can occur if ΔS<sub>total</sub> > 0, even if one of ΔS<sub>system</sub> or ΔS<sub>surroundings</sub> is negative.", tip: "A very exothermic reaction (-ΔH) gives a large positive ΔS<sub>surroundings</sub> overriding a negative ΔS<sub>system</sub>.", misconception: "Assuming both system and surroundings entropy must be positive for spontaneity." },
+            { id: "12.11", topic: 12, title: "Thermodynamic vs Kinetic Stability", content: "Distinguish thermodynamic stability (ΔS<sub>total</sub> < 0) from kinetic stability (feasible reaction with extremely high Eₐ).", tip: "A mixture of H₂ and O₂ is thermodynamically unstable but kinetically stable at room temp due to high Eₐ.", misconception: "Confusing a slow reaction rate with unfeasibility." },
+            { id: "12.12", topic: 12, title: "Born-Haber Terms Definitions", content: "Define standard enthalpy of atomisation (Δ<sub>at</sub>Hᵉ), electron affinity (EA), and lattice energy (Δ<sub>LE</sub>Hᵉ).", tip: "Lattice energy is defined as EXOTHERMIC formation of 1 mole of ionic solid from gaseous ions.", misconception: "Writing electron affinity equations without gaseous state symbols." },
+            { id: "12.13", topic: 12, title: "Constructing Born-Haber Cycles", content: "Construct Born-Haber cycles for ionic salts (e.g. MgCl₂, MgO) and calculate missing enthalpy values.", tip: "Remember that MgCl₂ requires SECOND ionisation energy of Mg and TWO times atomisation/electron affinity of Chlorine!", misconception: "Forgetting to double electron affinity for diatomic halogens forming 2X⁻." },
+            { id: "12.14", topic: 12, title: "Theoretical vs Experimental Lattice Energy", content: "Compare experimental Born-Haber lattice energy with theoretical ionic electrostatic value to deduce covalent character.", tip: "If experimental LE is MORE exothermic than theoretical LE, polarisation occurs causing partial COVALENT bonding!", misconception: "Stating that theoretical model includes covalent character (theoretical model assumes 100% spherical ionic ions)." },
+            { id: "12.15", topic: 12, title: "Polarisation & Covalency Factors", content: "Polarisation occurs when a small, highly charged cation distorts the electron cloud of a large, polarisable anion.", tip: "Small radius + high charge = maximum polarising power (Al³⁺ > Mg²⁺ > Na⁺).", misconception: "Attributing polarising power to anions." },
+            { id: "12.16", topic: 12, title: "Enthalpy of Solution & Hydration Definitions", content: "Define enthalpy of solution (Δ<sub>sol</sub>Hᵉ) and ion hydration enthalpy (Δ<sub>hyd</sub>Hᵉ).", tip: "Hydration enthalpy is always EXOTHERMIC (ΔH < 0) as ion-dipole bonds form with water.", misconception: "Confusing enthalpy of solution with enthalpy of hydration." },
+            { id: "12.17", topic: 12, title: "Solution Enthalpy Energy Cycles", content: "Calculate Δ<sub>sol</sub>Hᵉ = -Δ<sub>LE</sub>Hᵉ + ΣΔ<sub>hyd</sub>Hᵉ using energy cycles.", tip: "Dissolving involves breaking lattice (+LE) and hydrating ions (-Δ<sub>hyd</sub>H).", misconception: "Forgetting to include hydration values for BOTH cation and anion." },
+            { id: "12.18", topic: 12, title: "Ionic Charge/Radius Effect on Lattice & Hydration", content: "Higher ionic charge and smaller ionic radius make BOTH lattice energy and hydration enthalpy more exothermic.", tip: "Smaller ions get closer to water molecules/opposing ions, strengthening electrostatic attraction.", misconception: "Assuming smaller ions have weaker hydration enthalpy." },
+
+            // TOPIC 13: CHEMICAL EQUILIBRIA
+            { id: "13.1", topic: 13, title: "Equilibrium Constant K_c Expressions", content: "Deduce expressions and units for K_c in homogeneous and heterogeneous reactions.", tip: "Solids and pure liquid solvents are EXCLUDED from K_c expressions!", misconception: "Including solid concentrations in K_c expressions." },
+            { id: "13.2", topic: 13, title: "Gas Equilibrium Constant K_p Expressions", content: "Deduce expressions and units for K_p using partial pressures (p_A = P_total × mole fraction_A).", tip: "Use round brackets p(A) or P_A for K_p. Do NOT use square brackets [A]!", misconception: "Using square concentration brackets in K_p expressions." },
+            { id: "13.3", topic: 13, title: "Calculating K_c and K_p from Data", content: "Calculate equilibrium constants, equilibrium moles, partial pressures, and correct SI units.", tip: "Sum of mole fractions MUST equal 1.0. Sum of partial pressures MUST equal total pressure.", misconception: "Using initial moles instead of equilibrium moles in K_c calculations." },
+            { id: "13.4", topic: 13, title: "Factors Affecting Equilibrium Position", content: "Understand qualitative effects of temperature, pressure, concentration, and catalysts on equilibrium composition.", tip: "Catalysts increase forward and backward rates EQUALLY, accelerating approach to equilibrium without altering yield.", misconception: "Claiming catalysts increase K_c or K_p values." },
+            { id: "13.5", topic: 13, title: "Constancy of K_c / K_p", content: "Understand that changes in concentration, pressure, or catalysts DO NOT change the numerical value of K_c or K_p.", tip: "ONLY temperature changes the value of equilibrium constants K_c and K_p!", misconception: "Believing pressure changes alter K_p." },
+            { id: "13.6", topic: 13, title: "Temperature Effect on K_c / K_p", content: "For exothermic reactions (ΔH < 0), increasing T DECREASES K. For endothermic reactions (ΔH > 0), increasing T INCREASES K.", tip: "Link temperature shifts directly to whether the forward reaction is exo or endothermic.", misconception: "Confusing rate increase with equilibrium yield shift." },
+            { id: "13.8", topic: 13, title: "Thermodynamic Relationship ΔS<sub>total</sub> = R ln K", content: "Understand that ΔS<sub>total</sub> = R ln K. Large positive ΔS<sub>total</sub> gives very large K (>1), reaction goes to completion.", tip: "If K > 1, ln K is positive so ΔS<sub>total</sub> > 0 (feasible).", misconception: "Assuming K cannot be greater than 1." },
+
+            // TOPIC 14: ACID-BASE EQUILIBRIA
+            { id: "14.1", topic: 14, title: "Brønsted-Lowry Acids & Bases", content: "Brønsted-Lowry acid = proton (H⁺) donor; Brønsted-Lowry base = proton acceptor.", tip: "Acid-base reactions involve proton transfer from acid to base.", misconception: "Defining acids purely as Arrhenius H⁺ producers in water." },
+            { id: "14.2", topic: 14, title: "Conjugate Acid-Base Pairs", content: "Identify conjugate pairs differing by a single proton (H⁺) (e.g. CH₃COOH / CH₃COO⁻).", tip: "Acid 1 forms Conjugate Base 1; Base 2 forms Conjugate Acid 2.", misconception: "Pairing species that differ by two protons or an electron." },
+            { id: "14.3", topic: 14, title: "pH Definition", content: "Define pH = -log₁₀[H⁺] and [H⁺] = 10⁻ᵖᴴ.", tip: "Always state pH to TWO decimal places in Edexcel exam calculations!", misconception: "Rounding pH values to 1 significant figure." },
+            { id: "14.6", topic: 14, title: "Strong vs Weak Acids", content: "Strong acids fully dissociate in water (HCl → H⁺ + Cl⁻); weak acids partially dissociate (HA ⇌ H⁺ + A⁻).", tip: "Equilibrium lies far to the left for weak acids (K_a << 1).", misconception: "Equating acid strength with solution concentration." },
+            { id: "14.8", topic: 14, title: "Acid Dissociation Constant K_a & pK_a", content: "Deduce K_a = [H⁺][A⁻] / [HA] and pK_a = -log₁₀K_a.", tip: "Smaller pK_a value = stronger weak acid!", misconception: "Thinking larger pK_a means stronger acid." },
+            { id: "14.9", topic: 14, title: "Weak Acid pH Calculations", content: "Calculate pH of weak acids using [H⁺] ≈ √(K_a × [HA]).", tip: "Assumptions: 1. [H⁺] = [A⁻] (ignore H⁺ from water). 2. [HA]<sub>eq</sub> ≈ [HA]<sub>initial</sub>.", misconception: "Applying [H⁺] = √(K_a [HA]) to buffer solutions." },
+            { id: "14.10", topic: 14, title: "Ionic Product of Water (K_w)", content: "Define K_w = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ mol² dm⁻⁶ at 298 K.", tip: "Water dissociation is ENDOTHERMIC (ΔH > 0). As temp increases, K_w increases, so neutral pH drops below 7!", misconception: "Thinking water becomes acidic when heated (it remains neutral because [H⁺] = [OH⁻])." },
+            { id: "14.11", topic: 14, title: "Strong Base pH Calculations", content: "Calculate strong base pH: [OH⁻] = conc × hydroxides per formula; [H⁺] = K_w / [OH⁻]; pH = -log[H⁺].", tip: "For Ba(OH)₂, [OH⁻] = 2 × concentration!", misconception: "Forgetting to double [OH⁻] for diprotic bases like Ba(OH)₂." },
+            { id: "14.17", topic: 14, title: "Buffer Solutions Definition", content: "A buffer solution resists changes in pH when small amounts of acid or alkali are added.", tip: "Consists of a weak acid and its conjugate base salt (or weak base + conjugate acid salt).", misconception: "Believing a buffer keeps pH strictly constant at 7.00." },
+            { id: "14.18", topic: 14, title: "Buffer Action Mechanism", content: "Added H⁺ reacts with conjugate base (A⁻ → HA); added OH⁻ reacts with weak acid (HA → A⁻ + H₂O).", tip: "High reservoir concentrations of BOTH HA and A⁻ ensure minimal pH ratio change.", misconception: "Writing that added H⁺ reacts directly with OH⁻ in an acidic buffer." },
+            { id: "14.19", topic: 14, title: "Buffer pH Calculations", content: "Calculate buffer pH using [H⁺] = K_a × ([HA] / [A⁻]) or pH = pK_a + log₁₀([A⁻] / [HA]).", tip: "When [HA] = [A⁻], pH = pK_a (half-neutralisation point)!", misconception: "Using total volume incorrectly when finding final concentrations." },
+
+            // TOPIC 15: CARBONYLS, CARBOXYLIC DERIVATIVES & SPECTRA
+            { id: "15.1", topic: 15, title: "Optical Isomerism & Chirality", content: "Optical isomerism arises from a chiral center (carbon bonded to 4 DIFFERENT groups), producing non-superimposable mirror image enantiomers.", tip: "Draw 3D tetrahedral wedge-dash structures around the asymmetric carbon atom!", misconception: "Identifying a carbon in a C=O double bond as a chiral center." },
+            { id: "15.3", topic: 15, title: "Optical Activity & Polarimetry", content: "Single enantiomers rotate the plane of plane-polarised monochromatic light in opposite directions by equal angles.", tip: "Racemic mixture (50:50 mixture of enantiomers) is OPTICALLY INACTIVE due to equal opposite rotations canceling out.", misconception: "Thinking racemic mixtures contain no chiral molecules." },
+            { id: "15.5", topic: 15, title: "Mechanistic Evidence from Optical Activity", content: "S<sub>N</sub>1 proceeds via planar carbocation (equal attack from top/bottom) forming RACEMIC mixture. S<sub>N</sub>2 proceeds via backside attack causing INVERSION of configuration.", tip: "Formation of a racemic mixture proves an S<sub>N</sub>1 or nucleophilic addition mechanism involving a planar intermediate!", misconception: "Expecting S<sub>N</sub>2 reactions to yield racemic mixtures." },
+            { id: "15.8", topic: 15, title: "Reactions of Carbonyl Compounds", content: "Aldehydes vs Ketones: Tollens' (silver mirror for aldehyde), Fehling's (brick-red ppt for aldehyde), K₂Cr₂O₇/H⁺ (orange to green for aldehyde). Both reduced by LiAlH₄. 2,4-DNPH gives orange ppt with both.", tip: "Iodoform test (I₂/NaOH): Positive pale yellow ppt (CHI₃) with methyl ketones (CH₃C=O) and ethanal.", misconception: "Thinking ketones reduce Tollens' reagent." },
+            { id: "15.12", topic: 15, title: "Carboxylic Acids Reactions", content: "Carboxylic acids react with LiAlH₄ (reduced to 1° alcohol), PCl₅ (forms acyl chloride + POCl₃ + steamy HCl fumes), and bases/carbonates (CO₂ fizzing).", tip: "Carboxylic acids fizz with Na₂CO₃; alcohols do NOT!", misconception: "Using NaBH₄ to reduce carboxylic acids (NaBH₄ is too weak; MUST use LiAlH₄ in dry ether)." },
+            { id: "15.14", topic: 15, title: "Acyl Chlorides Reactivity", content: "Acyl chlorides (RCOCl) react vigorously at room temp with: Water (→ carboxylic acid + HCl), Alcohols (→ ester + HCl), Ammonia (→ primary amide + NH₄Cl), Amines (→ secondary amide).", tip: "No catalyst required! Steamy fumes of HCl gas evolved in all four reactions.", misconception: "Adding acid catalyst to acyl chloride reactions." },
+            { id: "15.15", topic: 15, title: "Ester Hydrolysis", content: "Acid hydrolysis (dilute H₂SO₄, reflux): reversible equilibrium forming carboxylic acid + alcohol. Alkaline hydrolysis (NaOH(aq), reflux): irreversible saponification forming carboxylate salt + alcohol.", tip: "Alkaline hydrolysis gives a higher yield because it is non-reversible!", misconception: "Expecting carboxylic acid product from alkaline ester hydrolysis (you get carboxylate salt RCOO⁻Na⁺)." },
+            { id: "15.16", topic: 15, title: "Polyesters (Condensation Polymerisation)", content: "Polyesters (e.g. Terylene) formed from dicarboxylic acids + diols with elimination of small H₂O molecules.", tip: "Draw ester linkage -COO- clearly in ester repeat units.", misconception: "Leaving double bonds in condensation polymer backbones." },
+            { id: "15.19", topic: 15, title: "¹³C NMR Spectroscopy", content: "Number of peaks = number of non-equivalent carbon environments. Chemical shift (δ) indicates carbon environment type.", tip: "Symmetrical molecules display fewer ¹³C NMR peaks than carbon count!", misconception: "Thinking peak height in ¹³C NMR is proportional to carbon count (integration applies to ¹H NMR, not ¹³C)." },
+            { id: "15.20", topic: 15, title: "¹H NMR Spectroscopy & (n+1) Rule", content: "Number of peaks = proton environments; Peak integration = proton ratio; (n+1) rule gives splitting pattern from adjacent non-equivalent protons n.", tip: "Singlet (0 adjacent H), Doublet (1 adjacent H), Triplet (2 adjacent H), Quartet (3 adjacent H). -OH protons appear as singlets and do not split!", misconception: "Counting protons on the same carbon when applying (n+1) splitting rule." }
+        ];
+
+        /* ==================== 10 EXAMINER PITFALLS DATASET ==================== */
+        const PITFALLS_DATA = [
+            {
+                title: "1. Arrhenius Gradient Conversion (<i>E</i><sub>a</sub> units)",
+                topic: "Topic 11: Kinetics",
+                badge: "Calculation Unit Trap",
+                misconception: "Calculating activation energy directly as <i>E</i><sub>a</sub> = -gradient without multiplying by <i>R</i> or leaving <i>E</i><sub>a</sub> in J mol⁻¹ when kJ mol⁻¹ is requested.",
+                truth: "Gradient of ln <i>k</i> vs 1/<i>T</i> equals -<i>E</i><sub>a</sub>/<i>R</i>. Therefore <i>E</i><sub>a</sub> = -gradient × 8.314 J mol⁻¹ K⁻¹. You MUST divide by 1000 to convert to kJ mol⁻¹!",
+                keywords: "gradient = -Ea/R, multiply by 8.314, divide by 1000 for kJ/mol"
+            },
+            {
+                title: "2. Δ<i>S</i><sub>surroundings</sub> Joule Conversion",
+                topic: "Topic 12: Thermodynamics",
+                badge: "Entropy Calculation",
+                misconception: "Plugging Δ<i>H</i> in kJ mol⁻¹ directly into Δ<i>S</i><sub>surroundings</sub> = -Δ<i>H</i>/<i>T</i> without multiplying by 1000.",
+                truth: "Δ<i>S</i><sub>surroundings</sub> has units of J K⁻¹ mol⁻¹. You MUST multiply Δ<i>H</i> (kJ mol⁻¹) by 1000 before dividing by <i>T</i> in Kelvin! Δ<i>S</i><sub>surroundings</sub> = -(Δ<i>H</i> × 1000) / <i>T</i>.",
+                keywords: "Multiply ΔH by 1000, J K^-1 mol^-1, T in Kelvin"
+            },
+            {
+                title: "3. Theoretical vs Experimental Lattice Energy Explanation",
+                topic: "Topic 12: Lattice Energy",
+                badge: "Bonding Character",
+                misconception: "Stating that theoretical ionic model lattice energy accounts for covalent character or polarization.",
+                truth: "The theoretical electrostatic model assumes PURE 100% IONIC bonding with perfectly spherical ions. A more exothermic experimental Born-Haber LE proves CATION POLARISATION of anion electron cloud, imparting PARTIAL COVALENT CHARACTER.",
+                keywords: "Theoretical assumes 100% spherical ionic, experimental higher = covalent character from cation polarisation"
+            },
+            {
+                title: "4. Weak Acid [H⁺] Calculation Assumptions",
+                topic: "Topic 14: Acid-Base",
+                badge: "Mandatory Exam Justification",
+                misconception: "Using [H⁺] = √(<i>K</i><sub>a</sub>[HA]) without knowing the two required simplifying assumptions.",
+                truth: "When asked to state assumptions: 1. [H⁺] = [A⁻] (ionization of water is negligible). 2. [HA]<sub>equilibrium</sub> = [HA]<sub>initial</sub> (degree of dissociation of weak acid is negligible).",
+                keywords: "[H+] = [A-], [HA]eq = [HA]start, negligible dissociation"
+            },
+            {
+                title: "5. Temperature Effect on Neutral Water pH",
+                topic: "Topic 14: <i>K</i><sub>w</sub> & pH",
+                badge: "Conceptual Trap",
+                misconception: "When water is heated to 50°C and its pH drops to 6.63, claiming the water has become acidic.",
+                truth: "Water dissociation (H₂O ⇌ H⁺ + OH⁻) is ENDOTHERMIC. Heating shifts equilibrium right, increasing <i>K</i><sub>w</sub> and [H⁺], so pH drops. However, water remains NEUTRAL because [H⁺] = [OH⁻] strictly holds!",
+                keywords: "Water remains neutral because [H+] = [OH-], Kw increases with temp"
+            },
+            {
+                title: "6. Racemic Mixture Formation Explanation",
+                topic: "Topic 15: Optical Activity",
+                badge: "Mechanism Geometry",
+                misconception: "Stating a racemic mixture forms because the starting ketone/aldehyde is chiral or spherical.",
+                truth: "You MUST state: 'The carbonyl group C=O is PLANAR around the sp² carbon. Nucleophilic attack by CN⁻ can occur from top or bottom face with EQUAL PROBABILITY (50:50), producing equal amounts of both enantiomers.'",
+                keywords: "C=O carbon is planar, equal probability attack top/bottom face, 50:50 enantiomers"
+            },
+            {
+                title: "7. Reducing Agent Choice for Carboxylic Acids",
+                topic: "Topic 15: Organic Reduction",
+                badge: "Reagent Selection",
+                misconception: "Using NaBH₄ to reduce ethanoic acid to ethanol.",
+                truth: "NaBH₄ is a mild reducing agent that reduces ONLY aldehydes and ketones. To reduce carboxylic acids, you MUST use the powerful reducing agent LiAlH₄ (lithium tetrahydridoaluminate) in DRY ETHER!",
+                keywords: "LiAlH4 in dry ether mandatory for carboxylic acids (NaBH4 too weak)"
+            },
+            {
+                title: "8. Ester Hydrolysis: Acidic vs Alkaline Yield",
+                topic: "Topic 15: Ester Reactions",
+                badge: "Equilibrium vs Completion",
+                misconception: "Expecting carboxylic acid product when an ester is boiled with aqueous NaOH.",
+                truth: "Alkaline hydrolysis (NaOH(aq), reflux) is NON-REVERSIBLE and produces the CARBOXYLATE SALT (RCOO⁻Na⁺) and alcohol. Acid hydrolysis (dilute H₂SO₄) is a reversible equilibrium forming carboxylic acid + alcohol.",
+                keywords: "Alkaline gives carboxylate salt, non-reversible, 100% yield"
+            },
+            {
+                title: "9. ¹H NMR (n+1) Splitting Rule Application",
+                topic: "Topic 15: NMR Spectroscopy",
+                badge: "Spectroscopy Interpretation",
+                misconception: "Counting hydrogen atoms on the carbon being analyzed when determining splitting multiplicity.",
+                truth: "The (n+1) rule states that n is the number of non-equivalent hydrogen atoms on ADJACENT carbon atoms! Note: -OH and -NH protons usually appear as singlets and do NOT split neighboring protons.",
+                keywords: "n = hydrogens on ADJACENT carbons, -OH protons do not split"
+            },
+            {
+                title: "10. Rate Constant <i>k</i> Dependencies",
+                topic: "Topic 11: Kinetics",
+                badge: "Kinetics Rule",
+                misconception: "Believing that adding a catalyst or increasing reactant concentration increases the rate constant <i>k</i>.",
+                truth: "The rate constant <i>k</i> is INDEPENDENT of concentration and pressure. <i>k</i> changes ONLY when TEMPERATURE changes (or when a catalyst lowers <i>E</i><sub>a</sub> in Arrhenius equation, but at fixed temp <i>k</i> is fixed for a given system).",
+                keywords: "k changes ONLY with temperature"
+            }
+        ];
+
+        /* ==================== 50 FLASHCARDS DATASET (10 PER TOPIC) ==================== */
+        const FLASHCARDS_DATA = [
+            // TOPIC 11: KINETICS (CARDS 1 - 10)
+            { id: 1, topic: "Topic 11: Kinetics", spec: "Spec 11.2", q: "How can you experimentally confirm that a reaction is FIRST ORDER from a concentration-time graph?", a: "• Measure successive half-lives (t<sub>½</sub>) on the concentration-time plot.\n• If the half-life remains CONSTANT as concentration decreases, the reaction is first order with respect to that reactant." },
+            { id: 2, topic: "Topic 11: Kinetics", spec: "Spec 11.3", q: "Why is sodium hydrogencarbonate (NaHCO₃) added to samples taken during titrimetric rate studies of ester hydrolysis?", a: "• To QUENCH (stop) the reaction immediately by neutralising the acid catalyst, freezing concentrations at that exact time prior to titration." },
+            { id: 3, topic: "Topic 11: Kinetics", spec: "Spec 11.4", q: "In an iodine clock reaction, why must the concentration of sodium thiosulfate (Na₂S₂O₃) be very small relative to reactants?", a: "• Ensures thiosulfate is consumed rapidly early in the reaction while reactant concentrations remain virtually unchanged, so 1/time accurately approximates initial rate." },
+            { id: 4, topic: "Topic 11: Kinetics", spec: "Spec 11.6", q: "What is the rate equation for the acid-catalysed iodination of propanone, and what does it reveal about iodine?", a: "• Rate = <i>k</i>[CH₃COCH₃][H⁺]\n• Iodine is ZERO ORDER ([I₂]⁰), proving I₂ is NOT involved in the rate-determining step or any step prior to it." },
+            { id: 5, topic: "Topic 11: Kinetics", spec: "Spec 11.7", q: "Define the term 'rate-determining step' in a chemical reaction mechanism.", a: "• The SLOWEST step in a multi-step reaction mechanism, which governs and limits the overall rate of the chemical reaction." },
+            { id: 6, topic: "Topic 11: Kinetics", spec: "Spec 11.9", q: "Why does hydrolysis of 2-bromo-2-methylpropane follow an S<sub>N</sub>1 mechanism rate equation (rate = <i>k</i>[R-Br])?", a: "• Formation of the tertiary carbocation intermediate in the slow first step is unimolecular and stabilized by three electron-donating alkyl groups." },
+            { id: 7, topic: "Topic 11: Kinetics", spec: "Spec 11.10", q: "State the Arrhenius equation in logarithmic form and explain how <i>E</i><sub>a</sub> is determined graphically.", a: "• ln <i>k</i> = -(<i>E</i><sub>a</sub>/<i>R</i>)(1/<i>T</i>) + ln <i>A</i>\n• Plot ln <i>k</i> on y-axis vs 1/<i>T</i> (Kelvin) on x-axis.\n• Calculate gradient: <i>E</i><sub>a</sub> = -gradient × 8.314 J mol⁻¹ K⁻¹." },
+            { id: 8, topic: "Topic 11: Kinetics", spec: "Spec 11.11", q: "Outline the three sequential steps involved in heterogeneous catalysis on a solid surface.", a: "1. ADSORPTION: Reactant gas molecules bind to active sites on solid catalyst surface, weakening internal bonds.\n2. REACTION: Adsorbed species react with lower <i>E</i><sub>a</sub>.\n3. DESORPTION: Product molecules depart surface." },
+            { id: 9, topic: "Topic 11: Kinetics", spec: "Spec 11.5", q: "Sketch/describe the shape of a rate vs concentration graph for a ZERO ORDER reactant.", a: "• A horizontal straight line parallel to the concentration axis (rate is completely independent of reactant concentration)." },
+            { id: 10, topic: "Topic 11: Kinetics", spec: "Spec 11.10", q: "What are the mandatory SI units required for temperature (<i>T</i>) and <i>R</i> in the Arrhenius equation?", a: "• Temperature (<i>T</i>): Kelvin (K = °C + 273.15).\n• Gas Constant (<i>R</i>): 8.314 J mol⁻¹ K⁻¹." },
+
+            // TOPIC 12: ENTROPY & ENERGETICS (CARDS 11 - 20)
+            { id: 11, topic: "Topic 12: Energetics", spec: "Spec 12.2", q: "Define 'entropy' (<i>S</i>) in terms of molecular behavior.", a: "• A measure of the degree of disorder or randomness of a system, reflecting the number of ways energy quanta and particles can be randomly dispersed." },
+            { id: 12, topic: "Topic 12: Energetics", spec: "Spec 12.6", q: "State the equation for Total Entropy Change (Δ<i>S</i><sub>total</sub>) and the condition for spontaneous reaction feasibility.", a: "• Δ<i>S</i><sub>total</sub> = Δ<i>S</i><sub>system</sub> + Δ<i>S</i><sub>surroundings</sub>\n• Condition for feasibility: Δ<i>S</i><sub>total</sub> > 0 (must be positive)." },
+            { id: 13, topic: "Topic 12: Energetics", spec: "Spec 12.8", q: "State the equation for Δ<i>S</i><sub>surroundings</sub> including mandatory unit conversion.", a: "• Δ<i>S</i><sub>surroundings</sub> = -(Δ<i>H</i> × 1000) / <i>T</i>\n• Δ<i>H</i> in kJ mol⁻¹ MUST be multiplied by 1000 to convert to Joules (J mol⁻¹) before dividing by <i>T</i> in Kelvin." },
+            { id: 14, topic: "Topic 12: Energetics", spec: "Spec 12.9", q: "How do you calculate the minimum temperature at which an endothermic reaction with positive Δ<i>S</i><sub>system</sub> becomes feasible?", a: "• Set Δ<i>S</i><sub>total</sub> = 0 ⇒ Δ<i>S</i><sub>system</sub> = (Δ<i>H</i> × 1000) / <i>T</i>\n• <i>T</i><sub>min</sub> = (Δ<i>H</i> × 1000) / Δ<i>S</i><sub>system</sub> (Kelvin)." },
+            { id: 15, topic: "Topic 12: Energetics", spec: "Spec 12.11", q: "Explain why a mixture of methane and oxygen is kinetically stable at 298 K despite being thermodynamically unstable.", a: "• Thermodynamically unstable because Δ<i>S</i><sub>total</sub> ≫ 0 (highly feasible).\n• Kinetically stable because activation energy (<i>E</i><sub>a</sub>) is extremely high, so reaction rate is imperceptibly zero without a spark." },
+            { id: 16, topic: "Topic 12: Energetics", spec: "Spec 12.12", q: "Define 'Lattice Energy' (Δ<sub>LE</sub><i>H</i>°).", a: "• The enthalpy change when 1 mole of an ionic crystalline solid is formed from its constituent gaseous ions under standard conditions (always exothermic, Δ<i>H</i> < 0)." },
+            { id: 17, topic: "Topic 12: Energetics", spec: "Spec 12.14", q: "Why is the experimental Born-Haber lattice energy of MgI₂ significantly more exothermic than theoretical electrostatic predictions?", a: "• Small Mg²⁺ cation has high polarising power and distorts the large polarisable I⁻ electron cloud, imparting significant PARTIAL COVALENT CHARACTER." },
+            { id: 18, topic: "Topic 12: Energetics", spec: "Spec 12.16", q: "Define 'Enthalpy Change of Hydration' (Δ<sub>hyd</sub><i>H</i>°).", a: "• The enthalpy change when 1 mole of gaseous ions is completely dissolved in water to form infinitely dilute aqueous ions under standard conditions." },
+            { id: 19, topic: "Topic 12: Energetics", spec: "Spec 12.17", q: "State the energy cycle relation between Enthalpy of Solution (Δ<sub>sol</sub><i>H</i>), Lattice Energy, and Hydration Enthalpies.", a: "• Δ<sub>sol</sub><i>H</i>° = -Δ<sub>LE</sub><i>H</i>° + Δ<sub>hyd</sub><i>H</i>°(cation) + Δ<sub>hyd</sub><i>H</i>°(anion)." },
+            { id: 20, topic: "Topic 12: Energetics", spec: "Spec 12.18", q: "Why is the hydration enthalpy of Mg²⁺ (-1920 kJ mol⁻¹) much more exothermic than Na⁺ (-406 kJ mol⁻¹)?", a: "• Mg²⁺ has a higher positive charge (+2 vs +1) and smaller ionic radius, resulting in much higher charge density and stronger ion-dipole attraction to water molecules." },
+
+            // TOPIC 13: EQUILIBRIA (CARDS 21 - 30)
+            { id: 21, topic: "Topic 13: Equilibria", spec: "Spec 13.1", q: "Write the <i>K</i><sub>c</sub> expression and units for: N₂(g) + 3H₂(g) ⇌ 2NH₃(g).", a: "• <i>K</i><sub>c</sub> = [NH₃]² / ([N₂][H₂]³)\n• Units: (mol dm⁻³)² / ((mol dm⁻³)(mol dm⁻³)³) = dm⁶ mol⁻²." },
+            { id: 22, topic: "Topic 13: Equilibria", spec: "Spec 13.2", q: "Define 'partial pressure' (<i>p</i><sub>A</sub>) of a gas in a mixture.", a: "• <i>p</i><sub>A</sub> = Mole Fraction of A × Total Pressure = (Moles of A / Total Moles of Gas) × <i>P</i><sub>total</sub>." },
+            { id: 23, topic: "Topic 13: Equilibria", spec: "Spec 13.5", q: "How does increasing total pressure affect the numerical value of <i>K</i><sub>p</sub> for a gaseous reaction?", a: "• It has NO EFFECT! <i>K</i><sub>p</sub> remains strictly constant at constant temperature. Equilibrium positions shift to maintain <i>K</i><sub>p</sub> value." },
+            { id: 24, topic: "Topic 13: Equilibria", spec: "Spec 13.6", q: "For an EXOTHERMIC equilibrium reaction (Δ<i>H</i> < 0), how does increasing temperature affect <i>K</i><sub>c</sub>?", a: "• <i>K</i><sub>c</sub> DECREASES. Equilibrium shifts left (endothermic direction) to oppose temperature rise, lowering product concentration relative to reactants." },
+            { id: 25, topic: "Topic 13: Equilibria", spec: "Spec 13.8", q: "State the mathematical relationship linking Total Entropy (Δ<i>S</i><sub>total</sub>) and Equilibrium Constant (<i>K</i>).", a: "• Δ<i>S</i><sub>total</sub> = <i>R</i> ln <i>K</i> ⇒ <i>K</i> = e^(Δ<i>S</i><sub>total</sub> / <i>R</i>)." },
+            { id: 26, topic: "Topic 13: Equilibria", spec: "Spec 13.8", q: "What does a very large value of <i>K</i> (<i>K</i> > 10¹⁰) signify regarding reaction extent and Δ<i>S</i><sub>total</sub>?", a: "• Reaction goes virtually 100% to completion; Δ<i>S</i><sub>total</sub> is large and positive." },
+            { id: 27, topic: "Topic 13: Equilibria", spec: "Spec 13.1", q: "Why are solid reactants excluded from <i>K</i><sub>c</sub> and <i>K</i><sub>p</sub> equilibrium expressions?", a: "• The concentration/density of a pure solid is constant and independent of the amount present, so it is incorporated into the equilibrium constant." },
+            { id: 28, topic: "Topic 13: Equilibria", spec: "Spec 13.4", q: "How does adding a catalyst alter the value of <i>K</i><sub>c</sub> and the position of dynamic equilibrium?", a: "• Catalyst has NO EFFECT on <i>K</i><sub>c</sub> value and NO EFFECT on equilibrium position; it increases forward and reverse rates equally." },
+            { id: 29, topic: "Topic 13: Equilibria", spec: "Spec 13.3", q: "In <i>K</i><sub>p</sub> expressions, what bracket notation MUST be used?", a: "• Use partial pressure terms <i>p</i>(A) or <i>P</i><sub>A</sub> with round brackets. NEVER use square brackets [A]!" },
+            { id: 30, topic: "Topic 13: Equilibria", spec: "Spec 13.7", q: "Explain using Δ<i>S</i><sub>total</sub> = Δ<i>S</i><sub>sys</sub> - Δ<i>H</i>/<i>T</i> why <i>K</i> increases with temperature for ENDOTHERMIC reactions.", a: "• As <i>T</i> increases, -Δ<i>H</i>/<i>T</i> becomes LESS negative for endothermic reactions (Δ<i>H</i> > 0), making Δ<i>S</i><sub>total</sub> more positive. Since Δ<i>S</i><sub>total</sub> = <i>R</i> ln <i>K</i>, <i>K</i> increases." },
+
+            // TOPIC 14: ACID-BASE EQUILIBRIA (CARDS 31 - 40)
+            { id: 31, topic: "Topic 14: Acids & Bases", spec: "Spec 14.1", q: "Define Brønsted-Lowry acid and base.", a: "• Brønsted-Lowry Acid: Proton (H⁺) donor.\n• Brønsted-Lowry Base: Proton (H⁺) acceptor." },
+            { id: 32, topic: "Topic 14: Acids & Bases", spec: "Spec 14.3", q: "Calculate the pH of 0.035 mol dm⁻³ nitric acid (HNO₃).", a: "• HNO₃ is strong acid ⇒ [H⁺] = 0.035 mol dm⁻³\n• pH = -log₁₀(0.035) = 1.46." },
+            { id: 33, topic: "Topic 14: Acids & Bases", spec: "Spec 14.9", q: "Calculate the pH of 0.10 mol dm⁻³ ethanoic acid (<i>K</i><sub>a</sub> = 1.74 × 10⁻⁵ mol dm⁻³).", a: "• [H⁺] = √(<i>K</i><sub>a</sub> × [HA]) = √(1.74 × 10⁻⁵ × 0.10) = 1.319 × 10⁻³ mol dm⁻³\n• pH = -log₁₀(1.319 × 10⁻³) = 2.88." },
+            { id: 34, topic: "Topic 14: Acids & Bases", spec: "Spec 14.10", q: "Calculate the pH of 0.050 mol dm⁻³ Ba(OH)₂ at 298 K (<i>K</i><sub>w</sub> = 1.0 × 10⁻¹⁴).", a: "• Ba(OH)₂ is diprotic base ⇒ [OH⁻] = 2 × 0.050 = 0.10 mol dm⁻³\n• [H⁺] = (1.0 × 10⁻¹⁴) / 0.10 = 1.0 × 10⁻¹³ mol dm⁻³\n• pH = 13.00." },
+            { id: 35, topic: "Topic 14: Acids & Bases", spec: "Spec 14.17", q: "Define a 'buffer solution'.", a: "• A solution that resists changes in pH when small amounts of acid (H⁺) or alkali (OH⁻) are added." },
+            { id: 36, topic: "Topic 14: Acids & Bases", spec: "Spec 14.18", q: "Explain how an acidic buffer (CH₃COOH / CH₃COO⁻) resists pH change when NaOH is added.", a: "• Added OH⁻ ions react with the weak acid reservoir: CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O. Ratio [HA]/[A⁻] remains nearly constant." },
+            { id: 37, topic: "Topic 14: Acids & Bases", spec: "Spec 14.21", q: "What special relationship exists at the HALF-NEUTRALISATION point during weak acid titration?", a: "• [HA] = [A⁻] ⇒ pH = p<i>K</i><sub>a</sub> (and <i>K</i><sub>a</sub> = [H⁺])." },
+            { id: 38, topic: "Topic 14: Acids & Bases", spec: "Spec 14.16", q: "How do you select a suitable indicator for an acid-base titration using a titration curve?", a: "• Choose an indicator whose pH color transition range falls ENTIRELY within the steep vertical pH section of the titration curve." },
+            { id: 39, topic: "Topic 14: Acids & Bases", spec: "Spec 14.22", q: "State the primary carbonic acid/hydrogencarbonate buffer system operating in human blood.", a: "• H₂CO₃(aq) ⇌ H⁺(aq) + HCO₃⁻(aq) (maintains blood pH between 7.35 and 7.45)." },
+            { id: 40, topic: "Topic 14: Acids & Bases", spec: "Spec 14.8", q: "Convert <i>K</i><sub>a</sub> = 1.74 × 10⁻⁵ mol dm⁻³ to p<i>K</i><sub>a</sub>.", a: "• p<i>K</i><sub>a</sub> = -log₁₀(1.74 × 10⁻⁵) = 4.76." },
+
+            // TOPIC 15: CARBONYLS & SPECTRA (CARDS 41 - 50)
+            { id: 41, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.2", q: "Define 'enantiomers' and state their physical property difference.", a: "• Non-superimposable 3D mirror image stereoisomers containing a chiral carbon.\n• They rotate the plane of plane-polarised light by equal angles in OPPOSITE directions." },
+            { id: 42, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.4", q: "Why is a racemic mixture optically inactive?", a: "• Contains equal 50:50 amounts of both enantiomers, so opposite rotations of plane-polarised light cancel out exactly." },
+            { id: 43, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.8", q: "State reagent and positive observation for testing a aldehyde/ketone carbonyl group.", a: "• Reagent: 2,4-dinitrophenylhydrazine (2,4-DNPH).\n• Observation: Orange/yellow/red crystalline precipitate." },
+            { id: 44, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.8", q: "Describe the positive result for Tollens' reagent with an aldehyde vs ketone.", a: "• Aldehyde: Forms a SILVER MIRROR (Ag⁺ reduced to metallic Ag).\n• Ketone: No reaction (remains colourless)." },
+            { id: 45, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.8", q: "State reagents and positive result for the iodoform test for methyl carbonyls (CH₃C=O).", a: "• Reagents: Iodine (I₂) and aqueous sodium hydroxide (NaOH).\n• Observation: Pale YELLOW precipitate of triiodomethane (CHI₃) with characteristic antiseptic smell." },
+            { id: 46, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.12", q: "State observation when ethanoic acid is added to aqueous sodium carbonate (Na₂CO₃).", a: "• Effervescence / fizzing (carbon dioxide gas evolved turning limewater cloudy)." },
+            { id: 47, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.14", q: "Write the equation for reaction of ethanoyl chloride (CH₃COCl) with ethanol.", a: "• CH₃COCl + CH₃CH₂OH → CH₃COOCH₂CH₃ + HCl(g) (forms ethyl ethanoate + steamy HCl fumes)." },
+            { id: 48, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.19", q: "How many peaks are observed in the ¹³C NMR spectrum of propanone (CH₃COCH₃)?", a: "• TWO peaks (symmetrical molecule: two equivalent methyl carbons = 1 peak; carbonyl carbon = 1 peak)." },
+            { id: 49, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.20", q: "Predict the ¹H NMR splitting pattern for the methyl (-CH₃) protons in ethanol (CH₃CH₂OH).", a: "• TRIPLET (1 + 2 = 3 peaks) because adjacent -CH₂- group has n=2 protons (n+1 = 3)." },
+            { id: 50, topic: "Topic 15: Carbonyls & Spectra", spec: "Spec 15.17", q: "What key fragment peak at <i>m/z</i> = 45 is characteristic of carboxylic acids in mass spec?", a: "• [COOH]⁺ ion fragment (12 + 32 + 1 = 45)." }
+        ];
+
+        /* ==================== 35 GLOSSARY TERMS WITH MCQS DATASET ==================== */
+        const GLOSSARY_DATA = [
+            {
+                term: "Acid Dissociation Constant (<i>K</i><sub>a</sub>)",
+                def: "An equilibrium constant measuring the extent of dissociation of a weak acid in solution: <i>K</i><sub>a</sub> = [H⁺][A⁻] / [HA]. Higher <i>K</i><sub>a</sub> values indicate stronger weak acids.",
+                q: "Edexcel IAL MCQ: Weak acid HA (0.10 mol dm⁻³) has pH = 3.00. What is its <i>K</i><sub>a</sub>?",
+                options: ["A: 1.0 × 10⁻³", "B: 1.0 × 10⁻⁵", "C: 1.0 × 10⁻⁶", "D: 1.0 × 10⁻⁷"],
+                ans: "Correct Answer: B (1.0 × 10⁻⁵ mol dm⁻³). Explanation: [H⁺] = 10⁻³ = 1.0 × 10⁻³. <i>K</i><sub>a</sub> = (10⁻³)² / 0.10 = 1.0 × 10⁻⁵."
+            },
+            {
+                term: "Activation Energy (<i>E</i><sub>a</sub>)",
+                def: "The minimum kinetic energy colliding reactant particles must possess for a reaction to occur.",
+                q: "Edexcel IAL MCQ: The gradient of a plot of ln <i>k</i> versus 1/<i>T</i> is -6000 K. What is <i>E</i><sub>a</sub>?",
+                options: ["A: +49.9 kJ mol⁻¹", "B: +721 kJ mol⁻¹", "C: -49.9 kJ mol⁻¹", "D: +0.72 kJ mol⁻¹"],
+                ans: "Correct Answer: A (+49.9 kJ mol⁻¹). Explanation: <i>E</i><sub>a</sub> = -(-6000) × 8.314 = 49884 J mol⁻¹ = +49.9 kJ mol⁻¹."
+            },
+            {
+                term: "Arrhenius Equation",
+                def: "An equation modeling rate constant dependence on temperature and <i>E</i><sub>a</sub>: <i>k</i> = <i>A</i> e^(-<i>E</i><sub>a</sub>/<i>RT</i>) or ln <i>k</i> = -(<i>E</i><sub>a</sub>/<i>RT</i>) + ln <i>A</i>.",
+                q: "Edexcel IAL MCQ: In the Arrhenius equation, what does pre-exponential factor <i>A</i> represent?",
+                options: ["A: Collision frequency and steric orientation", "B: Equilibrium yield", "C: Reaction enthalpy", "D: Catalyst mass"],
+                ans: "Correct Answer: A. Explanation: <i>A</i> accounts for total frequency of collisions with correct orientation."
+            },
+            {
+                term: "Born-Haber Cycle",
+                def: "A thermochemical cycle applying Hess's Law to calculate lattice energy from experimental formation, atomisation, IE, and EA values.",
+                q: "Edexcel IAL MCQ: Which step in a Born-Haber cycle is ENDOTHERMIC?",
+                options: ["A: First electron affinity of O", "B: First ionisation energy of Na", "C: Lattice energy of NaCl", "D: Enthalpy of formation of NaCl"],
+                ans: "Correct Answer: B. Explanation: Ionisation energy requires removing electrons against nuclear pull (ΔH > 0)."
+            },
+            {
+                term: "Buffer Solution",
+                def: "A solution containing a weak acid and its conjugate base salt that resists changes in pH when small amounts of acid or base are added.",
+                q: "Edexcel IAL MCQ: Which mixture forms an acidic buffer solution?",
+                options: ["A: HCl and NaCl", "B: CH₃COOH and CH₃COONa", "C: NaOH and NaCl", "D: HNO₃ and NH₃"],
+                ans: "Correct Answer: B. Explanation: Weak acid (CH₃COOH) + conjugate base salt (CH₃COONa)."
+            },
+            {
+                term: "Chemical Shift (δ)",
+                def: "The relative resonance frequency of a nucleus in NMR spectroscopy compared to tetramethylsilane (TMS) standard, measured in ppm.",
+                q: "Edexcel IAL MCQ: Why is TMS used as the universal reference standard in NMR?",
+                options: ["A: Gives 12 equivalent protons giving 1 sharp intense peak at δ = 0", "B: Highly reactive", "C: Soluble only in acid", "D: Colored blue"],
+                ans: "Correct Answer: A. Explanation: TMS (Si(CH₃)₄) is inert, volatile, and gives a single reference peak at 0 ppm."
+            },
+            {
+                term: "Chiral Center",
+                def: "An asymmetric carbon atom bonded to four different atoms or groups of atoms, creating optical isomerism.",
+                q: "Edexcel IAL MCQ: How many chiral centers exist in 2-bromo-3-chlorobutane?",
+                options: ["A: 0", "B: 1", "C: 2", "D: 3"],
+                ans: "Correct Answer: C (2 chiral centers). Explanation: Both C2 (-H, -Br, -CH₃, -CH(Cl)CH₃) and C3 (-H, -Cl, -CH₃, -CH(Br)CH₃) have 4 different groups."
+            },
+            {
+                term: "Clock Reaction",
+                def: "A kinetic experiment where a sudden visible color change occurs when a fixed scavenger is exhausted, approximating initial rate as 1/t.",
+                q: "Edexcel IAL MCQ: In the iodine clock reaction, what causes the sudden blue-black color?",
+                options: ["A: Excess I₂ reacting with starch indicator", "B: Thiosulfate precipitation", "C: Decomposition of acid", "D: Catalyst oxidation"],
+                ans: "Correct Answer: A. Explanation: Once thiosulfate scavenger is used up, free I₂ reacts immediately with starch."
+            },
+            {
+                term: "Condensation Polymerisation",
+                def: "Polymerisation where bifunctional monomers join together with the elimination of a small byproduct molecule like water or HCl.",
+                q: "Edexcel IAL MCQ: Which pair forms a polyester by condensation polymerisation?",
+                options: ["A: Ethene + propene", "B: Benzene-1,4-dicarboxylic acid + ethane-1,2-diol", "C: Hexane + ethanol", "D: Chloroethene + water"],
+                ans: "Correct Answer: B. Explanation: Dicarboxylic acid + diol forms polyester with loss of H₂O."
+            },
+            {
+                term: "Conjugate Acid-Base Pair",
+                def: "Two chemical species that transform into each other by the gain or loss of a single proton (H⁺).",
+                q: "Edexcel IAL MCQ: What is the conjugate base of the hydrogen sulfate ion (HSO₄⁻)?",
+                options: ["A: H₂SO₄", "B: SO₄²⁻", "C: H₃O⁺", "D: OH⁻"],
+                ans: "Correct Answer: B (SO₄²⁻). Explanation: Removing one proton (H⁺) from HSO₄⁻ gives SO₄²⁻."
+            },
+            {
+                term: "Enantiomers",
+                def: "Non-superimposable 3D mirror image stereoisomers that rotate plane-polarised light by equal angles in opposite directions.",
+                q: "Edexcel IAL MCQ: Enantiomers differ in which physical property?",
+                options: ["A: Melting point", "B: Direction of rotation of plane-polarised light", "C: Density", "D: Boiling point"],
+                ans: "Correct Answer: B. Explanation: Enantiomers have identical physical properties except optical rotation direction."
+            },
+            {
+                term: "Enthalpy of Hydration (Δ<sub>hyd</sub><i>H</i>°)",
+                def: "Enthalpy change when 1 mole of gaseous ions dissolves in water to form infinitely dilute aqueous ions under standard conditions.",
+                q: "Edexcel IAL MCQ: Which ion has the most exothermic hydration enthalpy?",
+                options: ["A: Na⁺", "B: K⁺", "C: Mg²⁺", "D: Ca²⁺"],
+                ans: "Correct Answer: C (Mg²⁺). Explanation: Highest charge (+2) and smallest ionic radius give maximum charge density."
+            },
+            {
+                term: "Enthalpy of Solution (Δ<sub>sol</sub><i>H</i>°)",
+                def: "Enthalpy change when 1 mole of an ionic solid dissolves completely in water to form infinitely dilute solution under standard conditions.",
+                q: "Edexcel IAL MCQ: If lattice energy is -780 kJ mol⁻¹ and sum of hydration enthalpies is -770 kJ mol⁻¹, what is Δ<sub>sol</sub><i>H</i>?",
+                options: ["A: +10 kJ mol⁻¹", "B: -10 kJ mol⁻¹", "C: -1550 kJ mol⁻¹", "D: +1550 kJ mol⁻¹"],
+                ans: "Correct Answer: A (+10 kJ mol⁻¹). Explanation: Δ<sub>sol</sub><i>H</i> = -Δ<sub>LE</sub><i>H</i> + ΣΔ<sub>hyd</sub><i>H</i> = -(-780) + (-770) = +10 kJ mol⁻¹."
+            },
+            {
+                term: "Entropy (<i>S</i>)",
+                def: "A thermodynamic state function quantifying dispersal of energy and matter disorder within a system (J K⁻¹ mol⁻¹).",
+                q: "Edexcel IAL MCQ: Which process shows a NEGATIVE system entropy change (Δ<i>S</i><sub>system</sub> &lt; 0)?",
+                options: ["A: H₂O(l) → H₂O(g)", "B: 2Mg(s) + O₂(g) → 2MgO(s)", "C: CaCO₃(s) → CaO(s) + CO₂(g)", "D: Dissolving NaCl(s)"],
+                ans: "Correct Answer: B. Explanation: 1 mole of gas forms pure solid, reducing gas moles (Δn<sub>gas</sub> = -1)."
+            },
+            {
+                term: "Feasibility (Thermodynamic)",
+                def: "The thermodynamic spontaneity of a reaction, dictated by total entropy change (Δ<i>S</i><sub>total</sub> &gt; 0).",
+                q: "Edexcel IAL MCQ: A reaction is feasible at ALL temperatures if:",
+                options: ["A: ΔH &lt; 0 and Δ<i>S</i><sub>system</sub> &gt; 0", "B: ΔH &gt; 0 and Δ<i>S</i><sub>system</sub> &lt; 0", "C: ΔH &lt; 0 and Δ<i>S</i><sub>system</sub> &lt; 0", "D: ΔH &gt; 0 and Δ<i>S</i><sub>system</sub> &gt; 0"],
+                ans: "Correct Answer: A. Explanation: Exothermic (Δ<i>S</i><sub>surr</sub> &gt; 0) + positive system entropy ensures Δ<i>S</i><sub>total</sub> &gt; 0 always."
+            },
+            {
+                term: "Half-Life (t<sub>½</sub>)",
+                def: "The time taken for the concentration of a reactant to decrease to half of its initial value.",
+                q: "Edexcel IAL MCQ: A 1st order reaction has <i>k</i> = 0.0693 min⁻¹. What is its half-life?",
+                options: ["A: 5 min", "B: 10 min", "C: 15 min", "D: 20 min"],
+                ans: "Correct Answer: B (10 min). Explanation: t<sub>½</sub> = (ln 2) / <i>k</i> = 0.693 / 0.0693 = 10 min."
+            },
+            {
+                term: "Heterogeneous Catalyst",
+                def: "A catalyst that exists in a different physical phase than the reactants (e.g. solid catalyst with gas reactants).",
+                q: "Edexcel IAL MCQ: How does solid Nickel catalyse alkene hydrogenation?",
+                options: ["A: Reactants adsorb onto solid nickel surface weakening bonds", "B: Nickel dissolves in alkene", "C: Nickel changes equilibrium constant", "D: Nickel releases oxygen"],
+                ans: "Correct Answer: A. Explanation: Surface adsorption provides alternative pathway with lower <i>E</i><sub>a</sub>."
+            },
+            {
+                term: "Homogeneous Catalyst",
+                def: "A catalyst present in the same physical phase as the reactants (e.g. aqueous Fe²⁺ catalyst in liquid redox reactions).",
+                q: "Edexcel IAL MCQ: Aqueous Fe²⁺ catalyses reaction between I⁻ and S₂O₈²⁻ because:",
+                options: ["A: Fe²⁺ provides surface sites", "B: Fe²⁺ changes oxidation state to Fe³⁺ avoiding like-charge anion repulsion", "C: Increases total gas volume", "D: Absorbs light"],
+                ans: "Correct Answer: B. Explanation: Alternate steps with oppositely charged ions eliminate high activation energy anion-anion repulsion."
+            },
+            {
+                term: "Ionic Product of Water (<i>K</i><sub>w</sub>)",
+                def: "The equilibrium constant for the self-ionisation of water: <i>K</i><sub>w</sub> = [H⁺][OH⁻] = 1.0 × 10⁻¹⁴ mol² dm⁻⁶ at 298 K.",
+                q: "Edexcel IAL MCQ: At 50°C, <i>K</i><sub>w</sub> = 5.48 × 10⁻¹⁴ mol² dm⁻⁶. What is pure water pH?",
+                options: ["A: 7.00", "B: 6.63", "C: 7.37", "D: 6.00"],
+                ans: "Correct Answer: B (6.63). Explanation: [H⁺] = √(5.48 × 10⁻¹⁴) = 2.34 × 10⁻⁷ ⇒ pH = -log(2.34 × 10⁻⁷) = 6.63."
+            },
+            {
+                term: "Iodoform Test",
+                def: "Qualitative test for methyl carbonyls (CH₃C=O) or methyl secondary alcohols using I₂ / NaOH, forming pale yellow CHI₃ precipitate.",
+                q: "Edexcel IAL MCQ: Which compound gives a POSITIVE yellow precipitate with I₂ / NaOH?",
+                options: ["A: Pentan-3-one", "B: Propanone", "C: Methanal", "D: Benzoic acid"],
+                ans: "Correct Answer: B (Propanone). Explanation: Propanone contains the required CH₃C=O methyl carbonyl group."
+            },
+            {
+                term: "Lattice Energy (Δ<sub>LE</sub><i>H</i>°)",
+                def: "Enthalpy change when 1 mole of ionic solid is formed from its constituent gaseous ions under standard conditions.",
+                q: "Edexcel IAL MCQ: Which compound has the most exothermic lattice energy?",
+                options: ["A: NaCl", "B: MgO", "C: KBr", "D: CsI"],
+                ans: "Correct Answer: B (MgO). Explanation: Mg²⁺ and O²⁻ have +2/-2 charges and small radii."
+            },
+            {
+                term: "Mass Spectrometry (MS)",
+                def: "Analytical technique measuring <i>m/z</i> ratios of molecular ions (M⁺) and fragment ions to elucidate molecular mass and structure.",
+                q: "Edexcel IAL MCQ: What structural fragment corresponds to <i>m/z</i> = 43 in mass spec?",
+                options: ["A: [COOH]⁺", "B: [CH₃CO]⁺ or [C₃H₇]⁺", "C: [OH]⁺", "D: [NO₂]⁺"],
+                ans: "Correct Answer: B. Explanation: Mass of CH₃CO = 15 + 28 = 43."
+            },
+            {
+                term: "Nucleophilic Addition",
+                def: "Mechanism where an electron-rich nucleophile attacks the electron-deficient carbonyl carbon (C<sup>δ+</sup>) in aldehydes/ketones.",
+                q: "Edexcel IAL MCQ: What nucleophile attacks ethanal in the reaction with HCN / KCN?",
+                options: ["A: CN⁻ ion", "B: H⁺ ion", "C: K⁺ ion", "D: OH⁻ ion"],
+                ans: "Correct Answer: A (CN⁻ ion). Explanation: Cyanide anion acts as the nucleophile with its lone pair."
+            },
+            {
+                term: "Optical Activity",
+                def: "The property of chiral molecules to rotate the plane of plane-polarised monochromatic light.",
+                q: "Edexcel IAL MCQ: Optical activity is measured using a:",
+                options: ["A: Colorimeter", "B: Polarimeter", "C: Mass spectrometer", "D: Geiger counter"],
+                ans: "Correct Answer: B (Polarimeter). Explanation: Polarimeters measure optical rotation angles of solutions."
+            },
+            {
+                term: "Order of Reaction",
+                def: "The power to which a reactant's concentration is raised in the rate equation, reflecting its kinetic influence.",
+                q: "Edexcel IAL MCQ: Doubling [A] quadruples the reaction rate. What is order in A?",
+                options: ["A: Zero", "B: First", "C: Second", "D: Third"],
+                ans: "Correct Answer: C (Second order). Explanation: 2² = 4 ⇒ rate ∝ [A]²."
+            },
+            {
+                term: "pH",
+                def: "A logarithmic measure of hydrogen ion concentration: pH = -log₁₀[H⁺].",
+                q: "Edexcel IAL MCQ: What is the [H⁺] concentration in a solution with pH = 3.40?",
+                options: ["A: 3.98 × 10⁻⁴ mol dm⁻³", "B: 2.51 × 10⁻³ mol dm⁻³", "C: 0.0010 mol dm⁻³", "D: 4.00 mol dm⁻³"],
+                ans: "Correct Answer: A (3.98 × 10⁻⁴ mol dm⁻³). Explanation: [H⁺] = 10⁻³ˑ⁴⁰ = 3.981 × 10⁻⁴."
+            },
+            {
+                term: "Polarisation (Ionic)",
+                def: "Distortion of the spherical electron cloud of an anion by electrostatic attraction from a small, highly charged cation.",
+                q: "Edexcel IAL MCQ: Which cation has the greatest polarising power?",
+                options: ["A: Na⁺", "B: Mg²⁺", "C: Al³⁺", "D: K⁺"],
+                ans: "Correct Answer: C (Al³⁺). Explanation: Highest charge (+3) and smallest radius."
+            },
+            {
+                term: "Proton NMR (¹H NMR)",
+                def: "Spectroscopy analyzing hydrogen Environments, peak area Integration, Chemical shifts (δ), and Splitting ((n+1) rule).",
+                q: "Edexcel IAL MCQ: How many ¹H NMR proton environments exist in methyl ethanoate (CH₃COOCH₃)?",
+                options: ["A: 1", "B: 2", "C: 3", "D: 6"],
+                ans: "Correct Answer: B (2 environments). Explanation: Acetyl methyl -COCH₃ and ester methyl -OCH₃ are non-equivalent."
+            },
+            {
+                term: "Racemic Mixture",
+                def: "An equimolar 50:50 mixture of two enantiomers, exhibiting zero net optical rotation.",
+                q: "Edexcel IAL MCQ: Why does S<sub>N</sub>1 hydrolysis of chiral 2-bromobutane form a racemic mixture?",
+                options: ["A: Planar carbocation intermediate attacked equally from top or bottom", "B: Inversion of configuration", "C: Product is insoluble", "D: Secondary alcohol"],
+                ans: "Correct Answer: A. Explanation: Planar carbocation allows 50:50 attack from either face."
+            },
+            {
+                term: "Rate Constant (<i>k</i>)",
+                def: "The proportionality constant in a rate equation, fixed for a reaction at a specified temperature.",
+                q: "Edexcel IAL MCQ: What are units of <i>k</i> for a second-order rate equation (rate = <i>k</i>[A]²)?",
+                options: ["A: s⁻¹", "B: dm³ mol⁻¹ s⁻¹", "C: dm⁶ mol⁻² s⁻¹", "D: mol dm⁻³ s⁻¹"],
+                ans: "Correct Answer: B (dm³ mol⁻¹ s⁻¹). Explanation: <i>k</i> = rate / [A]² = (mol dm⁻³ s⁻¹) / (mol dm⁻³)² = dm³ mol⁻¹ s⁻¹."
+            },
+            {
+                term: "Rate-Determining Step (RDS)",
+                def: "The slowest elementary step in a reaction mechanism sequence that limits the overall rate.",
+                q: "Edexcel IAL MCQ: Step 1: A + B → X (slow); Step 2: X + C → Y (fast). What is the rate equation?",
+                options: ["A: Rate = <i>k</i>[A][B]", "B: Rate = <i>k</i>[A][B][C]", "C: Rate = <i>k</i>[X][C]", "D: Rate = <i>k</i>[C]"],
+                ans: "Correct Answer: A. Explanation: Slow Step 1 involves 1 mole A and 1 mole B."
+            },
+            {
+                term: "Retention Time (t<sub>R</sub>)",
+                def: "The time taken for a component to travel through a chromatography column (GC/HPLC) from injection to detection.",
+                q: "Edexcel IAL MCQ: In Gas Chromatography, retention time depends on:",
+                options: ["A: Column temperature and compound solubility/volatility in mobile/stationary phases", "B: Light intensity", "C: Solution pH", "D: Mass number"],
+                ans: "Correct Answer: A. Explanation: Partitioning between stationary phase and carrier gas dictates t<sub>R</sub>."
+            },
+            {
+                term: "Retention Factor (R<sub>f</sub>)",
+                def: "Ratio of distance traveled by solute to distance traveled by solvent front in paper/thin-layer chromatography.",
+                q: "Edexcel IAL MCQ: Spot moves 3.0 cm, solvent front moves 12.0 cm. What is R<sub>f</sub>?",
+                options: ["A: 0.25", "B: 4.00", "C: 0.36", "D: 0.75"],
+                ans: "Correct Answer: A (0.25). Explanation: R<sub>f</sub> = 3.0 / 12.0 = 0.25."
+            },
+            {
+                term: "S<sub>N</sub>1 Mechanism",
+                def: "Unimolecular nucleophilic substitution involving slow rate-determining carbocation formation followed by fast nucleophile attack.",
+                q: "Edexcel IAL MCQ: Which halogenoalkane undergoes hydrolysis exclusively via S<sub>N</sub>1?",
+                options: ["A: 1-chlorobutane", "B: 2-bromopropane", "C: 2-chloro-2-methylpropane", "D: Chloromethane"],
+                ans: "Correct Answer: C. Explanation: Tertiary halogenoalkane forms highly stable tertiary carbocation."
+            },
+            {
+                term: "Tollens' Reagent",
+                def: "Ammoniacal silver nitrate solution ([Ag(NH₃)₂]⁺) used to distinguish aldehydes (forms silver mirror) from ketones (no reaction).",
+                q: "Edexcel IAL MCQ: Tollens' reagent reacts with ethanal because ethanal is:",
+                options: ["A: Oxidised to ethanoic acid while Ag⁺ is reduced to silver metal", "B: Reduced to ethanol", "C: Dehydrated", "D: Chlorinated"],
+                ans: "Correct Answer: A. Explanation: Aldehydes reduce Ag⁺ to Ag(s) mirror."
+            }
+        ];
+
+        /* ==================== 10 LEVEL 3 ESSAY MODELS DATASET ==================== */
+        const ESSAYS_DATA = [
+            {
+                title: "1. Experimental Determination of Activation Energy (<i>E</i><sub>a</sub>) via Arrhenius Plot",
+                question: "Describe how an initial rates experiment can be conducted to collect rate data at different temperatures for the iodine clock reaction. Explain how the data is processed graphically using the Arrhenius equation to calculate activation energy (<i>E</i><sub>a</sub>).",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Experimental Method:</strong> Measure fixed volumes of hydrogen peroxide, acid, starch, and a small known volume of sodium thiosulfate scavenger into a flask. Record initial temperature. Add potassium iodide, start stopwatch, and swirl.<br>
+                • <strong>Timing & Rate:</strong> Record time (<i>t</i>) when the sudden blue-black starch-iodine color appears. Calculate initial rate as rate ∝ 1/<i>t</i>. Repeat at minimum 5 different controlled temperatures (using a thermostatted water bath).<br>
+                • <strong>Arrhenius Relationship:</strong> Since rate constant <i>k</i> ∝ rate ∝ 1/<i>t</i>, plot ln(1/<i>t</i>) or ln <i>k</i> on the y-axis against 1/<i>T</i> (temperature in Kelvin, K = °C + 273) on the x-axis.<br>
+                • <strong>Graphical Analysis:</strong> Draw a straight line of best fit. Calculate the gradient of the line (gradient = Δ<i>y</i>/Δ<i>x</i>). The gradient will be negative.<br>
+                • <strong><i>E</i><sub>a</sub> Calculation:</strong> From ln <i>k</i> = -(<i>E</i><sub>a</sub>/<i>R</i>)(1/<i>T</i>) + ln <i>A</i>, setting gradient = -<i>E</i><sub>a</sub>/<i>R</i> ⇒ <i>E</i><sub>a</sub> = -gradient × 8.314 J mol⁻¹ K⁻¹.<br>
+                • <strong>Units & Conversion:</strong> Divide <i>E</i><sub>a</sub> by 1000 to convert Joules to final kJ mol⁻¹ with positive sign.`
+            },
+            {
+                title: "2. Born-Haber Cycle & Covalent Character in Ionic Lattices",
+                question: "Construct the enthalpy steps for the Born-Haber cycle of Magnesium Iodide (MgI₂). Explain why the experimental lattice energy of MgI₂ is significantly more exothermic than the theoretical value calculated from an electrostatic model.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Born-Haber Cycle Steps:</strong> 1. Enthalpy of formation (Δ<sub>f</sub><i>H</i>° [MgI₂(s)]). 2. Enthalpy of atomisation of Mg (Δ<sub>at</sub><i>H</i>° [Mg(s) → Mg(g)]). 3. First and second ionisation energies of Mg (IE₁ + IE₂ [Mg(g) → Mg²⁺(g) + 2e⁻]). 4. Enthalpy of atomisation of Iodine (2 × Δ<sub>at</sub><i>H</i>° [½I₂(s) → I(g)]). 5. Electron affinity of Iodine (2 × EA₁ [I(g) + e⁻ → I⁻(g)]). 6. Lattice Energy (Δ<sub>LE</sub><i>H</i>° [Mg²⁺(g) + 2I⁻(g) → MgI₂(s)]).<br>
+                • <strong>Theoretical Model Assumption:</strong> The theoretical electrostatic model assumes 100% PURE IONIC bonding with spherical ions with localized point charges.<br>
+                • <strong>Polarisation Mechanism:</strong> The small Mg²⁺ cation has a high positive charge density (small radius, +2 charge), giving it strong POLARISING POWER.<br>
+                • <strong>Anion Polarisability:</strong> The large iodide anion (I⁻) has a diffuse valence electron cloud that is easily POLARISABLE.<br>
+                • <strong>Covalent Character:</strong> Mg²⁺ distorts the electron cloud of I⁻, pulling electron density between the nuclei. This imparts significant PARTIAL COVALENT CHARACTER into the lattice bond.<br>
+                • <strong>Energy Consequence:</strong> Covalent overlap provides additional orbital binding energy, making the experimental lattice energy MORE EXOTHERMIC than the purely ionic theoretical prediction.`
+            },
+            {
+                title: "3. Action and Resistance to pH Change in Buffer Solutions",
+                question: "Explain what a buffer solution is. Describe the mechanism by which an ethanoic acid/sodium ethanoate buffer resists pH changes when small quantities of acid (HCl) or alkali (NaOH) are added.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Buffer Definition:</strong> A solution containing a weak acid (CH₃COOH) and its conjugate base salt (CH₃COONa) that resists changes in pH when small amounts of acid or base are added.<br>
+                • <strong>Equilibria Present:</strong> 1. Weak acid partial dissociation: CH₃COOH(aq) ⇌ CH₃COO⁻(aq) + H⁺(aq) (small concentration of H⁺). 2. Salt complete dissociation: CH₃COONa(aq) → CH₃COO⁻(aq) + Na⁺(aq) (large reservoir of CH₃COO⁻).<br>
+                • <strong>Addition of Acid (H⁺):</strong> Added H⁺ ions react with the large reservoir of conjugate base: CH₃COO⁻(aq) + H⁺(aq) → CH₃COOH(aq). Equilibrium shifts left, removing added H⁺ so [H⁺] and pH remain virtually unchanged.<br>
+                • <strong>Addition of Alkali (OH⁻):</strong> Added OH⁻ ions react with the large reservoir of weak acid: CH₃COOH(aq) + OH⁻(aq) → CH₃COO⁻(aq) + H₂O(l).<br>
+                • <strong>Ratio Stability:</strong> Because both [CH₃COOH] and [CH₃COO⁻] reservoirs are very large, the ratio [CH₃COOH]/[CH₃COO⁻] changes negligibly.<br>
+                • <strong>pH Control:</strong> Since [H⁺] = <i>K</i><sub>a</sub> × ([CH₃COOH] / [CH₃COO⁻]), [H⁺] remains nearly constant, preserving stable pH.`
+            },
+            {
+                title: "4. Stereochemistry & Kinetics: S<sub>N</sub>1 vs S<sub>N</sub>2 Mechanisms",
+                question: "Compare the kinetics and stereochemical outcomes of nucleophilic substitution reactions of a single enantiomer of 1-bromobutane versus 2-bromo-2-methylpropane with aqueous hydroxide ions.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>1-bromobutane (S<sub>N</sub>2 Mechanism):</strong><br>
+                - <em>Kinetics:</em> Second order overall (rate = <i>k</i>[C₄H₉Br][OH⁻]). The rate-determining step is bimolecular, involving simultaneous attack of OH⁻ and loss of Br⁻.<br>
+                - <em>Stereochemistry:</em> Nucleophile OH⁻ attacks strictly from the backside opposite the leaving group Br⁻ via a transition state. This causes complete INVERSION OF CONFIGURATION at the chiral carbon atom, yielding a single optically active enantiomer.<br>
+                • <strong>2-bromo-2-methylpropane (S<sub>N</sub>1 Mechanism):</strong><br>
+                - <em>Kinetics:</em> First order overall (rate = <i>k</i>[(CH₃)₃CBr]). The rate-determining step is unimolecular heterolytic cleavage of C-Br bond forming a carbocation.<br>
+                - <em>Stereochemistry:</em> The intermediate tertiary carbocation [(CH₃)₃C⁺] has a PLANAR shape around the positive carbon. The nucleophile OH⁻ can attack from either top or bottom face with EQUAL PROBABILITY (50:50).<br>
+                - <em>Optical Activity:</em> Equal 50:50 formation of both enantiomers produces a RACEMIC MIXTURE, which is OPTICALLY INACTIVE (rotations cancel).`
+            },
+            {
+                title: "5. Optical Activity & Mechanism of Nucleophilic Addition to Carbonyls",
+                question: "Describe the mechanism for the reaction between ethanal and hydrogen cyanide (HCN) in the presence of KCN. Explain why the product, 2-hydroxypropanenitrile, is formed as an optically inactive racemic mixture.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Role of Catalyst:</strong> KCN provides cyanide nucleophiles (CN⁻), as HCN is a weak acid and dissociates poorly.<br>
+                • <strong>Mechanism Step 1:</strong> Nucleophilic attack by cyanide ion (:CN⁻) using its lone pair on the electron-deficient carbonyl carbon (C<sup>δ+</sup>). The C=O double bond breaks heterolytically, transferring both electrons to oxygen, forming an alkoxide intermediate (CH₃CH(CN)O⁻). Curly arrow from :CN⁻ lone pair to C<sup>δ+</sup>, and from C=O bond to O.<br>
+                • <strong>Mechanism Step 2:</strong> Alkoxide anion is protonated by HCN or H₂O, regenerating CN⁻ catalyst and forming 2-hydroxypropanenitrile [CH₃CH(OH)CN].<br>
+                • <strong>Origin of Racemic Mixture:</strong> The initial carbonyl group (C=O) in ethanal has a PLANAR geometry around the sp² hybridized carbon atom.<br>
+                • <strong>Equal Probability Attack:</strong> The nucleophile CN⁻ can attack the planar carbon from either the top face or bottom face with EQUAL PROBABILITY (50:50 chance).<br>
+                • <strong>Optical Inactivity:</strong> Equal amounts of (+) and (-) enantiomers are produced. The opposite rotations of plane-polarised light cancel out exactly, making the product a RACEMIC MIXTURE that is OPTICALLY INACTIVE.`
+            },
+            {
+                title: "6. Titration Curves & Indicator Selection Principles",
+                question: "Sketch and explain the key features of the pH titration curve when 0.10 mol dm⁻³ NaOH is added to 25.0 cm³ of 0.10 mol dm⁻³ CH₃COOH. Explain how a suitable indicator is selected.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Curve Features:</strong> 1. Initial pH at 0 cm³ NaOH ≈ 2.88 (weak acid). 2. Initial steep rise followed by a buffering region (plateau) between 5 cm³ and 20 cm³. 3. Half-neutralisation point at 12.50 cm³ where pH = p<i>K</i><sub>a</sub> ≈ 4.76. 4. Steep vertical pH jump at equivalence point (25.0 cm³) spanning pH 7.0 to 10.5 (equivalence pH > 7 due to basic ethanoate salt hydrolysis). 5. Final horizontal curve leveling off at pH ≈ 12.5-13.0 (excess strong base).<br>
+                • <strong>Indicator Selection Rule:</strong> An indicator changes color over a specific pH range (p<i>K</i><sub>ind</sub> ± 1). The indicator's color transition range MUST fall ENTIRELY within the steep vertical pH section of the titration curve.<br>
+                • <strong>Suitable Indicator:</strong> PHENOLPHTHALEIN (pH range 8.3 – 10.0) is suitable because its color change coincides with the vertical jump (pH 7–10.5).<br>
+                • <strong>Unsuitable Indicator:</strong> METHYL ORANGE (pH range 3.1 – 4.4) is UNSUITABLE because its color change occurs early in the buffer region before the true equivalence point, overestimating titre volume.`
+            },
+            {
+                title: "7. Structural Elucidation via ¹H NMR, ¹³C NMR, and Mass Spectrometry",
+                question: "An unknown compound X (C₄H∸O₂) exhibits an IR absorption at 1740 cm⁻¹, two ¹³C NMR peaks, a ¹H NMR spectrum with a singlet (3H) at δ 2.0 and a singlet (3H) at δ 3.6, and a mass spec molecular ion M⁺ = 88. Deduce the structure of X and justify your answer.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Infrared Data:</strong> Strong absorption peak at 1740 cm⁻¹ indicates a carbonyl group (C=O). Absence of broad O-H absorption above 3200 cm⁻¹ rules out carboxylic acid, confirming an ESTER functional group.<br>
+                • <strong>Mass Spectrometry:</strong> M⁺ = 88 matches C₄H∸O₂ (4×12 + 8×1 + 2×16 = 88). Fragment peak at <i>m/z</i> = 43 corresponds to [CH₃CO]⁺. Fragment at <i>m/z</i> = 59 corresponds to [COOCH₃]⁺.<br>
+                • <strong>¹³C NMR Data:</strong> Shows 4 non-equivalent carbon environments or symmetry features.<br>
+                • <strong>¹H NMR Interpretation:</strong><br>
+                - Two singlet peaks indicate two non-equivalent proton environments with NO adjacent protons (n=0 ⇒ n+1 = 1 singlet).<br>
+                - Integration ratio 3:3 (or 1:1) indicates two isolated methyl (-CH₃) groups.<br>
+                - Singlet at δ 2.0 (3H): Characteristic of methyl protons adjacent to carbonyl group (CH₃-C=O).<br>
+                - Singlet at δ 3.6 (3H): Characteristic of methyl protons attached to electronegative ester oxygen (-O-CH₃).<br>
+                • <strong>Deduction:</strong> Methyl ethanoate (CH₃COOCH₃).`
+            },
+            {
+                title: "8. Total Entropy & Temperature Dependence of Feasibility",
+                question: "Thermal decomposition of calcium carbonate (CaCO₃(s) → CaO(s) + CO₂(g)) is endothermic (Δ<i>H</i>° = +178 kJ mol⁻¹) and has Δ<i>S</i><sub>system</sub>° = +161 J K⁻¹ mol⁻¹. Explain why this reaction is non-feasible at room temperature (298 K) but becomes feasible at high temperatures.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>System Entropy (Δ<i>S</i><sub>system</sub>):</strong> Δ<i>S</i><sub>system</sub> is POSITIVE (+161 J K⁻¹ mol⁻¹) because 1 mole of solid decomposes to form 1 mole of gas (CO₂), drastically increasing particle dispersal disorder.<br>
+                • <strong>Surroundings Entropy at 298 K (Δ<i>S</i><sub>surroundings</sub>):</strong> Δ<i>S</i><sub>surroundings</sub> = -(Δ<i>H</i> × 1000) / <i>T</i> = -178000 / 298 = -597.3 J K⁻¹ mol⁻¹.<br>
+                • <strong>Total Entropy at 298 K (Δ<i>S</i><sub>total</sub>):</strong> Δ<i>S</i><sub>total</sub> = +161 + (-597.3) = -436.3 J K⁻¹ mol⁻¹.<br>
+                • <strong>Non-Feasibility at Room Temp:</strong> Since Δ<i>S</i><sub>total</sub> &lt; 0 (negative) at 298 K, the reaction is NOT thermodynamically feasible at room temperature.<br>
+                • <strong>High Temperature Effect:</strong> As temperature <i>T</i> increases, the magnitude of the negative surroundings term (-(Δ<i>H</i> × 1000) / <i>T</i>) DECREASES towards zero.<br>
+                • <strong>Crossover Feasibility:</strong> At <i>T</i> &gt; 178000 / 161 = 1105.6 K (832.5°C), Δ<i>S</i><sub>surroundings</sub> becomes less negative than +161 J K⁻¹ mol⁻¹, making Δ<i>S</i><sub>total</sub> &gt; 0 (positive and feasible).`
+            },
+            {
+                title: "9. Comparative Reactivity: Acyl Chlorides vs Carboxylic Acids",
+                question: "Compare and contrast the reactivity of ethanoyl chloride (CH₃COCl) and ethanoic acid (CH₃COOH) towards nucleophiles such as ethanol. Explain why ethanoyl chloride reacts much more rapidly without needing a catalyst.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Reaction Comparison:</strong><br>
+                - <em>Ethanoic acid + Ethanol:</em> Reversible equilibrium reaction forming ethyl ethanoate and water. Requires concentrated H₂SO₄ catalyst and prolonged heating under reflux.<br>
+                - <em>Ethanoyl chloride + Ethanol:</em> Rapid, irreversible exothermic reaction forming ethyl ethanoate and steamy HCl gas fumes. Occurs vigorously at room temperature WITHOUT any catalyst.<br>
+                • <strong>Carbonyl Electrophilicity:</strong> In ethanoyl chloride, the carbonyl carbon is attached to TWO highly electronegative atoms (Oxygen and Chlorine). Both withdraw electron density via inductive effect (-I), making the carbonyl carbon EXTREMELY electron-deficient (δ++). In ethanoic acid, chlorine is absent so carbon is less electrophilic.<br>
+                • <strong>Leaving Group Ability:</strong> Chloride ion (Cl⁻) is a much BETTER LEAVING GROUP than hydroxide ion (OH⁻) due to weaker C-Cl bond and high stability of Cl⁻.<br>
+                • <strong>Activation Energy:</strong> The combination of higher electrophilicity and superior leaving group dramatically lowers the activation energy (<i>E</i><sub>a</sub>) for nucleophilic attack on ethanoyl chloride, enabling rapid room-temperature reaction.`
+            },
+            {
+                title: "10. Shift in <i>K</i><sub>c</sub> and Position of Equilibrium with Temperature",
+                question: "For the reversible gaseous reaction 2SO₂(g) + O₂(g) ⇌ 2SO₃(g) (Δ<i>H</i> = -197 kJ mol⁻¹), explain the effect of increasing temperature on the numerical value of <i>K</i><sub>c</sub> and the position of equilibrium using thermodynamic principles.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Exothermic Forward Reaction:</strong> The forward reaction is EXOTHERMIC (Δ<i>H</i> = -197 kJ mol⁻¹).<br>
+                • <strong>Le Chatelier Principle:</strong> Increasing temperature causes the system to oppose the change by shifting the equilibrium position in the ENDOTHERMIC direction (to the left, favoring reactants SO₂ and O₂).<br>
+                • <strong>Equilibrium Composition:</strong> As equilibrium shifts left, the equilibrium concentration of product [SO₃] DECREASES, while [SO₂] and [O₂] INCREASE.<br>
+                • <strong>Effect on <i>K</i><sub>c</sub> Value:</strong> <i>K</i><sub>c</sub> = [SO₃]² / ([SO₂]²[O₂]). Since product concentration falls and reactant concentration rises, the numerical value of <i>K</i><sub>c</sub> DECREASES.<br>
+                • <strong>Thermodynamic Explanation (Δ<i>S</i><sub>total</sub> = <i>R</i> ln <i>K</i>):</strong> Δ<i>S</i><sub>surroundings</sub> = -Δ<i>H</i> / <i>T</i>. For exothermic reaction (Δ<i>H</i> &lt; 0), -Δ<i>H</i> / <i>T</i> is positive. Increasing <i>T</i> DECREASES the positive magnitude of Δ<i>S</i><sub>surroundings</sub>, making Δ<i>S</i><sub>total</sub> less positive.<br>
+                • <strong>Conclusion:</strong> Since Δ<i>S</i><sub>total</sub> decreases, <i>K</i><sub>c</sub> MUST decrease as <i>K</i><sub>c</sub> = e^(Δ<i>S</i><sub>total</sub> / <i>R</i>).`
+            }
+        ];
+
+        /* ==================== 20 WEB MISCONCEPTIONS DATASET ==================== */
+        const WEB_MISCONCEPTIONS_DATA = [
+            {
+                source: "Discord (#chem-a2-help) & TSR",
+                topic: "Topic 11: Kinetics",
+                title: "1. Catalysts and the Rate Constant <i>k</i>",
+                misconception: "Adding a catalyst increases the rate constant <i>k</i> because the reaction goes faster.",
+                explanation: "FALSE! At a fixed temperature, the rate constant <i>k</i> for a specific catalyzed reaction path is constant. A catalyst provides a NEW reaction pathway with a lower <i>E</i><sub>a</sub> (which has its own distinct <i>k</i> value), but <i>k</i> itself is fundamentally a function of temperature (<i>T</i>) via the Arrhenius equation."
+            },
+            {
+                source: "Reddit r/6thForm",
+                topic: "Topic 12: Energetics",
+                title: "2. Dissolving and System Entropy",
+                misconception: "Dissolving any ionic solid in water always increases system entropy (Δ<i>S</i><sub>system</sub> &gt; 0).",
+                explanation: "FALSE! Dissolving ionic salts with small, highly charged ions (e.g. MgSO₄, AlF₃) causes water molecules to organize strongly in hydration spheres. This ordering of solvent molecules can outweigh lattice breakdown disorder, making Δ<i>S</i><sub>system</sub> NEGATIVE!"
+            },
+            {
+                source: "X (@ALevelChemTips) & TSR",
+                topic: "Topic 14: Acids & Bases",
+                title: "3. pH of Hot Water",
+                misconception: "When pure water is heated to 60°C and its pH drops to 6.5, the water becomes acidic.",
+                explanation: "FALSE! Water dissociation is endothermic, so heating increases <i>K</i><sub>w</sub> and [H⁺], lowering pH. However, [H⁺] still strictly EQUALS [OH⁻], so the water remains 100% NEUTRAL!"
+            },
+            {
+                source: "Discord A-Level Chemistry",
+                topic: "Topic 15: Optical Activity",
+                title: "4. Racemic Mixture Optical Rotation",
+                misconception: "A racemic mixture is optically inactive because the molecules themselves have lost their chirality.",
+                explanation: "FALSE! The individual molecules remain 100% chiral and optically active. The mixture is optically inactive as a whole because it contains equal 50:50 amounts of both enantiomers, so their equal and opposite light rotations cancel out!"
+            },
+            {
+                source: "Student Room Thread",
+                topic: "Topic 13: Equilibria",
+                title: "5. Pressure Effect on <i>K</i><sub>p</sub>",
+                misconception: "Increasing total pressure increases the value of the equilibrium constant <i>K</i><sub>p</sub> for gaseous reactions.",
+                explanation: "FALSE! <i>K</i><sub>p</sub> is strictly CONSTANT at a given temperature. Pressure changes alter equilibrium partial pressures and shift position, but <i>K</i><sub>p</sub> numerical value remains unchanged."
+            },
+            {
+                source: "Reddit Study Group",
+                topic: "Topic 15: Organic Reduction",
+                title: "6. NaBH₄ Reducing Power",
+                misconception: "NaBH₄ can reduce ethanoic acid to ethanol.",
+                explanation: "FALSE! NaBH₄ is a mild reducing agent that reduces ONLY aldehydes and ketones. Carboxylic acids require the much stronger reducing agent LiAlH₄ in dry ether!"
+            },
+            {
+                source: "X Revision Community",
+                topic: "Topic 11: Kinetics",
+                title: "7. Order vs Stoichiometry",
+                misconception: "Reaction orders in a rate equation are equal to the stoichiometric balancing numbers in the balanced equation.",
+                explanation: "FALSE! Reaction orders are determined EXPERIMENTALLY. They match balancing numbers ONLY if the reaction occurs in a single elementary step, which is rare."
+            },
+            {
+                source: "Discord Past Paper Help",
+                topic: "Topic 12: Born-Haber Cycles",
+                title: "8. Theoretical Lattice Energy Models",
+                misconception: "The theoretical electrostatic lattice energy formula includes covalent bonding factors.",
+                explanation: "FALSE! The theoretical ionic model assumes 100% PURE ionic bonding between perfectly spherical point charges. Discrepancies with experimental values prove cation polarization and partial covalent character."
+            },
+            {
+                source: "Student Room Forum",
+                topic: "Topic 14: Buffers",
+                title: "9. Buffer Action Limits",
+                misconception: "Adding HCl to an acidic buffer causes added H⁺ to react with OH⁻ ions in solution.",
+                explanation: "FALSE! Added H⁺ reacts with the large reservoir of CONJUGATE BASE salt (A⁻) to form weak acid (HA)."
+            },
+            {
+                source: "Reddit r/ALevel",
+                topic: "Topic 15: Spectroscopy",
+                title: "10. ¹³C NMR Integration",
+                misconception: "Peak areas in ¹³C NMR are proportional to the number of carbon atoms, just like in ¹H NMR.",
+                explanation: "FALSE! Unlike ¹H NMR, peak heights/areas in routine ¹³C NMR are NOT proportional to carbon count due to differing relaxation times and NOE effects."
+            },
+            {
+                source: "X Chem Teacher VC",
+                topic: "Topic 11: Arrhenius Plot",
+                title: "11. Temperature Units in Arrhenius Plots",
+                misconception: "Plotting ln <i>k</i> against temperature in degrees Celsius (°C) yields a straight line with gradient -<i>E</i><sub>a</sub>/<i>R</i>.",
+                explanation: "FALSE! Temperature in the Arrhenius equation MUST strictly be in Kelvin (K = °C + 273.15). Plotting in °C yields a curved non-linear line."
+            },
+            {
+                source: "Discord Exam Chat",
+                topic: "Topic 15: Ester Hydrolysis",
+                title: "12. Products of Alkaline Ester Hydrolysis",
+                misconception: "Refluxing ethyl ethanoate with aqueous NaOH yields ethanoic acid and ethanol.",
+                explanation: "FALSE! Alkaline conditions neutralise the acid immediately. The products are the SODIUM ETHANOATE SALT (CH₃COONa) and ethanol!"
+            },
+            {
+                source: "Student Room Thread",
+                topic: "Topic 14: Titration Curves",
+                title: "13. Equivalence Point pH for Weak Acid - Strong Base",
+                misconception: "The equivalence point pH of a weak acid titrated with a strong base is always exactly 7.00.",
+                explanation: "FALSE! The salt formed undergoes anion hydrolysis (A⁻ + H₂O ⇌ HA + OH⁻), creating an ALKALINE equivalence point (pH &gt; 7, typically 8.5–9.5)."
+            },
+            {
+                source: "Reddit Chemistry Group",
+                topic: "Topic 12: Entropy Units",
+                title: "14. Surroundings Entropy Units",
+                misconception: "Δ<i>S</i><sub>surroundings</sub> is calculated in kJ K⁻¹ mol⁻¹.",
+                explanation: "FALSE! Entropy is measured in JOULES (J K⁻¹ mol⁻¹). You MUST multiply Δ<i>H</i> (kJ mol⁻¹) by 1000 before dividing by <i>T</i>."
+            },
+            {
+                source: "Discord Revision Server",
+                topic: "Topic 15: Carbonyl Reactions",
+                title: "15. Fehling's Test with Ketones",
+                misconception: "Heating propanone with Fehling's solution forms a brick-red precipitate.",
+                explanation: "FALSE! Ketones CANNOT be easily oxidised and show NO REACTION with Fehling's or Tollens' reagents. Only aldehydes give a brick-red Cu₂O precipitate."
+            },
+            {
+                source: "X A-Level Hub",
+                topic: "Topic 11: Half-Life Orders",
+                title: "16. Second Order Half-Lives",
+                misconception: "A second-order reaction has a constant half-life.",
+                explanation: "FALSE! ONLY FIRST-ORDER reactions have a constant half-life. For a second-order reaction, each successive half-life DOUBLES as concentration halves (t<sub>½</sub> = 1 / (<i>k</i>[A]₀))."
+            },
+            {
+                source: "Student Room Thread",
+                topic: "Topic 15: Acyl Chlorides",
+                title: "17. Catalysts for Acyl Chloride Reactions",
+                misconception: "Converting acyl chlorides to esters requires concentrated sulfuric acid catalyst and heating under reflux.",
+                explanation: "FALSE! Acyl chlorides are highly reactive (δ++ carbon) and react vigorously with alcohols at ROOM TEMPERATURE without any catalyst!"
+            },
+            {
+                source: "Reddit Study Group",
+                topic: "Topic 14: Strong vs Weak Acid pH",
+                title: "18. Dilution Effect on Weak Acid pH",
+                misconception: "Diluting a weak acid 10-fold increases its pH by exactly 1.0 unit, just like a strong acid.",
+                explanation: "FALSE! Diluting a strong acid 10-fold increases pH by 1.0 unit. Diluting a weak acid 10-fold shifts equilibrium to increase dissociation, so pH increases by approx 0.5 units (ΔpH = -log√(0.1) = 0.5)."
+            },
+            {
+                source: "Discord Chemistry Study VC",
+                topic: "Topic 12: Solution Enthalpy",
+                title: "19. Dissolving Endothermic Feasibility",
+                misconception: "An endothermic dissolving process (Δ<sub>sol</sub><i>H</i> &gt; 0) can never happen at room temperature.",
+                explanation: "FALSE! Dissolving breaks a solid lattice into free aqueous ions, causing a massive positive system entropy increase (Δ<i>S</i><sub>system</sub> ≫ 0) that easily overrides negative surroundings entropy, making Δ<i>S</i><sub>total</sub> &gt; 0!"
+            },
+            {
+                source: "X Revision Space",
+                topic: "Topic 15: NMR Splitting",
+                title: "20. -OH Proton Splitting in Proton NMR",
+                misconception: "The -OH hydroxyl proton in ethanol splits neighboring -CH₂- protons into a quartet.",
+                explanation: "FALSE! Under normal conditions, rapid proton exchange with trace water averages out coupling, so -OH protons appear as SINGLETS and do NOT split neighboring protons."
+            }
+        ];
+
+        /* ==================== APP STATE & LOGIC ==================== */
+        let currentTab = 'syllabus';
+        let currentTopicFilter = 'ALL';
+        let cardViewMode = 'deck';
+        let activeCards = [...FLASHCARDS_DATA];
+        let cardIndex = 0;
+
+        let masteredItems = JSON.parse(localStorage.getItem('chem_paper4_mastered') || '[]');
+
+        function updateProgress() {
+            const count = masteredItems.length;
+            const total = SYLLABUS_DATA.length;
+            document.getElementById('progress-text').innerText = `${count} / ${total}`;
+            const pct = (count / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+
+        function toggleMastered(id) {
+            if (masteredItems.includes(id)) {
+                masteredItems = masteredItems.filter(i => i !== id);
+            } else {
+                masteredItems.push(id);
+            }
+            localStorage.setItem('chem_paper4_mastered', JSON.stringify(masteredItems));
+            updateProgress();
+            renderSyllabus();
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-sky-400');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-sky-400');
+                activeBtn.classList.remove('text-slate-400');
+            }
+        }
+
+        /* ==================== SYLLABUS RENDERER ==================== */
+        function renderSyllabus() {
+            const container = document.getElementById('syllabus-container');
+            const searchVal = document.getElementById('syllabus-search').value.toLowerCase();
+
+            const filtered = SYLLABUS_DATA.filter(item => {
+                const matchTopic = (currentTopicFilter === 'ALL') || (item.topic.toString() === currentTopicFilter);
+                const matchSearch = item.id.toLowerCase().includes(searchVal) ||
+                                    item.title.toLowerCase().includes(searchVal) ||
+                                    item.content.toLowerCase().includes(searchVal) ||
+                                    item.tip.toLowerCase().includes(searchVal);
+                return matchTopic && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl">No specification points found matching your search.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isMastered = masteredItems.includes(item.id);
+                return `
+                <div class="glass-panel p-5 rounded-2xl border ${isMastered ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800'} transition-all hover:border-slate-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono text-xs font-bold rounded-lg">Spec ${item.id}</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">Topic ${item.topic}</span>
+                            <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+                        </div>
+                        <button onclick="toggleMastered('${item.id}')" class="self-start sm:self-auto px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${isMastered ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                            <i class="fa-solid ${isMastered ? 'fa-check' : 'fa-circle-check'} text-xs"></i>
+                            <span>${isMastered ? 'Mastered' : 'Mark as Mastered'}</span>
+                        </button>
+                    </div>
+
+                    <p class="text-sm text-slate-300 leading-relaxed mb-4 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">${item.content}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-emerald-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-emerald-400">
+                                <i class="fa-solid fa-lightbulb"></i> <span>Examiner Tip / Key Phrasing</span>
+                            </div>
+                            <p>${item.tip}</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 text-amber-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-amber-400">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <span>Common Misconception</span>
+                            </div>
+                            <p>${item.misconception}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function filterTopic(topic) {
+            currentTopicFilter = topic;
+            document.querySelectorAll('.topic-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-topic') === topic) {
+                    btn.className = 'topic-filter-btn bg-sky-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all';
+                } else {
+                    btn.className = 'topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all';
+                }
+            });
+            renderSyllabus();
+        }
+
+        function filterSyllabus() {
+            renderSyllabus();
+        }
+
+        /* ==================== PITFALLS RENDERER ==================== */
+        function renderPitfalls() {
+            const container = document.getElementById('pitfalls-container');
+            container.innerHTML = PITFALLS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden group">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.badge}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Common Student Misconception:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Examiner Mark Scheme Secret:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.truth}</p>
+                            <div class="pt-1 text-[11px] font-mono text-sky-300">
+                                <strong class="text-slate-400">Mark Scheme Keywords:</strong> ${item.keywords}
+                            </div>
+                        </div>
+
+                        <div id="blur-overlay-${idx}" onclick="toggleBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Examiner Truth</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleBlur(idx) {
+            const overlay = document.getElementById(`blur-overlay-${idx}`);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        /* ==================== CALCULATOR LOGIC ==================== */
+        function calcArrhenius() {
+            const t1 = parseFloat(document.getElementById('arr-t1').value) || 298;
+            const k1 = parseFloat(document.getElementById('arr-k1').value) || 0.0025;
+            const t2 = parseFloat(document.getElementById('arr-t2').value) || 318;
+            const k2 = parseFloat(document.getElementById('arr-k2').value) || 0.0210;
+            const R = 8.314;
+
+            if (t1 === t2 || k1 <= 0 || k2 <= 0) return;
+
+            const ln_ratio = Math.log(k2 / k1);
+            const inv_t_diff = (1 / t2) - (1 / t1);
+            const Ea_J = - (ln_ratio / inv_t_diff) * R;
+            const Ea_kJ = Ea_J / 1000;
+
+            const A = k1 / Math.exp(-Ea_J / (R * t1));
+
+            document.getElementById('arr-output').innerHTML = `
+                <div><strong>Activation Energy (<i>E</i><sub>a</sub>):</strong> <span class="text-sky-300 font-bold">${Ea_kJ.toFixed(2)} kJ mol⁻¹</span> (${Ea_J.toFixed(0)} J mol⁻¹)</div>
+                <div><strong>Pre-exponential Factor (<i>A</i>):</strong> <span class="text-sky-300 font-bold">${A.toExponential(3)}</span></div>
+            `;
+        }
+
+        function calcEntropy() {
+            const dh_kJ = parseFloat(document.getElementById('ent-dh').value) || 0;
+            const ds_sys = parseFloat(document.getElementById('ent-ds-sys').value) || 0;
+            const temp = parseFloat(document.getElementById('ent-temp').value) || 298;
+
+            const dh_J = dh_kJ * 1000;
+            const ds_surr = - (dh_J / temp);
+            const ds_total = ds_sys + ds_surr;
+
+            let minT = "N/A";
+            if (ds_sys > 0 && dh_kJ > 0) {
+                minT = (dh_J / ds_sys).toFixed(1) + " K (" + ((dh_J / ds_sys) - 273.15).toFixed(1) + " °C)";
+            } else if (dh_kJ < 0 && ds_sys > 0) {
+                minT = "Feasible at ALL temperatures";
+            } else if (dh_kJ > 0 && ds_sys < 0) {
+                minT = "NOT feasible at ANY temperature";
+            }
+
+            const isFeasible = ds_total > 0;
+
+            document.getElementById('ent-output').innerHTML = `
+                <div><strong>Δ<i>S</i>(surroundings):</strong> ${ds_surr.toFixed(1)} J K⁻¹ mol⁻¹</div>
+                <div><strong>Δ<i>S</i>(total):</strong> <span class="${isFeasible ? 'text-emerald-400' : 'text-rose-400'} font-bold">${ds_total.toFixed(1)} J K⁻¹ mol⁻¹</span> (${isFeasible ? 'FEASIBLE' : 'NOT FEASIBLE'})</div>
+                <div><strong>Threshold Temp (<i>T</i><sub>min</sub>):</strong> ${minT}</div>
+            `;
+        }
+
+        function calcPH() {
+            const ka = parseFloat(document.getElementById('ph-ka').value) || 1.74e-5;
+            const ha = parseFloat(document.getElementById('ph-ha').value) || 0.10;
+            const salt = parseFloat(document.getElementById('ph-salt').value) || 0;
+
+            let h_conc = 0;
+            let type = "";
+
+            if (salt === 0) {
+                // Plain weak acid
+                h_conc = Math.sqrt(ka * ha);
+                type = "Weak Acid Solution";
+            } else {
+                // Buffer solution
+                h_conc = ka * (ha / salt);
+                type = "Acidic Buffer Mixture";
+            }
+
+            const ph = -Math.log10(h_conc);
+            const pKa = -Math.log10(ka);
+
+            document.getElementById('ph-output').innerHTML = `
+                <div><strong>Type:</strong> ${type} | <strong>p<i>K</i><sub>a</sub>:</strong> ${pKa.toFixed(2)}</div>
+                <div><strong>Calculated [H⁺]:</strong> ${h_conc.toExponential(3)} mol dm⁻³</div>
+                <div><strong>Calculated pH:</strong> <span class="text-purple-300 font-bold text-sm">${ph.toFixed(2)}</span></div>
+            `;
+        }
+
+        function calcKRel() {
+            const K = parseFloat(document.getElementById('k-val').value) || 150;
+            const T = parseFloat(document.getElementById('k-temp').value) || 298;
+            const R = 8.314;
+
+            if (K <= 0) return;
+
+            const ds_total = R * Math.log(K);
+
+            document.getElementById('k-output').innerHTML = `
+                <div><strong>Total Entropy Change (Δ<i>S</i><sub>total</sub>):</strong> <span class="text-cyan-300 font-bold">${ds_total.toFixed(2)} J K⁻¹ mol⁻¹</span></div>
+                <div><strong>Reaction Extent:</strong> ${K > 1 ? 'Favours Products (K > 1)' : 'Favours Reactants (K < 1)'}</div>
+            `;
+        }
+
+        /* ==================== FLASHCARD ENGINE ==================== */
+        function updateCard() {
+            if (activeCards.length === 0) return;
+            const item = activeCards[cardIndex];
+            
+            document.getElementById('card-front-topic').innerText = item.topic;
+            document.getElementById('card-front-spec').innerText = item.spec;
+            document.getElementById('card-front-question').innerHTML = item.q;
+            document.getElementById('card-back-answer').innerHTML = item.a;
+
+            document.getElementById('deck-current-index').innerText = cardIndex + 1;
+            document.getElementById('deck-total-count').innerText = activeCards.length;
+            document.getElementById('jump-card-input').max = activeCards.length;
+            document.getElementById('jump-card-input').value = cardIndex + 1;
+
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.remove('card-flipped');
+        }
+
+        function flipCard() {
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.toggle('card-flipped');
+        }
+
+        function nextCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex + 1) % activeCards.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex - 1 + activeCards.length) % activeCards.length;
+            updateCard();
+        }
+
+        function jumpToCard(val) {
+            let num = parseInt(val) - 1;
+            if (!isNaN(num) && num >= 0 && num < activeCards.length) {
+                cardIndex = num;
+                updateCard();
+            }
+        }
+
+        function shuffleDeck() {
+            activeCards.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (cardViewMode === 'list') renderListView();
+        }
+
+        function filterCards() {
+            const searchVal = document.getElementById('card-search').value.toLowerCase();
+            activeCards = FLASHCARDS_DATA.filter(item => {
+                return item.q.toLowerCase().includes(searchVal) ||
+                       item.a.toLowerCase().includes(searchVal) ||
+                       item.topic.toLowerCase().includes(searchVal) ||
+                       item.spec.toLowerCase().includes(searchVal);
+            });
+
+            cardIndex = 0;
+            if (activeCards.length > 0) {
+                updateCard();
+                if (cardViewMode === 'list') renderListView();
+            } else {
+                document.getElementById('card-front-question').innerHTML = "No flashcards found matching search.";
+                document.getElementById('card-back-answer').innerHTML = "Try adjusting your search terms.";
+            }
+        }
+
+        function shuffleDeck() {
+            activeCards.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (cardViewMode === 'list') renderListView();
+        }
+
+        function filterCards() {
+            const searchVal = document.getElementById('card-search').value.toLowerCase();
+            activeCards = FLASHCARDS_DATA.filter(item => {
+                return item.q.toLowerCase().includes(searchVal) ||
+                       item.a.toLowerCase().includes(searchVal) ||
+                       item.topic.toLowerCase().includes(searchVal) ||
+                       item.spec.toLowerCase().includes(searchVal);
+            });
+
+            cardIndex = 0;
+            if (activeCards.length > 0) {
+                updateCard();
+                if (cardViewMode === 'list') renderListView();
+            } else {
+                document.getElementById('card-front-question').innerText = "No flashcards found matching search.";
+                document.getElementById('card-back-answer').innerText = "Try adjusting your search terms.";
+            }
+        }
+
+        function setCardViewMode(mode) {
+            cardViewMode = mode;
+            if (mode === 'deck') {
+                document.getElementById('deck-view-container').classList.remove('hidden');
+                document.getElementById('list-view-container').classList.add('hidden');
+                document.getElementById('card-view-mode-deck').className = 'px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-list').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all';
+            } else {
+                document.getElementById('deck-view-container').classList.add('hidden');
+                document.getElementById('list-view-container').classList.remove('hidden');
+                document.getElementById('card-view-mode-list').className = 'px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-deck').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all';
+                renderListView();
+            }
+        }
+
+        function renderListView() {
+            const holder = document.getElementById('list-cards-holder');
+            holder.innerHTML = activeCards.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-semibold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">${item.topic}</span>
+                            <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">${item.spec}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">#${idx + 1}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-sm leading-relaxed">${item.q}</h4>
+                    <button onclick="document.getElementById('list-ans-${idx}').classList.toggle('hidden')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-300 rounded-lg text-xs font-semibold border border-slate-700">
+                        Toggle Mark Scheme Answer
+                    </button>
+                    <div id="list-ans-${idx}" class="hidden p-3 bg-emerald-950/20 border border-emerald-500/20 text-emerald-300 text-xs rounded-xl leading-relaxed whitespace-pre-line font-mono">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==================== GLOSSARY RENDERER (35 TERMS WITH MCQS) ==================== */
+        function renderGlossary() {
+            const container = document.getElementById('glossary-container');
+            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const filtered = GLOSSARY_DATA.filter(g => g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search) || g.q.toLowerCase().includes(search));
+
+            document.getElementById('glossary-count').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching glossary terms found.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((g, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="font-bold text-cyan-400 text-base mb-2 flex items-center space-x-2">
+                            <i class="fa-solid fa-bookmark text-xs"></i>
+                            <span>${g.term}</span>
+                        </h4>
+
+                        <!-- Interactive Blur Container for Definition -->
+                        <div class="relative min-h-[80px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-3">
+                            <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
+
+                            <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
+                                <div class="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-slate-200">Definition Blurred</span>
+                                <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal Definition</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attached Past Paper MCQ Question -->
+                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60 space-y-2">
+                        <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center space-x-1">
+                            <i class="fa-solid fa-file-circle-question"></i>
+                            <span>Attached Edexcel IAL Past Paper Question:</span>
+                        </div>
+                        <p class="text-xs text-slate-200 font-medium">${g.q}</p>
+                        
+                        <div class="grid grid-cols-2 gap-1.5 pt-1 text-[11px] text-slate-300">
+                            ${g.options.map(opt => `<div class="bg-slate-950 p-1.5 rounded border border-slate-800">${opt}</div>`).join('')}
+                        </div>
+
+                        <button onclick="document.getElementById('mcq-ans-${idx}').classList.toggle('hidden')" class="w-full mt-2 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition-all">
+                            Show / Hide Exam Solution
+                        </button>
+
+                        <div id="mcq-ans-${idx}" class="hidden p-2.5 bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs rounded-lg font-mono">
+                            ${g.ans}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleGlossaryBlur(idx) {
+            const overlay = document.getElementById(`gloss-blur-${idx}`);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        function filterGlossary() {
+            renderGlossary();
+        }
+
+        /* ==================== ESSAY MODELS RENDERER ==================== */
+        function renderEssays() {
+            const container = document.getElementById('essays-container');
+            container.innerHTML = ESSAYS_DATA.map((e, idx) => `
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                        <h3 class="text-lg font-bold text-rose-300">${e.title}</h3>
+                        <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30">6 Marks - Level 3</span>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
+                        <strong class="text-rose-400">Official Exam Question Prompt:</strong> ${e.question}
+                    </div>
+
+                    <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
+                        ${e.answer}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==================== WEB MISCONCEPTIONS RENDERER ==================== */
+        function renderWebMisconceptions() {
+            const container = document.getElementById('web-misconceptions-container');
+            container.innerHTML = WEB_MISCONCEPTIONS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.source}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Web Misconception Post:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Scientific Truth & Examiner Reasoning:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.explanation}</p>
+                        </div>
+
+                        <div id="web-blur-overlay-${idx}" onclick="toggleWebBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Explanation</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleWebBlur(idx) {
+            const overlay = document.getElementById(`web-blur-overlay-${idx}`);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        /* ==================== ON LOAD INITIALIZATION ==================== */
+        window.onload = function() {
+            updateProgress();
+            renderSyllabus();
+            renderPitfalls();
+            renderGlossary();
+            renderEssays();
+            renderWebMisconceptions();
+            updateCard();
+            calcArrhenius();
+            calcEntropy();
+            calcPH();
+            calcKRel();
+        };
+    </script>
+</body>
+</html>

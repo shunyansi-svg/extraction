@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel IAL Chemistry Paper 6 - Interactive Master Revision Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- KaTeX for Math & Chemical Formula Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-active {
+            border-bottom: 3px solid #0284c7;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+        
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .card-front {
+            transform: rotateY(0deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-front {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-back {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-slate-900/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                        <span class="text-xl">🔬</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-white leading-tight">Edexcel IAL Chemistry Paper 6</h1>
+                            <span class="text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full">WCH16/01</span>
+                        </div>
+                        <p class="text-xs text-sky-400 font-medium">Practical Skills in Chemistry II Master Revision Hub</p>
+                    </div>
+                </div>
+
+                <!-- Mastery Progress -->
+                <div class="hidden md:flex items-center space-x-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                    <div class="text-xs font-medium text-slate-300">
+                        Practical Points Mastered: <span id="progress-text" class="text-cyan-400 font-bold">0 / 25</span>
+                    </div>
+                    <div class="w-32 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex space-x-1 overflow-x-auto border-t border-slate-800/50 pt-1 text-sm font-medium">
+                <button onclick="switchTab('syllabus')" id="tab-syllabus" class="tab-btn tab-active px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-flask-vial text-xs"></i> <span>Core Practicals & Qual</span>
+                </button>
+                <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                </button>
+                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Practical Solvers</span>
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (50)</span>
+                </button>
+                <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Practical Glossary (35)</span>
+                </button>
+                <button onclick="switchTab('essays')" id="tab-essays" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-pen-ruler text-rose-400 text-xs"></i> <span>Experimental Design (10)</span>
+                </button>
+                <button onclick="switchTab('misconceptions')" id="tab-misconceptions" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-comments text-amber-400 text-xs"></i> <span>Lab Misconceptions (20)</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: SYLLABUS EXPLORER -->
+        <section id="view-syllabus" class="tab-view space-y-6">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="syllabus-search" oninput="filterSyllabus()" placeholder="Search test, reagent, ion, or technique..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 w-full md:w-auto">
+                    <button onclick="filterTopic('ALL')" class="topic-filter-btn bg-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all" data-topic="ALL">All Categories</button>
+                    <button onclick="filterTopic('INORGANIC')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="INORGANIC">Inorganic Qual</button>
+                    <button onclick="filterTopic('ORGANIC')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="ORGANIC">Organic Qual</button>
+                    <button onclick="filterTopic('KINETICS')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="KINETICS">Kinetics & Titration</button>
+                    <button onclick="filterTopic('PURIFICATION')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="PURIFICATION">Purification & Prep</button>
+                </div>
+            </div>
+
+            <div id="syllabus-container" class="space-y-4"></div>
+        </section>
+
+        <!-- TAB 2: EXAMINER PITFALLS -->
+        <section id="view-pitfalls" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">Paper 6 Practical Examiner Pitfalls (10 Key Cards)</h2>
+                        <p class="text-sm text-slate-300 mt-1">High-frequency practical exam traps from Unit 6 examiner reports. <strong>Click any blurred card to reveal the answer!</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pitfalls-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+        <!-- TAB 3: INTERACTIVE PRACTICAL CALCULATORS -->
+        <section id="view-calculators" class="tab-view space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Calculator 1 -->
+                <div class="glass-panel p-6 rounded-2xl border border-sky-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-sky-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-chart-line"></i> <span>Arrhenius Activation Energy ($E_a$) Solver</span>
+                    </h3>
+                    <p class="text-xs text-slate-300">Calculates $E_a$ ($\text{kJ mol}^{-1}$) from graph gradient or two temperature points ($\ln k = -\frac{E_a}{R}\frac{1}{T} + \ln A$).</p>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Graph Gradient ($m$ in K)</label>
+                            <input type="number" id="calc-gradient" value="-6500" step="any" oninput="calcArrhenius()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Gas Constant ($R$ in $\text{J K}^{-1}\text{mol}^{-1}$)</label>
+                            <input type="number" id="calc-r-const" value="8.314" step="any" readonly class="w-full bg-slate-950 border border-slate-800 text-slate-400 rounded p-2">
+                        </div>
+                    </div>
+                    <div id="arrhenius-output" class="p-4 bg-sky-950/40 border border-sky-500/30 rounded-xl font-mono text-xs text-sky-300 space-y-1"></div>
+                </div>
+
+                <!-- Calculator 2 -->
+                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-scale-balanced"></i> <span>Apparatus Uncertainty & Total Error Solver</span>
+                    </h3>
+                    <p class="text-xs text-slate-300">Calculate percentage uncertainty for titrations, temperature readings, and mass measurements.</p>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Uncertainty per Reading ($\pm$)</label>
+                            <input type="number" id="calc-unc-val" value="0.05" step="any" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Number of Readings Taken</label>
+                            <input type="number" id="calc-readings-num" value="2" min="1" max="5" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-slate-300 font-semibold mb-1">Measured Value (e.g. Titre $\text{cm}^3$, $\Delta T$ K, Mass g)</label>
+                            <input type="number" id="calc-measured-val" value="23.50" step="any" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div id="uncertainty-output" class="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl font-mono text-xs text-emerald-300 space-y-1"></div>
+                </div>
+
+                <!-- Calculator 3 -->
+                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-recycle"></i> <span>Recrystallisation Recovery & % Yield Solver</span>
+                    </h3>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Theoretical (g)</label>
+                            <input type="number" id="calc-theo-mass" value="5.00" step="any" oninput="calcRecrystYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Crude Solid (g)</label>
+                            <input type="number" id="calc-crude-mass" value="4.20" step="any" oninput="calcRecrystYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Pure Crystals (g)</label>
+                            <input type="number" id="calc-pure-mass" value="3.15" step="any" oninput="calcRecrystYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                    </div>
+                    <div id="recryst-output" class="p-4 bg-purple-950/40 border border-purple-500/30 rounded-xl font-mono text-xs text-purple-300 space-y-1"></div>
+                </div>
+
+                <!-- Calculator 4 -->
+                <div class="glass-panel p-6 rounded-2xl border border-cyan-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-cyan-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-vial"></i> <span>Back Titration / Moles Analysis</span>
+                    </h3>
+                    <p class="text-xs text-slate-300">Determines purity of an insoluble carbonate ($\text{MCO}_3$) reacted with excess acid and back-titrated with $\text{NaOH}$.</p>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Excess Acid Vol ($\text{cm}^3$)</label>
+                            <input type="number" id="tit-acid-vol" value="50.0" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Acid Conc ($\text{mol dm}^{-3}$)</label>
+                            <input type="number" id="tit-acid-conc" value="1.00" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">$\text{NaOH}$ Titre ($\text{cm}^3$)</label>
+                            <input type="number" id="tit-naoh-vol" value="23.40" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">$\text{NaOH}$ Conc ($\text{mol dm}^{-3}$)</label>
+                            <input type="number" id="tit-naoh-conc" value="0.50" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
+                        </div>
+                    </div>
+                    <div id="back-titration-output" class="p-4 bg-cyan-950/40 border border-cyan-500/30 rounded-xl font-mono text-xs text-cyan-300 space-y-1"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: 50 3D FLASHCARDS -->
+        <section id="view-quiz" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <button id="card-view-mode-deck" onclick="setCardViewMode('deck')" class="px-4 py-2 bg-cyan-600 text-white rounded-xl text-xs font-bold transition-all">🎴 3D Flip Deck</button>
+                    <button id="card-view-mode-list" onclick="setCardViewMode('list')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all">📝 Active List View</button>
+                    <button onclick="shuffleDeck()" class="px-3 py-2 bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shuffle"></i> <span>Shuffle Deck</span>
+                    </button>
+                </div>
+
+                <div class="relative w-full md:w-72">
+                    <input type="text" id="card-search" oninput="filterCards()" placeholder="Search 50 practical flashcards..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-cyan-500">
+                </div>
+            </div>
+
+            <!-- Deck View Container -->
+            <div id="deck-view-container" class="max-w-2xl mx-auto space-y-6">
+                <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+                    <div>
+                        Card <span id="deck-current-index" class="text-cyan-400 font-bold text-sm">1</span> of <span id="deck-total-count" class="font-bold text-sm">50</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>Jump to:</span>
+                        <input type="number" id="jump-card-input" min="1" max="50" onchange="jumpToCard(this.value)" class="w-16 bg-slate-900 border border-slate-700 text-cyan-300 text-center rounded p-1 text-xs font-mono">
+                    </div>
+                </div>
+
+                <!-- 3D Card Container -->
+                <div class="card-flip w-full h-96 cursor-pointer select-none" onclick="flipCard()">
+                    <div id="card-inner-el" class="card-inner relative w-full h-full rounded-2xl border border-cyan-500/30 bg-slate-900/95 shadow-2xl transition-transform duration-500">
+                        
+                        <!-- Front Face -->
+                        <div class="card-front absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 rounded-2xl border border-cyan-500/30">
+                            <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span id="card-front-topic" class="text-[11px] font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20">Inorganic Qualitative</span>
+                                    <span id="card-front-spec" class="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">CP1</span>
+                                </div>
+                                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full font-mono">Click to Flip</span>
+                            </div>
+
+                            <div class="text-base sm:text-lg font-bold text-slate-100 my-auto text-center px-2 leading-relaxed" id="card-front-question">
+                                Loading Question...
+                            </div>
+
+                            <div class="text-xs text-slate-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-cyan-400"></i>
+                                <span>Click card to reveal Answer</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face -->
+                        <div class="card-back absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/98 rounded-2xl border border-emerald-500/50 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                                <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                    <span>Mark Scheme Answer</span>
+                                </span>
+                                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Answer Revealed</span>
+                            </div>
+
+                            <div class="text-xs sm:text-sm text-slate-200 my-auto leading-relaxed overflow-y-auto max-h-56 px-2 py-1 custom-scrollbar whitespace-pre-line text-left bg-emerald-950/30 rounded-xl border border-emerald-500/20 p-3" id="card-back-answer">
+                                Loading Answer...
+                            </div>
+
+                            <div class="text-xs text-emerald-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                                <span>Click again to flip back</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center px-2 gap-2">
+                    <button onclick="prevCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Previous</span>
+                    </button>
+
+                    <button onclick="nextCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <span>Next</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- List View Container -->
+            <div id="list-view-container" class="max-w-4xl mx-auto space-y-4 hidden">
+                <div id="list-cards-holder" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <!-- TAB 5: MASTER GLOSSARY -->
+        <section id="view-glossary" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <button onclick="filterGlossaryCategory('ALL')" id="gloss-cat-ALL" class="gloss-cat-btn px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-semibold">All Terms</button>
+                    <button onclick="filterGlossaryCategory('qual_analysis')" id="gloss-cat-qual_analysis" class="gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium">Qualitative Analysis</button>
+                    <button onclick="filterGlossaryCategory('prep_purification')" id="gloss-cat-prep_purification" class="gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium">Prep & Purification</button>
+                    <button onclick="filterGlossaryCategory('kinetics_titration')" id="gloss-cat-kinetics_titration" class="gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium">Kinetics & Errors</button>
+                </div>
+                <div class="relative w-full sm:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Filter laboratory terms..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-9 pr-3 py-1.5 text-xs focus:ring-2 focus:ring-cyan-500">
+                </div>
+            </div>
+
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+        <!-- TAB 6: EXPERIMENTAL DESIGN MODELS -->
+        <section id="view-essays" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-rose-500/20">
+                <h2 class="text-xl font-bold text-rose-400 flex items-center space-x-2 mb-2">
+                    <i class="fa-solid fa-pen-ruler"></i> <span>Paper 6 High-Yield Experimental Design & Analysis Models (10 Exemplars)</span>
+                </h2>
+                <p class="text-xs text-slate-300">Complete mark scheme breakdowns for 6-mark experimental design, purification, and multi-step inorganic/organic analysis questions in Unit 6.</p>
+            </div>
+
+            <div id="essays-container" class="space-y-6"></div>
+        </section>
+
+        <!-- TAB 7: LAB & EXAM MISCONCEPTIONS -->
+        <section id="view-misconceptions" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-comments text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">20 Common Paper 6 Practical Misconceptions</h2>
+                        <p class="text-sm text-slate-300 mt-1">Real student practical errors collected from Unit 6 examiner reports. <strong>Click any blurred box to reveal the explanation!</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="web-misconceptions-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ==================== DATASETS ==================== */
+        const SYLLABUS_DATA = [
+            { id: "P6.1", cat: "INORGANIC", title: "Cation Testing: $\\text{Cu}^{2+}$ and $\\text{Zn}^{2+}$", content: "$\\text{Cu}^{2+}$: Blue solution $\\rightarrow$ pale blue ppt $\\text{Cu(OH)}_2$ with dropwise $\\text{NaOH}$ or $\\text{NH}_3$. In excess $\\text{NH}_3$, ppt redissolves to deep blue solution $[\\text{Cu(NH}_3)_4(\\text{H}_2\\text{O})_2]^{2+}$. $\\text{Zn}^{2+}$: Colourless $\\rightarrow$ white ppt $\\text{Zn(OH)}_2$ with dropwise $\\text{NaOH}$ or $\\text{NH}_3$. Redissolves in excess $\\text{NaOH}$ to $[\\text{Zn(OH)}_4]^{2-}$ and excess $\\text{NH}_3$ to $[\\text{Zn(NH}_3)_4]^{2+}$.", tip: "Record initial state, dropwise precipitate color AND behavior in excess reagent!", misconception: "Assuming $\\text{Zn(OH)}_2$ only redissolves in excess $\\text{NaOH}$ and not excess $\\text{NH}_3$." },
+            { id: "P6.2", cat: "INORGANIC", title: "Cation Testing: $\\text{Fe}^{2+}$, $\\text{Fe}^{3+}$, and $\\text{Cr}^{3+}$", content: "$\\text{Fe}^{2+}$: Pale green $\\rightarrow$ green ppt $\\text{Fe(OH)}_2$, turns red-brown on standing due to air oxidation to $\\text{Fe(OH)}_3$. $\\text{Fe}^{3+}$: Yellow-brown $\\rightarrow$ red-brown ppt $\\text{Fe(OH)}_3$, insoluble in excess. $\\text{Cr}^{3+}$: Green solution $\\rightarrow$ green ppt $\\text{Cr(OH)}_3$, dissolves in excess $\\text{NaOH}$ to dark green solution $[\\text{Cr(OH)}_6]^{3-}$.", tip: "Always mention 'turns red-brown on surface/standing' for $\\text{Fe}^{2+}$ with alkali.", misconception: "Confusing $\\text{Fe}^{2+}$ green precipitate with $\\text{Cr}^{3+}$ amphoteric green precipitate." },
+            { id: "P6.3", cat: "INORGANIC", title: "Halide Testing & Anion Confirmation", content: "Add dilute $\\text{HNO}_3$ first to remove carbonate/sulfite ions. Add $\\text{AgNO}_3$(aq): $\\text{Cl}^-$ = white ppt (dissolves in dil $\\text{NH}_3$); $\\text{Br}^-$ = cream ppt (dissolves in conc $\\text{NH}_3$); $\\text{I}^-$ = yellow ppt (insoluble in conc $\\text{NH}_3$). $\\text{SO}_4^{2-}$ test: Dilute $\\text{HCl} + \\text{BaCl}_2 \\rightarrow$ white ppt $\\text{BaSO}_4$.", tip: "Dilute $\\text{HNO}_3$ is added to prevent false positive white precipitates of $\\text{Ag}_2\\text{CO}_3$. Do NOT use $\\text{HCl}$ before $\\text{AgNO}_3$!", misconception: "Using hydrochloric acid to acidify silver nitrate test (introduces $\\text{Cl}^-$ ions!)." },
+            { id: "P6.4", cat: "ORGANIC", title: "Testing Carbonyls: 2,4-DNPH, Tollens', Fehling's, Iodoform", content: "2,4-DNPH: Yellow/orange/red ppt confirms $\\text{C=O}$ (aldehyde or ketone). Tollens' reagent: Silver mirror with aldehydes, no reaction with ketones. Fehling's/Benedict's: Blue solution $\\rightarrow$ brick-red ppt $\\text{Cu}_2\\text{O}$ with aldehydes. Iodoform test ($\\text{I}_2 + \\text{NaOH}$): Pale yellow ppt with antiseptic smell confirms $\\text{CH}_3\\text{C=O}$ or $\\text{CH}_3\\text{CH(OH)}-$.", tip: "Purify 2,4-DNP hydrazone crystals and measure melting point to identify specific aldehyde/ketone.", misconception: "Thinking Fehling's test gives a silver mirror." },
+            { id: "P6.5", cat: "ORGANIC", title: "Testing Alcohols, Carboxylic Acids, Acyl Chlorides & Phenols", content: "1°/2° Alcohols: Orange $\\text{K}_2\\text{Cr}_2\\text{O}_7/\\text{H}^+$ turns green. All alcohols: $\\text{PCl}_5 \\rightarrow$ misty fumes of $\\text{HCl}$. Carboxylic acids: Effervescence with $\\text{Na}_2\\text{CO}_3$ or $\\text{NaHCO}_3$ ($\\text{CO}_2$ gas turns limewater cloudy). Acyl chlorides: Steamy/misty fumes of $\\text{HCl}$ with water. Phenols: Decolourise bromine water and form white ppt 2,4,6-tribromophenol; no reaction with carbonates.", tip: "Phenol is acidic enough to react with $\\text{NaOH}$ but NOT weak carbonates like $\\text{NaHCO}_3$.", misconception: "Using $\\text{K}_2\\text{Cr}_2\\text{O}_7$ to test for 3° alcohols (they resist oxidation)." },
+            { id: "P6.6", cat: "KINETICS", title: "Kinetics: Quenching & Clock Reactions", content: "Rate-determining step investigations. Quenching: Withdraw aliquots at time intervals and add cold water or excess $\\text{NaHCO}_3$ to stop reaction, then titrate. Clock reactions (e.g. Iodine clock): Measure time $t$ for starch to turn blue-black. Initial rate $\\propto \\frac{1}{t}$. Scavenger thiosulfate ($\\text{S}_2\\text{O}_3^{2-}$) must be in small, fixed concentration.", tip: "Thiosulfate concentration must be limiting so it is consumed rapidly, giving a sharp endpoint.", misconception: "Adding starch indicator at the beginning of a clock reaction vs titration." },
+            { id: "P6.7", cat: "KINETICS", title: "Arrhenius Graph Analysis ($E_a$ and $A$)", content: "Plot $\\ln k$ (or $\\ln(1/t)$) against $\\frac{1}{T}$ (in Kelvin). Straight line gradient $m = -\\frac{E_a}{R}$. $E_a = -m \\times 8.314\\text{ J K}^{-1}\\text{mol}^{-1}$. Convert final $E_a$ to $\\text{kJ mol}^{-1}$ by dividing by 1000.", tip: "Temperature MUST be in Kelvin ($\text{K} = {^\circ}\text{C} + 273.15$) and gradient $m$ is negative!", misconception: "Forgetting to convert temperature to Kelvin or forgetting the minus sign in gradient calculation." },
+            { id: "P6.8", cat: "PURIFICATION", title: "Organic Purification: Recrystallisation Steps", content: "1. Dissolve crude solid in MINIMUM volume of HOT solvent. 2. Filter hot through fluted filter paper (removes insoluble impurities). 3. Cool filtrate slowly in ice bath (crystallisation). 4. Filter under suction using Büchner funnel. 5. Wash crystals with ice-cold solvent. 6. Dry between filter paper / desiccator.", tip: "Minimum hot solvent guarantees saturation upon cooling to maximise yield.", misconception: "Using a large volume of solvent or washing crystals with warm solvent." },
+            { id: "P6.9", cat: "PURIFICATION", title: "Distillation, Reflux, Separating Funnel & Drying", content: "Reflux: Boiling with vertical condenser to prevent loss of volatile reactants. Simple Distillation: Thermometer level with side-arm to measure boiling point. Separating funnel: Separate aqueous and organic layers; invert and open tap to vent pressure. Drying liquid: Add anhydrous $\\text{MgSO}_4$ or $\\text{CaCl}_2$ until liquid turns clear and agent flows freely.", tip: "Water enters condenser at the bottom and exits at the top for maximum cooling efficiency.", misconception: "Placing a stopper on top of a reflux condenser (causes explosive pressure build-up!)." },
+            { id: "P6.10", cat: "PURIFICATION", title: "Melting Point Determination & Purity Assessment", content: "Pack dry powdered sample into capillary tube. Heat slowly in melting point apparatus (e.g. Thiele tube or electrical block). Record temperature where melting begins and ends. Pure compound: Sharp melting point at literature value ($\pm 1{^\circ}\\text{C}$). Impure solid: Lower melting point with a broad range.", tip: "Heat slowly (0.5–1.0 °C per minute) near the expected melting point for accuracy.", misconception: "Claiming an impure solid melts sharply at a higher temperature." }
+        ];
+
+        const PITFALLS_DATA = [
+            {
+                title: "1. Condenser Cooling Water Direction",
+                topic: "Practical Apparatus Setup",
+                badge: "Setup Trap",
+                misconception: "Connecting cooling water inlet to the top of the condenser and outlet to the bottom.",
+                truth: "Water MUST enter at the BOTTOM and exit at the TOP to ensure the condenser jacket stays completely full of water and prevents air bubbles/overheating!",
+                keywords: "Water enters bottom, exits top, full jacket cooling"
+            },
+            {
+                title: "2. Stopper on Top of Reflux Condenser",
+                topic: "Reflux Safety",
+                badge: "Safety Hazard",
+                misconception: "Placing a stopper on top of the reflux condenser to prevent volatile vapors from escaping.",
+                truth: "NEVER seal a reflux apparatus! Heating a closed system causes dangerous pressure build-up leading to an explosion. Vapor condenses safely on cool walls.",
+                keywords: "Open top required, sealed system causes explosion hazard"
+            },
+            {
+                title: "3. Acidifying Silver Nitrate Test with HCl",
+                topic: "Inorganic Qualitative Analysis",
+                badge: "Contamination Trap",
+                misconception: "Acidifying aqueous silver nitrate with hydrochloric acid to test for halide ions.",
+                truth: "Adding $\\text{HCl}$ introduces chloride ions ($\\text{Cl}^-$), forming an immediate false-positive white precipitate of $\\text{AgCl}$! Always use dilute nitric acid ($\\text{HNO}_3$).",
+                keywords: "Use HNO3 only, HCl causes false positive AgCl ppt"
+            },
+            {
+                title: "4. Starch Indicator Addition in Thiosulfate Titration",
+                topic: "Redox Titration Technique",
+                badge: "Indicator Timing",
+                misconception: "Adding starch indicator at the beginning of an iodine-thiosulfate titration.",
+                truth: "Starch added early binds irreversibly to high concentration iodine. Add starch ONLY when solution turns pale straw-yellow near the end-point!",
+                keywords: "Add near end-point (pale yellow), blue-black to colourless"
+            },
+            {
+                title: "5. Thermometer Placement in Distillation",
+                topic: "Distillation Apparatus",
+                badge: "Measurement Accuracy",
+                misconception: "Submerging thermometer bulb directly into the liquid boiling in the flask.",
+                truth: "Thermometer bulb MUST be placed exactly opposite the entrance to the condenser side-arm to record the true boiling temperature of condensing vapor!",
+                keywords: "Bulb opposite side-arm, measures vapor temperature"
+            },
+            {
+                title: "6. Washing Crystals during Suction Filtration",
+                topic: "Recrystallisation Purification",
+                badge: "Yield Loss Trap",
+                misconception: "Washing collected purified crystals on Büchner funnel with warm solvent.",
+                truth: "Washing with warm solvent redissolves pure product crystals into filtrate, severely reducing yield. Wash strictly with ICE-COLD solvent!",
+                keywords: "Use ice-cold solvent, prevents redissolving pure crystals"
+            },
+            {
+                title: "7. Temperature Units in Arrhenius Calculations",
+                topic: "Kinetics Data Processing",
+                badge: "Unit Conversion Trap",
+                misconception: "Plotting $\\ln k$ against $\\frac{1}{T}$ using Celsius temperatures (${^\circ}\\text{C}$).",
+                truth: "Arrhenius equation requires absolute temperature in Kelvin ($\text{K} = {^\circ}\text{C} + 273.15$). Celsius values ruin gradient $m = -\\frac{E_a}{R}$.",
+                keywords: "Convert Celsius to Kelvin (T + 273.15), gradient m = -Ea/R"
+            },
+            {
+                title: "8. Heating Flammable Solvents with Bunsen Burners",
+                topic: "Organic Synthesis Safety",
+                badge: "Fire Hazard",
+                misconception: "Directly heating organic solvents like diethyl ether or ethanol over a open Bunsen flame.",
+                truth: "Flammable solvents catch fire easily. Heating MUST be carried out using an electric heating mantle or a hot water bath in a fume cupboard!",
+                keywords: "Electric heating mantle or water bath, no open flame"
+            },
+            {
+                title: "9. Burette & Pipette Titration Error Doubling",
+                topic: "Uncertainty Calculations",
+                badge: "Error Analysis",
+                misconception: "Treating burette titre uncertainty as a single reading uncertainty ($\pm 0.05\\text{ cm}^3$).",
+                truth: "Burette titre involves TWO readings (initial and final). Total uncertainty is $2 \\times 0.05 = \pm 0.10\\text{ cm}^3$. Pipette delivered volume is ONE reading!",
+                keywords: "Burette = 2 readings (2 x 0.05 = 0.10), Pipette = 1 reading"
+            },
+            {
+                title: "10. Mass Loss Interpretation in Thermal Decomposition",
+                topic: "Quantitative Analysis",
+                badge: "Calculations Trap",
+                misconception: "Assuming mass loss during crucible heating is solely due to water loss.",
+                truth: "Mass loss can be due to water of crystallisation OR gas evolution ($\\text{CO}_2, \\text{NO}_2, \\text{O}_2$). Re-heat to constant mass to confirm completion!",
+                keywords: "Heat to constant mass, confirms complete decomposition"
+            }
+        ];
+
+        // 50 Flashcards Array
+        const FLASHCARDS_DATA = [
+            { id: 1, topic: "Inorganic Qual", spec: "CP1", q: "Describe color change when excess NaOH is added to Cr³⁺(aq).", a: "• Green solution forms green ppt Cr(OH)₃ dropwise.\n• Redissolves in excess NaOH to form dark green solution [Cr(OH)₆]³⁻." },
+            { id: 2, topic: "Inorganic Qual", spec: "CP1", q: "Describe color change when excess NH₃ is added to Cu²⁺(aq).", a: "• Pale blue solution forms blue ppt Cu(OH)₂ dropwise.\n• Redissolves in excess NH₃ to deep blue solution [Cu(NH₃)₄(H₂O)₂]²⁺." },
+            { id: 3, topic: "Inorganic Qual", spec: "CP1", q: "What observation confirms Fe²⁺(aq) with NaOH(aq)?", a: "• Green precipitate Fe(OH)₂ forms.\n• Turns red-brown at surface/standing due to oxidation to Fe(OH)₃." },
+            { id: 4, topic: "Inorganic Qual", spec: "CP1", q: "Why add dilute HNO₃ before adding AgNO₃(aq) for halide testing?", a: "• Reacts with and removes carbonate (CO₃²⁻) or sulfite (SO₃²⁻) ions that would form false positive white precipitates." },
+            { id: 5, topic: "Inorganic Qual", spec: "CP1", q: "How do you distinguish AgCl, AgBr, and AgI using ammonia?", a: "• AgCl dissolves in dilute NH₃.\n• AgBr dissolves in CONCENTRATED NH₃.\n• AgI is INSOLUBLE in concentrated NH₃." },
+            { id: 6, topic: "Inorganic Qual", spec: "CP1", q: "State reagents and observation for testing sulfate ions (SO₄²⁻).", a: "• Add dilute HCl followed by BaCl₂(aq).\n• Formation of a white precipitate (BaSO₄)." },
+            { id: 7, topic: "Inorganic Qual", spec: "CP1", q: "Flame test observation for Barium ions (Ba²⁺).", a: "• Apple-green / green flame." },
+            { id: 8, topic: "Inorganic Qual", spec: "CP1", q: "Flame test observation for Calcium ions (Ca²⁺).", a: "• Brick-red / orange-red flame." },
+            { id: 9, topic: "Inorganic Qual", spec: "CP1", q: "Flame test observation for Lithium (Li⁺) and Sodium (Na⁺).", a: "• Li⁺ = Crimson red flame.\n• Na⁺ = Persistent yellow flame." },
+            { id: 10, topic: "Inorganic Qual", spec: "CP1", q: "Observation when Fe³⁺(aq) reacts with KI(aq).", a: "• Solution turns dark brown due to formation of iodine (I₂).\n• Fe³⁺ reduced to Fe²⁺." },
+
+            { id: 11, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for carbonyl group (C=O).", a: "• 2,4-dinitrophenylhydrazine (2,4-DNPH).\n• Formation of yellow / orange / red precipitate." },
+            { id: 12, topic: "Organic Qual", spec: "CP2", q: "How do you identify specific carbonyl compound after 2,4-DNPH test?", a: "• Filter and recrystallise hydrazone derivative.\n• Measure its melting point and compare with literature values." },
+            { id: 13, topic: "Organic Qual", spec: "CP2", q: "Tollens' reagent formula and observation with aldehydes.", a: "• Ammoniacal silver nitrate [Ag(NH₃)₂]⁺.\n• Formation of a silver mirror on tube walls (Ag⁺ reduced to Ag)." },
+            { id: 14, topic: "Organic Qual", spec: "CP2", q: "Fehling's solution observation with aldehydes.", a: "• Blue solution turns to brick-red precipitate (Cu₂O)." },
+            { id: 15, topic: "Organic Qual", spec: "CP2", q: "Reagents and observation for Iodoform test.", a: "• Iodine (I₂) and aqueous NaOH (or NaOI).\n• Pale yellow precipitate with antiseptic smell (CHI₃)." },
+            { id: 16, topic: "Organic Qual", spec: "CP2", q: "What functional groups give a positive iodoform test?", a: "• Methyl ketones (CH₃C=O) or secondary methyl alcohols (CH₃CH(OH)-) and ethanol." },
+            { id: 17, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for carboxylic acid.", a: "• Aqueous Na₂CO₃ or NaHCO₃.\n• Effervescence (CO₂ gas turns limewater cloudy)." },
+            { id: 18, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for -OH group in alcohols.", a: "• Add solid PCl₅ at room temperature.\n• Steamy / misty fumes of HCl gas (turns damp blue litmus paper red)." },
+            { id: 19, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for Phenol.", a: "• Add bromine water (Br₂(aq)).\n• Orange solution decolourises and forms a white ppt (2,4,6-tribromophenol)." },
+            { id: 20, topic: "Organic Qual", spec: "CP2", q: "Why doesn't phenol react with NaHCO₃?", a: "• Phenol is a weak acid, not strong enough to liberate CO₂ from carbonates." },
+
+            { id: 21, topic: "Kinetics & Titrations", spec: "CP3", q: "What is 'quenching' in kinetics titration experiments?", a: "• Rapidly stopping or slowing down a reaction in a sample aliquot at a known time.\n• Done by adding cold water, ice, or neutralising reagent (e.g. NaHCO₃)." },
+            { id: 22, topic: "Kinetics & Titrations", spec: "CP3", q: "In iodine clock reaction, what is the role of sodium thiosulfate?", a: "• Acts as a scavenger reacting with produced iodine.\n• Delays starch blue-black color change until fixed amount of iodine is produced." },
+            { id: 23, topic: "Kinetics & Titrations", spec: "CP3", q: "Why must thiosulfate concentration be small and limiting in clock reactions?", a: "• Ensures only a tiny initial fraction of reaction occurs so rate equals initial rate." },
+            { id: 24, topic: "Kinetics & Titrations", spec: "CP3", q: "State Arrhenius equation linear form and gradient definition.", a: "• ln k = -Ea / R * (1/T) + ln A.\n• Plot ln k vs 1/T: Gradient m = -Ea / R." },
+            { id: 25, topic: "Kinetics & Titrations", spec: "CP3", q: "Color change at endpoint of KMnO₄ titration with Fe²⁺ in acid.", a: "• Colourless to permanent faint pink (KMnO₄ acts as self-indicator)." },
+            { id: 26, topic: "Kinetics & Titrations", spec: "CP3", q: "Why does MnO₄⁻ / C₂O₄²⁻ titration need initial heating?", a: "• Reaction is slow initially due to anion-anion repulsion; heating produces Mn²⁺ autocatalyst." },
+            { id: 27, topic: "Kinetics & Titrations", spec: "CP3", q: "Choosing indicator for weak acid - strong base titration.", a: "• Phenolphthalein (pH range 8.3–10.0 matches vertical pH equivalence jump)." },
+            { id: 28, topic: "Kinetics & Titrations", spec: "CP3", q: "Choosing indicator for strong acid - weak base titration.", a: "• Methyl orange (pH range 3.1–4.4 matches vertical pH equivalence jump)." },
+            { id: 29, topic: "Kinetics & Titrations", spec: "CP3", q: "What is a 'concordant' titration result?", a: "• Titres within 0.10 cm³ (or 0.20 cm³) of each other." },
+            { id: 30, topic: "Kinetics & Titrations", spec: "CP3", q: "Formula for calculating percentage uncertainty.", a: "• % Uncertainty = (Total Uncertainty / Measured Value) * 100." },
+
+            { id: 31, topic: "Prep & Purification", spec: "CP4", q: "State purpose of heating under reflux.", a: "• Allows prolonged heating of volatile liquid mixtures without losing reactants or products." },
+            { id: 32, topic: "Prep & Purification", spec: "CP4", q: "Why add anti-bumping granules during heating?", a: "• Provide nucleation sites for smooth bubble formation, preventing violent bumping." },
+            { id: 33, topic: "Prep & Purification", spec: "CP4", q: "Outline step 1 of recrystallisation: Solvent selection & dissolution.", a: "• Dissolve crude solid in MINIMUM volume of HOT solvent." },
+            { id: 34, topic: "Prep & Purification", spec: "CP4", q: "Why use MINIMUM volume of hot solvent in recrystallisation?", a: "• Creates a saturated solution so maximum yield of crystals forms upon cooling." },
+            { id: 35, topic: "Prep & Purification", spec: "CP4", q: "Purpose of HOT filtration during recrystallisation.", a: "• Removes insoluble impurities while keeping desired product dissolved in hot filtrate." },
+            { id: 36, topic: "Prep & Purification", spec: "CP4", q: "Purpose of washing crystals with ICE-COLD solvent during suction filtration.", a: "• Removes soluble surface impurities without dissolving pure product crystals." },
+            { id: 37, topic: "Prep & Purification", spec: "CP4", q: "How does an impurity affect melting point of an organic solid?", a: "• Lowers melting point and broadens the melting temperature range." },
+            { id: 38, topic: "Prep & Purification", spec: "CP4", q: "How is steam distillation used in organic purification?", a: "• Distils water-immiscible organic compounds with high boiling points at temperatures below 100°C." },
+            { id: 39, topic: "Prep & Purification", spec: "CP4", q: "What is 'salting out' in solvent extraction?", a: "• Adding NaCl to aqueous layer to decrease organic solute solubility and force it into organic layer." },
+            { id: 40, topic: "Prep & Purification", spec: "CP4", q: "Common drying agents for organic liquid products.", a: "• Anhydrous MgSO₄, CaCl₂, or Na₂SO₄." },
+
+            { id: 41, topic: "Apparatus & Safety", spec: "CP5", q: "How do you know an organic liquid is completely dry after adding MgSO₄?", a: "• Liquid turns clear and solid powder flows freely without clumping." },
+            { id: 42, topic: "Apparatus & Safety", spec: "CP5", q: "Safe method for heating flammable organic liquids (e.g. ether, ethanol).", a: "• Use electric heating mantle or hot water bath (NO open flames!)." },
+            { id: 43, topic: "Apparatus & Safety", spec: "CP5", q: "Hazard control when handling toxic phenylamine or conc HNO₃.", a: "• Work in a fume cupboard with gloves and safety goggles." },
+            { id: 44, topic: "Apparatus & Safety", spec: "CP5", q: "Why venting is necessary when using a separating funnel?", a: "• Inverting and opening tap releases built-up pressure from volatile solvent vapors / CO₂." },
+            { id: 45, topic: "Apparatus & Safety", spec: "CP5", q: "Function of salt bridge in electrochemical cell.", a: "• Allows ion flow to complete circuit while preventing solution mixing (e.g. KNO₃ paper)." },
+            { id: 46, topic: "Apparatus & Safety", spec: "CP5", q: "Why ice-water bath is better than ice cubes alone for cooling?", a: "• Ice-water mixture provides maximum thermal contact surface area with flask." },
+            { id: 47, topic: "Apparatus & Safety", spec: "CP5", q: "Uncertainty of volumetric pipette vs measuring cylinder.", a: "• Volumetric pipette has much lower percentage uncertainty (high precision)." },
+            { id: 48, topic: "Apparatus & Safety", spec: "CP5", q: "How to heat a solid sample to constant mass.", a: "• Heat, cool in desiccator, weigh; repeat until two consecutive masses match within 0.01 g." },
+            { id: 49, topic: "Apparatus & Safety", spec: "CP5", q: "Why use thin-walled capillary tube for melting point determination?", a: "• Ensures rapid and even heat transfer to sample." },
+            { id: 50, topic: "Apparatus & Safety", spec: "CP5", q: "Why rate of heating must be slow (< 1 °C/min) near melting point?", a: "• Prevents thermal lag so thermometer reads true sample melting temperature." }
+        ];
+
+        const GLOSSARY_DATA = [
+            { term: "Recrystallisation", cat: "prep_purification", def: "Purification technique dissolving crude solid in minimum hot solvent, hot filtering, cooling, suction filtering, and washing." },
+            { term: "Refluxing", cat: "prep_purification", def: "Continual boiling and condensation in a vertical condenser to react volatile liquids without vapor loss." },
+            { term: "Steam Distillation", cat: "prep_purification", def: "Co-distillation of water-immiscible organic liquids at temperatures below 100°C to prevent thermal decomposition." },
+            { term: "Salting Out", cat: "prep_purification", def: "Adding an ionic salt (NaCl) to aqueous layer to decrease solubility of organic product and force it into organic solvent." },
+            { term: "Quenching", cat: "kinetics_titration", def: "Rapidly stopping or slowing a chemical reaction aliquot by sudden cooling, dilution, or neutralisation." },
+            { term: "Clock Reaction", cat: "kinetics_titration", def: "Reaction where a sudden visible color change occurs after a time delay proportional to initial rate." },
+            { term: "Arrhenius Equation", cat: "kinetics_titration", def: "Mathematical relationship $\\ln k = -\\frac{E_a}{RT} + \\ln A$ linking rate constant $k$, activation energy $E_a$, and temperature $T$." },
+            { term: "Suction Filtration", cat: "prep_purification", def: "Vacuum filtration using Büchner funnel and flask to rapidly separate solid crystals from liquid." },
+            { term: "Melting Point Range", cat: "prep_purification", def: "Temperature span from initial melting onset to complete liquefaction; sharp range ($\pm 1{^\circ}\\text{C}$) indicates high purity." },
+            { term: "2,4-DNPH", cat: "qual_analysis", def: "Reagent (Brady's reagent) giving yellow/orange/red hydrazone precipitate with aldehydes and ketones." },
+            { term: "Tollens' Reagent", cat: "qual_analysis", def: "Ammoniacal silver nitrate solution $[\\text{Ag(NH}_3)_2]^+$ forming silver mirror with aldehydes." },
+            { term: "Iodoform Test", cat: "qual_analysis", def: "Reaction with $\\text{I}_2/\\text{NaOH}$ forming pale yellow $\\text{CHI}_3$ precipitate with methyl ketones or secondary methyl alcohols." },
+            { term: "Concordant Titres", cat: "kinetics_titration", def: "Burette readings within $0.10\\text{ cm}^3$ (or $0.20\\text{ cm}^3$) of each other, used to calculate mean titre." },
+            { term: "Percentage Uncertainty", cat: "kinetics_titration", def: "Ratio of apparatus tolerance uncertainty to measured value multiplied by 100." },
+            { term: "Drying Agent", cat: "prep_purification", def: "Anhydrous salt ($\\text{MgSO}_4, \\text{CaCl}_2$) added to organic liquids to absorb dissolved water traces." },
+            { term: "Separating Funnel", cat: "prep_purification", def: "Glass apparatus used to separate immiscible liquid phases based on density differences." },
+            { term: "Thermal Lag", cat: "prep_purification", def: "Temperature gap between heating block and sample caused by heating too quickly in melting point apparatus." },
+            { term: "Fluted Filter Paper", cat: "prep_purification", def: "Folded filter paper increasing surface area for rapid hot filtration during recrystallisation." },
+            { term: "Back Titration", cat: "kinetics_titration", def: "Technique where excess known reagent reacts with sample, and unreacted excess is titrated." },
+            { term: "Self-Indicator", cat: "kinetics_titration", def: "Titration reactant changing color at end-point without added indicator (e.g. $\\text{KMnO}_4$)." },
+            { term: "Amphoteric Hydroxide", cat: "qual_analysis", def: "Metal hydroxide dissolving in both acids and strong bases (e.g. $\\text{Cr(OH)}_3, \\text{Zn(OH)}_2$)." },
+            { term: "Desiccator", cat: "prep_purification", def: "Sealed enclosure containing drying agent (silica gel) used to dry solid samples without heat." },
+            { term: "Anti-Bumping Granules", cat: "prep_purification", def: "Small calcium carbonate or silicon carbide stones providing nucleation sites for smooth boiling." },
+            { term: "Ligand Exchange", cat: "qual_analysis", def: "Substitution of one set of complex ion ligands by another, accompanied by color change." },
+            { term: "Gravimetric Analysis", cat: "kinetics_titration", def: "Quantitative determination of analyte mass by precipitation, filtration, and heating to constant mass." },
+            { term: "Azo Dye", cat: "qual_analysis", def: "Brightly colored compound containing $-N=N-$ linkage formed by coupling diazonium salt with phenol/naphthol." },
+            { term: "Diazotisation", cat: "qual_analysis", def: "Reaction of 1° aromatic amine with $\\text{HNO}_2$ ($< 10{^\circ}\\text{C}$) forming benzenediazonium ion." },
+            { term: "Retention Factor ($R_f$)", cat: "qual_analysis", def: "Ratio of distance travelled by compound to distance travelled by solvent front in chromatography." },
+            { term: "Mobile Phase", cat: "qual_analysis", def: "Liquid or gas solvent carrying chemical components through chromatography column/plate." },
+            { term: "Stationary Phase", cat: "qual_analysis", def: "Solid or liquid film bound to solid support that selectively adsorbs mixture components." },
+            { term: "Chemical Shift ($\\delta$)", cat: "qual_analysis", def: "NMR resonance position relative to tetramethylsilane (TMS) standard at $0\\text{ ppm}$." },
+            { term: "Integration Trace", cat: "qual_analysis", def: "Area under $^1\\text{H}$ NMR peak proportional to number of hydrogen atoms in that environment." },
+            { term: "Spin-Spin Splitting", cat: "qual_analysis", def: "Division of $^1\\text{H}$ NMR signal into $n+1$ peaks caused by $n$ adjacent non-equivalent protons." },
+            { term: "Molecular Ion Peak ($M^+$)", cat: "qual_analysis", def: "Mass spectrum peak with highest $m/z$ corresponding to unfragmented ionized molecule mass." },
+            { term: "Fume Cupboard", cat: "prep_purification", def: "Ventilated lab enclosure removing hazardous, toxic, or volatile fumes safely." }
+        ];
+
+        const ESSAYS_DATA = [
+            {
+                title: "1. Complete Recrystallisation Procedure for Impure Solid",
+                question: "Describe step-by-step how to purify a $5.0\\text{ g}$ sample of crude impure aspirin by recrystallisation. State purpose of each step.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Dissolution:</strong> Dissolve crude aspirin in the MINIMUM volume of HOT ethanol/water solvent. <em>(Purpose: Creates a saturated solution so maximum yield crystallises upon cooling.)</em><br>2. <strong>Hot Filtration:</strong> Filter hot solution through fluted filter paper using pre-heated funnel. <em>(Purpose: Removes insoluble solid impurities while keeping product dissolved in filtrate.)</em><br>3. <strong>Crystallisation:</strong> Allow filtrate to cool slowly to room temperature, then place in ice bath. <em>(Purpose: Solute recrystallises into pure lattice while soluble impurities remain dissolved.)</em><br>4. <strong>Suction Filtration:</strong> Collect pure crystals using Büchner funnel and vacuum pump. <em>(Purpose: Rapidly separates liquid filtrate from crystals and dries solid.)</em><br>5. <strong>Washing:</strong> Wash crystals on funnel with ICE-COLD solvent. <em>(Purpose: Removes soluble impurities from crystal surfaces without redissolving product.)</em><br>6. <strong>Drying:</strong> Dry crystals in desiccator or press between filter papers."
+            },
+            {
+                title: "2. Kinetics Investigation: Determining Activation Energy ($E_a$)",
+                question: "Describe an experimental procedure to determine activation energy ($E_a$) for reaction between thiosulfate and acid using clock reaction method.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Procedure:</strong> Measure fixed volumes of $\\text{Na}_2\\text{S}_2\\text{O}_3$ and $\\text{HCl}$ into separate tubes using volumetric pipettes. Place in water bath at temperature $T_1$.<br>2. <strong>Measurement:</strong> Mix reactants, start stopwatch simultaneously, and record time $t$ for solution to turn opaque (cross disappears).<br>3. <strong>Temperature Range:</strong> Repeat procedure at 5 different temperatures (e.g. 20°C, 30°C, 40°C, 50°C, 60°C).<br>4. <strong>Data Processing:</strong> Calculate rate proportional to $\\frac{1}{t}$. Convert temperatures to Kelvin ($T = {^\circ}\text{C} + 273.15$).<br>5. <strong>Plotting:</strong> Plot graph of $\\ln(1/t)$ on y-axis against $\\frac{1}{T}$ in $\\text{K}^{-1}$ on x-axis.<br>6. <strong>Calculation:</strong> Measure gradient $m = \\frac{\\Delta y}{\\Delta x}$. Calculate $E_a = -m \\times R = -m \\times 8.314\\text{ J K}^{-1}\\text{mol}^{-1}$. Divide by 1000 for $\\text{kJ mol}^{-1}$."
+            },
+            {
+                title: "3. Qualitative Analysis Scheme: 4 Unlabeled Organic Liquids",
+                question: "Devise a scheme of simple test-tube experiments to identify 4 unlabeled bottles containing: propan-1-ol, propanone, propanoic acid, and propanoyl chloride.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Test 1 (Water Test):</strong> Add a few drops of water to a sample from each bottle.<br>• <em>Observation:</em> Propanoyl chloride reacts vigorously producing steamy/misty fumes of $\\text{HCl}$ (turns damp blue litmus red). Bottle identified.<br>2. <strong>Test 2 (Carbonate Test):</strong> Add $\\text{NaHCO}_3$(aq) to remaining 3 liquids.<br>• <em>Observation:</em> Propanoic acid produces effervescence ($\\text{CO}_2$ gas turns limewater cloudy). Bottle identified.<br>3. <strong>Test 3 (Dichromate Oxidation):</strong> Add acidified $\\text{K}_2\\text{Cr}_2\\text{O}_7$ and warm in water bath.<br>• <em>Observation:</em> Propan-1-ol changes solution from orange to green. Bottle identified.<br>4. <strong>Test 4 (Confirmation):</strong> Propanone shows no change with dichromate, but gives yellow ppt with 2,4-DNPH."
+            },
+            {
+                title: "4. Preparation & Purification of Phenylamine / Azo Dye",
+                question: "Outline experimental steps to reduce nitrobenzene to phenylamine and convert it into an azo dye at low temperature.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Reduction:</strong> Reflux nitrobenzene with Tin (Sn) and concentrated $\\text{HCl}$ in fume cupboard.<br>2. <strong>Liberation:</strong> Add excess $\\text{NaOH}$(aq) to alkaline pH to liberate free phenylamine from phenylammonium salt.<br>3. <strong>Steam Distillation & Extraction:</strong> Steam distil mixture to collect oily phenylamine-water emulsion. Extract with solvent in separating funnel and dry with $\\text{MgSO}_4$.<br>4. <strong>Diazotisation:</strong> Dissolve phenylamine in dilute $\\text{HCl}$, cool below 10°C in ice bath, add cold $\\text{NaNO}_2$(aq) to form benzenediazonium chloride.<br>5. <strong>Coupling:</strong> Add diazonium solution dropwise to phenol dissolved in cold $\\text{NaOH}$ (< 10°C).<br>6. <strong>Observation:</strong> Orange/red precipitate of azo dye forms instantly."
+            },
+            {
+                title: "5. Thermometric / Redox Titration Analysis & Error Reduction",
+                question: "Explain how to perform a thermometric titration between $\\text{NaOH}$ and $\\text{HCl}$ to find stoichiometry, including methods to reduce thermal errors.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Setup:</strong> Place known volume of $\\text{HCl}$ (e.g. $25.0\\text{ cm}^3$) in an expanded polystyrene cup placed inside a glass beaker for insulation.<br>2. <strong>Baseline Temp:</strong> Record initial temperature of acid every minute for 3 minutes to ensure thermal equilibrium.<br>3. <strong>Addition:</strong> At minute 4, add $2.0\\text{ cm}^3$ portion of $\\text{NaOH}$ from burette, stir continuously, and record temperature at minute 5.<br>4. <strong>Serial Additions:</strong> Continue adding $2.0\\text{ cm}^3$ portions up to $30.0\\text{ cm}^3$, recording temp every minute.<br>5. <strong>Plotting & Extrapolation:</strong> Plot temperature vs volume. Draw two best-fit straight lines (temperature rise and cooling curve) and extrapolate to intersection.<br>6. <strong>Equivalence Point:</strong> Intersection point gives exact volume for neutralisation and maximum temperature change $\\Delta T$, accounting for heat loss."
+            },
+            {
+                title: "6. Inorganic Unknown Identification Scheme",
+                question: "Solid X is a green hydrated inorganic salt. Describe tests to identify cation and anion if X is iron(II) sulfate.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Dissolution:</strong> Dissolve solid X in distilled water to form a pale green aqueous solution.<br>2. <strong>Cation Test ($\\text{Fe}^{2+}$):</strong> Add dropwise $\\text{NaOH}$(aq) to $2\\text{ cm}^3$ solution.<br>• <em>Observation:</em> Green precipitate $\\text{Fe(OH)}_2$ forms. On standing in air, top layer turns red-brown due to oxidation to $\\text{Fe(OH)}_3$.<br>3. <strong>Anion Test ($\\text{SO}_4^{2-}$):</strong> Acidify $2\\text{ cm}^3$ solution with dilute $\\text{HCl}$, then add $\\text{BaCl}_2$(aq).<br>• <em>Observation:</em> White precipitate of barium sulfate ($\\text{BaSO}_4$) forms.<br>4. <strong>Water of Crystallisation:</strong> Heat weighed sample of X in crucible to constant mass to confirm hydrated salt status."
+            },
+            {
+                title: "7. Iodine Clock Kinetics Analysis",
+                question: "Explain how an iodine clock reaction (persulfate + iodide) determines reaction order with respect to $\\text{I}^-$.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Setup:</strong> Mix fixed volumes of $\\text{S}_2\\text{O}_8^{2-}$, starch indicator, and fixed small volume of limiting $\\text{Na}_2\\text{S}_2\\text{O}_3$.<br>2. <strong>Variable Concentration:</strong> Add specific volume of $\\text{KI}$ solution and distilled water so total volume remains constant.<br>3. <strong>Timing:</strong> Start timing on mixing and record time $t$ when solution suddenly turns blue-black.<br>4. <strong>Repeat Runs:</strong> Perform 5 runs varying $[\\text{I}^-]$ while keeping $[\\text{S}_2\\text{O}_8^{2-}]$ constant.<br>5. <strong>Rate Calculation:</strong> Calculate initial rate $\\propto \\frac{1}{t}$. Plot rate against $[\\text{I}^-]$.<br>6. <strong>Deduction:</strong> Straight line through origin indicates 1st order with respect to $\\text{I}^-$."
+            },
+            {
+                title: "8. Steam Distillation & Separating Funnel Extraction",
+                question: "Describe how steam distillation isolates phenylamine from reaction mixture, followed by solvent extraction with ether.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Steam Distillation:</strong> Pass steam through reaction flask containing phenylamine mixture. Collect cloudy distillate containing water and phenylamine.<br>2. <strong>Separating Funnel:</strong> Transfer distillate to separating funnel, add diethyl ether solvent. Invert and vent pressure tap periodically.<br>3. <strong>Salting Out:</strong> Add $\\text{NaCl}$ to aqueous layer to reduce phenylamine solubility in water and push it into ether layer.<br>4. <strong>Phase Separation:</strong> Allow layers to settle. Drain lower aqueous layer; run upper organic ether layer into flask.<br>5. <strong>Drying:</strong> Add anhydrous $\\text{MgSO}_4$ until solution turns clear.<br>6. <strong>Evaporation:</strong> Distil off low boiling ether ($35{^\circ}\\text{C}$) using warm water bath to isolate pure phenylamine liquid."
+            },
+            {
+                title: "9. Melting Point Determination & Purity Assessment",
+                question: "Explain how to determine melting point of benzoic acid using capillary tube apparatus and interpret purity.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Sample Prep:</strong> Ensure benzoic acid sample is completely dry. Crush into fine powder using mortar and pestle.<br>2. <strong>Packing:</strong> Press open end of thin-walled glass capillary tube into powder, tap down closed end until 2-3 mm depth is packed.<br>3. <strong>Apparatus:</strong> Insert capillary into melting point apparatus (e.g. Thiele tube or digital block).<br>4. <strong>Heating Control:</strong> Heat rapidly initially, then slow heating rate to $< 1{^\circ}\\text{C}$ per minute near expected MP ($122{^\circ}\\text{C}$).<br>5. <strong>Recording:</strong> Record temperature $T_1$ at initial liquid drop appearance and $T_2$ at complete liquefaction.<br>6. <strong>Purity Interpretation:</strong> Pure sample melts sharply ($121.5-122.5{^\circ}\\text{C}$). Impure sample melts over broad range at lower temp."
+            },
+            {
+                title: "10. Back Titration: Calcium Carbonate Purity",
+                question: "Outline steps to determine mass percentage of $\\text{CaCO}_3$ in an impure limestone sample using back titration with $\\text{HCl}$ and $\\text{NaOH}$.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Reaction:</strong> Weigh accurately $1.20\\text{ g}$ crushed limestone into beaker. Add excess $50.0\\text{ cm}^3$ of $1.00\\text{ mol dm}^{-3}\\text{ HCl}$.<br>2. <strong>Transfer:</strong> After effervescence ceases, quantitatively transfer mixture to $250.0\\text{ cm}^3$ volumetric flask and dilute to mark.<br>3. <strong>Titration:</strong> Pipette $25.0\\text{ cm}^3$ aliquots into conical flask, add phenolphthalein, titrate with $0.100\\text{ mol dm}^{-3}\\text{ NaOH}$ to pink endpoint.<br>4. <strong>Calculations:</strong> Calculate moles of $\\text{NaOH} = C \\times V$. Multiply by 10 to find unreacted excess $\\text{HCl}$ in total flask.<br>5. <strong>Reacted Acid:</strong> Moles $\\text{HCl}$ reacted with $\\text{CaCO}_3 = \\text{Total initial } \\text{HCl} - \\text{Unreacted excess } \\text{HCl}$.<br>6. <strong>Purity %:</strong> Moles $\\text{CaCO}_3 = \\frac{1}{2} \\text{Moles HCl reacted}$. Calculate mass $\\text{CaCO}_3 = n \\times 100.1\\text{ g mol}^{-1}$ and divide by sample mass $\\times 100\\%$."
+            }
+        ];
+
+        const WEB_MISCONCEPTIONS_DATA = [
+            { source: "Paper 6 Examiner Report", topic: "Practical Apparatus", title: "1. Water Direction in Distillation Condenser", misconception: "Running cooling water into top of condenser and out the bottom.", explanation: "FALSE! Water must enter at the BOTTOM and exit at the TOP to keep the cooling jacket full and prevent air pockets!" },
+            { source: "Reddit r/6thForm", topic: "Organic Reflux", title: "2. Stopper on Reflux Apparatus", misconception: "Put a stopper on top of reflux condenser to keep vapors inside.", explanation: "FALSE! Sealing reflux apparatus creates explosive pressure build-up. Vapors condense safely on cool inner walls." },
+            { source: "Discord Chem Help", topic: "Qualitative Analysis", title: "3. Acidifying Silver Nitrate with HCl", misconception: "Acidify silver nitrate with hydrochloric acid when testing for halides.", explanation: "FALSE! HCl adds chloride ions, generating a false positive white AgCl precipitate! Use dilute nitric acid (HNO3)." },
+            { source: "Student Room Thread", topic: "Redox Titrations", title: "4. Starch Indicator Addition Timing", misconception: "Add starch indicator at start of iodine-thiosulfate titration.", explanation: "FALSE! Starch binds irreversibly to high concentration iodine. Add starch ONLY when solution is pale straw-yellow!" },
+            { source: "Examiner Report 2024", topic: "Purification", title: "5. Washing Crystals with Warm Solvent", misconception: "Wash purified solid crystals with warm solvent during suction filtration.", explanation: "FALSE! Warm solvent redissolves pure product into filtrate, destroying yield. Always wash with ICE-COLD solvent!" },
+            { source: "Reddit Chemistry Group", topic: "Apparatus Setup", title: "6. Thermometer Bulb Depth in Distillation", misconception: "Submerge thermometer bulb deep inside boiling liquid.", explanation: "FALSE! Thermometer bulb must sit directly opposite condenser side-arm entrance to measure true vapor boiling point." },
+            { source: "X Revision Space", topic: "Kinetics Graphs", title: "7. Celsius in Arrhenius Plot", misconception: "Plot ln(k) against 1/T using Celsius temperatures (°C).", explanation: "FALSE! Temperature MUST be in Kelvin (K = °C + 273.15) for gradient m = -Ea/R to yield correct energy units!" },
+            { source: "Discord Past Papers", topic: "Uncertainty Calculations", title: "8. Burette Titre Uncertainty Single Reading", misconception: "Burette titre percentage uncertainty uses single reading tolerance (±0.05 cm³).", explanation: "FALSE! Titre is calculated from initial and final readings, so total uncertainty is DOUBLED (2 x 0.05 = ±0.10 cm³)!" },
+            { source: "Student Room Forum", topic: "Lab Safety", title: "9. Bunsen Heating of Ether", misconception: "Heat diethyl ether directly over Bunsen burner flame.", explanation: "FALSE! Ether is extremely flammable. Must use electric heating mantle or hot water bath without open flames!" },
+            { source: "X A-Level Hub", topic: "Qualitative Analysis", title: "10. Precipitate Observation Detail", misconception: "Writing 'blue solution forms blue solution' when NaOH is added to Cu²⁺.", explanation: "FALSE! Must explicitly state 'PALE BLUE PRECIPITATE forms, which dissolves in excess NH3 to DEEP BLUE SOLUTION'." },
+            { source: "Discord Study VC", topic: "Purification", title: "11. Recrystallisation Solvent Volume", misconception: "Dissolve crude solid in large excess volume of hot solvent.", explanation: "FALSE! Must use MINIMUM volume of hot solvent to produce saturated solution for high crystal yield upon cooling." },
+            { source: "Reddit r/ALevel", topic: "Physical Chemistry", title: "12. Crucible Heating Completion", misconception: "Heating crucible once for 5 minutes proves all water of crystallisation is lost.", explanation: "FALSE! Must re-heat, cool in desiccator, and weigh repeatedly until CONSTANT MASS is achieved." },
+            { source: "X Revision Space", topic: "Qualitative Analysis", title: "13. Zinc Hydroxide Solubility in Excess", misconception: "Zinc hydroxide precipitate redissolves only in excess NaOH, not excess NH3.", explanation: "FALSE! Zn(OH)2 is amphoteric AND forms ammine complex: redissolves in BOTH excess NaOH and excess NH3!" },
+            { source: "Student Room Thread", topic: "Organic Synthesis", title: "14. Drying Liquid Product with Solid Filter", misconception: "Filter paper alone can dry an organic liquid containing dissolved water.", explanation: "FALSE! Filter paper removes solid particles. Dissolved water requires anhydrous chemical drying agent like MgSO4." },
+            { source: "Discord Exam Chat", topic: "Qualitative Analysis", title: "15. Nitric Acid in Barium Chloride Test", misconception: "Acidify barium chloride test with nitric acid when testing for sulfates.", explanation: "FALSE! Acidify sulfate test with dilute HCl or HNO3, but NEVER sulfuric acid (adds SO4²⁻ ions!)." },
+            { source: "Reddit Study Group", topic: "Apparatus Techniques", title: "16. Separating Funnel Tap Opening", misconception: "Keep separating funnel tap closed while shaking immiscible liquids.", explanation: "FALSE! Must invert funnel and OPEN tap periodically to vent built-up solvent vapor pressure safely." },
+            { source: "X Chem Teacher VC", topic: "Melting Point Analysis", title: "17. Fast Heating in Melting Point Block", misconception: "Heat sample as fast as possible in melting point apparatus to save time.", explanation: "FALSE! Fast heating causes thermal lag (thermometer reads higher than sample temp). Heat < 1°C/min near MP!" },
+            { source: "Student Room Forum", topic: "Kinetics Titration", title: "18. Quenching Method Action", misconception: "Quenching means adding an indicator to end the titration.", explanation: "FALSE! Quenching means rapidly stopping/slowing the reaction in an aliquot using cold water or neutralising agent." },
+            { source: "Discord Past Paper Help", topic: "Organic Qual", title: "19. Phenol Reactivity with Carbonates", misconception: "Phenol produces effervescence with NaHCO3 solution.", explanation: "FALSE! Phenol is too weakly acidic to react with carbonates. Only carboxylic acids liberate CO2 gas!" },
+            { source: "Reddit r/6thForm", topic: "Spectroscopy", title: "20. ¹³C NMR Peak Height Meaning", misconception: "Height or area of ¹³C NMR peak is proportional to number of carbon atoms.", explanation: "FALSE! Unlike ¹H NMR, ¹³C NMR peak heights do NOT equal integration ratios due to variable relaxation times." }
+        ];
+
+        /* ==================== STATE VARIABLES ==================== */
+        let currentTab = 'syllabus';
+        let currentTopicFilter = 'ALL';
+        let currentGlossaryCat = 'ALL';
+        let cardViewMode = 'deck';
+        let activeCards = [...FLASHCARDS_DATA];
+        let cardIndex = 0;
+        let masteredItems = JSON.parse(localStorage.getItem('chem_paper6_mastered') || '[]');
+
+        /* ==================== KATEX HELPER ==================== */
+        function initKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError : false
+                });
+            }
+        }
+
+        function reRenderMath() {
+            setTimeout(() => {
+                if (window.renderMathInElement) {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError : false
+                    });
+                }
+            }, 50);
+        }
+
+        /* ==================== CORE FUNCTIONS ==================== */
+        function updateProgress() {
+            const count = masteredItems.length;
+            const total = SYLLABUS_DATA.length;
+            document.getElementById('progress-text').innerText = count + ' / ' + total;
+            const pct = (count / total) * 100;
+            document.getElementById('progress-bar').style.width = pct + '%';
+        }
+
+        function toggleMastered(id) {
+            if (masteredItems.includes(id)) {
+                masteredItems = masteredItems.filter(i => i !== id);
+            } else {
+                masteredItems.push(id);
+            }
+            localStorage.setItem('chem_paper6_mastered', JSON.stringify(masteredItems));
+            updateProgress();
+            renderSyllabus();
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-sky-400');
+                btn.classList.add('text-slate-400');
+            });
+
+            const activeView = document.getElementById('view-' + tabId);
+            if (activeView) activeView.classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-sky-400');
+                activeBtn.classList.remove('text-slate-400');
+            }
+            reRenderMath();
+        }
+
+        /* ==================== RENDERERS ==================== */
+        function renderSyllabus() {
+            const container = document.getElementById('syllabus-container');
+            const searchVal = document.getElementById('syllabus-search').value.toLowerCase();
+
+            const filtered = SYLLABUS_DATA.filter(item => {
+                const matchCat = (currentTopicFilter === 'ALL') || (item.cat === currentTopicFilter);
+                const matchSearch = item.id.toLowerCase().includes(searchVal) ||
+                                    item.title.toLowerCase().includes(searchVal) ||
+                                    item.content.toLowerCase().includes(searchVal) ||
+                                    item.tip.toLowerCase().includes(searchVal);
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl">No practical modules found matching search.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isMastered = masteredItems.includes(item.id);
+                return `
+                <div class="glass-panel p-5 rounded-2xl border ${isMastered ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800'} transition-all hover:border-slate-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-xs font-bold rounded-lg">${item.id}</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">${item.cat}</span>
+                            <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+                        </div>
+                        <button onclick="toggleMastered('${item.id}')" class="self-start sm:self-auto px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${isMastered ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                            <i class="fa-solid ${isMastered ? 'fa-check' : 'fa-circle-check'} text-xs"></i>
+                            <span>${isMastered ? 'Mastered' : 'Mark as Mastered'}</span>
+                        </button>
+                    </div>
+
+                    <p class="text-sm text-slate-300 leading-relaxed mb-4 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">${item.content}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-emerald-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-emerald-400">
+                                <i class="fa-solid fa-lightbulb"></i> <span>Examiner Tip / Key Observation</span>
+                            </div>
+                            <p>${item.tip}</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 text-amber-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-amber-400">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <span>Common Lab Error</span>
+                            </div>
+                            <p>${item.misconception}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            reRenderMath();
+        }
+
+        function filterTopic(cat) {
+            currentTopicFilter = cat;
+            document.querySelectorAll('.topic-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-topic') === cat) {
+                    btn.className = 'topic-filter-btn bg-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all';
+                } else {
+                    btn.className = 'topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all';
+                }
+            });
+            renderSyllabus();
+        }
+
+        function filterSyllabus() {
+            renderSyllabus();
+        }
+
+        function renderPitfalls() {
+            const container = document.getElementById('pitfalls-container');
+            container.innerHTML = PITFALLS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden group">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.badge}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Common Student Mistake:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Examiner Mark Scheme Secret:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.truth}</p>
+                            <div class="pt-1 text-[11px] font-mono text-cyan-300">
+                                <strong class="text-slate-400">Mark Scheme Keywords:</strong> ${item.keywords}
+                            </div>
+                        </div>
+
+                        <div id="blur-overlay-${idx}" onclick="toggleBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Examiner Truth</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        function toggleBlur(idx) {
+            const overlay = document.getElementById('blur-overlay-' + idx);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        /* ==================== CALCULATORS ==================== */
+        function calcArrhenius() {
+            const gradient = parseFloat(document.getElementById('calc-gradient').value) || 0;
+            const R = 8.314;
+
+            const eaJ = -gradient * R;
+            const eaKJ = eaJ / 1000;
+
+            document.getElementById('arrhenius-output').innerHTML = `
+                <div><strong>Activation Energy ($E_a$):</strong> <span class="${eaKJ > 0 ? 'text-emerald-400' : 'text-rose-400'} font-bold">${eaKJ.toFixed(2)} kJ mol⁻¹</span></div>
+                <div><strong>In Joules:</strong> ${eaJ.toFixed(1)} J mol⁻¹</div>
+                <div><strong>Formula:</strong> $E_a = -\text{gradient} \times R = -(${gradient}) \times 8.314$</div>
+            `;
+            reRenderMath();
+        }
+
+        function calcUncertainty() {
+            const uncVal = parseFloat(document.getElementById('calc-unc-val').value) || 0;
+            const numReadings = parseInt(document.getElementById('calc-readings-num').value) || 1;
+            const measuredVal = parseFloat(document.getElementById('calc-measured-val').value) || 1;
+
+            const totalUnc = uncVal * numReadings;
+            const pctUnc = (totalUnc / measuredVal) * 100;
+
+            document.getElementById('uncertainty-output').innerHTML = `
+                <div><strong>Total Apparatus Uncertainty:</strong> $\pm ${totalUnc.toFixed(3)}$</div>
+                <div><strong>Percentage Uncertainty:</strong> <span class="text-emerald-300 font-bold">${pctUnc.toFixed(2)}%</span></div>
+                <div><strong>Calculation:</strong> $\\frac{${numReadings} \\times ${uncVal}}{${measuredVal}} \\times 100\\%$</div>
+            `;
+            reRenderMath();
+        }
+
+        function calcRecrystYield() {
+            const theo = parseFloat(document.getElementById('calc-theo-mass').value) || 1;
+            const crude = parseFloat(document.getElementById('calc-crude-mass').value) || 0;
+            const pure = parseFloat(document.getElementById('calc-pure-mass').value) || 0;
+
+            const overallYieldPct = (pure / theo) * 100;
+            const recoveryPct = crude > 0 ? (pure / crude) * 100 : 0;
+
+            document.getElementById('recryst-output').innerHTML = `
+                <div><strong>Overall Percentage Yield:</strong> <span class="text-purple-300 font-bold">${overallYieldPct.toFixed(2)}%</span></div>
+                <div><strong>Recrystallisation Recovery:</strong> <span class="text-purple-300 font-bold">${recoveryPct.toFixed(2)}%</span></div>
+            `;
+            reRenderMath();
+        }
+
+        function calcBackTitration() {
+            const vAcid = (parseFloat(document.getElementById('tit-acid-vol').value) || 0) / 1000;
+            const cAcid = parseFloat(document.getElementById('tit-acid-conc').value) || 0;
+            const vNaoh = (parseFloat(document.getElementById('tit-naoh-vol').value) || 0) / 1000;
+            const cNaoh = parseFloat(document.getElementById('tit-naoh-conc').value) || 0;
+
+            const molesAcidTotal = vAcid * cAcid;
+            const molesNaoh = vNaoh * cNaoh;
+            const molesAcidReacted = molesAcidTotal - molesNaoh;
+            const molesCarb = molesAcidReacted / 2; // CaCO3 + 2HCl -> CaCl2 + H2O + CO2
+            const massCarb = molesCarb * 100.1;
+
+            document.getElementById('back-titration-output').innerHTML = `
+                <div><strong>Total Acid Added:</strong> ${molesAcidTotal.toFixed(4)} mol</div>
+                <div><strong>Unreacted Excess Acid (NaOH titration):</strong> ${molesNaoh.toFixed(4)} mol</div>
+                <div><strong>Acid Reacted with Carbonate:</strong> ${molesAcidReacted.toFixed(4)} mol</div>
+                <div><strong>Calculated Pure $\\text{CaCO}_3$ Mass:</strong> <span class="text-cyan-300 font-bold">${massCarb.toFixed(3)} g</span></div>
+            `;
+            reRenderMath();
+        }
+
+        /* ==================== FLASHCARDS ==================== */
+        function updateCard() {
+            if (activeCards.length === 0) return;
+            const item = activeCards[cardIndex];
+            
+            document.getElementById('card-front-topic').innerText = item.topic;
+            document.getElementById('card-front-spec').innerText = item.spec;
+            document.getElementById('card-front-question').innerHTML = item.q;
+            document.getElementById('card-back-answer').innerHTML = item.a;
+
+            document.getElementById('deck-current-index').innerText = cardIndex + 1;
+            document.getElementById('deck-total-count').innerText = activeCards.length;
+            document.getElementById('jump-card-input').max = activeCards.length;
+            document.getElementById('jump-card-input').value = cardIndex + 1;
+
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.remove('card-flipped');
+            reRenderMath();
+        }
+
+        function flipCard() {
+            document.getElementById('card-inner-el').classList.toggle('card-flipped');
+        }
+
+        function nextCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex + 1) % activeCards.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex - 1 + activeCards.length) % activeCards.length;
+            updateCard();
+        }
+
+        function jumpToCard(val) {
+            let num = parseInt(val) - 1;
+            if (!isNaN(num) && num >= 0 && num < activeCards.length) {
+                cardIndex = num;
+                updateCard();
+            }
+        }
+
+        function shuffleDeck() {
+            activeCards.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (cardViewMode === 'list') renderListView();
+        }
+
+        function filterCards() {
+            const searchVal = document.getElementById('card-search').value.toLowerCase();
+            activeCards = FLASHCARDS_DATA.filter(item => {
+                return item.q.toLowerCase().includes(searchVal) ||
+                       item.a.toLowerCase().includes(searchVal) ||
+                       item.topic.toLowerCase().includes(searchVal) ||
+                       item.spec.toLowerCase().includes(searchVal);
+            });
+
+            cardIndex = 0;
+            if (activeCards.length > 0) {
+                updateCard();
+                if (cardViewMode === 'list') renderListView();
+            } else {
+                document.getElementById('card-front-question').innerHTML = "No flashcards found matching search.";
+                document.getElementById('card-back-answer').innerHTML = "Try adjusting your search terms.";
+            }
+        }
+
+        function setCardViewMode(mode) {
+            cardViewMode = mode;
+            if (mode === 'deck') {
+                document.getElementById('deck-view-container').classList.remove('hidden');
+                document.getElementById('list-view-container').classList.add('hidden');
+                document.getElementById('card-view-mode-deck').className = 'px-4 py-2 bg-cyan-600 text-white rounded-xl text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-list').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all';
+            } else {
+                document.getElementById('deck-view-container').classList.add('hidden');
+                document.getElementById('list-view-container').classList.remove('hidden');
+                document.getElementById('card-view-mode-list').className = 'px-4 py-2 bg-cyan-600 text-white rounded-xl text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-deck').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all';
+                renderListView();
+            }
+        }
+
+        function renderListView() {
+            const holder = document.getElementById('list-cards-holder');
+            holder.innerHTML = activeCards.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-semibold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">${item.topic}</span>
+                            <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">${item.spec}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">#${idx + 1}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-sm leading-relaxed">${item.q}</h4>
+                    <button onclick="document.getElementById('list-ans-${idx}').classList.toggle('hidden')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-xs font-semibold border border-slate-700">
+                        Toggle Answer
+                    </button>
+                    <div id="list-ans-${idx}" class="hidden p-3 bg-emerald-950/20 border border-emerald-500/20 text-emerald-300 text-xs rounded-xl leading-relaxed whitespace-pre-line font-mono">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        /* ==================== GLOSSARY ==================== */
+        function renderGlossary() {
+            const container = document.getElementById('glossary-container');
+            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const filtered = GLOSSARY_DATA.filter(g => {
+                const matchCat = (currentGlossaryCat === 'ALL') || (g.cat === currentGlossaryCat);
+                const matchSearch = g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search);
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching terms found.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map((g, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all space-y-3">
+                    <h4 class="font-bold text-cyan-400 text-base flex items-center space-x-2">
+                        <i class="fa-solid fa-bookmark text-xs"></i>
+                        <span>${g.term}</span>
+                    </h4>
+
+                    <div class="relative min-h-[90px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-4">
+                        <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
+
+                        <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Definition Blurred</span>
+                            <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        function filterGlossaryCategory(cat) {
+            currentGlossaryCat = cat;
+            document.querySelectorAll('.gloss-cat-btn').forEach(btn => {
+                if (btn.id === 'gloss-cat-' + cat) {
+                    btn.className = 'gloss-cat-btn px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-semibold';
+                } else {
+                    btn.className = 'gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium';
+                }
+            });
+            renderGlossary();
+        }
+
+        function toggleGlossaryBlur(idx) {
+            const overlay = document.getElementById('gloss-blur-' + idx);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        function filterGlossary() {
+            renderGlossary();
+        }
+
+        /* ==================== EXPERIMENTAL DESIGN MODELS ==================== */
+        function renderEssays() {
+            const container = document.getElementById('essays-container');
+            container.innerHTML = ESSAYS_DATA.map((e, idx) => `
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                        <h3 class="text-lg font-bold text-rose-300">${e.title}</h3>
+                        <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30">6 Marks - Level 3</span>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
+                        <strong class="text-rose-400">Official Question Prompt:</strong> ${e.question}
+                    </div>
+
+                    <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
+                        ${e.answer}
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        /* ==================== LAB MISCONCEPTIONS ==================== */
+        function renderWebMisconceptions() {
+            const container = document.getElementById('web-misconceptions-container');
+            container.innerHTML = WEB_MISCONCEPTIONS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.source}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Student Practical Mistake:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Mark Scheme Truth:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.explanation}</p>
+                        </div>
+
+                        <div id="web-blur-overlay-${idx}" onclick="toggleWebBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        function toggleWebBlur(idx) {
+            const overlay = document.getElementById('web-blur-overlay-' + idx);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        /* ==================== INITIALIZATION ==================== */
+        window.onload = function() {
+            updateProgress();
+            renderSyllabus();
+            renderPitfalls();
+            renderGlossary();
+            renderEssays();
+            renderWebMisconceptions();
+            updateCard();
+            calcArrhenius();
+            calcUncertainty();
+            calcRecrystYield();
+            calcBackTitration();
+            reRenderMath();
+        };
+    </script>
+</body>
+</html>

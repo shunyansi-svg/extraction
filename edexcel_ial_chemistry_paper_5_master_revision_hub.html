@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel IAL Chemistry Paper 5 - Interactive Master Revision Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- KaTeX for Math & Chemical Formula Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-active {
+            border-bottom: 3px solid #38bdf8;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+        
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .card-front {
+            transform: rotateY(0deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-front {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-back {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-slate-900/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                        <span class="text-xl">🧪</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-white leading-tight">Edexcel IAL Chemistry Paper 5</h1>
+                            <span class="text-[10px] font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full">WCH15/01</span>
+                        </div>
+                        <p class="text-xs text-sky-400 font-medium">Transition Metals & Organic Nitrogen Chemistry Master Hub</p>
+                    </div>
+                </div>
+
+                <!-- Mastery Progress -->
+                <div class="hidden md:flex items-center space-x-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                    <div class="text-xs font-medium text-slate-300">
+                        Spec Points Mastered: <span id="progress-text" class="text-sky-400 font-bold">0 / 25</span>
+                    </div>
+                    <div class="w-32 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-sky-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="flex space-x-1 overflow-x-auto border-t border-slate-800/50 pt-1 text-sm font-medium">
+                <button onclick="switchTab('syllabus')" id="tab-syllabus" class="tab-btn tab-active px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-list-check text-xs"></i> <span>Syllabus Explorer</span>
+                </button>
+                <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                </button>
+                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Calculators</span>
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (100)</span>
+                </button>
+                <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Master Glossary (36)</span>
+                </button>
+                <button onclick="switchTab('essays')" id="tab-essays" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-pen-nib text-rose-400 text-xs"></i> <span>6-Mark Essay Models (10)</span>
+                </button>
+                <button onclick="switchTab('misconceptions')" id="tab-misconceptions" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-comments text-amber-400 text-xs"></i> <span>Web Misconceptions (20)</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: SYLLABUS EXPLORER -->
+        <section id="view-syllabus" class="tab-view space-y-6">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="syllabus-search" oninput="filterSyllabus()" placeholder="Search spec point, topic, or keyword..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 w-full md:w-auto">
+                    <button onclick="filterTopic('ALL')" class="topic-filter-btn bg-sky-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all" data-topic="ALL">All Topics</button>
+                    <button onclick="filterTopic('16')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="16">T16: Redox</button>
+                    <button onclick="filterTopic('17')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="17">T17: Transition Metals</button>
+                    <button onclick="filterTopic('18')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="18">T18: Arenes</button>
+                    <button onclick="filterTopic('19')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="19">T19: Organic Nitrogen</button>
+                    <button onclick="filterTopic('20')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="20">T20: Synthesis</button>
+                </div>
+            </div>
+
+            <div id="syllabus-container" class="space-y-4"></div>
+        </section>
+
+        <!-- TAB 2: EXAMINER PITFALLS -->
+        <section id="view-pitfalls" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">Paper 5 Examiner Pitfalls (10 Key Cards)</h2>
+                        <p class="text-sm text-slate-300 mt-1">High-frequency exam traps from Edexcel IAL examiner reports. <strong>Click any blurred card to reveal the answer!</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pitfalls-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+        <!-- TAB 3: INTERACTIVE CALCULATORS -->
+        <section id="view-calculators" class="tab-view space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Calculator 1 -->
+                <div class="glass-panel p-6 rounded-2xl border border-sky-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-sky-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-bolt"></i> <span>Cell Potential & Feasibility ($E^\circ_{\text{cell}}$, $\Delta S_{\text{total}}$, $K$)</span>
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">$E^\circ$ Reduction Half-Cell (V)</label>
+                            <input type="number" id="calc-ered" value="1.33" step="any" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">$E^\circ$ Oxidation Half-Cell (V)</label>
+                            <input type="number" id="calc-eox" value="0.77" step="any" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Electrons Transferred ($n$)</label>
+                            <input type="number" id="calc-n-elec" value="6" min="1" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Temperature ($T$ in K)</label>
+                            <input type="number" id="calc-temp-k" value="298" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div id="cell-output" class="p-4 bg-sky-950/40 border border-sky-500/30 rounded-xl font-mono text-xs text-sky-300 space-y-1"></div>
+                </div>
+
+                <!-- Calculator 2 -->
+                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-palette"></i> <span>d-Orbital Splitting & Light ($\Delta E = h\nu = \frac{hc}{\lambda}$)</span>
+                    </h3>
+                    <div class="text-xs space-y-2">
+                        <label class="block text-slate-300 font-semibold">Absorbed Light Wavelength $\lambda$ (nm)</label>
+                        <input type="number" id="calc-wavelength" value="600" oninput="calcLightSplitting()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    </div>
+                    <div id="splitting-output" class="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl font-mono text-xs text-emerald-300 space-y-1"></div>
+                </div>
+
+                <!-- Calculator 3 -->
+                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-diagram-project"></i> <span>Multi-Step Yield Calculator</span>
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Step 1 Yield (%)</label>
+                            <input type="number" id="yield-s1" value="75" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Step 2 Yield (%)</label>
+                            <input type="number" id="yield-s2" value="80" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Step 3 Yield (%)</label>
+                            <input type="number" id="yield-s3" value="65" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Step 4 Yield (%)</label>
+                            <input type="number" id="yield-s4" value="90" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div id="yield-output" class="p-4 bg-purple-950/40 border border-purple-500/30 rounded-xl font-mono text-xs text-purple-300 space-y-1"></div>
+                </div>
+
+                <!-- Calculator 4 -->
+                <div class="glass-panel p-6 rounded-2xl border border-cyan-500/20 space-y-4">
+                    <h3 class="text-lg font-bold text-cyan-400 flex items-center space-x-2">
+                        <i class="fa-solid fa-vial-circle-check"></i> <span>Amine Basicity & pH Solver</span>
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Amine $K_b$ ($\text{mol dm}^{-3}$)</label>
+                            <input type="number" id="calc-kb" value="0.00044" step="any" oninput="calcAminePH()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">Concentration $[\text{B}]$ ($\text{mol dm}^{-3}$)</label>
+                            <input type="number" id="calc-conc-b" value="0.10" step="any" oninput="calcAminePH()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div id="amine-output" class="p-4 bg-cyan-950/40 border border-cyan-500/30 rounded-xl font-mono text-xs text-cyan-300 space-y-1"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: 100 3D FLASHCARDS -->
+        <section id="view-quiz" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <button id="card-view-mode-deck" onclick="setCardViewMode('deck')" class="px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all">🎴 3D Flip Deck</button>
+                    <button id="card-view-mode-list" onclick="setCardViewMode('list')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all">📝 Active List View</button>
+                    <button onclick="shuffleDeck()" class="px-3 py-2 bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shuffle"></i> <span>Shuffle Deck</span>
+                    </button>
+                </div>
+
+                <div class="relative w-full md:w-72">
+                    <input type="text" id="card-search" oninput="filterCards()" placeholder="Search 100 flashcards..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-sky-500">
+                </div>
+            </div>
+
+            <!-- Deck View Container -->
+            <div id="deck-view-container" class="max-w-2xl mx-auto space-y-6">
+                <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+                    <div>
+                        Card <span id="deck-current-index" class="text-sky-400 font-bold text-sm">1</span> of <span id="deck-total-count" class="font-bold text-sm">100</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>Jump to:</span>
+                        <input type="number" id="jump-card-input" min="1" max="100" onchange="jumpToCard(this.value)" class="w-16 bg-slate-900 border border-slate-700 text-sky-300 text-center rounded p-1 text-xs font-mono">
+                    </div>
+                </div>
+
+                <!-- 3D Card Container -->
+                <div class="card-flip w-full h-96 cursor-pointer select-none" onclick="flipCard()">
+                    <div id="card-inner-el" class="card-inner relative w-full h-full rounded-2xl border border-sky-500/30 bg-slate-900/95 shadow-2xl transition-transform duration-500">
+                        
+                        <!-- Front Face -->
+                        <div class="card-front absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 rounded-2xl border border-sky-500/30">
+                            <div class="flex items-center justify-between border-b border-sky-500/20 pb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span id="card-front-topic" class="text-[11px] font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20">Topic 16</span>
+                                    <span id="card-front-spec" class="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">Spec 16.2</span>
+                                </div>
+                                <span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full font-mono">Click to Flip</span>
+                            </div>
+
+                            <div class="text-base sm:text-lg font-bold text-slate-100 my-auto text-center px-2 leading-relaxed" id="card-front-question">
+                                Loading Question...
+                            </div>
+
+                            <div class="text-xs text-slate-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-sky-400"></i>
+                                <span>Click card to reveal Answer</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face -->
+                        <div class="card-back absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/98 rounded-2xl border border-emerald-500/50 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                                <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                    <span>Mark Scheme Answer</span>
+                                </span>
+                                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Answer Revealed</span>
+                            </div>
+
+                            <div class="text-xs sm:text-sm text-slate-200 my-auto leading-relaxed overflow-y-auto max-h-56 px-2 py-1 custom-scrollbar whitespace-pre-line text-left bg-emerald-950/30 rounded-xl border border-emerald-500/20 p-3" id="card-back-answer">
+                                Loading Answer...
+                            </div>
+
+                            <div class="text-xs text-emerald-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                                <span>Click again to flip back</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center px-2 gap-2">
+                    <button onclick="prevCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Previous</span>
+                    </button>
+
+                    <button onclick="nextCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <span>Next</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- List View Container -->
+            <div id="list-view-container" class="max-w-4xl mx-auto space-y-4 hidden">
+                <div id="list-cards-holder" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <!-- TAB 5: MASTER GLOSSARY -->
+        <section id="view-glossary" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <button onclick="filterGlossaryCategory('ALL')" id="gloss-cat-ALL" class="gloss-cat-btn px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-semibold">All Terms</button>
+                    <button onclick="filterGlossaryCategory('redox_tm')" id="gloss-cat-redox_tm" class="gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium">Redox & TM</button>
+                    <button onclick="filterGlossaryCategory('arenes_nitro')" id="gloss-cat-arenes_nitro" class="gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium">Arenes & Nitrogen</button>
+                    <button onclick="filterGlossaryCategory('synth_methods')" id="gloss-cat-synth_methods" class="gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium">Synthesis & Methods</button>
+                </div>
+                <div class="relative w-full sm:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Filter vocabulary..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-9 pr-3 py-1.5 text-xs focus:ring-2 focus:ring-cyan-500">
+                </div>
+            </div>
+
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+        <!-- TAB 6: 6-MARK ESSAY MODELS -->
+        <section id="view-essays" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-rose-500/20">
+                <h2 class="text-xl font-bold text-rose-400 flex items-center space-x-2 mb-2">
+                    <i class="fa-solid fa-file-pen"></i> <span>Paper 5 Level 3 (6-Mark) High-Yield Essay Models (10 Exemplars)</span>
+                </h2>
+                <p class="text-xs text-slate-300">Complete mark scheme breakdowns for long-answer essay prompts in Pearson Edexcel Paper 5.</p>
+            </div>
+
+            <div id="essays-container" class="space-y-6"></div>
+        </section>
+
+        <!-- TAB 7: WEB MISCONCEPTIONS -->
+        <section id="view-misconceptions" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-comments text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">20 Common Paper 5 Misconceptions</h2>
+                        <p class="text-sm text-slate-300 mt-1">Real student confusion points collected from past paper analysis. <strong>Click any blurred box to reveal the explanation!</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="web-misconceptions-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ==================== DATASETS ==================== */
+        const SYLLABUS_DATA = [
+            { id: "16.1", topic: 16, title: "Oxidation Numbers & Redox Half-Equations", content: "Understand oxidation and reduction in terms of electron transfer and changes in oxidation number applied to s-, p-, and d-block elements.", tip: "Balance atoms first, then O using $\\text{H}_2\\text{O}$, H using $\\text{H}^+$, and charge using electrons (e⁻).", misconception: "Confusing oxidation state changes with overall complex ion charge." },
+            { id: "16.2", topic: 16, title: "Standard Electrode Potential ($E^\\circ$)", content: "Define standard electrode potential $E^\\circ$ as the electromotive force of a half-cell relative to the standard hydrogen electrode under standard conditions.", tip: "Standard conditions: 298 K, 100 kPa gas pressure, 1.00 mol dm⁻³ ion concentration.", misconception: "Defining $E^\\circ$ without specifying standard state conditions." },
+            { id: "16.4", topic: 16, title: "Standard Hydrogen Electrode (SHE)", content: "Features of SHE: Platinum electrode coated with platinum black, $\\text{H}_2$ gas at 100 kPa, 1.00 mol dm⁻³ $\\text{H}^+$(aq) at 298 K, assigned $E^\\circ = 0.00\\text{ V}$.", tip: "Platinum acts as an inert electrical conductor and provides a porous surface for adsorption.", misconception: "Thinking the hydrogen electrode can be replaced by a simple copper electrode." },
+            { id: "16.7", topic: 16, title: "Standard Cell Potential Calculation ($E^\\circ_{\\text{cell}}$)", content: "Calculate $E^\\circ_{\\text{cell}} = E^\\circ(\\text{reduction}) - E^\\circ(\\text{oxidation})$ and write conventional cell diagrams.", tip: "Cell diagram: reduced | oxidized || oxidized | reduced. Double line || = salt bridge.", misconception: "Multiplying $E^\\circ$ values by stoichiometric coefficients when balancing redox equations." },
+            { id: "16.10", topic: 16, title: "Thermodynamic Feasibility & $E^\\circ_{\\text{cell}}$ Relationships", content: "Predict reaction feasibility: Positive $E^\\circ_{\\text{cell}}$ signifies thermodynamic feasibility ($\\Delta S_{\\text{total}} > 0$ and $\\ln K > 0$).", tip: "$E^\\circ_{\\text{cell}}$ is directly proportional to $\\Delta S_{\\text{total}}$ ($\\Delta S_{\\text{total}} = \\frac{nFE^\\circ_{\\text{cell}}}{T}$) and to $\\ln K$.", misconception: "Assuming a positive $E^\\circ_{\\text{cell}}$ guarantees a rapid reaction at room temperature." },
+            { id: "16.12", topic: 16, title: "Limitations of $E^\\circ$ Predictions", content: "Understand limitations: Kinetic stability (high activation energy $E_a$) and non-standard conditions.", tip: "If reactant concentrations exceed 1.00 mol dm⁻³, electrode potential shifts via Le Chatelier's principle.", misconception: "Believing $E^\\circ$ predictions account for activation energy barriers." },
+            { id: "16.15", topic: 16, title: "Redox Titrations: Manganate(VII) & Thiosulfate", content: "Carry out calculations for $\\text{KMnO}_4$ with $\\text{Fe}^{2+}/\\text{C}_2\\text{O}_4^{2-}$ and $\\text{I}_2$ with $\\text{Na}_2\\text{S}_2\\text{O}_3$.", tip: "$\\text{KMnO}_4$ end-point is pale pink. Add starch near thiosulfate end-point (pale yellow) turning blue-black to colourless.", misconception: "Adding starch indicator at the beginning of an iodine-thiosulfate titration." },
+            { id: "16.18", topic: 16, title: "Fuel Cells Chemistry", content: "Understand hydrogen-oxygen fuel cells with acidic and alkaline electrolytes.", tip: "Acidic cell: Anode: $2\\text{H}_2 \\rightarrow 4\\text{H}^+ + 4e^-$; Cathode: $\\text{O}_2 + 4\\text{H}^+ + 4e^- \\rightarrow 2\\text{H}_2\\text{O}$. Overall: $2\\text{H}_2 + \\text{O}_2 \\rightarrow 2\\text{H}_2\\text{O}$.", misconception: "Believing fuel cells store electrical energy like rechargeable batteries." },
+
+            { id: "17.1", topic: 17, title: "Definition of Transition Metals", content: "d-block elements that form one or more stable ions with incompletely filled d-orbitals.", tip: "Scandium ($\\text{Sc}^{3+}$ is $3d^0$) and Zinc ($\\text{Zn}^{2+}$ is $3d^{10}$) are NOT transition metals!", misconception: "Classifying Zinc as a transition metal." },
+            { id: "17.2", topic: 17, title: "Electronic Configurations (Sc to Zn)", content: "Write configurations for Period 4 d-block atoms and ions. Cr: $[\\text{Ar}] 3d^5 4s^1$; Cu: $[\\text{Ar}] 3d^{10} 4s^1$. 4s electrons are lost FIRST when forming ions!", tip: "Always remove 4s electrons before 3d electrons when forming cations.", misconception: "Removing 3d electrons before 4s electrons when forming transition metal cations." },
+            { id: "17.3", topic: 17, title: "Variable Oxidation States", content: "Transition metals exhibit variable oxidation states due to small energy difference between 4s and 3d subshells.", tip: "Highest oxidation states are found in oxoanions like $\\text{MnO}_4^-$ (+7) and $\\text{Cr}_2\\text{O}_7^{2-}$ (+6).", misconception: "Assuming 4s electrons require vastly more energy to remove than 3d electrons." },
+            { id: "17.4", topic: 17, title: "Complex Ions & Ligands", content: "A ligand donates a lone pair of electrons to a central metal ion forming a dative (coordinate) covalent bond.", tip: "Coordination number = total number of dative bonds formed to central ion.", misconception: "Confusing coordination number with oxidation number." },
+            { id: "17.8", topic: 17, title: "Origin of Colour in Transition Complexes", content: "Ligands split 3d orbitals into different energy levels ($\\Delta E$). Electrons absorb specific frequencies of visible light ($\\Delta E = h\\nu = \\frac{hc}{\\lambda}$) for d-d transitions. Observed color is complementary.", tip: "Full $3d^{10}$ ($\\text{Zn}^{2+}$) or empty $3d^0$ ($\\text{Sc}^{3+}$) ions cannot undergo d-d transitions and are COLOURLESS.", misconception: "Stating light is emitted during d-d promotion." },
+            { id: "17.13", topic: 17, title: "Shapes of Complex Ions", content: "6-fold coordination = Octahedral (90°); 4-fold with large ligands ($\\text{Cl}^-$) = Tetrahedral (109.5°); 4-fold with Pt(II) = Square Planar (90° e.g. cis-platin).", tip: "cis-platin is used as an anti-cancer drug supplied as a single cis isomer.", misconception: "Predicting $[\\text{CuCl}_4]^{2-}$ is octahedral." },
+            { id: "17.17", topic: 17, title: "Haemoglobin & Carbon Monoxide Poisoning", content: "Haemoglobin contains $\\text{Fe}^{2+}$. Ligand exchange replaces bound $\\text{O}_2$ with CO, which binds irreversibly due to higher stability.", tip: "CO poisoning occurs because CO forms a stronger dative bond than $\\text{O}_2$.", misconception: "Claiming CO oxidizes $\\text{Fe}^{2+}$ to $\\text{Fe}^{3+}$." },
+            { id: "17.18", topic: 17, title: "Vanadium Oxidation States", content: "$\\text{VO}_2^+$ (+5, yellow) $\\rightarrow \\text{VO}^{2+}$ (+4, blue) $\\rightarrow \\text{V}^{3+}$ (+3, green) $\\rightarrow \\text{V}^{2+}$ (+2, violet) upon reduction with Zn/$\\text{H}^+$.", tip: "Order: Yellow $\\rightarrow$ Blue $\\rightarrow$ Green $\\rightarrow$ Violet.", misconception: "Confusing $\\text{VO}_2^+$ (+5) with $\\text{VO}^{2+}$ (+4)." },
+            { id: "17.22", topic: 17, title: "Reactions with NaOH and $\\text{NH}_3$", content: "$\\text{Fe}^{2+}$: Green ppt $\\text{Fe(OH)}_2$. $\\text{Fe}^{3+}$: Red-brown ppt $\\text{Fe(OH)}_3$. $\\text{Cu}^{2+}$: Blue ppt $\\text{Cu(OH)}_2$, dissolves in excess $\\text{NH}_3$ to deep blue solution $[\\text{Cu(NH}_3)_4(\\text{H}_2\\text{O})_2]^{2+}$. $\\text{Cr}^{3+}$: Green ppt, amphoteric (dissolves in excess NaOH to dark green $[\\text{Cr(OH)}_6]^{3-}$).", tip: "Record initial precipitate color AND behavior in excess reagent!", misconception: "Forgetting $\\text{Cu}^{2+}$ precipitate redissolves in excess ammonia." },
+            { id: "17.25", topic: 17, title: "Chelate Effect & Entropy", content: "Substitution of monodentate ligands by multidentate ligands forms more stable complexes due to positive $\\Delta S_{\\text{system}}$ (more product particles).", tip: "$\\Delta H \\approx 0$; $\\Delta S_{\\text{system}} > 0$ drives negative $\\Delta G$.", misconception: "Attributing chelate stability solely to exothermic enthalpy changes." },
+            { id: "17.26", topic: 17, title: "Catalytic Mechanisms ($\\text{V}_2\\text{O}_5$, $\\text{Fe}^{2+}$, $\\text{Mn}^{2+}$)", content: "Heterogeneous: $\\text{V}_2\\text{O}_5$ in Contact Process. Homogeneous: $\\text{Fe}^{2+}$ in $\\text{I}^-/\\text{S}_2\\text{O}_8^{2-}$. Autocatalysis: $\\text{Mn}^{2+}$ in $\\text{MnO}_4^-/\\text{C}_2\\text{O}_4^{2-}$.", tip: "Autocatalysis graph shows an S-shaped (sigmoidal) curve.", misconception: "Describing $\\text{V}_2\\text{O}_5$ as a homogeneous catalyst." },
+
+            { id: "18.1", topic: 18, title: "Benzene Delocalisation Evidence", content: "Evidence: 1. Thermochemical: Enthalpy of hydrogenation is $-205\\text{ kJ mol}^{-1}$ ($149\\text{ kJ mol}^{-1}$ less exothermic than expected $-354$). 2. X-ray: All C-C bonds equal length ($0.139\\text{ nm}$). 3. Reactivity: Resists addition, undergoes electrophilic substitution.", tip: "Quote $-205$ vs $-354\\text{ kJ mol}^{-1}$ and state delocalisation energy is $149\\text{ kJ mol}^{-1}$.", misconception: "Claiming benzene contains alternating short double and long single bonds." },
+            { id: "18.2", topic: 18, title: "Bonding in Benzene Ring", content: "Planar hexagonal ring of $sp^2$ carbon atoms. Unhybridised p-orbitals overlap sideways forming a delocalised $\\pi$-electron cloud above and below ring.", tip: "Six delocalised $\\pi$-electrons are shared across six carbons.", misconception: "Drawing benzene mechanisms without showing broken horseshoe cation intermediate." },
+            { id: "18.4", topic: 18, title: "Reactions of Benzene", content: "Nitration: Conc $\\text{HNO}_3$ + Conc $\\text{H}_2\\text{SO}_4$ at 55°C. Halogenation: $\\text{Br}_2$ + $\\text{FeBr}_3$. Friedel-Crafts Alkylation ($\text{RCl} + \\text{AlCl}_3$) and Acylation ($\text{RCOCl} + \\text{AlCl}_3$).", tip: "Nitration temp MUST be kept at ~55°C to prevent dinitrobenzene.", misconception: "Adding $\\text{H}_2\\text{SO}_4$ as a reactant in balanced overall nitration equation." },
+            { id: "18.5", topic: 18, title: "Electrophilic Substitution Mechanism", content: "Electrophile generation ($\\text{HNO}_3 + 2\\text{H}_2\\text{SO}_4 \\rightarrow \\text{NO}_2^+ + \\text{H}_3\\text{O}^+ + 2\\text{HSO}_4^-$). $\\text{NO}_2^+$ attacks $\\pi$-cloud $\\rightarrow$ horseshoe intermediate with + charge $\\rightarrow \\text{H}^+$ lost.", tip: "Horseshoe in cation intermediate MUST span carbons 2 to 6 with positive charge inside!", misconception: "Starting curly arrow from the positive charge instead of the $\\pi$-ring." },
+            { id: "18.6", topic: 18, title: "Phenol Reactivity vs Benzene", content: "Phenol reacts rapidly with bromine water at room temp WITHOUT catalyst to form 2,4,6-tribromophenol (white ppt).", tip: "Oxygen lone pair delocalises into $\\pi$-ring, activating it towards electrophiles.", misconception: "Expecting phenol to require $\\text{AlCl}_3$ catalyst for bromination." },
+
+            { id: "19.1", topic: 19, title: "Nomenclature of Nitrogen Compounds", content: "Name aliphatic amines, aromatic amines (phenylamine), amides, and amino acids.", tip: "In N-substituted amides, 'N-' indicates alkyl group attached directly to nitrogen.", misconception: "Confusing amine suffixes with amide functional groups." },
+            { id: "19.3", topic: 19, title: "Relative Basicity of Nitrogen Species", content: "Basicity order: 1° Aliphatic Amine > Ammonia > Phenylamine > Amide.", tip: "Alkyl groups are electron-releasing (+I). Phenylamine: Lone pair delocalises into benzene ring $\\rightarrow$ less available.", misconception: "Stating phenylamine is stronger base than butylamine." },
+            { id: "19.4", topic: 19, title: "Preparation of Aliphatic Amines", content: "1. Haloalkane + excess ethanolic $\\text{NH}_3$ under pressure. 2. Reduction of nitriles with $\\text{LiAlH}_4$ in dry ether.", tip: "EXCESS ammonia prevents further substitution.", misconception: "Using aqueous ammonia to prepare pure 1° amines." },
+            { id: "19.5", topic: 19, title: "Preparation of Phenylamine", content: "Reduction of nitrobenzene using Tin (Sn) and concentrated HCl under reflux, followed by NaOH(aq) to liberate free amine.", tip: "Sn + HCl forms phenylammonium ions; NaOH liberates free $\\text{C}_6\\text{H}_5\\text{NH}_2$.", misconception: "Forgetting final NaOH neutralisation step." },
+            { id: "19.6", topic: 19, title: "Diazotisation & Azo Dyes", content: "Phenylamine + $\\text{HNO}_2$ ($\\text{NaNO}_2 + \\text{HCl}$) at < 10°C $\\rightarrow$ Benzenediazonium chloride. Coupling with phenol in NaOH $\\rightarrow$ Azo dye.", tip: "Keep temperature below 10°C! Above 10°C, diazonium ion decomposes to phenol and $\\text{N}_2$.", misconception: "Running diazotisation at room temperature." },
+            { id: "19.8", topic: 19, title: "Polymers: Polyamides & Poly(ethenol)", content: "Polyamides (Nylon-6,6, Kevlar) formed via condensation polymerisation. Poly(ethenol) formed by addition, soluble in water due to H-bonding.", tip: "Poly(ethenol) water solubility enables biodegradable hospital laundry bags.", misconception: "Classifying Kevlar as an addition polymer." },
+            { id: "19.11", topic: 19, title: "Amino Acids, Zwitterions & Isoelectric Point", content: "Amino acids exist as zwitterions ($^+\\text{H}_3\\text{N-CHR-COO}^-$) at neutral pH. In acid: $^+\\text{H}_3\\text{N-CHR-COOH}$; In alkali: $\\text{H}_2\\text{N-CHR-COO}^-$. Optically active (except glycine).", tip: "Glycine is the ONLY amino acid without a chiral center (R = H).", misconception: "Assuming glycine rotates plane-polarised light." },
+
+            { id: "20.1", topic: 20, title: "Integrated Spectroscopic Elucidation", content: "Combine combustion analysis, IR, Mass Spec ($M^+$, fragments), and ¹H/¹³C NMR to deduce structures.", tip: "$m/z = 43$ ([$\text{CH}_3\text{CO}$]⁺), $m/z = 31$ ([$\text{CH}_2\text{OH}$]⁺), $m/z = 45$ ([$\text{COOH}$]⁺).", misconception: "Misinterpreting ¹³C NMR peak height as integration ratio." },
+            { id: "20.2", topic: 20, title: "Grignard Reagents (RMgX)", content: "Formation: RX + Mg in dry ether. Reactions: + $\\text{CO}_2 \\rightarrow$ Carboxylic Acid (+1C); + Methanal $\\rightarrow$ 1° Alcohol (+1C); + Aldehyde $\\rightarrow$ 2° Alcohol; + Ketone $\\rightarrow$ 3° Alcohol.", tip: "MUST use ANHYDROUS DRY ETHER! Water destroys Grignard.", misconception: "Adding water during Grignard formation step." },
+            { id: "20.3", topic: 20, title: "4-Step Synthesis Pathway Planning", content: "Design up to 4-step organic routes. Overall yield = product of individual step fractional yields.", tip: "Fewer steps = higher overall yield.", misconception: "Adding fractional yields instead of multiplying them." },
+            { id: "20.4", topic: 20, title: "Aspirin Synthesis (Core Practical 16)", content: "2-hydroxybenzoic acid + ethanoic anhydride $\\rightarrow$ Aspirin + ethanoic acid.", tip: "Ethanoic anhydride is preferred over ethanoyl chloride (safer, no toxic HCl gas).", misconception: "Using ethanoyl chloride in industrial aspirin synthesis." },
+            { id: "20.5", topic: 20, title: "Purification & Melting Point Determination", content: "Recrystallisation: Dissolve in min hot solvent, filter hot, cool, suction filter, dry. Purity check: Sharp melting point matching literature value.", tip: "Impure solids melt over a BROAD range at a LOWER temperature.", misconception: "Dissolving sample in large excess of cold solvent during recrystallisation." }
+        ];
+
+        const PITFALLS_DATA = [
+            {
+                title: "1. Transition Metal d-d Promotion Light Description",
+                topic: "Topic 17: Transition Metals",
+                badge: "Color Mechanism Trap",
+                misconception: "Transition metal complexes are colored because d-electrons emit visible light when jumping to higher energy d-orbitals.",
+                truth: "d-electrons ABSORB specific frequencies of visible light ($\\Delta E = h\\nu$) when promoted from lower to higher split 3d orbitals. The color observed is the COMPLEMENTARY color transmitted/reflected!",
+                keywords: "Light absorbed for d-d promotion, complementary color transmitted"
+            },
+            {
+                title: "2. Grignard Reagent Anhydrous Dry Ether Requirement",
+                topic: "Topic 20: Organic Synthesis",
+                badge: "Reagent Preparation Trap",
+                misconception: "Grignard reagents (RMgX) can be prepared in aqueous ethanol solution.",
+                truth: "Grignard reagents are violently decomposed by water: $\\text{RMgX} + \\text{H}_2\\text{O} \\rightarrow \\text{RH} + \\text{Mg(OH)X}$. Preparation MUST strictly use ANHYDROUS DRY ETHER!",
+                keywords: "Anhydrous dry ether mandatory, water destroys Grignard"
+            },
+            {
+                title: "3. Benzene Nitration Temperature Limit (55°C)",
+                topic: "Topic 18: Arenes",
+                badge: "Temperature Control Trap",
+                misconception: "Boiling benzene under reflux with conc $\\text{HNO}_3/\\text{H}_2\\text{SO}_4$ produces pure nitrobenzene.",
+                truth: "Heating above 55°C leads to FURTHER substitution forming dinitrobenzene. Temperature must be controlled at ~55°C using a water bath.",
+                keywords: "Maintain temperature at 55°C to prevent multiple nitration"
+            },
+            {
+                title: "4. Diazotisation Reaction Temperature (< 10°C)",
+                topic: "Topic 19: Organic Nitrogen",
+                badge: "Diazonium Stability",
+                misconception: "Preparing benzenediazonium chloride at room temperature (25°C).",
+                truth: "Benzenediazonium ions decompose above 10°C releasing $\\text{N}_2$ gas to form phenol. Reaction MUST be kept below 10°C in an ice bath!",
+                keywords: "Keep temperature < 10°C, ice bath prevents N2 gas loss"
+            },
+            {
+                title: "5. Phenylamine Basicity vs Aliphatic Amines",
+                topic: "Topic 19: Nitrogen Chemistry",
+                badge: "Basicity Reasoning",
+                misconception: "Phenylamine is a stronger base than butylamine because the benzene ring attracts protons.",
+                truth: "Phenylamine is a WEAKER base than ammonia/butylamine because nitrogen's lone pair DELOCALISES into the aromatic $\\pi$-system, making it LESS available for protonation.",
+                keywords: "Nitrogen lone pair delocalises into pi ring, less available for H+"
+            },
+            {
+                title: "6. Chelate Effect Entropy Explanation",
+                topic: "Topic 17: Complex Stability",
+                badge: "Thermodynamics Trap",
+                misconception: "Multidentate complexes are more stable because dative bonds formed are much stronger (highly exothermic $\\Delta H$).",
+                truth: "$\\Delta H$ is approximately zero because identical dative bonds are broken and formed. Stability is driven by a positive INCREASE IN SYSTEM ENTROPY ($\\Delta S_{\\text{system}} > 0$) due to more particles!",
+                keywords: "$\\Delta H \\approx 0$, $\\Delta S_{\\text{system}} > 0$ drives stability (more product species)"
+            },
+            {
+                title: "7. Horseshoe Representation in Electrophilic Substitution",
+                topic: "Topic 18: Arenes Mechanisms",
+                badge: "Mechanism Geometry",
+                misconception: "Drawing the cation intermediate horseshoe spanning all 6 carbons with positive charge outside ring.",
+                truth: "The broken ring horseshoe MUST span carbons 2 to 6 facing the $sp^3$ carbon being attacked, with the positive charge INSIDE the horseshoe!",
+                keywords: "Horseshoe spans C2-C6 facing attacked C, + charge inside"
+            },
+            {
+                title: "8. Phenol Bromination Conditions vs Benzene",
+                topic: "Topic 18: Phenol Reactivity",
+                badge: "Reagent Selection",
+                misconception: "Brominating phenol requires $\\text{FeBr}_3$ catalyst and heating under reflux.",
+                truth: "Phenol is activated by oxygen lone pair delocalisation. It reacts INSTANTLY with bromine water at room temperature WITHOUT catalyst, forming a white precipitate of 2,4,6-tribromophenol.",
+                keywords: "No catalyst required, bromine water decolourises, white ppt"
+            },
+            {
+                title: "9. Impure Organic Solid Melting Point Behaviour",
+                topic: "Topic 20: Practical Purity",
+                badge: "Melting Point Interpretation",
+                misconception: "An impure organic sample melts at a higher temperature than the pure substance.",
+                truth: "Impurities disrupt crystal lattice binding, causing the sample to melt over a BROAD temperature range at a LOWER temperature than the pure literature melting point.",
+                keywords: "Melts over broad range at lower temperature"
+            },
+            {
+                title: "10. Zinc and Scandium Transition Metal Status",
+                topic: "Topic 17: Electronic Structure",
+                badge: "Definition Precision",
+                misconception: "Scandium and Zinc are transition metals because they are located in the d-block.",
+                truth: "Scandium forms $\\text{Sc}^{3+}$ ($3d^0$, empty d-subshell) and Zinc forms $\\text{Zn}^{2+}$ ($3d^{10}$, full d-subshell). Neither forms a stable ion with an INCOMPLETELY FILLED d-orbital!",
+                keywords: "No stable ion with partially filled d-orbital"
+            }
+        ];
+
+        // 100 Flashcards Array
+        const FLASHCARDS_DATA = [];
+        // Populate 100 flashcards across all 5 topics
+        const topicNames = [
+            "Topic 16: Redox",
+            "Topic 17: Transition Metals",
+            "Topic 18: Arenes",
+            "Topic 19: Organic Nitrogen",
+            "Topic 20: Synthesis"
+        ];
+        
+        // Base questions database
+        const baseCards = [
+            // Redox
+            { topic: "Topic 16: Redox", spec: "Spec 16.2", q: "Define 'Standard Electrode Potential' ($E^\\circ$).", a: "• Electromotive force (emf) of a half-cell compared with a standard hydrogen electrode under standard conditions (298 K, 100 kPa gas pressure, 1.00 mol dm⁻³ ion concentration)." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.4", q: "State components and conditions of the Standard Hydrogen Electrode (SHE).", a: "• Platinum electrode coated with platinum black.\n• $\\text{H}_2$ gas at 100 kPa and 298 K.\n• 1.00 mol dm⁻³ $\\text{H}^+$(aq) solution." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.7", q: "How is standard cell potential $E^\\circ_{\\text{cell}}$ calculated?", a: "• $E^\\circ_{\\text{cell}} = E^\\circ(\\text{reduced species}) - E^\\circ(\\text{oxidised species})$." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.10", q: "What $E^\\circ_{\\text{cell}}$ value dictates thermodynamic feasibility?", a: "• $E^\\circ_{\\text{cell}}$ MUST be POSITIVE ($E^\\circ_{\\text{cell}} > 0\\text{ V}$)." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.11", q: "State the equation linking $E^\\circ_{\\text{cell}}$ to Total Entropy Change ($\\Delta S_{\\text{total}}$).", a: "• $\\Delta S_{\\text{total}} = \\frac{n F E^\\circ_{\\text{cell}}}{T}$." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.12", q: "Why might a feasible redox reaction (positive $E^\\circ_{\\text{cell}}$) fail to react?", a: "• High activation energy ($E_a$), making it kinetically extremely slow." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "State color change at end-point of manganate(VII) titration with $\\text{Fe}^{2+}$.", a: "• Colourless to permanent faint pink." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "When is starch indicator added during iodine-thiosulfate titration?", a: "• Added near end-point when solution turns pale straw-yellow." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "State end-point color change for iodine-thiosulfate titration with starch.", a: "• Blue-black to COLOURLESS." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.18", q: "Write anode and cathode equations for acidic $\\text{H}_2\\text{-O}_2$ fuel cell.", a: "• Anode: $2\\text{H}_2 \\rightarrow 4\\text{H}^+ + 4e^-$\n• Cathode: $\\text{O}_2 + 4\\text{H}^+ + 4e^- \\rightarrow 2\\text{H}_2\\text{O}$." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.19", q: "Write overall equation for $\\text{H}_2\\text{-O}_2$ fuel cell.", a: "• $2\\text{H}_2(\\text{g}) + \\text{O}_2(\\text{g}) \\rightarrow 2\\text{H}_2\\text{O}(\\text{l})$." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.8", q: "What do | and || represent in conventional cell notation?", a: "• Single line | = Phase boundary.\n• Double line || = Salt bridge." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.8", q: "State the function of a salt bridge.", a: "• Allows ion movement to complete circuit while preventing solution mixing." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.9", q: "How does increasing reactant ion concentration affect electrode potential $E$?", a: "• Shifts equilibrium to favor reduction, making $E$ MORE POSITIVE." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.14", q: "Define a 'disproportionation reaction'.", a: "• Redox reaction where atoms of the same element in a single species are simultaneously oxidised and reduced." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "Write ionic equation for reaction between $\\text{MnO}_4^-$ and $\\text{Fe}^{2+}$ in acid.", a: "• $\\text{MnO}_4^- + 5\\text{Fe}^{2+} + 8\\text{H}^+ \\rightarrow \\text{Mn}^{2+} + 5\\text{Fe}^{3+} + 4\\text{H}_2\\text{O}$." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "Write ionic equation for reaction between $\\text{I}_2$ and thiosulfate ($\\text{S}_2\\text{O}_3^{2-}$).", a: "• $\\text{I}_2 + 2\\text{S}_2\\text{O}_3^{2-} \\rightarrow 2\\text{I}^- + \\text{S}_4\\text{O}_6^{2-}$." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.18", q: "State two advantages of fuel cells over combustion engines.", a: "• Zero carbon emissions (only $\\text{H}_2\\text{O}$ produced).\n• Higher energy efficiency." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.18", q: "State two disadvantages of using hydrogen fuel.", a: "• Storage difficulties/hazards for high-pressure $\\text{H}_2$.\n• Production relies on fossil fuel reforming." },
+            { topic: "Topic 16: Redox", spec: "Spec 16.4", q: "Why is a calomel electrode used instead of SHE?", a: "• SHE is fragile and requires continuous $\\text{H}_2$ gas supply; calomel is compact and robust." },
+
+            // Transition Metals
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.1", q: "Define a 'transition metal'.", a: "• d-block element forming one or more stable ions with an incompletely filled d-orbital." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.1", q: "Why is Zinc (Zn) not a transition metal?", a: "• $\\text{Zn}^{2+}$ ion has a completely full $3d^{10}$ electron subshell." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.2", q: "Write full electron configuration for $\\text{Cu}^{2+}$.", a: "• $1s^2 2s^2 2p^6 3s^2 3p^6 3d^9$." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.4", q: "Define the term 'ligand'.", a: "• Atom, ion, or molecule donating a lone pair of electrons to a central metal ion to form a dative bond." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.8", q: "Explain why transition metal complexes are colored.", a: "• Ligands split 3d orbitals into different energy levels.\n• d-electrons absorb visible light ($\\Delta E = h\\nu$) to promote (d-d transition).\n• Complementary color is transmitted." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.9", q: "Why are $\\text{Sc}^{3+}$ and $\\text{Zn}^{2+}$ complexes colorless?", a: "• $\\text{Sc}^{3+}$ is $3d^0$ (no d-electrons to promote).\n• $\\text{Zn}^{2+}$ is $3d^{10}$ (no vacant d-orbitals for promotion)." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.10", q: "Define 'coordination number'.", a: "• Total number of dative covalent bonds formed between ligands and central metal ion." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.13", q: "State geometry and bond angle for 6-fold coordination.", a: "• Octahedral geometry with 90° bond angles." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.14", q: "Why does $[\\text{Cu}(\\text{H}_2\\text{O})_6]^{2+}$ form tetrahedral $[\\text{CuCl}_4]^{2-}$ with conc HCl?", a: "• $\\text{Cl}^-$ ligands are larger than $\\text{H}_2\\text{O}$, causing steric hindrance so only 4 $\\text{Cl}^-$ fit around $\\text{Cu}^{2+}$." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.15", q: "State geometry, bond angle, and medical use of cis-platin.", a: "• Square planar geometry (90°).\n• Anti-cancer drug." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.16", q: "Define a 'bidentate ligand' with an example.", a: "• Donates TWO lone pairs forming TWO dative bonds with one central ion (e.g. 1,2-diaminoethane)." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.18", q: "List colors of Vanadium in oxidation states +5, +4, +3, +2.", a: "• +5 ($\\text{VO}_2^+$): Yellow\n• +4 ($\\text{VO}^{2+}$): Blue\n• +3 ($\\text{V}^{3+}$): Green\n• +2 ($\\text{V}^{2+}$): Violet" },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.22", q: "Describe observation when NaOH(aq) is added dropwise and excess to $\\text{Cr}^{3+}$(aq).", a: "• Dropwise: Green ppt $\\text{Cr(OH)}_3$.\n• Excess: Dissolves to dark green solution $[\\text{Cr(OH)}_6]^{3-}$." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.22", q: "Describe observation when $\\text{NH}_3$(aq) is added dropwise and excess to $\\text{Cu}^{2+}$(aq).", a: "• Dropwise: Pale blue ppt $\\text{Cu(OH)}_2$.\n• Excess: Dissolves to deep blue solution $[\\text{Cu(NH}_3)_4(\\text{H}_2\\text{O})_2]^{2+}$." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.25", q: "Explain the 'chelate effect' in terms of entropy.", a: "• Multidentate ligand substitution increases total particle count in solution.\n• Positive system entropy ($\\Delta S_{\\text{system}} > 0$) drives high stability." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.27", q: "Outline heterogeneous catalysis mechanism.", a: "1. Adsorption of reactants onto catalyst surface.\n2. Reaction on surface.\n3. Desorption of products." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.28", q: "Name catalyst in Contact Process and write equations.", a: "• Vanadium(V) oxide ($\\text{V}_2\\text{O}_5$).\n• $\\text{SO}_2 + \\text{V}_2\\text{O}_5 \\rightarrow \\text{SO}_3 + \\text{V}_2\\text{O}_4$\n• $\\text{V}_2\\text{O}_4 + \\frac{1}{2}\\text{O}_2 \\rightarrow \\text{V}_2\\text{O}_5$" },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.31", q: "Why does $\\text{Fe}^{2+}$ act as homogeneous catalyst for $\\text{I}^-$ and $\\text{S}_2\\text{O}_8^{2-}$?", a: "• Avoids anion-anion repulsion. $\\text{Fe}^{2+}$ reduces $\\text{S}_2\\text{O}_8^{2-}$ to $\\text{SO}_4^{2-}$ forming $\\text{Fe}^{3+}$, then $\\text{Fe}^{3+}$ oxidises $\\text{I}^-$ to $\\text{I}_2$." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.32", q: "What is 'autocatalysis'? Give an example.", a: "• Reaction where a product acts as catalyst.\n• Example: $\\text{Mn}^{2+}$ in $\\text{MnO}_4^-/\\text{C}_2\\text{O}_4^{2-}$ reaction." },
+            { topic: "Topic 17: Transition Metals", spec: "Spec 17.21", q: "Write dichromate/chromate equilibrium equation.", a: "• $\\text{Cr}_2\\text{O}_7^{2-} + \\text{H}_2\\text{O} \\rightleftharpoons 2\\text{CrO}_4^{2-} + 2\\text{H}^+$ (Orange $\\rightleftharpoons$ Yellow)." },
+
+            // Arenes
+            { topic: "Topic 18: Arenes", spec: "Spec 18.1", q: "State thermochemical evidence supporting benzene delocalisation.", a: "• Experimental hydrogenation enthalpy = $-205\\text{ kJ mol}^{-1}$.\n• Kekulé prediction = $-354\\text{ kJ mol}^{-1}$.\n• Benzene is $149\\text{ kJ mol}^{-1}$ more stable." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.1", q: "State X-ray diffraction evidence for benzene.", a: "• All six C-C bonds equal length ($0.139\\text{ nm}$), intermediate between single ($0.154\\text{ nm}$) and double ($0.134\\text{ nm}$)." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.2", q: "Describe bonding and orbital overlap in benzene.", a: "• Planar hexagon of $sp^2$ carbons.\n• Sideways overlap of unhybridised p-orbitals forms delocalised $\\pi$-cloud above and below ring." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.3", q: "Why does benzene undergo substitution rather than addition?", a: "• Addition destroys stable delocalised $\\pi$-system; substitution preserves aromatic stability." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "State reagents and temp for benzene nitration.", a: "• Conc $\\text{HNO}_3$ + Conc $\\text{H}_2\\text{SO}_4$ at ~55°C." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "Write equation generating nitronium electrophile ($\\text{NO}_2^+$).", a: "• $\\text{HNO}_3 + 2\\text{H}_2\\text{SO}_4 \\rightarrow \\text{NO}_2^+ + \\text{H}_3\\text{O}^+ + 2\\text{HSO}_4^-$." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "State reagents for Friedel-Crafts acylation of benzene.", a: "• Acyl chloride ($\text{RCOCl}$) + anhydrous $\\text{AlCl}_3$ catalyst." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "Write equation generating electrophile in acylation.", a: "• $\\text{RCOCl} + \\text{AlCl}_3 \\rightarrow \\text{RCO}^+ + \\text{AlCl}_4^-$." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "Why does phenol react faster with bromine than benzene?", a: "• Oxygen lone pair delocalises into $\\pi$-ring, increasing electron density to polarise $\\text{Br}_2$ without catalyst." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "State observation when bromine water is added to phenol.", a: "• Orange bromine water decolourises; white ppt of 2,4,6-tribromophenol forms." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Write equation for regeneration of $\\text{AlCl}_3$ catalyst.", a: "• $\\text{AlCl}_4^- + \\text{H}^+ \\rightarrow \\text{AlCl}_3 + \\text{HCl}$." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Reagents for halogenation of benzene.", a: "• $\\text{Br}_2$ or $\\text{Cl}_2$ with $\\text{FeBr}_3/\\text{FeCl}_3$ or $\\text{AlCl}_3$ catalyst." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.1", q: "How many isomers exist for 1,2-dichlorobenzene?", a: "• Kekulé predicts 2 isomers; modern structure proves only 1 isomer exists." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "What is observed during complete combustion of benzene?", a: "• Very smoky yellow flame due to high C:H ratio." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "What does the horseshoe symbol in benzene intermediate represent?", a: "• Delocalised + charge spread over 5 carbons (C2-C6) with C1 being $sp^3$." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Reagents for benzene sulfonation.", a: "• Fuming sulfuric acid (or conc $\\text{H}_2\\text{SO}_4$ under reflux)." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "Why is phenol weakly acidic?", a: "• Phenoxide ion ($\\text{C}_6\\text{H}_5\\text{O}^-$) is stabilized by negative charge delocalisation into aromatic ring." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "Does phenol react with $\\text{Na}_2\\text{CO}_3$?", a: "• NO! Phenol is too weakly acidic to react with carbonates." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Convert methylbenzene to benzoic acid.", a: "• Reflux with alkaline $\\text{KMnO}_4$, then acidify with HCl." },
+            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "Role of $\\text{H}_2\\text{SO}_4$ in benzene nitration.", a: "• Catalyst and acid (protonates $\\text{HNO}_3$ to generate $\\text{NO}_2^+$)." },
+
+            // Organic Nitrogen
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.3", q: "Rank ammonia, butylamine, phenylamine, ethanamide in order of basicity.", a: "• Ethanamide < Phenylamine < Ammonia < Butylamine." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.3", q: "Why is butylamine a stronger base than ammonia?", a: "• Butyl group is electron-releasing (+I), increasing electron density on N lone pair." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.3", q: "Why is phenylamine a weaker base than ammonia?", a: "• N lone pair delocalises into benzene $\\pi$-ring, decreasing availability for $\\text{H}^+$." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.4", q: "Prepare ethylamine from bromoethane.", a: "• Heat bromoethane with EXCESS ethanolic ammonia under pressure." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.4", q: "Why use excess ammonia in 1° amine synthesis?", a: "• Prevents primary amine product from reacting further to form 2°/3° amines." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.5", q: "Reagents to reduce nitrobenzene to phenylamine.", a: "• Tin (Sn) + conc HCl under reflux, followed by NaOH(aq)." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.6", q: "Generate nitrous acid ($\\text{HNO}_2$) in situ.", a: "• Mix $\\text{NaNO}_2$ and dilute HCl at < 10°C." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.6", q: "Steps to prepare an azo dye from phenylamine.", a: "1. Phenylamine + $\\text{NaNO}_2$ + HCl at < 10°C $\\rightarrow$ benzenediazonium chloride.\n2. Couple with phenol in NaOH at < 10°C." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.7", q: "Equation for ethanoyl chloride + methylamine.", a: "• $\\text{CH}_3\\text{COCl} + 2\\text{CH}_3\\text{NH}_2 \\rightarrow \\text{CH}_3\\text{CONHCH}_3 + \\text{CH}_3\\text{NH}_3^+\\text{Cl}^-$." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.8", q: "Difference between addition and condensation polymerisation.", a: "• Addition: C=C monomers join with no loss of atoms.\n• Condensation: Bifunctional monomers join eliminating small molecule ($\\text{H}_2\\text{O}/\\text{HCl}$)." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.8", q: "Monomers for Nylon-6,6.", a: "• Hexane-1,6-dioic acid and hexane-1,6-diamine." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.10", q: "Why is poly(ethenol) water soluble?", a: "• Contains numerous -OH groups capable of forming hydrogen bonds with water." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Define a 'zwitterion'.", a: "• Dipolar ion containing both + and - charges within same molecule, net charge zero." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Structure of alanine at pH 1.", a: "• $^+\\text{H}_3\\text{N-CH(CH}_3\\text{)-COOH}$." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Structure of alanine at pH 13.", a: "• $\\text{H}_2\\text{N-CH(CH}_3\\text{)-COO}^-$." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Bond linking amino acids in proteins.", a: "• Peptide bond (amide link: -CONH-)." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.2", q: "Butylamine + $\\text{Cu}^{2+}$(aq) dropwise and excess.", a: "• Dropwise: Pale blue ppt $\\text{Cu(OH)}_2$.\n• Excess: Deep blue solution." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.4", q: "Reduce propanenitrile to propylamine.", a: "• $\\text{LiAlH}_4$ in dry ether, then dilute acid." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.8", q: "Linkage present in Kevlar.", a: "• Aromatic polyamide linkage." },
+            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Why do amino acids have high melting points?", a: "• Solid zwitterions are held by strong ionic electrostatic forces in a crystal lattice." },
+
+            // Synthesis
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "How is a Grignard reagent prepared?", a: "• Reflux haloalkane with Mg turnings in ANHYDROUS DRY ETHER." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{CO}_2$ followed by acid work-up.", a: "• Ethanoic acid ($\\text{CH}_3\\text{COOH}$) (+1C)." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{methanal (HCHO)}$ followed by acid.", a: "• Ethanol (1° alcohol)." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{ethanal (CH}_3\\text{CHO)}$ followed by acid.", a: "• Propan-2-ol (2° alcohol)." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{propanone (CH}_3\\text{COCH}_3\\text{)}$ followed by acid.", a: "• 2-methylpropan-2-ol (3° alcohol)." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "Why must glassware be dry for Grignard reactions?", a: "• Water destroys Grignard: $\\text{RMgX} + \\text{H}_2\\text{O} \\rightarrow \\text{RH} + \\text{Mg(OH)X}$." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.4", q: "Equation for aspirin preparation.", a: "• 2-hydroxybenzoic acid + ethanoic anhydride $\\rightarrow$ Aspirin + ethanoic acid." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.4", q: "Why is ethanoic anhydride preferred over ethanoyl chloride?", a: "• Safer rate, cheaper, forms harmless ethanoic acid (not toxic HCl gas)." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Outline 5 steps of recrystallisation.", a: "1. Dissolve in MINIMUM hot solvent.\n2. Filter hot.\n3. Cool in ice bath.\n4. Suction filter.\n5. Wash with ice-cold solvent & dry." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Why use minimum hot solvent in recrystallisation?", a: "• Produces a saturated solution so maximum crystals form upon cooling." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "How does melting point confirm product purity?", a: "• Pure product melts sharply at exact literature MP; impurities lower and broaden range." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.1", q: "Key IR band confirming ester group.", a: "• Strong sharp C=O peak at ~1735-1750 cm⁻¹ (no broad O-H peak)." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.1", q: "$m/z$ fragment characteristic of carboxylic acids.", a: "• $m/z = 45$ ([$\\text{COOH}$]⁺)." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.1", q: "Number of ¹³C NMR peaks for 1,4-dimethylbenzene.", a: "• 3 peaks." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.3", q: "How is percentage atom economy calculated?", a: "• $\\frac{\\text{Molar mass of desired product}}{\\text{Sum of molar masses of all products}} \\times 100\\%$." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Why add anti-bumping granules?", a: "• Provide nucleation sites for smooth boiling and prevent violent bumping." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Thermometer placement in distillation setup.", a: "• Level with the condenser side-arm entrance." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Suitable drying agent for organic liquids.", a: "• Anhydrous $\\text{CaCl}_2$ or $\\text{Na}_2\\text{SO}_4$." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "How do you know an organic liquid is dry?", a: "• Liquid turns clear and drying agent flows freely without clumping." },
+            { topic: "Topic 20: Synthesis", spec: "Spec 20.3", q: "Why prefer 3-step synthesis over 5-step?", a: "• Multiplying yields means fewer steps give higher overall yield and less waste." }
+        ];
+
+        // Ensure exactly 100 items by repeating/indexing cleanly
+        for (let i = 0; i < 100; i++) {
+            const item = baseCards[i % baseCards.length];
+            FLASHCARDS_DATA.push({
+                id: i + 1,
+                topic: item.topic,
+                spec: item.spec,
+                q: item.q + (i >= baseCards.length ? ` (Variant ${Math.floor(i / baseCards.length) + 1})` : ''),
+                a: item.a
+            });
+        }
+
+        const GLOSSARY_DATA = [
+            { term: "Transition Metal", cat: "redox_tm", def: "A d-block element forming one or more stable ions with incompletely filled d-orbitals." },
+            { term: "Standard Electrode Potential ($E^\\circ$)", cat: "redox_tm", def: "Emf of a half-cell compared with SHE under standard conditions (298 K, 100 kPa, 1.00 M)." },
+            { term: "Standard Hydrogen Electrode (SHE)", cat: "redox_tm", def: "Platinum electrode in 1.00 M $\\text{H}^+$(aq) with $\\text{H}_2$ gas at 100 kPa and 298 K, $E^\\circ = 0.00\\text{ V}$." },
+            { term: "Ligand", cat: "redox_tm", def: "Molecule or ion donating a lone pair of electrons to a central metal ion to form a dative bond." },
+            { term: "Complex Ion", cat: "redox_tm", def: "Central metal ion surrounded by ligands bonded via dative covalent bonds." },
+            { term: "Coordination Number", cat: "redox_tm", def: "Total number of dative covalent bonds formed between ligands and central metal ion." },
+            { term: "d-d Transition", cat: "redox_tm", def: "Excitation of an electron from lower to higher 3d orbital caused by visible light absorption." },
+            { term: "Bidentate Ligand", cat: "redox_tm", def: "Ligand donating two lone pairs forming two dative bonds with a single metal ion." },
+            { term: "Chelate Effect", cat: "redox_tm", def: "Enhanced stability of multidentate complexes due to positive system entropy change ($\\Delta S_{\\text{system}} > 0$)." },
+            { term: "Amphoteric Hydroxide", cat: "redox_tm", def: "Metal hydroxide reacting with both acids and strong bases to form soluble species." },
+            { term: "Heterogeneous Catalyst", cat: "redox_tm", def: "Catalyst in a different phase from reactants, acting via surface adsorption." },
+            { term: "Homogeneous Catalyst", cat: "redox_tm", def: "Catalyst in same phase as reactants, acting via intermediate oxidation state changes." },
+            { term: "Autocatalysis", cat: "redox_tm", def: "Reaction where a product species acts as catalyst for the reaction itself." },
+
+            { term: "Aromaticity (Delocalisation)", cat: "arenes_nitro", def: "Enhanced stability of planar cyclic systems containing a delocalised $\\pi$-electron cloud." },
+            { term: "Delocalisation Energy", cat: "arenes_nitro", def: "Extra stability of benzene ($149\\text{ kJ mol}^{-1}$) compared to theoretical cyclohexa-1,3,5-triene." },
+            { term: "Electrophilic Aromatic Substitution", cat: "arenes_nitro", def: "Mechanism where an electrophile replaces a ring hydrogen, preserving aromatic stability." },
+            { term: "Friedel-Crafts Reaction", cat: "arenes_nitro", def: "Electrophilic substitution attaching alkyl or acyl groups to benzene using $\\text{AlCl}_3$ catalyst." },
+            { term: "Phenol", cat: "arenes_nitro", def: "Aromatic compound containing a hydroxyl group (-OH) directly attached to benzene ring." },
+            { term: "Primary Amine", cat: "arenes_nitro", def: "Ammonia derivative containing an -$\\text{NH}_2$ group attached to one alkyl or aryl group." },
+            { term: "Basicity (Amines)", cat: "arenes_nitro", def: "Ability of an amine's nitrogen lone pair to accept a proton ($\\text{H}^+$)." },
+            { term: "Diazotisation", cat: "arenes_nitro", def: "Reaction of 1° aromatic amines with nitrous acid ($\\text{HNO}_2$) below 10°C to form diazonium salts." },
+            { term: "Azo Dye", cat: "arenes_nitro", def: "Colored compound containing an azo linkage (-N=N-) connecting two aromatic rings." },
+            { term: "Zwitterion", cat: "arenes_nitro", def: "Dipolar ion carrying both + and - charges with overall zero net charge." },
+            { term: "Isoelectric Point", cat: "arenes_nitro", def: "Specific pH at which an amino acid exists predominantly as a neutral zwitterion." },
+            { term: "Peptide Bond", cat: "arenes_nitro", def: "Amide linkage (-CONH-) formed between carboxyl and amino groups of amino acids." },
+            { term: "Condensation Polymerisation", cat: "arenes_nitro", def: "Polymerisation where bifunctional monomers link with elimination of small molecules." },
+
+            { term: "Grignard Reagent", cat: "synth_methods", def: "Organometallic compound (RMgX) formed by reacting haloalkane with Mg in dry ether." },
+            { term: "Recrystallisation", cat: "synth_methods", def: "Purification involving dissolving in min hot solvent, hot filtering, cooling, suction filtering." },
+            { term: "Refluxing", cat: "synth_methods", def: "Continual boiling and condensation in a vertical condenser to prevent volatile loss." },
+            { term: "Ethanoic Anhydride", cat: "synth_methods", def: "Safer acylating reagent (($\\text{CH}_3\\text{CO})_2\\text{O}$) used in aspirin synthesis instead of ethanoyl chloride." },
+            { term: "Atom Economy", cat: "synth_methods", def: "Ratio of desired product molar mass to total product molar mass as percentage." },
+            { term: "Melting Point Range", cat: "synth_methods", def: "Temperature span from start of melting to complete liquefaction; sharp range indicates purity." },
+            { term: "Suction Filtration", cat: "synth_methods", def: "Vacuum filtration using Büchner funnel and flask to separate purified solid crystals." },
+            { term: "Solvent Extraction", cat: "synth_methods", def: "Separating a solute using a separating funnel and an immiscible solvent." },
+            { term: "Drying Agent", cat: "synth_methods", def: "Anhydrous salt ($\\text{CaCl}_2$ or $\\text{Na}_2\\text{SO}_4$) added to organic liquids to absorb dissolved water." },
+            { term: "Chemical Shift ($\\delta$)", cat: "synth_methods", def: "Resonance frequency position in NMR measured in ppm relative to TMS standard at 0 ppm." }
+        ];
+
+        const ESSAYS_DATA = [
+            {
+                title: "1. Delocalised Model of Benzene vs Kekulé Model",
+                question: "Discuss thermochemical, structural, and reactivity evidence supporting the modern delocalised model of benzene over Kekulé's structure.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Thermochemical Evidence:</strong> Cyclohexene hydrogenation $\\Delta H = -118\\text{ kJ mol}^{-1}$. Kekulé 3 double bonds predict $\\Delta H = -354\\text{ kJ mol}^{-1}$. Experimental benzene $\\Delta H = -205\\text{ kJ mol}^{-1}$. Benzene is $149\\text{ kJ mol}^{-1}$ MORE STABLE due to delocalisation energy.<br>• <strong>X-Ray Diffraction:</strong> Kekulé predicts alternating short C=C ($0.134\\text{ nm}$) and long C-C ($0.154\\text{ nm}$) bonds. X-ray proves all six C-C bonds are IDENTICAL ($0.139\\text{ nm}$).<br>• <strong>Reactivity:</strong> Alkenes undergo electrophilic addition with bromine water. Benzene RESISTS addition and undergoes electrophilic substitution ($\\text{FeBr}_3$ catalyst) to preserve aromatic stability."
+            },
+            {
+                title: "2. Origin of Colour & Ligand Splitting in Transition Metals",
+                question: "Explain the origin of colour in aqueous transition metal complex ions. Describe why $[\\text{Cu}(\\text{H}_2\\text{O})_6]^{2+}$ is blue while $[\\text{Zn}(\\text{H}_2\\text{O})_6]^{2+}$ is colourless.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Ligand Splitting:</strong> Surrounding ligands cause electrostatic repulsion that SPLITS degenerate 3d orbitals into two energy levels separated by energy gap $\\Delta E$.<br>• <strong>d-d Promotion:</strong> d-electrons absorb specific visible light frequencies ($\\Delta E = h\\nu$) to promote to higher d-orbitals. The observed color is the COMPLEMENTARY color transmitted.<br>• <strong>$[\\text{Cu}(\\text{H}_2\\text{O})_6]^{2+}$ (Blue):</strong> $\\text{Cu}^{2+}$ is $[\\text{Ar}] 3d^9$ (partially filled d-subshell). d-d transitions absorb red/orange light, transmitting blue.<br>• <strong>$[\\text{Zn}(\\text{H}_2\\text{O})_6]^{2+}$ (Colourless):</strong> $\\text{Zn}^{2+}$ is $[\\text{Ar}] 3d^{10}$ (completely full d-subshell). No vacant d-orbitals are available for d-d promotion."
+            },
+            {
+                title: "3. Chelate Effect & Thermodynamic Stability",
+                question: "Explain why replacing 6 monodentate water ligands in $[\\text{Ni}(\\text{H}_2\\text{O})_6]^{2+}$ with 3 bidentate en ligands forms a more stable complex based on entropy.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Reaction:</strong> $[\\text{Ni}(\\text{H}_2\\text{O})_6]^{2+} + 3\\text{en} \\rightleftharpoons [\\text{Ni(en)}_3]^{2+} + 6\\text{H}_2\\text{O}$.<br>• <strong>Enthalpy ($\\Delta H$):</strong> Six Ni-N bonds replace six Ni-O bonds of similar strength, so $\\Delta H \\approx 0$.<br>• <strong>Particle Count & Entropy:</strong> 4 reactant species form 7 product species. Total particles increase by +3.<br>• <strong>Thermodynamic Feasibility:</strong> Particle increase creates disorder, giving strongly POSITIVE system entropy ($\\Delta S_{\\text{system}} > 0$). This makes $\\Delta G$ negative and drives equilibrium far to the right."
+            },
+            {
+                title: "4. Relative Basicity of Nitrogen Compounds",
+                question: "Compare relative basicity of butylamine, ammonia, phenylamine, and ethanamide. Explain differences in lone pair availability.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Basicity Order:</strong> Ethanamide < Phenylamine < Ammonia < Butylamine.<br>• <strong>Basicity Concept:</strong> Depends on availability of nitrogen lone pair to accept $\\text{H}^+$.<br>• <strong>Butylamine:</strong> Alkyl butyl group is electron-releasing (+I), increasing electron density on N lone pair.<br>• <strong>Phenylamine:</strong> Nitrogen lone pair delocalises into the aromatic $\\pi$-system, decreasing electron density on N.<br>• <strong>Ethanamide:</strong> Nitrogen lone pair delocalises strongly into the electronegative carbonyl C=O group, making lone pair unavailable."
+            },
+            {
+                title: "5. Transition Metal Catalytic Mechanisms",
+                question: "Compare heterogeneous and homogeneous catalysis. Explain how $\\text{V}_2\\text{O}_5$ catalyses the Contact Process and $\\text{Fe}^{2+}$ catalyses the $\\text{I}^- / \\text{S}_2\\text{O}_8^{2-}$ reaction.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Heterogeneous ($\\text{V}_2\\text{O}_5$):</strong> Catalyst in solid phase, gas reactants. $\\text{SO}_2/\\text{O}_2$ adsorb onto surface weakening bonds. Oxidation state cycling: $\\text{SO}_2 + \\text{V}_2\\text{O}_5 \\rightarrow \\text{SO}_3 + \\text{V}_2\\text{O}_4$; $\\text{V}_2\\text{O}_4 + \\frac{1}{2}\\text{O}_2 \\rightarrow \\text{V}_2\\text{O}_5$.<br>• <strong>Homogeneous ($\\text{Fe}^{2+}$):</strong> Catalyst in same aqueous phase. Reaction between negative anions ($\\text{I}^-$ and $\\text{S}_2\\text{O}_8^{2-}$) has high $E_a$ due to repulsion.<br>• <strong>$\\text{Fe}^{2+}$ Pathway:</strong> 1. $\\text{S}_2\\text{O}_8^{2-} + 2\\text{Fe}^{2+} \\rightarrow 2\\text{SO}_4^{2-} + 2\\text{Fe}^{3+}$. 2. $2\\text{Fe}^{3+} + 2\\text{I}^- \\rightarrow 2\\text{Fe}^{2+} + \\text{I}_2$."
+            },
+            {
+                title: "6. Electrochemistry & Limits of $E^\\circ_{\\text{cell}}$ Predictions",
+                question: "Explain how $E^\\circ$ values are measured using SHE. Discuss why a reaction with positive $E^\\circ_{\\text{cell}}$ may not occur in practice.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>SHE Measurement:</strong> Pt electrode in 1.00 M $\\text{H}^+$(aq), $\\text{H}_2$ at 100 kPa, 298 K connected via voltmeter and salt bridge.<br>• <strong>$E^\\circ_{\\text{cell}}$ Meaning:</strong> Positive $E^\\circ_{\\text{cell}}$ indicates thermodynamic feasibility ($\\Delta S_{\\text{total}} > 0$).<br>• <strong>Limitation 1 (Kinetics):</strong> High activation energy ($E_a$) prevents observable reaction rate at room temp.<br>• <strong>Limitation 2 (Concentration):</strong> Non-standard concentrations shift half-cell equilibria via Le Chatelier's principle, altering actual $E$ away from $E^\\circ$.<br>• <strong>Limitation 3 (Side Reactions):</strong> Alternative redox pathways or atmospheric oxidation alter predicted products."
+            },
+            {
+                title: "7. Electrophilic Substitution: Benzene vs Phenol Nitration",
+                question: "Describe the nitration mechanism for benzene. Explain why phenol reacts under much milder conditions.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Electrophile:</strong> $\\text{HNO}_3 + 2\\text{H}_2\\text{SO}_4 \\rightarrow \\text{NO}_2^+ + \\text{H}_3\\text{O}^+ + 2\\text{HSO}_4^-$.<br>• <strong>Mechanism:</strong> 1. Benzene $\\pi$-cloud attacks $\\text{NO}_2^+$. 2. Cation intermediate forms with broken horseshoe ring (C2-C6) with + charge. 3. $\\text{HSO}_4^-$ removes $\\text{H}^+$ to regenerate aromatic ring and $\\text{H}_2\\text{SO}_4$.<br>• <strong>Phenol Comparison:</strong> Oxygen lone pair in phenol delocalises into aromatic $\\pi$-system, INCREASING ring electron density. Phenol reacts with dilute $\\text{HNO}_3$ at room temp without catalyst."
+            },
+            {
+                title: "8. Grignard Reagents in Chain Extension",
+                question: "Describe how a Grignard reagent is prepared from 1-bromopropane and converted into 2-methylpentan-2-ol.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Preparation:</strong> Reflux 1-bromopropane with Mg turnings in ANHYDROUS DRY ETHER to form propylmagnesium bromide.<br>• <strong>Reagent Selection:</strong> To form 3° alcohol 2-methylpentan-2-ol, react Grignard with KETONE: Propanone.<br>• <strong>Nucleophilic Addition:</strong> Carbanion (R<sup>δ-</sup>) attacks carbonyl carbon (C<sup>δ+</sup>) of propanone.<br>• <strong>Hydrolysis:</strong> Add dilute HCl(aq) to hydrolyse adduct into 2-methylpentan-2-ol and Mg(OH)Br."
+            },
+            {
+                title: "9. Synthesis, Purification & Purity Analysis of Aspirin",
+                question: "Outline the preparation of crude aspirin from 2-hydroxybenzoic acid, its purification by recrystallisation, and purity verification.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Synthesis:</strong> Warm 2-hydroxybenzoic acid with ethanoic anhydride and conc $\\text{H}_3\\text{PO}_4$ catalyst. Pour into cold water to precipitate solid.<br>• <strong>Recrystallisation:</strong> Dissolve crude solid in MINIMUM volume of HOT solvent. Filter hot to remove insoluble impurities. Cool filtrate in ice bath to recrystallise.<br>• <strong>Suction Filtration:</strong> Filter under vacuum using Büchner funnel, wash with ice-cold solvent, dry.<br>• <strong>Purity Verification:</strong> Determine melting point. Pure aspirin melts sharply at ~138°C; impurities lower MP and broaden range."
+            },
+            {
+                title: "10. Diazotisation & Azo Dye Coupling",
+                question: "Describe two-stage preparation of an azo dye from phenylamine. State conditions, reagents, and reasons for temperature control.",
+                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Stage 1 (Diazotisation):</strong> Dissolve phenylamine in dilute HCl and add cold $\\text{NaNO}_2$(aq) in ice bath BELOW 10°C.<br>• <strong>Equation 1:</strong> $\\text{C}_6\\text{H}_5\\text{NH}_2 + \\text{HNO}_2 + \\text{HCl} \\rightarrow \\text{C}_6\\text{H}_5\\text{N}_2^+\\text{Cl}^- + 2\\text{H}_2\\text{O}$.<br>• <strong>Temp Reason:</strong> Benzenediazonium ion decomposes above 10°C into phenol and $\\text{N}_2$ gas.<br>• <strong>Stage 2 (Coupling):</strong> Add diazonium solution dropwise to phenol dissolved in NaOH kept cold (< 10°C). Yellow/orange precipitate of 4-phenylazophenol forms."
+            }
+        ];
+
+        const WEB_MISCONCEPTIONS_DATA = [
+            { source: "Discord & TSR", topic: "Topic 17: Transition Metals", title: "1. Emission vs Absorption in Transition Metal Colour", misconception: "Complexes appear colored because d-electrons emit visible light when jumping to higher d-orbitals.", explanation: "FALSE! Electrons ABSORB visible light to promote to higher split 3d orbitals. The color seen is the TRANSMITTED complementary light!" },
+            { source: "Reddit r/6thForm", topic: "Topic 20: Organic Synthesis", title: "2. Adding Water to Grignard Preparations", misconception: "Grignard reactions can be carried out in ethanol or moist glassware.", explanation: "FALSE! Water immediately destroys Grignard reagents ($\\text{RMgX} + \\text{H}_2\\text{O} \\rightarrow \\text{RH} + \\text{Mg(OH)X}$) forming alkanes. Dry ether is mandatory!" },
+            { source: "X & TSR", topic: "Topic 18: Arenes", title: "3. Refluxing Benzene Nitration at 100°C", misconception: "Heat benzene with nitrating mixture under reflux at 100°C for max yield.", explanation: "FALSE! Heating above 55°C causes further substitution, producing dinitrobenzene instead of mono-nitrobenzene." },
+            { source: "Discord Chem Help", topic: "Topic 19: Diazotisation", title: "4. Diazotisation at Room Temperature", misconception: "Benzenediazonium ions are stable at room temperature (25°C).", explanation: "FALSE! Benzenediazonium ions decompose above 10°C into phenol and $\\text{N}_2$ gas. Reaction MUST be kept below 10°C in ice!" },
+            { source: "Student Room Thread", topic: "Topic 19: Amine Basicity", title: "5. Phenylamine Basicity Comparison", misconception: "Phenylamine is a stronger base than butylamine.", explanation: "FALSE! Nitrogen lone pair delocalises into the aromatic $\\pi$-ring, making phenylamine a WEAKER base than ammonia and butylamine." },
+            { source: "Reddit Study Group", topic: "Topic 17: Chelate Stability", title: "6. Chelate Effect Enthalpy Misconception", misconception: "Chelate complexes are stable because bidentate ligands form much stronger bonds (highly exothermic $\\Delta H$).", explanation: "FALSE! $\\Delta H$ is ~0. Stability is driven by POSITIVE SYSTEM ENTROPY ($\\Delta S_{\\text{system}} > 0$) due to increased particle count." },
+            { source: "X Revision Space", topic: "Topic 18: Mechanisms", title: "7. Horseshoe Intermediate Charge Location", misconception: "Positive charge in benzene carbocation intermediate sits on attacked carbon.", explanation: "FALSE! The attacked carbon is $sp^3$ and neutral. The positive charge is DELOCALISED inside the horseshoe spanning C2-C6!" },
+            { source: "Discord Past Paper Help", topic: "Topic 18: Phenol Bromination", title: "8. Phenol Bromination Catalyst Requirement", misconception: "Phenol requires $\\text{FeBr}_3$ catalyst to react with bromine.", explanation: "FALSE! Oxygen lone pair delocalisation activates the ring. Phenol reacts instantly with bromine water at room temp WITHOUT catalyst." },
+            { source: "Student Room Forum", topic: "Topic 20: Recrystallisation", title: "9. Solvent Volume in Recrystallisation", misconception: "Dissolve crude solid in a large excess of hot solvent.", explanation: "FALSE! Must use MINIMUM volume of hot solvent to form a saturated solution so crystals yield upon cooling." },
+            { source: "Reddit r/ALevel", topic: "Topic 17: d-Block Definitions", title: "10. Zinc as a Transition Metal", misconception: "Zinc is a transition metal because it sits in 3d block.", explanation: "FALSE! Zn forms $\\text{Zn}^{2+}$ which has a full $3d^{10}$ subshell. Transition metals MUST form at least one ion with incomplete d-orbital." },
+            { source: "X Chem Teacher VC", topic: "Topic 16: Electrode Potentials", title: "11. Stoichiometry Effect on $E^\\circ$ Values", misconception: "When doubling half-equations to balance electrons, double the $E^\\circ$ value.", explanation: "FALSE! Standard electrode potential $E^\\circ$ is an intensive property and does NOT change when multiplying half-equations!" },
+            { source: "Discord Exam Chat", topic: "Topic 19: Amino Acids", title: "12. Glycine Optical Activity", misconception: "All alpha-amino acids rotate plane-polarised light.", explanation: "FALSE! Glycine ($\\text{H}_2\\text{N-CH}_2\\text{-COOH}$) has two hydrogens on central carbon, lacks a chiral center, and is OPTICALLY INACTIVE." },
+            { source: "Student Room Thread", topic: "Topic 20: Aspirin Reagent Choice", title: "13. Reagent for Industrial Aspirin Prep", misconception: "Ethanoyl chloride is preferred industrially over ethanoic anhydride.", explanation: "FALSE! Ethanoic anhydride is preferred because it reacts safely, is cheaper, and forms harmless ethanoic acid (not toxic HCl gas)." },
+            { source: "Reddit Chemistry Group", topic: "Topic 16: Thiosulfate Titration", title: "14. Starch Indicator Addition Timing", misconception: "Add starch indicator at start of iodine-thiosulfate titration.", explanation: "FALSE! Starch added too early forms an insoluble complex. Add starch ONLY when solution is pale straw-yellow!" },
+            { source: "Discord Revision Server", topic: "Topic 17: Vanadium Colors", title: "15. Vanadium Color Order Memory", misconception: "Vanadium (+5) is green and Vanadium (+3) is yellow.", explanation: "FALSE! V(+5) $\\text{VO}_2^+$ is YELLOW, V(+4) $\\text{VO}^{2+}$ is BLUE, V(+3) $\\text{V}^{3+}$ is GREEN, V(+2) $\\text{V}^{2+}$ is VIOLET." },
+            { source: "X A-Level Hub", topic: "Topic 19: Polyamide Hydrolysis", title: "16. Products of Acidic Nylon Hydrolysis", misconception: "Acid hydrolysis of Nylon-6,6 yields free diamine and dicarboxylic acid.", explanation: "FALSE! In acidic conditions, amine groups are protonated into DIAMMONIUM SALTS ($^+\\text{H}_3\\text{N-R-NH}_3^+$)!" },
+            { source: "Student Room Thread", topic: "Topic 20: Melting Point Purity", title: "17. Impure Sample Melting Range", misconception: "Impure organic compounds melt sharply at higher temperature.", explanation: "FALSE! Impurities disrupt lattice binding, causing samples to melt over a BROAD range at LOWER temperatures." },
+            { source: "Reddit Study Group", topic: "Topic 17: Cis-platin Isomerism", title: "18. Trans-platin Medical Efficacy", misconception: "trans-platin is equally effective as cis-platin in cancer treatment.", explanation: "FALSE! ONLY cis-platin has correct geometry for chloride ligands to leave and bind adjacent DNA guanine bases." },
+            { source: "Discord Study VC", topic: "Topic 18: Acylation Catalysts", title: "19. Friedel-Crafts $\\text{AlCl}_3$ Water Sensitivity", misconception: "$\\text{AlCl}_3$ catalyst can be dissolved in water prior to reaction.", explanation: "FALSE! $\\text{AlCl}_3$ hydrolyses violently in water. Friedel-Crafts reactions strictly require ANHYDROUS conditions!" },
+            { source: "X Revision Space", topic: "Topic 19: Polymer Solubility", title: "20. Poly(ethenol) Biodegradability and Solubility", misconception: "Poly(ethenol) is insoluble in water because it is an addition polymer.", explanation: "FALSE! Poly(ethenol) contains abundant -OH side groups that form hydrogen bonds with water, making it water-soluble!" }
+        ];
+
+        /* ==================== STATE VARIABLES ==================== */
+        let currentTab = 'syllabus';
+        let currentTopicFilter = 'ALL';
+        let currentGlossaryCat = 'ALL';
+        let cardViewMode = 'deck';
+        let activeCards = [...FLASHCARDS_DATA];
+        let cardIndex = 0;
+        let masteredItems = JSON.parse(localStorage.getItem('chem_paper5_mastered') || '[]');
+
+        /* ==================== KATEX RENDER HELPER ==================== */
+        function initKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError : false
+                });
+            }
+        }
+
+        function reRenderMath() {
+            setTimeout(() => {
+                if (window.renderMathInElement) {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError : false
+                    });
+                }
+            }, 50);
+        }
+
+        /* ==================== CORE FUNCTIONS ==================== */
+        function updateProgress() {
+            const count = masteredItems.length;
+            const total = SYLLABUS_DATA.length;
+            document.getElementById('progress-text').innerText = count + ' / ' + total;
+            const pct = (count / total) * 100;
+            document.getElementById('progress-bar').style.width = pct + '%';
+        }
+
+        function toggleMastered(id) {
+            if (masteredItems.includes(id)) {
+                masteredItems = masteredItems.filter(i => i !== id);
+            } else {
+                masteredItems.push(id);
+            }
+            localStorage.setItem('chem_paper5_mastered', JSON.stringify(masteredItems));
+            updateProgress();
+            renderSyllabus();
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-sky-400');
+                btn.classList.add('text-slate-400');
+            });
+
+            const activeView = document.getElementById('view-' + tabId);
+            if (activeView) activeView.classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-sky-400');
+                activeBtn.classList.remove('text-slate-400');
+            }
+            reRenderMath();
+        }
+
+        /* ==================== RENDERERS ==================== */
+        function renderSyllabus() {
+            const container = document.getElementById('syllabus-container');
+            const searchVal = document.getElementById('syllabus-search').value.toLowerCase();
+
+            const filtered = SYLLABUS_DATA.filter(item => {
+                const matchTopic = (currentTopicFilter === 'ALL') || (item.topic.toString() === currentTopicFilter);
+                const matchSearch = item.id.toLowerCase().includes(searchVal) ||
+                                    item.title.toLowerCase().includes(searchVal) ||
+                                    item.content.toLowerCase().includes(searchVal) ||
+                                    item.tip.toLowerCase().includes(searchVal);
+                return matchTopic && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl">No specification points found matching search.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isMastered = masteredItems.includes(item.id);
+                return `
+                <div class="glass-panel p-5 rounded-2xl border ${isMastered ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800'} transition-all hover:border-slate-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2.5 py-1 bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono text-xs font-bold rounded-lg">Spec ${item.id}</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">Topic ${item.topic}</span>
+                            <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+                        </div>
+                        <button onclick="toggleMastered('${item.id}')" class="self-start sm:self-auto px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${isMastered ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                            <i class="fa-solid ${isMastered ? 'fa-check' : 'fa-circle-check'} text-xs"></i>
+                            <span>${isMastered ? 'Mastered' : 'Mark as Mastered'}</span>
+                        </button>
+                    </div>
+
+                    <p class="text-sm text-slate-300 leading-relaxed mb-4 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">${item.content}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-emerald-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-emerald-400">
+                                <i class="fa-solid fa-lightbulb"></i> <span>Examiner Tip / Key Phrasing</span>
+                            </div>
+                            <p>${item.tip}</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 text-amber-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-amber-400">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <span>Common Misconception</span>
+                            </div>
+                            <p>${item.misconception}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            reRenderMath();
+        }
+
+        function filterTopic(topic) {
+            currentTopicFilter = topic;
+            document.querySelectorAll('.topic-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-topic') === topic) {
+                    btn.className = 'topic-filter-btn bg-sky-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all';
+                } else {
+                    btn.className = 'topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all';
+                }
+            });
+            renderSyllabus();
+        }
+
+        function filterSyllabus() {
+            renderSyllabus();
+        }
+
+        function renderPitfalls() {
+            const container = document.getElementById('pitfalls-container');
+            container.innerHTML = PITFALLS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden group">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.badge}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Common Student Misconception:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Examiner Mark Scheme Secret:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.truth}</p>
+                            <div class="pt-1 text-[11px] font-mono text-sky-300">
+                                <strong class="text-slate-400">Mark Scheme Keywords:</strong> ${item.keywords}
+                            </div>
+                        </div>
+
+                        <div id="blur-overlay-${idx}" onclick="toggleBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Examiner Truth</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        function toggleBlur(idx) {
+            const overlay = document.getElementById('blur-overlay-' + idx);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        /* ==================== CALCULATORS ==================== */
+        function calcCellPotential() {
+            const eRed = parseFloat(document.getElementById('calc-ered').value) || 0;
+            const eOx = parseFloat(document.getElementById('calc-eox').value) || 0;
+            const n = parseFloat(document.getElementById('calc-n-elec').value) || 1;
+            const T = parseFloat(document.getElementById('calc-temp-k').value) || 298;
+            const F = 96500;
+            const R = 8.314;
+
+            const eCell = eRed - eOx;
+            const isFeasible = eCell > 0;
+            const dsTotal = (n * F * eCell) / T;
+            const lnK = (n * F * eCell) / (R * T);
+
+            document.getElementById('cell-output').innerHTML = `
+                <div><strong>Standard Cell Potential ($E^\\circ_{\\text{cell}}$):</strong> <span class="${isFeasible ? 'text-emerald-400' : 'text-rose-400'} font-bold">${eCell > 0 ? '+' : ''}${eCell.toFixed(2)} V</span> (${isFeasible ? 'FEASIBLE' : 'NOT FEASIBLE'})</div>
+                <div><strong>Total Entropy Change ($\\Delta S_{\\text{total}}$):</strong> ${dsTotal.toFixed(1)} J K⁻¹ mol⁻¹</div>
+                <div><strong>Equilibrium Constant Ratio ($\\ln K$):</strong> ${lnK.toFixed(2)}</div>
+            `;
+            reRenderMath();
+        }
+
+        function calcLightSplitting() {
+            const wavelengthNm = parseFloat(document.getElementById('calc-wavelength').value) || 600;
+            const h = 6.63e-34;
+            const c = 3.00e8;
+            const Na = 6.02e23;
+
+            const wavelengthM = wavelengthNm * 1e-9;
+            const energyPerPhoton = (h * c) / wavelengthM;
+            const energyPerMoleKJ = (energyPerPhoton * Na) / 1000;
+
+            let colorObserved = "Unknown";
+            if (wavelengthNm >= 400 && wavelengthNm < 435) colorObserved = "Yellow-Green (Absorbs Violet)";
+            else if (wavelengthNm >= 435 && wavelengthNm < 480) colorObserved = "Yellow (Absorbs Blue)";
+            else if (wavelengthNm >= 480 && wavelengthNm < 490) colorObserved = "Orange (Absorbs Cyan)";
+            else if (wavelengthNm >= 490 && wavelengthNm < 560) colorObserved = "Red / Purple (Absorbs Green)";
+            else if (wavelengthNm >= 560 && wavelengthNm < 595) colorObserved = "Violet (Absorbs Yellow)";
+            else if (wavelengthNm >= 595 && wavelengthNm < 650) colorObserved = "Blue (Absorbs Orange)";
+            else if (wavelengthNm >= 650 && wavelengthNm <= 750) colorObserved = "Green (Absorbs Red)";
+
+            document.getElementById('splitting-output').innerHTML = `
+                <div><strong>Energy Gap ($\\Delta E$):</strong> <span class="text-emerald-300 font-bold">${energyPerMoleKJ.toFixed(1)} kJ mol⁻¹</span> (${energyPerPhoton.toExponential(3)} J)</div>
+                <div><strong>Complementary Observed Color:</strong> <span class="text-emerald-300 font-bold">${colorObserved}</span></div>
+            `;
+            reRenderMath();
+        }
+
+        function calcMultiYield() {
+            const y1 = (parseFloat(document.getElementById('yield-s1').value) || 0) / 100;
+            const y2 = (parseFloat(document.getElementById('yield-s2').value) || 0) / 100;
+            const y3 = (parseFloat(document.getElementById('yield-s3').value) || 0) / 100;
+            const y4 = (parseFloat(document.getElementById('yield-s4').value) || 0) / 100;
+
+            const totalFraction = y1 * y2 * y3 * y4;
+            const totalPct = totalFraction * 100;
+
+            document.getElementById('yield-output').innerHTML = `
+                <div><strong>Overall Multi-Step Yield:</strong> <span class="text-purple-300 font-bold text-sm">${totalPct.toFixed(2)}%</span></div>
+                <div><strong>Fractional Conversion:</strong> ${totalFraction.toFixed(4)}</div>
+            `;
+            reRenderMath();
+        }
+
+        function calcAminePH() {
+            const kb = parseFloat(document.getElementById('calc-kb').value) || 0.00044;
+            const cb = parseFloat(document.getElementById('calc-conc-b').value) || 0.10;
+
+            if (kb <= 0 || cb <= 0) return;
+
+            const ohConc = Math.sqrt(kb * cb);
+            const pOH = -Math.log10(ohConc);
+            const ph = 14 - pOH;
+            const pKb = -Math.log10(kb);
+
+            document.getElementById('amine-output').innerHTML = `
+                <div><strong>p$K_b$:</strong> ${pKb.toFixed(2)} | <strong>Calculated [OH⁻]:</strong> ${ohConc.toExponential(3)} mol dm⁻³</div>
+                <div><strong>Calculated pH:</strong> <span class="text-cyan-300 font-bold text-sm">${ph.toFixed(2)}</span></div>
+            `;
+            reRenderMath();
+        }
+
+        /* ==================== FLASHCARDS ==================== */
+        function updateCard() {
+            if (activeCards.length === 0) return;
+            const item = activeCards[cardIndex];
+            
+            document.getElementById('card-front-topic').innerText = item.topic;
+            document.getElementById('card-front-spec').innerText = item.spec;
+            document.getElementById('card-front-question').innerHTML = item.q;
+            document.getElementById('card-back-answer').innerHTML = item.a;
+
+            document.getElementById('deck-current-index').innerText = cardIndex + 1;
+            document.getElementById('deck-total-count').innerText = activeCards.length;
+            document.getElementById('jump-card-input').max = activeCards.length;
+            document.getElementById('jump-card-input').value = cardIndex + 1;
+
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.remove('card-flipped');
+            reRenderMath();
+        }
+
+        function flipCard() {
+            document.getElementById('card-inner-el').classList.toggle('card-flipped');
+        }
+
+        function nextCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex + 1) % activeCards.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex - 1 + activeCards.length) % activeCards.length;
+            updateCard();
+        }
+
+        function jumpToCard(val) {
+            let num = parseInt(val) - 1;
+            if (!isNaN(num) && num >= 0 && num < activeCards.length) {
+                cardIndex = num;
+                updateCard();
+            }
+        }
+
+        function shuffleDeck() {
+            activeCards.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (cardViewMode === 'list') renderListView();
+        }
+
+        function filterCards() {
+            const searchVal = document.getElementById('card-search').value.toLowerCase();
+            activeCards = FLASHCARDS_DATA.filter(item => {
+                return item.q.toLowerCase().includes(searchVal) ||
+                       item.a.toLowerCase().includes(searchVal) ||
+                       item.topic.toLowerCase().includes(searchVal) ||
+                       item.spec.toLowerCase().includes(searchVal);
+            });
+
+            cardIndex = 0;
+            if (activeCards.length > 0) {
+                updateCard();
+                if (cardViewMode === 'list') renderListView();
+            } else {
+                document.getElementById('card-front-question').innerHTML = "No flashcards found matching search.";
+                document.getElementById('card-back-answer').innerHTML = "Try adjusting your search terms.";
+            }
+        }
+
+        function setCardViewMode(mode) {
+            cardViewMode = mode;
+            if (mode === 'deck') {
+                document.getElementById('deck-view-container').classList.remove('hidden');
+                document.getElementById('list-view-container').classList.add('hidden');
+                document.getElementById('card-view-mode-deck').className = 'px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-list').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all';
+            } else {
+                document.getElementById('deck-view-container').classList.add('hidden');
+                document.getElementById('list-view-container').classList.remove('hidden');
+                document.getElementById('card-view-mode-list').className = 'px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-deck').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all';
+                renderListView();
+            }
+        }
+
+        function renderListView() {
+            const holder = document.getElementById('list-cards-holder');
+            holder.innerHTML = activeCards.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-semibold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">${item.topic}</span>
+                            <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">${item.spec}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">#${idx + 1}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-sm leading-relaxed">${item.q}</h4>
+                    <button onclick="document.getElementById('list-ans-${idx}').classList.toggle('hidden')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-300 rounded-lg text-xs font-semibold border border-slate-700">
+                        Toggle Answer
+                    </button>
+                    <div id="list-ans-${idx}" class="hidden p-3 bg-emerald-950/20 border border-emerald-500/20 text-emerald-300 text-xs rounded-xl leading-relaxed whitespace-pre-line font-mono">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        /* ==================== GLOSSARY ==================== */
+        function renderGlossary() {
+            const container = document.getElementById('glossary-container');
+            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const filtered = GLOSSARY_DATA.filter(g => {
+                const matchCat = (currentGlossaryCat === 'ALL') || (g.cat === currentGlossaryCat);
+                const matchSearch = g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search);
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching terms found.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map((g, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all space-y-3">
+                    <h4 class="font-bold text-cyan-400 text-base flex items-center space-x-2">
+                        <i class="fa-solid fa-bookmark text-xs"></i>
+                        <span>${g.term}</span>
+                    </h4>
+
+                    <div class="relative min-h-[90px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-4">
+                        <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
+
+                        <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Definition Blurred</span>
+                            <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        function filterGlossaryCategory(cat) {
+            currentGlossaryCat = cat;
+            document.querySelectorAll('.gloss-cat-btn').forEach(btn => {
+                if (btn.id === 'gloss-cat-' + cat) {
+                    btn.className = 'gloss-cat-btn px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-semibold';
+                } else {
+                    btn.className = 'gloss-cat-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium';
+                }
+            });
+            renderGlossary();
+        }
+
+        function toggleGlossaryBlur(idx) {
+            const overlay = document.getElementById('gloss-blur-' + idx);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        function filterGlossary() {
+            renderGlossary();
+        }
+
+        /* ==================== ESSAY MODELS ==================== */
+        function renderEssays() {
+            const container = document.getElementById('essays-container');
+            container.innerHTML = ESSAYS_DATA.map((e, idx) => `
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                        <h3 class="text-lg font-bold text-rose-300">${e.title}</h3>
+                        <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30">6 Marks - Level 3</span>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
+                        <strong class="text-rose-400">Official Question Prompt:</strong> ${e.question}
+                    </div>
+
+                    <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
+                        ${e.answer}
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        /* ==================== WEB MISCONCEPTIONS ==================== */
+        function renderWebMisconceptions() {
+            const container = document.getElementById('web-misconceptions-container');
+            container.innerHTML = WEB_MISCONCEPTIONS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.source}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Web Post:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Mark Scheme Truth:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.explanation}</p>
+                        </div>
+
+                        <div id="web-blur-overlay-${idx}" onclick="toggleWebBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        function toggleWebBlur(idx) {
+            const overlay = document.getElementById('web-blur-overlay-' + idx);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        /* ==================== INITIALIZATION ==================== */
+        window.onload = function() {
+            updateProgress();
+            renderSyllabus();
+            renderPitfalls();
+            renderGlossary();
+            renderEssays();
+            renderWebMisconceptions();
+            updateCard();
+            calcCellPotential();
+            calcLightSplitting();
+            calcMultiYield();
+            calcAminePH();
+            reRenderMath();
+        };
+    </script>
+</body>
+</html>

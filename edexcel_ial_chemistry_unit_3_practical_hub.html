@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel IAL Chemistry Unit 3 - Practical Skills Revision Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        chem: {
+                            purple: '#8b5cf6',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                            cyan: '#06b6d4',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-active {
+            border-bottom: 3px solid #06b6d4;
+            color: #06b6d4;
+            font-weight: 600;
+        }
+        
+        /* 3D Flashcard flip styles */
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .card-front {
+            transform: rotateY(0deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-front {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-back {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #06b6d4;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-slate-900/95 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                        <span class="text-xl">🔬</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-white leading-tight">Edexcel IAL Chemistry Unit 3</h1>
+                            <span class="text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full">WCH13/01</span>
+                        </div>
+                        <p class="text-xs text-cyan-400 font-medium">Practical Skills in Chemistry I • Master Revision Hub</p>
+                    </div>
+                </div>
+
+                <!-- Progress Tracker -->
+                <div class="hidden md:flex items-center space-x-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                    <div class="text-xs font-medium text-slate-300">
+                        Practical Mastery: <span id="progress-text" class="text-cyan-400 font-bold">0 / 25</span>
+                    </div>
+                    <div class="w-32 bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs Container -->
+            <nav class="flex space-x-1 overflow-x-auto no-scrollbar border-t border-slate-800/50 pt-1 text-sm font-medium">
+                <button onclick="switchTab('syllabus')" id="tab-syllabus" class="tab-btn tab-active px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-flask text-xs"></i> <span>Core Practicals Explorer</span>
+                </button>
+                <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                </button>
+                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Practical Tools</span>
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-brain text-purple-400 text-xs"></i> <span>3D Flashcards (50) & Quiz</span>
+                </button>
+                <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Glossary & MCQs (35)</span>
+                </button>
+                <button onclick="switchTab('essays')" id="tab-essays" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-pen-nib text-rose-400 text-xs"></i> <span>Practical Planning Exemplars (10)</span>
+                </button>
+                <button onclick="switchTab('misconceptions')" id="tab-misconceptions" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-comments text-amber-400 text-xs"></i> <span>Web Misconceptions (20)</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: CORE PRACTICALS & SYLLABUS EXPLORER -->
+        <section id="view-syllabus" class="tab-view space-y-6">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="syllabus-search" oninput="filterSyllabus()" placeholder="Search core practical, method, reagent, or technique (e.g. CP1, reflux, flame test)..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 w-full md:w-auto">
+                    <button onclick="filterTopic('ALL')" class="topic-filter-btn bg-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all" data-topic="ALL">All Practicals</button>
+                    <button onclick="filterTopic('Core')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="Core">Core Practicals 1-8</button>
+                    <button onclick="filterTopic('Suggested')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="Suggested">Suggested Practicals</button>
+                    <button onclick="filterTopic('Techniques')" class="topic-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-topic="Techniques">Lab Techniques & Safety</button>
+                </div>
+            </div>
+
+            <div id="syllabus-container" class="space-y-4">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- TAB 2: EXAMINER PITFALLS -->
+        <section id="view-pitfalls" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-lightbulb text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">Unit 3 Practical Examiner Pitfalls & Method Traps (10 Cards)</h2>
+                        <p class="text-sm text-slate-300 mt-1">Sourced from Edexcel Unit 3 Chief Examiner Reports and Mark Schemes. **Click any blurred card to reveal the exact required Mark Scheme Phrasing!**</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pitfalls-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- TAB 3: PRACTICAL CALCULATORS -->
+        <section id="view-calculators" class="tab-view space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Calculator 1: Calorimetry (Q = mcΔT) & ΔH Solver -->
+                <div class="glass-panel p-6 rounded-2xl border border-cyan-500/20">
+                    <h3 class="text-lg font-bold text-cyan-400 flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-temperature-arrow-up"></i> <span>1. Calorimetry (<i>Q</i> = <i>mc</i>Δ<i>T</i>) & Δ<i>H</i> Solver</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Calculate energy transferred (<i>Q</i>) and enthalpy change (Δ<i>H</i>) for exothermic or endothermic reactions.</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Solution Volume / Mass (<i>m</i> in g)</label>
+                            <input type="number" id="cal-m" value="50" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2 focus:ring-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Specific Heat Capacity <i>c</i> (J g⁻¹ K⁻¹)</label>
+                            <input type="number" id="cal-c" value="4.18" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Temperature Rise Δ<i>T</i> (°C or K)</label>
+                            <input type="number" id="cal-dt" value="8.5" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Moles of Limiting Reactant (<i>n</i>)</label>
+                            <input type="number" id="cal-n" value="0.025" step="0.001" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                        </div>
+                    </div>
+
+                    <div id="cal-result" class="p-4 bg-cyan-950/40 border border-cyan-500/30 rounded-xl text-center font-mono text-cyan-300 font-bold text-sm">
+                        Q = 1776.5 J = 1.777 kJ | ΔH = -71.06 kJ mol⁻¹
+                    </div>
+                </div>
+
+                <!-- Calculator 2: Percentage Uncertainty Calculator -->
+                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20">
+                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-percent"></i> <span>2. Equipment Percentage Uncertainty Calculator</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Calculates % Uncertainty = (Uncertainty × Readings / Measured Value) × 100%.</p>
+                    
+                    <div class="space-y-3 text-sm mb-4">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-xs text-slate-400">Equipment Uncertainty</label>
+                                <input type="number" id="unc-err" value="0.05" step="0.01" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400">Readings Count</label>
+                                <select id="unc-readings" onchange="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                                    <option value="1">1 (Pipette / Cylinder)</option>
+                                    <option value="2" selected>2 (Burette / Balance)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400">Measured Value</label>
+                                <input type="number" id="unc-val" value="23.40" step="0.1" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="unc-result" class="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-center font-mono text-emerald-300 font-bold text-sm">
+                        Total Uncertainty: ±0.10 cm³ | Percentage Error: 0.43%
+                    </div>
+                </div>
+
+                <!-- Calculator 3: Titration Mean Concordant Titre & Concentration Solver -->
+                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20 lg:col-span-2">
+                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-vial-circle-check"></i> <span>3. Titration Mean Concordant Titre & Concentration Solver</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-3">Filters concordant titres (within ±0.10 cm³), calculates mean titre, and solves C₁V₁ / n₁ = C₂V₂ / n₂.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 text-xs">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="font-bold text-purple-300 block mb-1">Rough Titre (cm³)</span>
+                            <input type="number" id="titre-r" value="24.10" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="font-bold text-purple-300 block mb-1">Titre 1 (cm³)</span>
+                            <input type="number" id="titre-1" value="23.45" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="font-bold text-purple-300 block mb-1">Titre 2 (cm³)</span>
+                            <input type="number" id="titre-2" value="23.55" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <span class="font-bold text-purple-300 block mb-1">Titre 3 (cm³)</span>
+                            <input type="number" id="titre-3" value="23.80" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
+                        </div>
+                    </div>
+
+                    <div id="titration-result" class="p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl text-center font-mono text-purple-300 font-bold text-xs sm:text-sm">
+                        Concordant Titres: Titre 1 & Titre 2 | Mean Titre = 23.50 cm³
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: 3D FLASHCARDS (50) & QUIZ -->
+        <section id="view-quiz" class="tab-view space-y-6 hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-900 p-4 rounded-2xl border border-slate-800 gap-3">
+                <div class="flex space-x-2">
+                    <button id="quiz-mode-cards" onclick="setQuizMode('cards')" class="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-layer-group"></i> <span>🎴 3D Flashcard Deck (50)</span>
+                    </button>
+                    <button id="quiz-mode-test" onclick="setQuizMode('test')" class="px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-list-ul"></i> <span>📝 Active List View</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-3 text-xs text-slate-400 font-medium">
+                    <button onclick="shuffleDeck()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-purple-300 border border-purple-500/30 rounded-lg font-semibold transition-all">
+                        <i class="fa-solid fa-shuffle"></i> <span>Shuffle Deck</span>
+                    </button>
+                    <div>
+                        Card <span id="card-index" class="text-purple-400 font-bold">1</span> of <span id="card-total" class="font-bold">50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 3D Interactive Flip Component -->
+            <div id="flashcard-view" class="max-w-2xl mx-auto space-y-6">
+                <div class="card-flip w-full h-96 cursor-pointer select-none" onclick="flipCard()">
+                    <div id="card-inner-el" class="card-inner relative w-full h-full rounded-2xl border border-purple-500/30 bg-slate-900/95 shadow-2xl transition-transform duration-500">
+                        
+                        <!-- Front Face (Question) -->
+                        <div class="card-front absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 rounded-2xl border border-purple-500/30">
+                            <div class="flex items-center justify-between border-b border-purple-500/20 pb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span id="card-front-topic" class="text-[11px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20">Core Practical 1</span>
+                                    <span id="card-front-spec" class="text-[11px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 font-mono">CP 1.11</span>
+                                </div>
+                                <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-mono">Click to Flip</span>
+                            </div>
+
+                            <div class="text-base sm:text-lg font-bold text-slate-100 my-auto text-center px-2 leading-relaxed" id="card-question">
+                                Loading Question...
+                            </div>
+
+                            <div class="text-xs text-slate-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-purple-400"></i>
+                                <span>Click card to reveal Edexcel Unit 3 Mark Scheme Answer</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face (Answer) -->
+                        <div class="card-back absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/98 rounded-2xl border border-emerald-500/50 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                                <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                    <span>Edexcel Mark Scheme Answer</span>
+                                </span>
+                                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Answer Revealed</span>
+                            </div>
+
+                            <div class="text-xs sm:text-sm text-slate-200 my-auto leading-relaxed overflow-y-auto max-h-56 px-2 py-1 custom-scrollbar whitespace-pre-line text-left bg-emerald-950/30 rounded-xl border border-emerald-500/20 p-3" id="card-answer">
+                                Loading Answer...
+                            </div>
+
+                            <div class="text-xs text-emerald-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                                <span>Click again to flip back to question</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center px-2 gap-2">
+                    <button onclick="prevCard()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Previous</span>
+                    </button>
+
+                    <button onclick="nextCard()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <span>Next</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Mode View -->
+            <div id="test-view" class="max-w-2xl mx-auto space-y-6 hidden">
+                <div id="quiz-questions-container" class="space-y-6">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: PRACTICAL GLOSSARY -->
+        <section id="view-glossary" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="relative w-full">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Filter all 35 practical terms & attached Unit 3 past paper questions..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div class="text-xs text-slate-400 whitespace-nowrap">
+                    Total Terms: <span id="glossary-count" class="font-bold text-cyan-400">35</span>
+                </div>
+            </div>
+
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- TAB 6: PRACTICAL PLANNING EXEMPLARS (10) -->
+        <section id="view-essays" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-rose-500/20">
+                <h2 class="text-xl font-bold text-rose-400 flex items-center space-x-2 mb-2">
+                    <i class="fa-solid fa-file-pen"></i> <span>Unit 3 Experimental Planning & Evaluation Masterclass (10 Exemplars)</span>
+                </h2>
+                <p class="text-xs text-slate-300">Complete mark scheme breakdowns for high-yield experimental planning and evaluation prompts in Pearson Edexcel Unit 3 (Paper WCH13/01).</p>
+            </div>
+
+            <div id="essays-container" class="space-y-6">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- TAB 7: WEB MISCONCEPTIONS -->
+        <section id="view-misconceptions" class="tab-view space-y-6 hidden">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 border border-amber-500/20">
+                        <i class="fa-solid fa-comments text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">20 Practical Chemistry Misconceptions (X, Discord, TSR, Reddit)</h2>
+                        <p class="text-sm text-slate-300 mt-1">Real-world practical errors gathered from A-Level student communities. **Click any blurred box to reveal the Mark Scheme Explanation!**</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="web-misconceptions-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ==================== COMPLETE UNIT 3 PRACTICAL SYLLABUS DATA ==================== */
+        const SYLLABUS_DATA = [
+            // CORE PRACTICALS
+            {
+                id: "CP1",
+                topic: "Core",
+                title: "Core Practical 1: Measurement of the Molar Volume of a Gas",
+                content: "Measure volume of gas (CO<sub>2</sub>) evolved from reaction of acid with carbonate. Moles calculated from mass of limiting carbonate; <i>V</i><sub>m</sub> = Volume / Moles. Uses gas syringe or collection over water.",
+                tip: "Mark Scheme Keyword: Use a gas syringe rather than water displacement if gas is soluble in water (e.g., CO<sub>2</sub>). Replace bung quickly to prevent gas escaping.",
+                misconception: "Assuming gas displacement over water is 100% accurate for CO<sub>2</sub>. CO<sub>2</sub> is slightly soluble in water, leading to an underestimated volume."
+            },
+            {
+                id: "CP2",
+                topic: "Core",
+                title: "Core Practical 2: Enthalpy Change Determination & Hess's Law",
+                content: "Determine enthalpy change for reactions (e.g., Zn + CuSO<sub>4</sub> or neutralisation) using calorimetry (<i>Q</i> = <i>mc</i>Δ<i>T</i>). Plot temperature vs time and extrapolate cooling curve back to time of mixing.",
+                tip: "Extrapolate cooling lines to time of addition to account for unavoidable heat loss during the reaction. Use a lid on the polystyrene cup.",
+                misconception: "Using total mass of solid + solution in <i>m</i> instead of volume of solution × density (1.0 g cm⁻³)."
+            },
+            {
+                id: "CP3",
+                topic: "Core",
+                title: "Core Practical 3: Volumetric Analysis - Finding HCl Concentration",
+                content: "Titration of unknown HCl(aq) using standard Na<sub>2</sub>CO<sub>3</sub>(aq) solution and methyl orange indicator. Repeat until concordant titres (within ±0.10 cm³) are obtained.",
+                tip: "Always state color change at end-point: Methyl orange turns from YELLOW (alkaline) to ORANGE (end-point) when acid added.",
+                misconception: "Including the initial rough titration value in the calculation of the mean titre."
+            },
+            {
+                id: "CP4",
+                topic: "Core",
+                title: "Core Practical 4: Preparation of a Standard Solution & NaOH Titration",
+                content: "Prepare 250.0 cm³ standard solution of solid acid (weighing by difference, dissolving in beaker, transferring with washings, making up to mark in volumetric flask) and titrate against NaOH.",
+                tip: "Must rinse beaker and funnel with distilled water into the volumetric flask to ensure quantitative transfer.",
+                misconception: "Filling the volumetric flask past the line and pouring out excess. The whole solution must be remade!"
+            },
+            {
+                id: "CP5",
+                topic: "Core",
+                title: "Core Practical 5: Rates of Hydrolysis of Halogenoalkanes",
+                content: "Compare hydrolysis rates of 1-chloro, 1-bromo, and 1-iodobutane using aqueous AgNO<sub>3</sub> in ethanol. Ethanol acts as a co-solvent to mix immiscible layers.",
+                tip: "Rate order: I > Br > Cl. Governed strictly by C-X bond enthalpy (C-I is weakest), NOT bond polarity!",
+                misconception: "Thinking fluoroalkanes hydrolyse fastest because the C-F bond is most polar. C-F bond enthalpy is too high!"
+            },
+            {
+                id: "CP6",
+                topic: "Core",
+                title: "Core Practical 6: Preparation & Purification of a Halogenoalkane",
+                content: "Chlorination of 2-methylpropan-2-ol with conc. HCl or preparation of 1-bromobutane. Involves shaking in separating funnel, washing with NaHCO<sub>3</sub>(aq), drying with CaCl<sub>2</sub>(s), and distillation.",
+                tip: "In separating funnel, invert and periodically open tap to release CO<sub>2</sub> pressure formed from acid-NaHCO<sub>3</sub> neutralization.",
+                misconception: "Leaving the stopper in the separating funnel while attempting to drain the bottom layer."
+            },
+            {
+                id: "CP7",
+                topic: "Core",
+                title: "Core Practical 7: Oxidation of Propan-1-ol (Propanal vs Propanoic Acid)",
+                content: "Oxidise propan-1-ol with K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub> / H<sub>2</sub>SO<sub>4</sub>. Distillation removes propanal immediately (prevents further oxidation). Heating under reflux produces propanoic acid.",
+                tip: "Water must enter the bottom of the Liebig condenser and exit from the top to guarantee the cooling jacket is completely filled.",
+                misconception: "Using a sealed apparatus during reflux or distillation, which creates a dangerous pressure vessel explosion hazard."
+            },
+            {
+                id: "CP8",
+                topic: "Core",
+                title: "Core Practical 8: Qualitative Analysis of Unknowns",
+                content: "Identify inorganic cations (flame tests, NH<sub>3</sub>), anions (AgNO<sub>3</sub> / HNO<sub>3</sub> for halides, BaCl<sub>2</sub> / HCl for SO<sub>4</sub><sup>2-</sup>), and organic functional groups (PCl<sub>5</sub>, K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub>, Br<sub>2</sub>(aq)).",
+                tip: "Must add dilute HNO<sub>3</sub> BEFORE AgNO<sub>3</sub> to remove interfering carbonate (CO<sub>3</sub><sup>2-</sup>) or sulfite (SO<sub>3</sub><sup>2-</sup>) ions.",
+                misconception: "Using hydrochloric acid instead of nitric acid before adding silver nitrate (adds Cl⁻ which forms false positive AgCl)."
+            },
+
+            // SUGGESTED PRACTICALS
+            {
+                id: "SP1",
+                topic: "Suggested",
+                title: "Suggested Practical: Preparation of Double Salt (Mohr's Salt)",
+                content: "Synthesise ammonium iron(II) sulfate, (NH<sub>4</sub>)<sub>2</sub>Fe(SO<sub>4</sub>)<sub>2</sub>·6H<sub>2</sub>O. Filter, crystallise, dry between filter papers, and calculate percentage yield.",
+                tip: "Avoid heating crystals to dryness in an oven to prevent loss of water of crystallisation.",
+                misconception: "Assuming 100% yield is expected. Yield is reduced by solubility in cold solvent during washing."
+            },
+            {
+                id: "SP2",
+                topic: "Suggested",
+                title: "Suggested Practical: Ion Migration in U-Tube / Slide",
+                content: "Electrolyse green CuCrO<sub>4</sub> solution in a U-tube or on filter paper. Blue Cu<sup>2+</sup> ions migrate to cathode (-); yellow CrO<sub>4</sub><sup>2-</sup> ions migrate to anode (+).",
+                tip: "Provides direct physical visual evidence for the existence of ions and ionic bonding.",
+                misconception: "Believing covalent compounds show migration of colored bands under an electric field."
+            },
+            {
+                id: "SP3",
+                topic: "Suggested",
+                title: "Suggested Practical: Deflection of Liquid Jets by Electrostatic Rod",
+                content: "Run a thin jet of liquid (water, ethanol, cyclohexane) from a burette near a charged polythene rod. Polar liquids (water, ethanol) deflect; non-polar (cyclohexane) does not.",
+                tip: "Molecules with permanent dipoles align towards the charged rod regardless of charge sign.",
+                misconception: "Thinking non-polar liquids like cyclohexane will deflect towards a positively charged rod."
+            },
+            {
+                id: "SP4",
+                topic: "Suggested",
+                title: "Suggested Practical: Catalytic Cracking of Alkanes",
+                content: "Heat liquid paraffin over Al<sub>2</sub>O<sub>3</sub> catalyst. Collect gaseous alkenes over water. Remove delivery tube from water BEFORE stopping heating to prevent suck-back!",
+                tip: "'Suck-back' hazard: Cold water sucked into hot test tube causes glass to crack/shatter.",
+                misconception: "Removing the Bunsen flame before removing the delivery tube from water."
+            },
+
+            // TECHNIQUES & SAFETY
+            {
+                id: "TECH1",
+                topic: "Techniques",
+                title: "Laboratory Technique: Heating Under Reflux",
+                content: "Heats volatile reaction mixtures without loss of reactants/products. Uses vertical condenser with open top, anti-bumping granules, and electric heating mantle for flammable solvents.",
+                tip: "Never heat organic liquids with an open Bunsen flame if flammable. Use water bath or heating mantle.",
+                misconception: "Plugging the top of the reflux condenser with a stopper."
+            },
+            {
+                id: "TECH2",
+                topic: "Techniques",
+                title: "Laboratory Technique: Purification via Separating Funnel & Drying Agents",
+                content: "Separate immiscible aqueous/organic layers. Identify density. Wash organic layer with NaHCO<sub>3</sub>(aq) (neutralise acid) and add anhydrous CaCl<sub>2</sub> or MgSO<sub>4</sub> until free-flowing.",
+                tip: "Drying agent turns liquid from CLOUDY to CLEAR when water is fully removed.",
+                misconception: "Confusing clumping drying agent with dry liquid. If drying agent clumps, add MORE drying agent!"
+            }
+        ];
+
+        /* ==================== 10 EXAMINER PITFALLS DATA ==================== */
+        const PITFALLS_DATA = [
+            {
+                title: "1. Cooling Curve Extrapolation in Calorimetry",
+                topic: "Core Practical 2: Energetics",
+                badge: "Graph Technique",
+                misconception: "Simply taking the highest single temperature recorded as T_max when calculating ΔT.",
+                truth: "Heat loss occurs continuously as the reaction proceeds! You MUST extrapolate both the initial baseline and final cooling line back to the EXACT MINUTE OF ADDITION (e.g. 3.5 mins) to find theoretical ΔT.",
+                keywords: "Extrapolate cooling line, time of mixing/addition, theoretical max temperature"
+            },
+            {
+                title: "2. Condenser Water Flow Direction in Reflux & Distillation",
+                topic: "Core Practical 6 & 7: Synthesis",
+                badge: "Apparatus Setup",
+                misconception: "Connecting water inlet to the top of the Liebig condenser and outlet to the bottom.",
+                truth: "Water MUST enter at the BOTTOM and exit at the TOP! This guarantees the cooling jacket stays completely filled with cold water without air pockets or bubbles.",
+                keywords: "Water IN at bottom, water OUT at top, fills jacket completely"
+            },
+            {
+                title: "3. Halide Confirmation Test Nitric Acid Pre-Step",
+                topic: "Core Practical 8: Inorganic Tests",
+                badge: "Qualitative Analysis",
+                misconception: "Adding silver nitrate solution directly without adding acid, or acidifying with dilute HCl.",
+                truth: "Must add dilute NITRIC ACID (HNO₃) first to react with and remove any interfering CO₃²⁻ or SO₃²⁻ ions. Adding HCl introduces Cl⁻ ions, giving a false positive white precipitate!",
+                keywords: "Dilute HNO₃ first, removes CO₃²⁻/SO₃²⁻, NEVER use HCl"
+            },
+            {
+                title: "4. Preventing 'Suck-Back' in Thermal Decomposition / Cracking",
+                topic: "Suggested Practicals: Alkanes",
+                badge: "Lab Safety Hazard",
+                misconception: "Turning off the Bunsen burner flame first, then taking the delivery tube out of the trough.",
+                truth: "MUST remove the delivery tube from the water BEFORE removing the Bunsen flame! Otherwise, contracting cooling gas creates a vacuum, sucking cold water into hot glass tube and cracking it.",
+                keywords: "Remove tube from water BEFORE removing heat, prevents suck-back"
+            },
+            {
+                title: "5. Identifying Separating Funnel Layers & Washing",
+                topic: "Core Practical 6: Halogenoalkanes",
+                badge: "Purification Guardrail",
+                misconception: "Assuming the organic layer is always the top layer in a separating funnel.",
+                truth: "Layer position depends strictly on DENSITY! Bromoethane/1-bromobutane (density ~1.47 g/cm³) forms the BOTTOM layer. Cyclohexene (density 0.81 g/cm³) forms the TOP layer. If in doubt, add a drop of water to see which layer expands!",
+                keywords: "Check relative density, halogenoalkanes denser than water (bottom layer)"
+            },
+            {
+                title: "6. Soluble Gas Collection Errors (CO₂ vs H₂ / O₂)",
+                topic: "Core Practical 1: Gas Molar Vol",
+                badge: "Gas Collection Trap",
+                misconception: "Collecting carbon dioxide (CO₂) over water in an inverted measuring cylinder without correction.",
+                truth: "CO₂ is slightly soluble in water, leading to an UNDERESTIMATED gas volume! Use a gas syringe for accurate measurement of soluble or partially soluble gases.",
+                keywords: "CO₂ soluble in water, underestimates volume, use gas syringe"
+            },
+            {
+                title: "7. Flame Test Wire Cleaning Procedure",
+                topic: "Core Practical 8: Flame Tests",
+                badge: "Cation Identification",
+                misconception: "Washing the flame test wire with distilled water or using a copper wire.",
+                truth: "Dip a PLATINUM or NICHROME wire into CONCENTRATED HYDROCHLORIC ACID (HCl) and heat in a hot non-luminous Bunsen flame until no color is observed to convert metal impurities into volatile chlorides.",
+                keywords: "Platinum/Nichrome wire, conc. HCl, hot non-luminous flame"
+            },
+            {
+                title: "8. Percentage Uncertainty: Single vs Dual Instrument Readings",
+                topic: "Volumetric & Calorimetry Analysis",
+                badge: "Uncertainty Math",
+                misconception: "Multiplying equipment uncertainty by 1 for burette titres or temperature changes.",
+                truth: "Measurements involving TWO readings (initial & final on burette, balance, or thermometer) have DOUBLE the absolute uncertainty (2 × equipment error)! Single-mark items (pipette, volumetric flask) use 1 × error.",
+                keywords: "Burette/balance/thermometer = 2 readings = 2 × error"
+            },
+            {
+                title: "9. PCl₅ Test Ambiguity for -OH Groups",
+                topic: "Core Practical 8: Organic Tests",
+                badge: "Functional Group Test",
+                misconception: "PCl₅ proves a sample is an alcohol because it produces misty fumes of HCl.",
+                truth: "PCl₅ reacts with ANY compound containing an -OH group, INCLUDING WATER and carboxylic acids! The liquid sample MUST be DRY before testing with PCl₅ to avoid false positive misty fumes from water.",
+                keywords: "Sample must be DRY, PCl₅ reacts with water & -COOH as well as -OH"
+            },
+            {
+                title: "10. Appearance of Drying Agents (CaCl₂ / MgSO₄)",
+                topic: "Core Practical 6 & 7: Synthesis",
+                badge: "Drying Technique",
+                misconception: "Adding drying agent until all solid dissolves in the organic liquid.",
+                truth: "Drying agents DO NOT dissolve! They absorb water. When wet, drying agent clumps together. Liquid is FULLY DRY when drying agent remains FREE-FLOWING / POWDERY on swirling and liquid turns CLEAR.",
+                keywords: "Remains free-flowing/powdery, liquid turns from cloudy to clear"
+            }
+        ];
+
+        /* ==================== 50 FLASHCARDS DECK DATA (10 PER PRACTICAL CATEGORY) ==================== */
+        const QUIZ_DATA = [
+            /* CAT 1: CORE PRACTICALS 1 & 2 (GAS & THERMO) */
+            {
+                topic: "Core Practical 1: Gas Vol",
+                spec: "Spec CP1.1",
+                q: "1. Why is a gas syringe preferred over water displacement for measuring the volume of CO₂ gas produced?",
+                a: "• Carbon dioxide (CO₂) is slightly soluble in water.\n• Collecting over water results in some CO₂ dissolving, leading to an UNDERESTIMATED gas volume and incorrect molar volume."
+            },
+            {
+                topic: "Core Practical 1: Gas Vol",
+                spec: "Spec CP1.2",
+                q: "2. State two experimental sources of error when measuring gas volume from a reaction between CaCO₃ and HCl.",
+                a: "1. Gas escaping before the bung is quickly replaced onto the reaction flask.\n2. CO₂ gas dissolving in aqueous reaction solution or trough water."
+            },
+            {
+                topic: "Core Practical 1: Gas Vol",
+                spec: "Spec CP1.3",
+                q: "3. How does using ethanoic acid instead of hydrochloric acid affect the gas volume collection?",
+                a: "• Ethanoic acid is a weak acid, so the reaction is SLOWER.\n• Slowing the initial reaction rate reduces gas loss before the bung is inserted, improving volume accuracy."
+            },
+            {
+                topic: "Core Practical 2: Calorimetry",
+                spec: "Spec CP2.1",
+                q: "4. Why is a polystyrene cup placed inside a glass beaker during calorimetry experiments?",
+                a: "• Polystyrene is a good thermal insulator with low heat capacity.\n• Placing it in a beaker provides stability and creates a trapping air gap to MINIMISE HEAT LOSS to surroundings."
+            },
+            {
+                topic: "Core Practical 2: Calorimetry",
+                spec: "Spec CP2.2",
+                q: "5. Explain how ΔT is determined from a cooling curve graph in a reaction between Zn and CuSO₄.",
+                a: "1. Plot temperature against time.\n2. Draw lines of best fit through initial temperature points and final cooling points.\n3. Extrapolate both lines back to the exact minute of Zn addition to find theoretical maximum ΔT."
+            },
+            {
+                topic: "Core Practical 2: Calorimetry",
+                spec: "Spec CP2.3",
+                q: "6. In Q = mcΔT, why is 'm' taken as the mass of the solution and NOT the mass of solid reactant added?",
+                a: "• Heat energy released/absorbed is transferred directly into the solvent water/solution.\n• The mass 'm' represents the substance undergoing the temperature change (e.g. 50 cm³ aqueous solution ≈ 50 g)."
+            },
+            {
+                topic: "Core Practical 2: Calorimetry",
+                spec: "Spec CP2.4",
+                q: "7. Why are experimental ΔH values for alcohol combustion typically less exothermic than book values?",
+                a: "1. Heat loss to surrounding air and glass beaker.\n2. Incomplete combustion of alcohol (forming soot/CO).\n3. Evaporation of volatile alcohol from spirit burner before/after weighing."
+            },
+            {
+                topic: "Core Practical 2: Calorimetry",
+                spec: "Spec CP2.5",
+                q: "8. State two assumptions made when calculating enthalpy change of neutralization in aqueous solution.",
+                a: "1. Specific heat capacity of solution is equal to pure water (4.18 J g⁻¹ K⁻¹).\n2. Density of aqueous solution is equal to pure water (1.00 g cm⁻³)."
+            },
+            {
+                topic: "Core Practical 1 & 2",
+                spec: "Spec CP1/2",
+                q: "9. How does reweighing a weighing bottle after adding solid improve mass accuracy?",
+                a: "• 'Weighing by difference' accounts for any solid residue remaining stuck inside the weighing bottle, giving exact mass transferred."
+            },
+            {
+                topic: "Core Practical 2: Hess Cycle",
+                spec: "Spec CP2.6",
+                q: "10. Why cannot the enthalpy change for direct thermal decomposition of hydrated CuSO₄·5H₂O be measured directly?",
+                a: "• Direct heating requires strong thermal energy, making it impossible to measure exact temperature change ΔT, and decomposition may be incomplete."
+            },
+
+            /* CAT 2: CORE PRACTICALS 3 & 4 (TITRATION & STANDARDS) */
+            {
+                topic: "Core Practical 3: Titration",
+                spec: "Spec CP3.1",
+                q: "11. Why should the funnel be removed from the burette after filling before starting a titration?",
+                a: "• Remaining drops of titrant can drip down from the funnel during titration, altering the final burette reading and underestimating titre."
+            },
+            {
+                topic: "Core Practical 3: Titration",
+                spec: "Spec CP3.2",
+                q: "12. What are 'concordant titres' in volumetric analysis?",
+                a: "• Titre volumes that agree with each other within ±0.10 cm³ (or ±0.20 cm³ depending on mark scheme spec)."
+            },
+            {
+                topic: "Core Practical 3: Titration",
+                spec: "Spec CP3.3",
+                q: "13. Why is the conical flask swirled continuously during addition of titrant near the end-point?",
+                a: "• To ensure thorough and immediate mixing of reactants so the indicator endpoint color change is observed precisely."
+            },
+            {
+                topic: "Core Practical 3: Titration",
+                spec: "Spec CP3.4",
+                q: "14. State the color change of methyl orange indicator when HCl is titrated into NaOH solution.",
+                a: "• Solution changes from YELLOW (alkaline) to ORANGE (at end-point neutralisation)."
+            },
+            {
+                topic: "Core Practical 4: Standard Sol",
+                spec: "Spec CP4.1",
+                q: "15. Describe the steps to transfer a dissolved solid quantitatively from a beaker into a volumetric flask.",
+                a: "1. Pour beaker solution into volumetric flask via funnel.\n2. Rinse beaker, glass rod, and funnel multiple times with distilled water, pouring all washings into flask."
+            },
+            {
+                topic: "Core Practical 4: Standard Sol",
+                spec: "Spec CP4.2",
+                q: "16. Why must the volumetric flask be inverted multiple times after making up to the mark?",
+                a: "• To ensure complete mixing and uniform concentration throughout the entire 250 cm³ solution."
+            },
+            {
+                topic: "Core Practical 4: Standard Sol",
+                spec: "Spec CP4.3",
+                q: "17. What happens to calculated NaOH concentration if distilled water is added above the mark in a volumetric flask?",
+                a: "• The standard acid solution becomes diluted (lower concentration), requiring a LARGER titre of NaOH, resulting in an UNDERESTIMATED calculated NaOH concentration."
+            },
+            {
+                topic: "Core Practical 3 & 4",
+                spec: "Spec CP3/4",
+                q: "18. Why is a conical flask preferred over a beaker for titration?",
+                a: "• Slanted conical walls prevent liquid from splashing out during vigorous swirling."
+            },
+            {
+                topic: "Core Practical 3: Air Bubbles",
+                spec: "Spec CP3.5",
+                q: "19. How does an air bubble trapped below the burette tap affect the recorded titre?",
+                a: "• The air bubble fills with liquid during titration, making the delivered volume reading LARGER than actual volume delivered."
+            },
+            {
+                topic: "Core Practical 4: NaOH CO₂",
+                spec: "Spec CP4.4",
+                q: "20. Why does solid NaOH gain mass when left exposed to air on a balance?",
+                a: "• NaOH is hygroscopic (absorbs moisture from air) and reacts with atmospheric CO₂ to form Na₂CO₃."
+            },
+
+            /* CAT 3: CORE PRACTICALS 5 & 6 (HALOGENOALKANES & SYNTHESIS) */
+            {
+                topic: "Core Practical 5: Hydrolysis",
+                spec: "Spec CP5.1",
+                q: "21. Why is ethanol added to the test tubes in the halogenoalkane hydrolysis reaction with aqueous AgNO₃?",
+                a: "• Ethanol acts as a CO-SOLVENT to dissolve both water-soluble AgNO₃ and water-insoluble halogenoalkanes into a single phase."
+            },
+            {
+                topic: "Core Practical 5: Hydrolysis",
+                spec: "Spec CP5.2",
+                q: "22. State the relative rate of hydrolysis order for 1-chlorobutane, 1-bromobutane, and 1-iodobutane.",
+                a: "• Rate: 1-iodobutane > 1-bromobutane > 1-chlorobutane.\n• Reason: C-I bond enthalpy is lowest (weakest bond), so C-I breaks fastest."
+            },
+            {
+                topic: "Core Practical 5: Hydrolysis",
+                spec: "Spec CP5.3",
+                q: "23. Compare the rate of hydrolysis of primary, secondary, and tertiary chloroalkanes.",
+                a: "• Rate: Tertiary > Secondary > Primary.\n• Reason: Tertiary halogenoalkanes react via SN1 mechanism forming stable tertiary carbocations."
+            },
+            {
+                topic: "Core Practical 6: Synthesis",
+                spec: "Spec CP6.1",
+                q: "24. Why is NaHCO₃(aq) added to the organic product in a separating funnel during 1-bromobutane preparation?",
+                a: "• To NEUTRALISE and remove excess acidic impurities (unreacted HCl / H₂SO₄)."
+            },
+            {
+                topic: "Core Practical 6: Synthesis",
+                spec: "Spec CP6.2",
+                q: "25. Why must the separating funnel tap be opened periodically after inversion?",
+                a: "• To release pressure build-up of CO₂ gas produced from the reaction of acid with NaHCO₃."
+            },
+            {
+                topic: "Core Practical 6: Synthesis",
+                spec: "Spec CP6.3",
+                q: "26. How do you identify which layer in a separating funnel is the organic layer?",
+                a: "• Add a few drops of water: the aqueous layer will increase in volume. Alternatively, compare densities (halogenoalkanes > water, form lower layer)."
+            },
+            {
+                topic: "Core Practical 6: Synthesis",
+                spec: "Spec CP6.4",
+                q: "27. State the observation that confirms an organic liquid has been fully dried with anhydrous CaCl₂.",
+                a: "• Liquid changes from CLOUDY to CLEAR, and additional drying agent remains free-flowing/powdery upon swirling."
+            },
+            {
+                topic: "Core Practical 6: Synthesis",
+                spec: "Spec CP6.5",
+                q: "28. Why should anti-bumping granules be added before heating an organic reaction mixture?",
+                a: "• Provides nucleation sites for smooth bubble formation, preventing superheating and violent uneven boiling ('bumping')."
+            },
+            {
+                topic: "Core Practical 6: Yield",
+                spec: "Spec CP6.6",
+                q: "29. State two reasons why practical percentage yield of 1-bromobutane is less than 100%.",
+                a: "1. Loss of liquid product transferred between glassware/separating funnel/distillation.\n2. Incomplete reaction or competing side reactions (e.g. elimination forming alkene)."
+            },
+            {
+                topic: "Core Practical 6: Distillation",
+                spec: "Spec CP6.7",
+                q: "30. Why is the receiving flask cooled in an ice bath during distillation of volatile chloroalkanes?",
+                a: "• To prevent evaporation loss of volatile organic product vapors into room air."
+            },
+
+            /* CAT 4: CORE PRACTICALS 7 & 8 (OXIDATION & QUALITATIVE ORGANIC) */
+            {
+                topic: "Core Practical 7: Oxidation",
+                spec: "Spec CP7.1",
+                q: "31. Contrast the experimental setups required to produce propanal versus propanoic acid from propan-1-ol.",
+                a: "• Propanal: Distillation with acidified K₂Cr₂O₇ (propanal distils off as formed).\n• Propanoic Acid: Heating under REFLUX with excess acidified K₂Cr₂O₇ to force complete oxidation."
+            },
+            {
+                topic: "Core Practical 7: Oxidation",
+                spec: "Spec CP7.2",
+                q: "32. State the color change observed when propan-1-ol reacts with acidified potassium dichromate(VI).",
+                a: "• Solution changes from ORANGE to GREEN (Cr(VI) reduced to Cr(III))."
+            },
+            {
+                topic: "Core Practical 7: Reflux",
+                spec: "Spec CP7.3",
+                q: "33. What is the purpose of heating under reflux?",
+                a: "• Allows prolonged heating of volatile liquids at boiling point without loss of reactants or products as vapors condense and return."
+            },
+            {
+                topic: "Core Practical 8: Organic Tests",
+                spec: "Spec CP8.1",
+                q: "34. Describe the positive test result for an alkene using bromine water.",
+                a: "• Solution changes from ORANGE to COLOURLESS (decolourises)."
+            },
+            {
+                topic: "Core Practical 8: Organic Tests",
+                spec: "Spec CP8.2",
+                q: "35. Describe the test to confirm the presence of an -OH group using PCl₅ and state observation.",
+                a: "• Add solid PCl₅ to dry sample. Positive observation: Misty/steamy white fumes of HCl gas produced."
+            },
+            {
+                topic: "Core Practical 8: Organic Tests",
+                spec: "Spec CP8.3",
+                q: "36. Why must an organic liquid sample be dried before carrying out the PCl₅ test?",
+                a: "• Water reacts vigorously with PCl₅ to produce HCl fumes, giving a false positive test for alcohols!"
+            },
+            {
+                topic: "Core Practical 8: Organic Tests",
+                spec: "Spec CP8.4",
+                q: "37. How can Fehling's solution distinguish between propanal and propanone?",
+                a: "• Propanal (aldehyde): Orange/brick-red precipitate forms.\n• Propanone (ketone): Remains blue (no reaction)."
+            },
+            {
+                topic: "Core Practical 7: Thermometer",
+                spec: "Spec CP7.4",
+                q: "38. Where should the thermometer bulb be placed in a distillation apparatus?",
+                a: "• Level with the side-arm entry leading to the condenser to accurately measure vapor condensing temperature."
+            },
+            {
+                topic: "Core Practical 8: Manganate",
+                spec: "Spec CP8.5",
+                q: "39. What observation occurs when cyclohexene is shaken with cold acidified KMnO₄(aq)?",
+                a: "• Purple solution decolourises to COLOURLESS (or brown MnO₂ precipitate forms)."
+            },
+            {
+                topic: "Core Practical 7: Safety",
+                spec: "Spec CP7.5",
+                q: "40. Why should an electric heating mantle be used instead of a Bunsen flame to heat ethanol?",
+                a: "• Ethanol is highly flammable; electric mantles eliminate naked flame ignition sources."
+            },
+
+            /* CAT 5: QUALITATIVE INORGANIC & LAB TECHNIQUES */
+            {
+                topic: "Core Practical 8: Inorganic Tests",
+                spec: "Spec CP8.6",
+                q: "41. Describe the flame test observations for Ca²⁺, Ba²⁺, Sr²⁺, and Na⁺ cations.",
+                a: "• Ca²⁺: Brick red\n• Ba²⁺: Apple green\n• Sr²⁺: Crimson red\n• Na⁺: Persistent yellow"
+            },
+            {
+                topic: "Core Practical 8: Inorganic Tests",
+                spec: "Spec CP8.7",
+                q: "42. How are Cl⁻, Br⁻, and I⁻ precipitates differentiated using aqueous ammonia?",
+                a: "• AgCl (white): Dissolves in DILUTE ammonia.\n• AgBr (cream): Dissolves in CONCENTRATED ammonia (insoluble in dilute).\n• AgI (yellow): INSOLUBLE in both dilute and conc ammonia."
+            },
+            {
+                topic: "Core Practical 8: Inorganic Tests",
+                spec: "Spec CP8.8",
+                q: "43. Describe the test and positive observation for sulfate ions (SO₄²⁻).",
+                a: "• Add dilute HCl (to remove carbonates), then add BaCl₂(aq).\n• Positive result: WHITE PRECIPITATE of BaSO₄."
+            },
+            {
+                topic: "Core Practical 8: Inorganic Tests",
+                spec: "Spec CP8.9",
+                q: "44. Describe the test for ammonium ions (NH₄⁺).",
+                a: "• Warm sample with NaOH(aq). Damp red litmus paper turned BLUE by evolved ammonia gas (NH₃)."
+            },
+            {
+                topic: "Core Practical 8: Inorganic Tests",
+                spec: "Spec CP8.10",
+                q: "45. What gas is observed when solid Group 2 nitrates thermally decompose?",
+                a: "• BROWN GAS of Nitrogen Dioxide (NO₂) + Oxygen gas (relights glowing splint)."
+            },
+            {
+                topic: "Core Practical 8: Safety",
+                spec: "Spec CP8.11",
+                q: "46. Why must thermal decomposition of nitrates be conducted inside a fume cupboard?",
+                a: "• Nitrogen dioxide (NO₂) gas evolved is TOXIC and corrosive to respiratory tract."
+            },
+            {
+                topic: "Inorganic Tests: Halides",
+                spec: "Spec CP8.12",
+                q: "47. What is observed when concentrated H₂SO₄ is added to solid NaBr?",
+                a: "• Misty fumes (HBr), BROWN FUMES of Bromine gas (Br₂), and choking SO₂ gas."
+            },
+            {
+                topic: "Suggested: Ion Migration",
+                spec: "Spec SP2.1",
+                q: "48. Describe observations during electrolysis of green CuCrO₄ solution in a U-tube.",
+                a: "• Blue band (Cu²⁺ cations) migrates to cathode (-).\n• Yellow band (CrO₄²⁻ anions) migrates to anode (+)."
+            },
+            {
+                topic: "Lab Techniques: Safety",
+                spec: "Spec TECH.1",
+                q: "49. What hazard symbol is associated with concentrated H₂SO₄ and conc NaOH?",
+                a: "• CORROSIVE symbol (causes severe skin burns and eye damage)."
+            },
+            {
+                topic: "Lab Techniques: IR Spectra",
+                spec: "Spec TECH.2",
+                q: "50. How can IR spectroscopy verify that propan-1-ol has been completely converted to propanal?",
+                a: "• Disappearance of broad O-H stretch peak (3200-3600 cm⁻¹) and appearance of sharp C=O carbonyl peak (1720 cm⁻¹)."
+            }
+        ];
+
+        /* ==================== 35 GLOSSARY TERMS WITH ATTACHED IAL MCQS ==================== */
+        const GLOSSARY_DATA = [
+            {
+                term: "Anti-bumping Granules",
+                def: "Small, inert porous ceramic pieces added to liquids before heating to provide nucleation sites for smooth bubble formation, preventing superheating and violent bumping.",
+                q: "Edexcel IAL MCQ: Why are anti-bumping granules added to a reaction mixture before heating under reflux?",
+                options: ["A: To increase reaction yield", "B: To prevent violent uneven boiling", "C: To act as a homogeneous catalyst", "D: To lower boiling point"],
+                ans: "Correct Answer: B. Explanation: Anti-bumping granules provide nucleation sites for small bubbles, preventing superheating and violent splashing."
+            },
+            {
+                term: "Burette Meniscus",
+                def: "The curved upper surface of a liquid in a burette. Volume readings must always be taken from the bottom of the meniscus at eye level to prevent parallax error.",
+                q: "Edexcel IAL MCQ: A student reads the upper edge of a concave meniscus in a burette for both initial and final readings. What is the impact on recorded titre?",
+                options: ["A: Titre is overestimated", "B: Titre is underestimated", "C: No net error if consistent", "D: Titre is doubled"],
+                ans: "Correct Answer: C. Explanation: Since both initial and final readings are offset by the same systematic error, taking the difference cancels out the offset!"
+            },
+            {
+                term: "Concordant Titres",
+                def: "Multiple titration volume results that agree within ±0.10 cm³ of each other, used to calculate a reliable mean titre.",
+                q: "Edexcel IAL MCQ: Given titres 23.10, 23.40, 23.45, and 23.50 cm³. Which titres should be averaged to find the mean titre?",
+                options: ["A: All four titres", "B: 23.40, 23.45, and 23.50 cm³", "C: 23.10 and 23.50 cm³", "D: 23.45 and 23.50 cm³"],
+                ans: "Correct Answer: B. Explanation: 23.40, 23.45, and 23.50 cm³ are all within ±0.10 cm³ of each other (concordant)."
+            },
+            {
+                term: "Drying Agent",
+                def: "An anhydrous inorganic salt (e.g. CaCl₂, MgSO₄, Na₂SO₄) added to wet organic liquids to absorb dissolved water, turning liquid from cloudy to clear.",
+                q: "Edexcel IAL MCQ: Which compound is suitable for drying a crude sample of 1-bromobutane?",
+                options: ["A: Anhydrous CaCl₂", "B: Concentrated H₂SO₄", "C: Aqueous NaOH", "D: Hydrated MgSO₄·7H₂O"],
+                ans: "Correct Answer: A. Explanation: Anhydrous CaCl₂ absorbs water without reacting with the halogenoalkane."
+            },
+            {
+                term: "Extrapolation",
+                def: "Extending a graph line beyond measured data points, used in calorimetry cooling curves back to the time of mixing to calculate theoretical ΔT without heat loss.",
+                q: "Edexcel IAL MCQ: Why is temperature extrapolated back to time of mixing in calorimetry?",
+                options: ["A: To account for heat loss during reaction", "B: To speed up calculation", "C: To correct for balance error", "D: To convert °C to K"],
+                ans: "Correct Answer: A. Explanation: Extrapolation estimates maximum temperature rise if the reaction were instantaneous without heat dissipation."
+            },
+            {
+                term: "Fehling's Solution",
+                def: "An alkaline copper(II) reagent used to distinguish aldehydes from ketones. Aldehydes reduce blue Cu²⁺ to an orange/brick-red Cu₂O precipitate.",
+                q: "Edexcel IAL MCQ: What observation occurs when propanal is warmed with Fehling's solution?",
+                options: ["A: Silver mirror forms", "B: Blue solution forms brick-red ppt", "C: Orange to green color change", "D: Misty fumes evolved"],
+                ans: "Correct Answer: B. Explanation: Propanal is oxidized to propanoate while Cu²⁺ is reduced to brick-red Cu₂O."
+            },
+            {
+                term: "Flame Test",
+                def: "A procedure using a clean platinum/nichrome wire dipped in conc. HCl to identify metal cations by their characteristic emission flame color.",
+                q: "Edexcel IAL MCQ: Which metal cation produces an apple-green flame?",
+                options: ["A: Ca²⁺", "B: Ba²⁺", "C: Sr²⁺", "D: Na⁺"],
+                ans: "Correct Answer: B. Explanation: Barium (Ba²⁺) emits an apple-green flame."
+            },
+            {
+                term: "Fractional Distillation",
+                def: "Separation of liquids with close boiling points using a fractionating column packed with glass beads to provide repeated condensation/evaporations.",
+                q: "Edexcel IAL MCQ: Why is fractional distillation used instead of simple distillation to purify cyclohexene from cyclohexanol?",
+                options: ["A: Cyclohexene has high density", "B: Boiling points of cyclohexene and cyclohexanol are relatively close", "C: Cyclohexanol decomposes on heating", "D: Cyclohexene is soluble in water"],
+                ans: "Correct Answer: B. Explanation: Fractional distillation gives better separation for liquids with closer boiling points."
+            },
+            {
+                term: "Fume Cupboard",
+                def: "A ventilated laboratory enclosure designed to contain and exhaust toxic or harmful gases/vapors (e.g. NO₂, HCl, Br₂).",
+                q: "Edexcel IAL MCQ: Why must thermal decomposition of copper(II) nitrate be conducted in a fume cupboard?",
+                options: ["A: Oxygen gas is explosive", "B: Toxic brown NO₂ gas is evolved", "C: Copper oxide is flammable", "D: To prevent light exposure"],
+                ans: "Correct Answer: B. Explanation: Nitrogen dioxide (NO₂) is toxic and irritating to lungs."
+            },
+            {
+                term: "Gas Syringe",
+                def: "A calibrated glass barrel apparatus used to collect and measure volumes of gas directly from a sealed reaction system without water solubility errors.",
+                q: "Edexcel IAL MCQ: Why is a gas syringe preferred over water displacement for measuring CO₂ volume?",
+                options: ["A: CO₂ is denser than air", "B: CO₂ is slightly soluble in water", "C: CO₂ reacts with glass", "D: CO₂ is flammable"],
+                ans: "Correct Answer: B. Explanation: Water displacement underestimates CO₂ volume due to dissolution."
+            },
+            {
+                term: "Hydrolysis Rate",
+                def: "The speed at which a bond (such as C-X in halogenoalkanes) is broken by reaction with water/nucleophiles, governed by bond enthalpy.",
+                q: "Edexcel IAL MCQ: Which halogenoalkane hydrolyses fastest when warmed with aqueous AgNO₃ in ethanol?",
+                options: ["A: 1-chlorobutane", "B: 1-bromobutane", "C: 1-iodobutane", "D: 1-fluorobutane"],
+                ans: "Correct Answer: C. Explanation: The C-I bond has the lowest bond enthalpy and breaks most rapidly."
+            },
+            {
+                term: "Heating Under Reflux",
+                def: "Heating a reaction mixture with a vertical condenser to continuously boil and condense vapors, preventing loss of volatile components.",
+                q: "Edexcel IAL MCQ: What is the primary purpose of refluxing ethanol with excess acidified K₂Cr₂O₇?",
+                options: ["A: To distill off ethanal", "B: To ensure complete oxidation to ethanoic acid", "C: To prevent reaction", "D: To reduce yield"],
+                ans: "Correct Answer: B. Explanation: Reflux keeps volatile ethanal in the flask until fully oxidized to ethanoic acid."
+            },
+            {
+                term: "Indicator (Methyl Orange)",
+                def: "An acid-base indicator changing color from red (acidic) to yellow (alkaline), turning orange at endpoint (pH 3.1–4.4).",
+                q: "Edexcel IAL MCQ: What is the color change at the endpoint when HCl is added from a burette to Na₂CO₃ solution containing methyl orange?",
+                options: ["A: Red to yellow", "B: Yellow to orange", "C: Colorless to pink", "D: Orange to green"],
+                ans: "Correct Answer: B. Explanation: Alkaline Na₂CO₃ is yellow; at endpoint neutralisation it turns orange."
+            },
+            {
+                term: "Limiting Reactant",
+                def: "The reactant completely consumed in a chemical reaction, which dictates maximum theoretical moles of product and heat released.",
+                q: "Edexcel IAL MCQ: 0.10 mol Zn is added to 50 cm³ of 1.0 mol dm⁻³ CuSO₄. Which is the limiting reactant?",
+                options: ["A: Zn", "B: CuSO₄", "C: Both equal", "D: Water"],
+                ans: "Correct Answer: B. Explanation: Moles CuSO₄ = 0.050 dm³ × 1.0 = 0.050 mol < 0.10 mol Zn."
+            },
+            {
+                term: "Molar Volume (Vm)",
+                def: "The volume occupied by 1 mole of gas under specified temperature and pressure (24.0 dm³ mol⁻¹ at RTP).",
+                q: "Edexcel IAL MCQ: 0.0020 mol of gas occupies 48 cm³ at RTP. What is the calculated molar volume?",
+                options: ["A: 24.0 dm³ mol⁻¹", "B: 12.0 dm³ mol⁻¹", "C: 48.0 dm³ mol⁻¹", "D: 22.4 dm³ mol⁻¹"],
+                ans: "Correct Answer: A. Explanation: Vm = 0.048 dm³ / 0.0020 mol = 24.0 dm³ mol⁻¹."
+            },
+            {
+                term: "Nucleophilic Substitution",
+                def: "A reaction where an electron-pair donor (nucleophile, e.g. OH⁻, H₂O) replaces a leaving halogen atom in a halogenoalkane.",
+                q: "Edexcel IAL MCQ: Which species acts as the nucleophile when 1-bromobutane reacts with aqueous KOH?",
+                options: ["A: K⁺", "B: OH⁻", "C: Br⁻", "D: H₂O"],
+                ans: "Correct Answer: B. Explanation: Hydroxide ion (OH⁻) donates an electron pair to attack the δ+ carbon."
+            },
+            {
+                term: "Parallax Error",
+                def: "Apparent displacement in liquid volume reading occurring when the line of sight is not perpendicular to the scale/meniscus.",
+                q: "Edexcel IAL MCQ: How should a student position their eye to avoid parallax error reading a measuring cylinder?",
+                options: ["A: Above the meniscus", "B: Below the meniscus", "C: Level with bottom of meniscus", "D: At 45° angle"],
+                ans: "Correct Answer: C. Explanation: Eye level must align horizontally with the bottom of the concave meniscus."
+            },
+            {
+                term: "Percentage Uncertainty",
+                def: "Quantifies measurement precision: % Uncertainty = (Absolute Uncertainty × Readings / Measured Value) × 100%.",
+                q: "Edexcel IAL MCQ: A burette with error ±0.05 cm³ delivers a titre of 20.00 cm³. What is the percentage uncertainty?",
+                options: ["A: 0.25%", "B: 0.50%", "C: 0.10%", "D: 1.00%"],
+                ans: "Correct Answer: B. Explanation: Burette involves 2 readings: (2 × 0.05 / 20.00) × 100% = 0.50%."
+            },
+            {
+                term: "PCl₅ Test",
+                def: "Qualitative test for hydroxyl (-OH) groups in dry organic compounds. Produces steamy white fumes of HCl gas.",
+                q: "Edexcel IAL MCQ: Why does moist propan-1-ol give an invalid result with PCl₅?",
+                options: ["A: Propan-1-ol decomposes", "B: Water reacts with PCl₅ to form HCl fumes", "C: PCl₅ dissolves in water", "D: No reaction occurs"],
+                ans: "Correct Answer: B. Explanation: PCl₅ reacts with H₂O to give HCl, masking whether -OH came from alcohol or water."
+            },
+            {
+                term: "Qualitative Analysis",
+                def: "Non-numerical lab testing used to identify chemical species, functional groups, or ions present in a sample.",
+                q: "Edexcel IAL MCQ: Which reagent identifies sulfate ions (SO₄²⁻) by forming a white precipitate?",
+                options: ["A: AgNO₃(aq)", "B: Acidified BaCl₂(aq)", "C: NaOH(aq)", "D: Fehling's solution"],
+                ans: "Correct Answer: B. Explanation: Acidified BaCl₂ reacts with SO₄²⁻ to give insoluble white BaSO₄."
+            },
+            {
+                term: "Recrystallisation",
+                def: "Purification technique for solid products based on dissolving impure solid in hot solvent and cooling to crystallise pure product.",
+                q: "Edexcel IAL MCQ: Why is hot filtration performed during recrystallisation?",
+                options: ["A: To remove insoluble impurities", "B: To speed up cooling", "C: To remove soluble impurities", "D: To increase yield"],
+                ans: "Correct Answer: A. Explanation: Fluted filter paper under hot conditions removes insoluble debris while desired compound stays dissolved."
+            },
+            {
+                term: "Separating Funnel",
+                def: "Glassware used to separate immiscible liquids of differing densities (e.g. organic layer and aqueous layer).",
+                q: "Edexcel IAL MCQ: How should you relieve internal gas pressure when shaking a separating funnel with NaHCO₃(aq)?",
+                options: ["A: Remove top stopper", "B: Invert funnel and open tap periodically", "C: Heat funnel", "D: Cool in ice"],
+                ans: "Correct Answer: B. Explanation: Inverting and opening the tap safely vents evolved CO₂ gas."
+            },
+            {
+                term: "Silver Nitrate Test",
+                def: "Precipitation test for halide ions in nitric acid solution: Cl⁻ (white), Br⁻ (cream), I⁻ (yellow).",
+                q: "Edexcel IAL MCQ: Which silver halide precipitate is soluble in dilute aqueous ammonia?",
+                options: ["A: AgCl", "B: AgBr", "C: AgI", "D: None"],
+                ans: "Correct Answer: A. Explanation: Silver chloride (AgCl) dissolves easily in dilute NH₃ to form [Ag(NH₃)₂]⁺."
+            },
+            {
+                term: "Sodium Hydrogencarbonate Wash",
+                def: "Washing an organic layer with NaHCO₃(aq) to neutralise remaining acidic impurities, evolving CO₂ gas.",
+                q: "Edexcel IAL MCQ: What observation confirms acid neutralisation during NaHCO₃ washing in a separating funnel?",
+                options: ["A: Color change to green", "B: Effervescence / fizzing", "C: Temperature drop", "D: White precipitate"],
+                ans: "Correct Answer: B. Explanation: Effervescence occurs as CO₂ gas is liberated."
+            },
+            {
+                term: "Standard Solution",
+                def: "A solution of accurately known concentration prepared by dissolving a known mass of primary standard solid in a known volume.",
+                q: "Edexcel IAL MCQ: Why is NaOH NOT suitable as a primary standard for preparing a standard solution?",
+                options: ["A: It is insoluble in water", "B: It absorbs water and CO₂ from air", "C: It reacts with glass", "D: It is a weak base"],
+                ans: "Correct Answer: B. Explanation: Solid NaOH is deliquescent and absorbs CO₂, making its exact mass uncertain."
+            },
+            {
+                term: "Suck-Back",
+                def: "Hazard where contracting cooling gas creates a partial vacuum, drawing cold liquid back into a hot reaction vessel, causing glass cracking.",
+                q: "Edexcel IAL MCQ: How is suck-back prevented during thermal cracking of alkanes over hot Al₂O₃?",
+                options: ["A: Remove delivery tube from water before turning off heat", "B: Cool tube rapidly", "C: Use open flask", "D: Add water"],
+                ans: "Correct Answer: A. Explanation: Removing delivery tube breaks liquid contact before cooling vacuum develops."
+            },
+            {
+                term: "Thermal Decomposition",
+                def: "The breakdown of a chemical compound into simpler substances by heating (e.g. Group 2 nitrates forming NO₂ + O₂).",
+                q: "Edexcel IAL MCQ: Which Group 2 nitrate requires the HIGHEST temperature to thermally decompose?",
+                options: ["A: Mg(NO₃)₂", "B: Ca(NO₃)₂", "C: Sr(NO₃)₂", "D: Ba(NO₃)₂"],
+                ans: "Correct Answer: D. Explanation: Ba²⁺ has the largest ionic radius and lowest charge density, causing minimum anion polarising power."
+            },
+            {
+                term: "Thermometric Titration",
+                def: "Determining titration endpoint by plotting temperature change against added volume of titrant.",
+                q: "Edexcel IAL MCQ: Where is the endpoint located on a thermometric titration graph for an exothermic reaction?",
+                options: ["A: At the maximum temperature peak", "B: At the lowest point", "C: At initial point", "D: At origin"],
+                ans: "Correct Answer: A. Explanation: Peak temperature marks complete neutralisation before cooling by excess titrant."
+            },
+            {
+                term: "Volumetric Flask",
+                def: "Flat-bottomed laboratory glassware calibrated to contain an exact volume (e.g. 250.0 cm³) at a specified temperature.",
+                q: "Edexcel IAL MCQ: How should the meniscus be aligned when making up a standard solution in a volumetric flask?",
+                options: ["A: Top of meniscus on graduation mark", "B: Bottom of meniscus level with graduation mark", "C: Above mark", "D: Below mark"],
+                ans: "Correct Answer: B. Explanation: Bottom of concave meniscus must align horizontally with etched ring mark."
+            },
+            {
+                term: "Water of Crystallisation",
+                def: "Water molecules chemically bonded inside a giant crystal lattice (e.g. MgSO₄·xH₂O), driven off by heating to constant mass.",
+                q: "Edexcel IAL MCQ: Why is a crucible heated to 'constant mass' when determining water of crystallisation?",
+                options: ["A: To ensure all water has evaporated", "B: To melt the salt", "C: To prevent oxidation", "D: To clean crucible"],
+                ans: "Correct Answer: A. Explanation: Repeating heating and weighing until mass is constant ensures complete dehydration."
+            },
+            {
+                term: "Weighing by Difference",
+                def: "A method where container + solid is weighed, solid transferred, and empty container reweighed to find exact transferred mass.",
+                q: "Edexcel IAL MCQ: Container mass = 12.40 g. Container + solid = 15.60 g. Container after transfer = 12.45 g. What is mass of solid transferred?",
+                options: ["A: 3.20 g", "B: 3.15 g", "C: 3.25 g", "D: 15.60 g"],
+                ans: "Correct Answer: B. Explanation: Mass transferred = (15.60 - 12.45) = 3.15 g."
+            },
+            {
+                term: "Yield (Percentage)",
+                def: "Ratio of practical mass obtained to theoretical maximum mass: % Yield = (Actual Mass / Theoretical Mass) × 100%.",
+                q: "Edexcel IAL MCQ: Theoretical yield = 5.0 g. Actual purified mass obtained = 3.5 g. Calculate percentage yield.",
+                options: ["A: 70%", "B: 80%", "C: 50%", "D: 35%"],
+                ans: "Correct Answer: A. Explanation: % Yield = (3.5 / 5.0) × 100% = 70%."
+            },
+            {
+                term: "Infrared O-H Stretch (Alcohol vs Acid)",
+                def: "Alcohol O-H absorbs smoothly at 3200–3600 cm⁻¹. Carboxylic acid O-H absorbs as a very broad 'hairy' peak at 2500–3300 cm⁻¹ overlapping C-H.",
+                q: "Edexcel IAL MCQ: How does IR spectroscopy distinguish a carboxylic acid from an alcohol?",
+                options: ["A: Carboxylic acid shows very broad O-H (2500-3300) AND strong C=O (1700)", "B: Alcohol shows C=O peak", "C: Carboxylic acid has no peak", "D: Alcohol has broader peak"],
+                ans: "Correct Answer: A. Explanation: Acid features both C=O (~1700 cm⁻¹) and extremely broad O-H (2500–3300 cm⁻¹)."
+            },
+            {
+                term: "Mass Spectrometry Fragment ion m/z 15",
+                def: "A sharp peak at m/z = 15 in organic mass spectra corresponds to the methyl cation fragment [CH₃]⁺.",
+                q: "Edexcel IAL MCQ: What structural fragment produces a peak at m/z = 15 in the mass spectrum of propan-2-ol?",
+                options: ["A: [OH]⁺", "B: [CH₃]⁺", "C: [C₂H₅]⁺", "D: [CHO]⁺"],
+                ans: "Correct Answer: B. Explanation: Cleavage of C-C bond produces [CH₃]⁺ ion with m/z = 12 + 3 = 15."
+            },
+            {
+                term: "Reflux Condenser Water Jacket",
+                def: "Outer cooling sleeve surrounding inner glass tube. Must remain completely filled with cold water to maximize heat exchange.",
+                q: "Edexcel IAL MCQ: Why does connecting water inlet to the top of a Liebig condenser decrease cooling efficiency?",
+                options: ["A: Water drains out too quickly under gravity, leaving air pockets", "B: Water becomes too cold", "C: Pressure explodes glass", "D: No flow occurs"],
+                ans: "Correct Answer: A. Explanation: Gravity causes water to run down without filling upper jacket, creating air gaps."
+            }
+        ];
+
+        /* ==================== 10 LEVEL 3 PRACTICAL PLANNING EXEMPLARS ==================== */
+        const ESSAYS_DATA = [
+            {
+                title: "1. Planning Determination of Enthalpy of Neutralisation with Extrapolation",
+                question: "Plan an experiment to accurately determine the enthalpy change of neutralisation between 1.0 mol dm⁻³ HCl and 1.0 mol dm⁻³ NaOH. Include apparatus, procedure, graphical analysis for heat loss, and calculations.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Apparatus:</strong> Polystyrene cup supported in a 250 cm³ beaker, 50 cm³ measuring cylinders, digital thermometer (precision ±0.1°C), lid, stopwatch.<br>
+                • <strong>Procedure:</strong> 1. Measure 25.0 cm³ of 1.0 mol dm⁻³ HCl into the polystyrene cup. Record temperature every minute for 3 minutes to establish a stable baseline.<br>
+                2. At minute 4, add 25.0 cm³ of 1.0 mol dm⁻³ NaOH quickly without recording.<br>
+                3. Stir continuously and resume recording temperature every minute from minute 5 to 10 as mixture cools.<br>
+                • <strong>Graphical Extrapolation:</strong> Plot temperature (°C) against time (mins). Draw best-fit lines through initial points (0-3 min) and cooling points (5-10 min). Extrapolate both lines to 4 minutes (time of mixing) to measure theoretical Δ<i>T</i>.<br>
+                • <strong>Calculations:</strong> 1. Calculate heat transferred <i>Q</i> = <i>m</i> · <i>c</i> · Δ<i>T</i> = 50.0 g × 4.18 J g⁻¹ K⁻¹ × Δ<i>T</i>.<br>
+                2. Moles of H<sub>2</sub>O formed = <i>n</i>(HCl) = <i>C</i> × <i>V</i> = 1.0 × 0.025 = 0.025 mol.<br>
+                3. Enthalpy change Δ<i>H</i><sub>neut</sub> = -<i>Q</i> / (<i>n</i> × 1000) kJ mol⁻¹ (negative sign required for exothermic).`
+            },
+            {
+                title: "2. Preparation and Purification of 1-Bromobutane from Butan-1-ol",
+                question: "Describe the experimental steps for preparing and purifying a sample of 1-bromobutane from butan-1-ol, sodium bromide, and 50% sulfuric acid.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Synthesis (Reflux):</strong> Place NaBr(s), water, and butan-1-ol in a round-bottom flask. Slowly add concentrated H₂SO₄ with cooling. Add anti-bumping granules, attach Liebig condenser vertically (water in at bottom), and heat under reflux for 30 minutes.<br>
+                • <strong>Distillation:</strong> Rearrange apparatus for simple distillation. Distil the reaction mixture and collect crude 1-bromobutane (boiling range 95-103°C) into an ice-cooled receiver.<br>
+                • <strong>Purification (Separating Funnel):</strong> Transfer distillate to a separating funnel. Drain off the denser lower organic layer (1-bromobutane density ~1.27 g cm⁻³).<br>
+                • <strong>Washing:</strong> Wash organic layer with aqueous NaHCO₃ to neutralise acidic impurities. Invert and vent CO₂ gas periodically. Wash with water and separate.<br>
+                • <strong>Drying & Final Distillation:</strong> Transfer organic liquid to a conical flask, add anhydrous CaCl₂ drying agent until liquid turns from cloudy to clear and solid is free-flowing. Filter into a clean flask and re-distil, collecting pure product at 101-103°C.`
+            },
+            {
+                title: "3. Preparation of a Standard Acid Solution & Titration of NaOH",
+                question: "Outline the procedure to prepare 250.0 cm³ of a standard solution of a solid organic acid (e.g. ethanedioic acid) and use it to find the concentration of an NaOH solution.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Preparation of Standard Solution:</strong> 1. Weigh a sample bottle containing solid acid on a 2 decimal place balance. Transfer solid into a 250 cm³ beaker and reweigh bottle (weighing by difference).<br>
+                2. Dissolve solid in ~100 cm³ of distilled water using a glass rod.<br>
+                3. Transfer solution via funnel into a 250.0 cm³ volumetric flask. Wash beaker, rod, and funnel with distilled water, adding all washings into flask.<br>
+                4. Make up to etched mark with distilled water (bottom of meniscus on mark). Stopper and invert flask 10-15 times to homogenise.<br>
+                • <strong>Titration Procedure:</strong> 1. Rinse pipette with standard acid and burette with NaOH.<br>
+                2. Pipette 25.0 cm³ of acid into a conical flask; add 2-3 drops of phenolphthalein indicator.<br>
+                3. Titrate with NaOH from burette, swirling continuously, until solution turns permanently pale pink. Repeat to get concordant titres within ±0.10 cm³.<br>
+                4. Calculate mean concordant titre and determine NaOH concentration using stoichiometry.`
+            },
+            {
+                title: "4. Identification Scheme for 4 Unknown Inorganic Salts",
+                question: "You are given four unlabelled white powders: NaCl, NaBr, NaI, and Na₂SO₄. Describe a sequence of chemical tests to unambiguously identify each salt.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Step 1 (Sulfate Test):</strong> Dissolve a small sample of each salt in distilled water. Add dilute HCl followed by aqueous BaCl₂.<br>
+                - <em>Observation:</em> Only Na₂SO₄ forms a WHITE PRECIPITATE (BaSO₄). The other three salts show no precipitate.<br>
+                • <strong>Step 2 (Halide Silver Nitrate Test):</strong> To fresh aqueous solutions of the remaining three salts, add dilute HNO₃ followed by aqueous AgNO₃.<br>
+                - NaCl forms a WHITE PRECIPITATE (AgCl).<br>
+                - NaBr forms a CREAM PRECIPITATE (AgBr).<br>
+                - NaI forms a YELLOW PRECIPITATE (AgI).<br>
+                • <strong>Step 3 (Ammonia Confirmation):</strong> Add dilute aqueous ammonia to each precipitate.<br>
+                - AgCl dissolves completely in dilute NH₃.<br>
+                - AgBr is insoluble in dilute NH₃, but dissolves completely upon adding CONCENTRATED NH₃.<br>
+                - AgI remains insoluble in both dilute and concentrated NH₃.`
+            },
+            {
+                title: "5. Oxidation of Propan-1-ol: Controlling Product Formation",
+                question: "Explain how you would selectively prepare (a) propanal and (b) propanoic acid from propan-1-ol in the laboratory. Give reagents, conditions, apparatus diagrams features, and safety.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Reagents:</strong> Acidified Potassium Dichromate(VI) (K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub> / H<sub>2</sub>SO<sub>4</sub>). Color change: Orange to Green.<br>
+                • <strong>(a) Preparation of Propanal (Partial Oxidation):</strong> Use excess propan-1-ol and limited dichromate. Set up DISTILLATION apparatus.<br>
+                - <em>Key Feature:</em> Propanal (BP 49°C) has a lower boiling point than propan-1-ol (97°C) and propanoic acid due to lack of hydrogen bonding.<br>
+                - Propanal distils off immediately as it forms and is collected in an ice-cooled flask, preventing further oxidation.<br>
+                • <strong>(b) Preparation of Propanoic Acid (Complete Oxidation):</strong> Use excess acidified dichromate. Set up REFLUX apparatus.<br>
+                - <em>Key Feature:</em> Heat under reflux for 20-30 minutes so volatile propanal vapor condenses and falls back into the flask to undergo full oxidation.<br>
+                - After reflux, re-arrange apparatus for distillation to collect propanoic acid at 141°C.<br>
+                • <strong>Safety:</strong> Use an electric heating mantle (propan-1-ol is flammable). Dichromate is toxic/carcinogenic (wear gloves).`
+            },
+            {
+                title: "6. Experimental Determination of Molar Gas Volume",
+                question: "Describe an experiment using a gas syringe to determine the molar volume of carbon dioxide at RTP from the reaction between MgCO₃ and HCl. Discuss key measurements and error minimization.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Apparatus Setup:</strong> Conical flask attached via delivery tube and rubber bung to a 100 cm³ calibrated gas syringe clamped horizontally.<br>
+                • <strong>Procedure:</strong> 1. Measure 50 cm³ of 1.0 mol dm⁻³ HCl (excess) into the flask.<br>
+                2. Accurately weigh ~0.20 g of MgCO₃ solid on a 3 decimal place balance by difference.<br>
+                3. Add MgCO₃ to acid, replace bung immediately, and start timing.<br>
+                4. Record final volume of gas in syringe when effervescence stops.<br>
+                • <strong>Calculations:</strong> 1. Moles of MgCO<sub>3</sub> = mass / 84.3 g mol⁻¹.<br>
+                2. <i>n</i>(CO<sub>2</sub>) = <i>n</i>(MgCO<sub>3</sub>) (1:1 mole ratio).<br>
+                3. Molar volume <i>V</i><sub>m</sub> = Volume of gas collected (dm³) / <i>n</i>(CO<sub>2</sub>).<br>
+                • <strong>Error Minimisation:</strong> 1. Use a gas syringe rather than water displacement because CO<sub>2</sub> dissolves in water.<br>
+                2. Place MgCO₃ in a small tube inside flask and tip to start, avoiding gas loss before bung insertion.`
+            },
+            {
+                title: "7. Comparing Hydrolysis Rates of Halogenoalkanes",
+                question: "Design a fair-test experiment to compare the relative rates of hydrolysis of 1-chlorobutane, 1-bromobutane, and 1-iodobutane.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Method:</strong> 1. Set up three test tubes, each containing 1.0 cm³ of ethanol (co-solvent) and 1.0 cm³ of aqueous silver nitrate (AgNO<sub>3</sub>).<br>
+                2. Place test tubes in a thermostatically controlled water bath at 50°C for 5 minutes to reach temperature equilibrium.<br>
+                3. Add 5 drops of 1-chlorobutane to tube 1, 5 drops of 1-bromobutane to tube 2, and 5 drops of 1-iodobutane to tube 3 simultaneously. Start stopwatch.<br>
+                • <strong>Control Variables:</strong> Same volume/concentration of AgNO<sub>3</sub>, same volume of ethanol, same moles/drops of halogenoalkane, constant temperature.<br>
+                • <strong>Observations & Timing:</strong> Measure time taken for a distinct precipitate/cloudiness to appear over a black cross.<br>
+                - Tube 3 (1-iodobutane): Yellow precipitate (AgI) forms FASTEST.<br>
+                - Tube 2 (1-bromobutane): Cream precipitate (AgBr) forms SECOND.<br>
+                - Tube 1 (1-chlorobutane): White precipitate (AgCl) forms SLOWEST.<br>
+                • <strong>Explanation:</strong> Hydrolysis rate depends on C-X bond enthalpy (C-I < C-Br < C-Cl). C-I bond requires least energy to break.`
+            },
+            {
+                title: "8. Thermal Decomposition Trends in Group 2 Nitrates",
+                question: "Describe an experiment to compare the thermal stability of anhydrous Magnesium Nitrate and Barium Nitrate. Explain the trend in terms of cation polarising power.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Experimental Method:</strong> 1. Place equal mole amounts (e.g. 0.01 mol) of dry Mg(NO<sub>3</sub>)<sub>2</sub> and Ba(NO<sub>3</sub>)<sub>2</sub> into separate dry boiling tubes clamped at the same angle.<br>
+                2. Heat each tube using identical Bunsen burner blue flame settings.<br>
+                3. Measure time taken for brown nitrogen dioxide (NO<sub>2</sub>) gas to first appear or to relight a glowing splint at the tube mouth.<br>
+                • <strong>Safety:</strong> Perform in a FUME CUPBOARD because NO<sub>2</sub> gas is toxic.<br>
+                • <strong>Observations:</strong> Mg(NO<sub>3</sub>)<sub>2</sub> decomposes much faster at a lower temperature than Ba(NO<sub>3</sub>)<sub>2</sub>.<br>
+                • <strong>Theoretical Explanation:</strong> Mg<sup>2+</sup> has a much smaller ionic radius and higher charge density than Ba<sup>2+</sup>.<br>
+                - Mg<sup>2+</sup> exerts greater POLARISING POWER on the large NO<sub>3</sub>⁻ nitrate anion, distorting its electron cloud.<br>
+                - This weakens the N-O covalent bonds within the nitrate ion, making them break at lower thermal energy.`
+            },
+            {
+                title: "9. Synthesis and Purification of Cyclohexene from Cyclohexanol",
+                question: "Outline the preparation of cyclohexene by dehydration of cyclohexanol using conc. H₃PO₄, including separation, drying, and fractional distillation.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Dehydration (Reflux):</strong> Add 10 cm³ cyclohexanol and 4 cm³ concentrated H₃PO₄ (catalyst) with anti-bumping granules into a round-bottom flask. Heat gently under reflux.<br>
+                • <strong>Distillation:</strong> Re-assemble for fractional distillation. Distil off crude cyclohexene-water mixture below 90°C.<br>
+                • <strong>Separation & Washing:</strong> Transfer distillate to a separating funnel. Add 10 cm³ saturated NaCl solution (salting out water). Cyclohexene is LESS DENSE than water (0.81 g cm⁻³) and forms the TOP organic layer.<br>
+                - Drain off lower aqueous layer. Wash upper organic layer with Na<sub>2</sub>CO<sub>3</sub>(aq) to remove acidic H₃PO₄ traces.<br>
+                • <strong>Drying & Final Distillation:</strong> Run organic layer into a flask, add anhydrous CaCl<sub>2</sub> drying agent until clear. Filter into a clean flask and distil, collecting pure cyclohexene at 82-84°C.`
+            },
+            {
+                title: "10. Evaluating Sources of Error & Calculating Uncertainty in Titrations",
+                question: "A student performs a titration using a 25.0 cm³ pipette (uncertainty ±0.06 cm³) and a 50.00 cm³ burette (uncertainty ±0.05 cm³ per reading). Mean titre = 23.50 cm³. Calculate total percentage uncertainty and discuss experimental errors.",
+                answer: `<strong>Model Answer (6 Marks / Level 3 Exemplar):</strong><br>
+                • <strong>Uncertainty Calculations:</strong><br>
+                1. <em>Pipette % Uncertainty:</em> Pipette is a single delivery measurement = 1 reading.<br>
+                % Error (Pipette) = (0.06 / 25.00) × 100% = 0.24%.<br>
+                2. <em>Burette % Uncertainty:</em> Burette involves 2 readings (initial & final) → Absolute Error = 2 × 0.05 = ±0.10 cm³.<br>
+                % Error (Burette) = (0.10 / 23.50) × 100% = 0.43%.<br>
+                3. <em>Total Equipment % Uncertainty:</em> 0.24% + 0.43% = 0.67%.<br>
+                • <strong>Discussion of Procedural Errors:</strong><br>
+                - Trapped air bubble in burette tip → Overestimates titre volume.<br>
+                - Leaving funnel in burette top → Dripping underestimates titre volume.<br>
+                - Reading top of meniscus → Cancelled out if done consistently for initial and final readings.`
+            }
+        ];
+
+        /* ==================== 20 COMMON PRACTICAL WEB MISCONCEPTIONS ==================== */
+        const WEB_MISCONCEPTIONS_DATA = [
+            {
+                source: "Discord (#chem-practical) & TSR",
+                topic: "Core Practical 2: Energetics",
+                title: "1. Mass Value in Q = mcΔT",
+                misconception: "When 2.0 g of Zinc is added to 50 cm³ CuSO₄ solution, m = 52.0 g in Q = mcΔT.",
+                explanation: "FALSE! Heat capacity c (4.18 J/g/K) applies to the aqueous SOLUTION. Mass m should be 50.0 g (50 cm³ × 1.0 g/cm³ density). The mass of added solid is excluded from m!"
+            },
+            {
+                source: "X (@ALevelChemTips) & Reddit",
+                topic: "Core Practical 7: Reflux Setup",
+                title: "2. Reflux Condenser Water Flow",
+                misconception: "Water should enter the top of a reflux condenser so gravity helps flow.",
+                explanation: "FALSE! Water MUST enter at the BOTTOM and exit at the TOP. Entering at top causes water to trickle down without filling the jacket, leaving air pockets and reducing cooling!"
+            },
+            {
+                source: "Student Room (Edexcel Unit 3 Megathread)",
+                topic: "Core Practical 8: Halide Tests",
+                title: "3. Acidifying Silver Nitrate with HCl",
+                misconception: "You can acidify silver nitrate solution with dilute hydrochloric acid to test for halides.",
+                explanation: "CRITICAL ERROR! Adding HCl introduces chloride ions (Cl⁻), which immediately react with AgNO₃ to form a false positive white precipitate of AgCl! You MUST use dilute Nitric Acid (HNO₃)."
+            },
+            {
+                source: "Discord Chemistry Study VC",
+                topic: "Core Practical 1: Gas Molar Vol",
+                title: "4. CO₂ Collection over Water",
+                misconception: "Collecting CO₂ over water in a measuring cylinder gives 100% accurate gas volumes.",
+                explanation: "FALSE! Carbon dioxide is moderately soluble in water. Some CO₂ dissolves into the water trough, leading to an UNDERESTIMATED gas volume. A gas syringe must be used for accurate CO₂ collection."
+            },
+            {
+                source: "Reddit r/6thForm",
+                topic: "Core Practical 6: Separating Funnel",
+                title: "5. Organic Layer Position",
+                misconception: "The organic layer in a separating funnel is always the top layer because organic solvents float.",
+                explanation: "FALSE! Layer position depends entirely on DENSITY. Halogenoalkanes (e.g. 1-bromobutane, density ~1.27 g/cm³) are denser than water and form the BOTTOM layer. Cyclohexene (0.81 g/cm³) forms the TOP layer."
+            },
+            {
+                source: "Discord Chem Bot QA",
+                topic: "Core Practical 6: Drying Agents",
+                title: "6. Dissolving Drying Agents",
+                misconception: "You keep adding anhydrous CaCl₂ to an organic liquid until all solid dissolves.",
+                explanation: "FALSE! Drying agents DO NOT dissolve in organic liquids! They absorb water. Liquid is dry when drying agent stops clumping together and remains POWDERY/FREE-FLOWING upon swirling."
+            },
+            {
+                source: "X (Chemistry Teacher Thread)",
+                topic: "Core Practical 5: Hydrolysis Rate",
+                title: "7. Halogenoalkane Hydrolysis Cause",
+                misconception: "1-fluoroalkane hydrolyses fastest because C-F bond is the most polar.",
+                explanation: "FALSE! Hydrolysis rate is dictated by BOND ENTHALPY, not bond polarity! C-I bond enthalpy is the lowest (weakest bond), so 1-iodoalkane hydrolyses fastest. C-F bond is too strong to break easily."
+            },
+            {
+                source: "Student Room Discussion",
+                topic: "Core Practical 3: Titrations",
+                title: "8. Conical Flask Rinsing",
+                misconception: "The conical flask should be rinsed with the alkali/analyte solution before titration.",
+                explanation: "FALSE! Rinsing the conical flask with alkali leaves unmeasured extra moles of alkali inside, overestimating required titre! The conical flask MUST ONLY be rinsed with DISTILLED WATER."
+            },
+            {
+                source: "Discord A-Level Hub",
+                topic: "Core Practical 4: Standard Solutions",
+                title: "9. Overfilled Volumetric Flask",
+                misconception: "If you add water past the etched mark in a volumetric flask, you can pipette out the excess water.",
+                explanation: "FALSE! Pipetting out excess solution removes dissolved solute moles, altering concentration! If overfilled, the entire standard solution is ruined and MUST be remade from scratch."
+            },
+            {
+                source: "Reddit r/ALevel",
+                topic: "Core Practical 8: PCl₅ Alcohol Test",
+                title: "10. PCl₅ Test on Wet Samples",
+                misconception: "PCl₅ test can be carried out directly on aqueous ethanol to confirm the alcohol.",
+                explanation: "FALSE! Water reacts violently with PCl₅ to produce HCl fumes! The sample MUST BE THOROUGHLY DRIED first, otherwise water produces a false positive result."
+            },
+            {
+                source: "X Revision Space",
+                topic: "Suggested Practical: Thermal Cracking",
+                title: "11. Thermal Cracking Suck-Back",
+                misconception: "When stopping cracking of paraffin, turn off the Bunsen burner first, then remove tube from water.",
+                explanation: "DANGEROUS ERROR! Turning off heat first causes gas inside to cool and contract, sucking cold trough water into the red-hot glass tube, causing it to SHATTER. Always remove delivery tube from water FIRST!"
+            },
+            {
+                source: "Discord Past Paper Help",
+                topic: "Core Practical 8: Flame Tests",
+                title: "12. Washing Flame Test Wire",
+                misconception: "Clean the flame test wire by washing with distilled water.",
+                explanation: "FALSE! Distilled water does not remove persistent metal oxides or form volatile salts. Wire MUST be dipped in CONCENTRATED HCl and heated in a hot Bunsen flame until no flame color is observed."
+            },
+            {
+                source: "Student Room Thread",
+                topic: "Volumetric Analysis Math",
+                title: "13. Burette Reading Uncertainty",
+                misconception: "A burette reading has an uncertainty of ±0.05 cm³, so a titre calculation has ±0.05 cm³ error.",
+                explanation: "FALSE! A titre is derived from TWO readings (initial burette reading and final reading). Absolute uncertainty doubles: 2 × 0.05 = ±0.10 cm³!"
+            },
+            {
+                source: "Reddit Chemistry Homework",
+                topic: "Core Practical 7: Distillation Bulb",
+                title: "14. Distillation Thermometer Depth",
+                misconception: "Push the thermometer bulb deep down into the boiling liquid during distillation.",
+                explanation: "FALSE! The thermometer bulb must be positioned level with the T-junction side-arm leading to the condenser to accurately measure the boiling point of the vapor being condensed."
+            },
+            {
+                source: "Discord Revision Server",
+                topic: "Core Practical 8: Carbonate Test",
+                title: "15. Lime Water Reaction Observation",
+                misconception: "CO₂ turns limewater clear.",
+                explanation: "INCORRECT TERMINOLOGY! CO₂ gas turns limewater (calcium hydroxide) CLOUDY / MILKY due to formation of a white precipitate of CaCO₃."
+            },
+            {
+                source: "X Chem Community",
+                topic: "Core Practical 3: Rough Titre",
+                title: "16. Averaging All Titration Runs",
+                misconception: "To get the mean titre, add all 4 titration runs (including rough run) and divide by 4.",
+                explanation: "FALSE! The initial rough titration is an approximation and MUST BE EXCLUDED. Only calculate the mean from CONCORDANT TITRES (within ±0.10 cm³ of each other)."
+            },
+            {
+                source: "Student Room Forum",
+                topic: "Core Practical 2: Polystyrene Cup",
+                title: "17. Calorimeter Glass Beaker Role",
+                misconception: "The glass beaker in calorimetry acts as the primary heat insulator.",
+                explanation: "FALSE! Polystyrene is the insulator. The glass beaker is used purely for MECHANICAL STABILITY to prevent the lightweight polystyrene cup from tipping over!"
+            },
+            {
+                source: "Discord Exam Chat",
+                topic: "Core Practical 8: Sulfate Test",
+                title: "18. Acidifying BaCl₂ with Sulfuric Acid",
+                misconception: "Acidify barium chloride with H₂SO₄ before testing for sulfate ions.",
+                explanation: "CRITICAL ERROR! Adding H₂SO₄ introduces SO₄²⁻ ions, reacting with BaCl₂ to form a false positive white precipitate of BaSO₄! Use dilute HCl instead."
+            },
+            {
+                source: "Reddit Study Group",
+                topic: "Core Practical 6: Anti-Bumping Granules",
+                title: "19. Adding Anti-Bumping Granules Late",
+                misconception: "If you forget anti-bumping granules, add them while the liquid is boiling hot.",
+                explanation: "DANGEROUS! Adding granules to a superheated near-boiling liquid causes instantaneous violent boiling and eruption of hot liquid! Cool the liquid down first before adding granules."
+            },
+            {
+                source: "X A-Level Thread",
+                topic: "Core Practical 8: Fehling's vs Tollens'",
+                title: "20. Fehling's Test Color Result",
+                misconception: "Fehling's test with aldehydes forms a silver mirror.",
+                explanation: "CONFUSION OF REAGENTS! Tollens' reagent forms a silver mirror. Fehling's solution turns from a blue solution to a BRICK-RED / ORANGE PRECIPITATE (Cu₂O)."
+            }
+        ];
+
+        /* ==================== APP STATE & NAVIGATION ==================== */
+        let currentTab = 'syllabus';
+        let currentTopicFilter = 'ALL';
+        let cardIndex = 0;
+
+        // Local Storage for Progress Tracking
+        let masteredItems = JSON.parse(localStorage.getItem('chem_unit3_mastered') || '[]');
+
+        function updateProgress() {
+            const count = masteredItems.length;
+            const total = SYLLABUS_DATA.length;
+            document.getElementById('progress-text').innerText = `${count} / ${total}`;
+            const pct = (count / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+
+        function toggleMastered(id) {
+            if (masteredItems.includes(id)) {
+                masteredItems = masteredItems.filter(i => i !== id);
+            } else {
+                masteredItems.push(id);
+            }
+            localStorage.setItem('chem_unit3_mastered', JSON.stringify(masteredItems));
+            updateProgress();
+            renderSyllabus();
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-cyan-400');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-cyan-400');
+                activeBtn.classList.remove('text-slate-400');
+            }
+        }
+
+        /* ==================== SYLLABUS RENDERER ==================== */
+        function renderSyllabus() {
+            const container = document.getElementById('syllabus-container');
+            const searchVal = document.getElementById('syllabus-search').value.toLowerCase();
+
+            const filtered = SYLLABUS_DATA.filter(item => {
+                const matchTopic = (currentTopicFilter === 'ALL') || (item.topic === currentTopicFilter);
+                const matchSearch = item.id.toLowerCase().includes(searchVal) ||
+                                    item.title.toLowerCase().includes(searchVal) ||
+                                    item.content.toLowerCase().includes(searchVal) ||
+                                    item.tip.toLowerCase().includes(searchVal);
+                return matchTopic && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl">No core practicals or techniques found matching your search.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isMastered = masteredItems.includes(item.id);
+                return `
+                <div class="glass-panel p-5 rounded-2xl border ${isMastered ? 'border-emerald-500/40 bg-emerald-950/10' : 'border-slate-800'} transition-all hover:border-slate-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-xs font-bold rounded-lg">${item.id}</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300">${item.topic}</span>
+                            <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+                        </div>
+                        <button onclick="toggleMastered('${item.id}')" class="self-start sm:self-auto px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${isMastered ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
+                            <i class="fa-solid ${isMastered ? 'fa-check' : 'fa-circle-check'} text-xs"></i>
+                            <span>${isMastered ? 'Mastered' : 'Mark as Mastered'}</span>
+                        </button>
+                    </div>
+
+                    <p class="text-sm text-slate-300 leading-relaxed mb-4 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">${item.content}</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-emerald-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-emerald-400">
+                                <i class="fa-solid fa-lightbulb"></i> <span>Examiner Tip / Key Phrasing</span>
+                            </div>
+                            <p>${item.tip}</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-amber-950/20 border border-amber-500/20 text-amber-300">
+                            <div class="font-bold flex items-center space-x-1 mb-1 text-amber-400">
+                                <i class="fa-solid fa-triangle-exclamation"></i> <span>Common Misconception</span>
+                            </div>
+                            <p>${item.misconception}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function filterTopic(topic) {
+            currentTopicFilter = topic;
+            document.querySelectorAll('.topic-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-topic') === topic) {
+                    btn.classList.add('bg-cyan-600', 'text-white');
+                    btn.classList.remove('bg-slate-800', 'text-slate-300');
+                } else {
+                    btn.classList.remove('bg-cyan-600', 'text-white');
+                    btn.classList.add('bg-slate-800', 'text-slate-300');
+                }
+            });
+            renderSyllabus();
+        }
+
+        function filterSyllabus() {
+            renderSyllabus();
+        }
+
+        /* ==================== PITFALLS RENDERER ==================== */
+        function renderPitfalls() {
+            const container = document.getElementById('pitfalls-container');
+            container.innerHTML = PITFALLS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden group">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.badge}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <!-- Student Misconception Quote Box -->
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Common Method Trap:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <!-- Explanation Container with Interactive Blur -->
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <!-- Unblurred Mark Scheme Truth -->
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Examiner Mark Scheme Secret:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.truth}</p>
+                            <div class="pt-1 text-[11px] font-mono text-cyan-300">
+                                <strong class="text-slate-400">Mark Scheme Keywords:</strong> ${item.keywords}
+                            </div>
+                        </div>
+
+                        <!-- Blur Overlay element -->
+                        <div id="blur-overlay-${idx}" onclick="toggleBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Examiner Truth</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleBlur(idx) {
+            const overlay = document.getElementById(`blur-overlay-${idx}`);
+            if (overlay) {
+                if (overlay.classList.contains('opacity-0')) {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }
+        }
+
+        /* ==================== PRACTICAL CALCULATORS LOGIC ==================== */
+        function calcCalorimetry() {
+            const m = parseFloat(document.getElementById('cal-m').value) || 0;
+            const c = parseFloat(document.getElementById('cal-c').value) || 4.18;
+            const dt = parseFloat(document.getElementById('cal-dt').value) || 0;
+            const n = parseFloat(document.getElementById('cal-n').value) || 1;
+
+            const Q_joules = m * c * dt;
+            const Q_kj = Q_joules / 1000;
+            const dh = -(Q_kj / n);
+
+            document.getElementById('cal-result').innerText = 
+                `Q = ${Q_joules.toFixed(1)} J = ${Q_kj.toFixed(3)} kJ | ΔH = ${dh.toFixed(2)} kJ mol⁻¹`;
+        }
+
+        function calcUncertainty() {
+            const err = parseFloat(document.getElementById('unc-err').value) || 0;
+            const readings = parseInt(document.getElementById('unc-readings').value) || 1;
+            const val = parseFloat(document.getElementById('unc-val').value) || 1;
+
+            const totalAbsErr = err * readings;
+            const pctErr = (totalAbsErr / val) * 100;
+
+            document.getElementById('unc-result').innerText = 
+                `Total Absolute Uncertainty: ±${totalAbsErr.toFixed(2)} | Percentage Error: ${pctErr.toFixed(2)}%`;
+        }
+
+        function calcTitration() {
+            const t1 = parseFloat(document.getElementById('titre-1').value) || 0;
+            const t2 = parseFloat(document.getElementById('titre-2').value) || 0;
+            const t3 = parseFloat(document.getElementById('titre-3').value) || 0;
+
+            const values = [t1, t2, t3].filter(v => v > 0);
+            let concordant = [];
+
+            if (values.length >= 2) {
+                if (Math.abs(t1 - t2) <= 0.10) concordant.push(t1, t2);
+                if (Math.abs(t2 - t3) <= 0.10 && !concordant.includes(t2)) concordant.push(t2, t3);
+                if (Math.abs(t1 - t3) <= 0.10 && !concordant.includes(t1)) concordant.push(t1, t3);
+            }
+
+            concordant = [...new Set(concordant)];
+
+            if (concordant.length > 0) {
+                const mean = concordant.reduce((a, b) => a + b, 0) / concordant.length;
+                document.getElementById('titration-result').innerText = 
+                    `Concordant Titres (${concordant.join(', ')} cm³) | Mean Titre = ${mean.toFixed(2)} cm³`;
+            } else {
+                document.getElementById('titration-result').innerText = 
+                    `No concordant titres within ±0.10 cm³. Perform another titration run.`;
+            }
+        }
+
+        /* ==================== 3D FLASHCARD ENGINE ==================== */
+        function updateCard() {
+            const item = QUIZ_DATA[cardIndex];
+            document.getElementById('card-front-topic').innerText = item.topic;
+            document.getElementById('card-front-spec').innerText = item.spec;
+            document.getElementById('card-question').innerText = item.q;
+            document.getElementById('card-answer').innerText = item.a;
+            document.getElementById('card-index').innerText = cardIndex + 1;
+            document.getElementById('card-total').innerText = QUIZ_DATA.length;
+
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.remove('card-flipped');
+        }
+
+        function flipCard() {
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.toggle('card-flipped');
+        }
+
+        function nextCard() {
+            cardIndex = (cardIndex + 1) % QUIZ_DATA.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            cardIndex = (cardIndex - 1 + QUIZ_DATA.length) % QUIZ_DATA.length;
+            updateCard();
+        }
+
+        function shuffleDeck() {
+            QUIZ_DATA.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (!document.getElementById('test-view').classList.contains('hidden')) {
+                renderTestMode();
+            }
+        }
+
+        function setQuizMode(mode) {
+            if (mode === 'cards') {
+                document.getElementById('flashcard-view').classList.remove('hidden');
+                document.getElementById('test-view').classList.add('hidden');
+                document.getElementById('quiz-mode-cards').className = 'px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+                document.getElementById('quiz-mode-test').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+            } else {
+                document.getElementById('flashcard-view').classList.add('hidden');
+                document.getElementById('test-view').classList.remove('hidden');
+                document.getElementById('quiz-mode-test').className = 'px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+                document.getElementById('quiz-mode-cards').className = 'px-4 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5';
+                renderTestMode();
+            }
+        }
+
+        function renderTestMode() {
+            const container = document.getElementById('quiz-questions-container');
+            container.innerHTML = QUIZ_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-bold text-purple-400">${item.topic}</span>
+                            <span class="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 font-mono">${item.spec}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">#${idx + 1}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-sm leading-relaxed">${item.q}</h4>
+                    <button onclick="document.getElementById('ans-${idx}').classList.toggle('hidden')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold">
+                        Toggle Mark Scheme Answer
+                    </button>
+                    <div id="ans-${idx}" class="hidden p-3 bg-emerald-950/20 border border-emerald-500/20 text-emerald-300 text-xs rounded-xl leading-relaxed whitespace-pre-line">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==================== GLOSSARY RENDERER ==================== */
+        function renderGlossary() {
+            const container = document.getElementById('glossary-container');
+            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const filtered = GLOSSARY_DATA.filter(g => g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search) || g.q.toLowerCase().includes(search));
+
+            document.getElementById('glossary-count').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching glossary terms found.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((g, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="font-bold text-cyan-400 text-base mb-1.5 flex items-center space-x-2">
+                            <i class="fa-solid fa-bookmark text-xs"></i>
+                            <span>${g.term}</span>
+                        </h4>
+                        <p class="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded-xl border border-slate-800">${g.def}</p>
+                    </div>
+
+                    <!-- Attached Past Paper MCQ Question -->
+                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60 space-y-2">
+                        <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center space-x-1">
+                            <i class="fa-solid fa-file-circle-question"></i>
+                            <span>Attached Edexcel Unit 3 Exam Question:</span>
+                        </div>
+                        <p class="text-xs text-slate-200 font-medium">${g.q}</p>
+                        
+                        <div class="grid grid-cols-2 gap-1.5 pt-1 text-[11px] text-slate-300">
+                            ${g.options.map(opt => `<div class="bg-slate-950 p-1.5 rounded border border-slate-800">${opt}</div>`).join('')}
+                        </div>
+
+                        <button onclick="document.getElementById('mcq-ans-${idx}').classList.toggle('hidden')" class="w-full mt-2 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition-all">
+                            Show / Hide Exam Solution
+                        </button>
+
+                        <div id="mcq-ans-${idx}" class="hidden p-2.5 bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs rounded-lg font-mono">
+                            ${g.ans}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterGlossary() {
+            renderGlossary();
+        }
+
+        /* ==================== ESSAY MODELS RENDERER ==================== */
+        function renderEssays() {
+            const container = document.getElementById('essays-container');
+            container.innerHTML = ESSAYS_DATA.map((e, idx) => `
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                        <h3 class="text-lg font-bold text-rose-300">${e.title}</h3>
+                        <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30">6 Marks - Practical Planning</span>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
+                        <strong class="text-rose-400">Official Exam Question Prompt:</strong> ${e.question}
+                    </div>
+
+                    <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
+                        ${e.answer}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderWebMisconceptions() {
+            const container = document.getElementById('web-misconceptions-container');
+            container.innerHTML = WEB_MISCONCEPTIONS_DATA.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4 relative overflow-hidden">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">${item.source}</span>
+                        <span class="text-xs text-slate-400 font-medium">${item.topic}</span>
+                    </div>
+
+                    <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
+
+                    <!-- Student Misconception Quote Box -->
+                    <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl space-y-1">
+                        <div class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span>Web Misconception Post:</span>
+                        </div>
+                        <p class="text-xs text-rose-200 italic font-medium leading-relaxed">"${item.misconception}"</p>
+                    </div>
+
+                    <!-- Explanation Container with Interactive Blur -->
+                    <div class="relative min-h-[110px] rounded-xl overflow-hidden border border-emerald-500/30 bg-emerald-950/10">
+                        <!-- Unblurred Mark Scheme Truth -->
+                        <div class="p-4 text-xs space-y-2">
+                            <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> <span>Scientific Truth & Examiner Reasoning:</span>
+                            </div>
+                            <p class="text-emerald-200 leading-relaxed font-normal">${item.explanation}</p>
+                        </div>
+
+                        <!-- Blur Overlay element -->
+                        <div id="web-blur-overlay-${idx}" onclick="toggleWebBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-4 text-center transition-all duration-500 ease-in-out cursor-pointer hover:bg-slate-950/80">
+                            <div class="w-9 h-9 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Explanation Blurred</span>
+                            <span class="text-[11px] text-amber-400 font-semibold mt-0.5 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">Click to Reveal Explanation</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleWebBlur(idx) {
+            const overlay = document.getElementById(`web-blur-overlay-${idx}`);
+            if (overlay) {
+                if (overlay.classList.contains('opacity-0')) {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }
+        }
+
+        /* ==================== ON LOAD INITIALIZATION ==================== */
+        window.onload = function() {
+            updateProgress();
+            renderSyllabus();
+            renderPitfalls();
+            renderGlossary();
+            renderEssays();
+            renderWebMisconceptions();
+            shuffleDeck();
+            calcCalorimetry();
+            calcUncertainty();
+            calcTitration();
+        };
+    </script>
+</body>
+</html>

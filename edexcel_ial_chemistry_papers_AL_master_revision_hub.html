@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel IAL Chemistry (Paper 4, 5 & 6) Master Revision Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- KaTeX for Math & Chemical Formula Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="initKaTeX()"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-active {
+            border-bottom: 3px solid #38bdf8;
+            color: #38bdf8;
+            font-weight: 700;
+        }
+        .subtab-active {
+            background-color: #0284c7;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .card-front {
+            transform: rotateY(0deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-front {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-back {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-sky-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-slate-900/95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                        <span class="text-xl">🧪</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-white leading-tight">Edexcel IAL Chemistry Master Hub</h1>
+                            <span class="text-[10px] font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-full">IAL A2</span>
+                        </div>
+                        <p class="text-xs text-sky-400 font-medium">Paper 4 (WCH14), Paper 5 (WCH15) & Paper 6 (WCH16)</p>
+                    </div>
+                </div>
+
+                <!-- Global Stats -->
+                <div class="hidden md:flex items-center space-x-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700 font-mono text-xs text-slate-300">
+                    <div>🎴 Flashcards: <span class="text-sky-400 font-bold">300</span></div>
+                    <div class="text-slate-600">|</div>
+                    <div>📖 Glossary Terms: <span class="text-emerald-400 font-bold">100+</span></div>
+                </div>
+            </div>
+
+            <!-- Main Navigation Tabs -->
+            <nav class="flex space-x-2 border-t border-slate-800/50 pt-1 text-sm font-medium">
+                <button onclick="switchMainTab('flashcards')" id="tab-flashcards" class="tab-btn tab-active px-5 py-3 whitespace-nowrap flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-layer-group text-purple-400 text-sm"></i> 
+                    <span>3D Interactive Flashcards (300)</span>
+                </button>
+                <button onclick="switchMainTab('glossary')" id="tab-glossary" class="tab-btn px-5 py-3 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-sm"></i> 
+                    <span>Master Glossary (Click to Reveal)</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ==================== TAB 1: 3D FLASHCARDS ==================== -->
+        <section id="view-flashcards" class="tab-view space-y-6">
+            
+            <!-- Filter & Search Bar -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+                    <button onclick="filterFlashcards('ALL')" class="card-filter-btn px-3 py-1.5 bg-sky-600 text-white rounded-lg text-xs font-semibold transition-all" data-paper="ALL">All Papers (300)</button>
+                    <button onclick="filterFlashcards('P4')" class="card-filter-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium transition-all" data-paper="P4">Paper 4 (100)</button>
+                    <button onclick="filterFlashcards('P5')" class="card-filter-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium transition-all" data-paper="P5">Paper 5 (100)</button>
+                    <button onclick="filterFlashcards('P6')" class="card-filter-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium transition-all" data-paper="P6">Paper 6 (100)</button>
+                </div>
+
+                <div class="flex items-center space-x-2 w-full md:w-auto">
+                    <button id="card-mode-deck" onclick="setCardViewMode('deck')" class="px-3.5 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all whitespace-nowrap">🎴 3D Deck</button>
+                    <button id="card-mode-list" onclick="setCardViewMode('list')" class="px-3.5 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all whitespace-nowrap">📝 Active List</button>
+                    <button onclick="shuffleDeck()" class="px-3 py-2 bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-shuffle"></i> <span>Shuffle</span>
+                    </button>
+                    <div class="relative w-full md:w-64">
+                        <input type="text" id="card-search" oninput="filterCardsSearch()" placeholder="Search questions..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-sky-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deck View Container -->
+            <div id="deck-view-container" class="max-w-2xl mx-auto space-y-6">
+                <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+                    <div>
+                        Card <span id="deck-current-index" class="text-sky-400 font-bold text-sm">1</span> of <span id="deck-total-count" class="font-bold text-sm">300</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>Jump to:</span>
+                        <input type="number" id="jump-card-input" min="1" max="300" onchange="jumpToCard(this.value)" class="w-16 bg-slate-900 border border-slate-700 text-sky-300 text-center rounded p-1 text-xs font-mono">
+                    </div>
+                </div>
+
+                <!-- 3D Card Flip Box -->
+                <div class="card-flip w-full h-96 cursor-pointer select-none" onclick="flipCard()">
+                    <div id="card-inner-el" class="card-inner relative w-full h-full rounded-2xl border border-sky-500/30 bg-slate-900/95 shadow-2xl transition-transform duration-500">
+                        
+                        <!-- Front Face -->
+                        <div class="card-front absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 rounded-2xl border border-sky-500/30">
+                            <div class="flex items-center justify-between border-b border-sky-500/20 pb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span id="card-front-paper" class="text-[11px] font-bold text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20 font-mono">Paper 4</span>
+                                    <span id="card-front-topic" class="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">Kinetics</span>
+                                </div>
+                                <span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full font-mono">Click to Flip</span>
+                            </div>
+
+                            <div class="text-sm sm:text-base font-bold text-slate-100 my-auto text-center px-2 leading-relaxed" id="card-front-question">
+                                Loading Question...
+                            </div>
+
+                            <div class="text-xs text-slate-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-sky-400"></i>
+                                <span>Click card to reveal Mark Scheme Answer</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face -->
+                        <div class="card-back absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/98 rounded-2xl border border-emerald-500/50 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                                <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                    <span>Mark Scheme Answer</span>
+                                </span>
+                                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Answer Revealed</span>
+                            </div>
+
+                            <div class="text-xs sm:text-sm text-slate-200 my-auto leading-relaxed overflow-y-auto max-h-56 px-3 py-2 custom-scrollbar whitespace-pre-line text-left bg-emerald-950/30 rounded-xl border border-emerald-500/20" id="card-back-answer">
+                                Loading Answer...
+                            </div>
+
+                            <div class="text-xs text-emerald-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                                <span>Click again to flip back</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center px-2 gap-2">
+                    <button onclick="prevCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Previous</span>
+                    </button>
+
+                    <button onclick="nextCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <span>Next</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- List View Container -->
+            <div id="list-view-container" class="max-w-4xl mx-auto space-y-4 hidden">
+                <div id="list-cards-holder" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: MASTER GLOSSARY ==================== -->
+        <section id="view-glossary" class="tab-view space-y-6 hidden">
+            
+            <!-- Subtab Navigation -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <button onclick="switchGlossarySubtab('P4')" id="gloss-subtab-P4" class="gloss-subtab-btn subtab-active px-4 py-2 rounded-xl text-xs font-semibold transition-all">Paper 4 Vocabulary</button>
+                    <button onclick="switchGlossarySubtab('P5')" id="gloss-subtab-P5" class="gloss-subtab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all">Paper 5 Vocabulary</button>
+                    <button onclick="switchGlossarySubtab('P6')" id="gloss-subtab-P6" class="gloss-subtab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all">Paper 6 Vocabulary</button>
+                </div>
+
+                <div class="relative w-full sm:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Search terms or definitions..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs focus:ring-2 focus:ring-cyan-500">
+                </div>
+            </div>
+
+            <!-- Glossary Cards Grid -->
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+    </main>
+
+    <script>
+        /* ==================== DATASETS ==================== */
+        
+        // 300 FLASHCARDS DATASET (100 P4 + 100 P5 + 100 P6)
+        const FLASHCARDS_DATA = [
+            /* ------------ PAPER 4 (1-100) ------------ */
+            { id: 1, paper: "P4", topic: "Rates & Kinetics", q: "Why is a reaction order with respect to a reactant not determined by its stoichiometric coefficient in the overall balanced equation?", a: "• Stoichiometric coefficients represent overall mole ratios.\n• Reaction order depends ONLY on the species involved in the rate-determining (slowest) step of the reaction mechanism." },
+            { id: 2, paper: "P4", topic: "Rates & Kinetics", q: "In an Arrhenius plot of $\\ln k$ vs $\\frac{1}{T}$, state the gradient and how activation energy $E_a$ is calculated.", a: "• Gradient $m = -\\frac{E_a}{R}$.\n• Activation energy $E_a = -m \\times 8.314 \\text{ J K}^{-1}\\text{mol}^{-1}$.\n• Divide by 1000 to convert final answer to $\\text{kJ mol}^{-1}$." },
+            { id: 3, paper: "P4", topic: "Rates & Kinetics", q: "Why must the scavenger reagent (e.g. $\\text{S}_2\\text{O}_3^{2-}$) in an iodine clock reaction be added in small, limiting amounts?", a: "• Ensures it is rapidly consumed in a tiny initial fraction of the overall reaction.\n• Allows measurement of time $t$ corresponding strictly to initial rate before reactant concentrations change significantly." },
+            { id: 4, paper: "P4", topic: "Rates & Kinetics", q: "Explain why quenching with ice-cold water stops a reaction aliquot during a titrimetric kinetics study.", a: "• Drastically lowers temperature, reducing average kinetic energy of molecules below $E_a$.\n• Dilutes reactant concentrations, drastically reducing successful collision frequency." },
+            { id: 5, paper: "P4", topic: "Rates & Kinetics", q: "Contrast the concentration-time graphs for 0-order and 1st-order reactions.", a: "• 0-Order: Straight line with constant negative gradient (Rate = $k$).\n• 1st-Order: Downward curve with constant half-life ($t_{1/2}$)." },
+            { id: 6, paper: "P4", topic: "Rates & Kinetics", q: "State the unit of rate constant $k$ for a 2nd-order overall reaction.", a: "• Rate = $k[A]^2 \\implies k = \\frac{\\text{mol dm}^{-3}\\text{ s}^{-1}}{(\\text{mol dm}^{-3})^2} = \\text{dm}^3 \\text{mol}^{-1} \\text{s}^{-1}$." },
+            { id: 7, paper: "P4", topic: "Rates & Kinetics", q: "What is the relationship between rate-determining step and species appearing in the rate equation?", a: "• Species appearing in the rate equation are involved in the rate-determining step (or pre-equilibrium steps forming rate-determining intermediates)." },
+            { id: 8, paper: "P4", topic: "Rates & Kinetics", q: "Why does a catalyst increase reaction rate without changing $K_c$ or $\\Delta H$?", a: "• Provides an alternative route with lower $E_a$, speeding up forward and reverse reactions EQUALLY.\n• Does not change initial/final energy levels or equilibrium position." },
+            { id: 9, paper: "P4", topic: "Rates & Kinetics", q: "How can half-life ($t_{1/2}$) confirm 1st-order kinetics from a concentration-time graph?", a: "• Calculate time taken for concentration to halve across multiple successive intervals.\n• If $t_{1/2}$ remains CONSTANT, reaction is 1st order." },
+            { id: 10, paper: "P4", topic: "Rates & Kinetics", q: "Why does temperature increase cause a exponential increase in rate constant $k$?", a: "• According to Arrhenius ($k = A e^{-E_a/RT}$), higher $T$ increases fraction of molecules with $E \\ge E_a$ exponentially." },
+
+            { id: 11, paper: "P4", topic: "Equilibria & Entropy", q: "Why does changing pressure or concentration shift equilibrium position but NOT change $K_c$?", a: "• $K_c$ is a thermodynamic constant dependent ONLY on temperature.\n• Shifts in concentration/pressure restore the ratio of products to reactants to match fixed $K_c$." },
+            { id: 12, paper: "P4", topic: "Equilibria & Entropy", q: "How does temperature affect $K_c$ for an ENDOTHERMIC reaction ($\\Delta H > 0$)?", a: "• Increasing $T$ shifts equilibrium to right (endothermic direction) to absorb added heat.\n• Yield of products increases, so $K_c$ INCREASES." },
+            { id: 13, paper: "P4", topic: "Equilibria & Entropy", q: "State the equation for entropy change of surroundings ($\\Delta S_{\\text{surr}}$).", a: "• $\\Delta S_{\\text{surr}} = -\\frac{\\Delta H}{T}$ (where $\\Delta H$ is in $\\text{J mol}^{-1}$ and $T$ in Kelvin)." },
+            { id: 14, paper: "P4", topic: "Equilibria & Entropy", q: "What condition determines thermodynamic feasibility of a chemical process?", a: "• Total entropy change must be POSITIVE: $\\Delta S_{\\text{tot}} = \\Delta S_{\\text{sys}} + \\Delta S_{\\text{surr}} > 0$." },
+            { id: 15, paper: "P4", topic: "Equilibria & Entropy", q: "Link $\\Delta S_{\\text{tot}}$ to equilibrium constant $K$.", a: "• $\\Delta S_{\\text{tot}} = R \\ln K$.\n• Positive $\\Delta S_{\\text{tot}}$ gives $K > 1$ (products favored)." },
+            { id: 16, paper: "P4", topic: "Equilibria & Entropy", q: "Why is $\\Delta S_{\\text{sys}}$ positive for thermal decomposition of $\\text{CaCO}_3$(s) $\\rightarrow \\text{CaO}$(s) + $\\text{CO}_2$(g)?", a: "• Gas produced from solid starting material increases number of moles of gas (higher disorder/microstates)." },
+            { id: 17, paper: "P4", topic: "Equilibria & Entropy", q: "How to calculate minimum temperature at which an endothermic reaction becomes feasible?", a: "• Set $\\Delta S_{\\text{tot}} = 0 \\implies \\Delta S_{\\text{sys}} = -\\Delta S_{\\text{surr}} = \\frac{\\Delta H}{T} \\implies T = \\frac{\\Delta H}{\\Delta S_{\\text{sys}}}$." },
+            { id: 18, paper: "P4", topic: "Equilibria & Entropy", q: "Why is hydrated copper sulfate dissolution enthalpy slightly endothermic yet spontaneous?", a: "• Large positive increase in system entropy ($\\Delta S_{\\text{sys}} > 0$) from solid lattice to mobile hydrated ions outweighs negative $\\Delta S_{\\text{surr}}$." },
+            { id: 19, paper: "P4", topic: "Equilibria & Entropy", q: "Why are solids excluded from $K_c$ expressions?", a: "• Concentrations of pure solids are constant and incorporated into the value of $K_c$." },
+            { id: 20, paper: "P4", topic: "Equilibria & Entropy", q: "Why does gas phase reaction $2\\text{NO}_2 \\rightleftharpoons \\text{N}_2\\text{O}_4$ have negative $\\Delta S_{\\text{sys}}$?", a: "• 2 moles of gas condense into 1 mole of gas, decreasing number of particles and disorder." },
+
+            { id: 21, paper: "P4", topic: "Lattice Energy & Cycles", q: "Why is experimental Born-Haber lattice energy more exothermic than theoretical ionic lattice energy for $\\text{MgCl}_2$?", a: "• Theoretical model assumes purely spherical ionic bonding.\n• Small, highly charged $\\text{Mg}^{2+}$ cation polarises electron cloud of $\\text{Cl}^-$, adding COVALENT character." },
+            { id: 22, paper: "P4", topic: "Lattice Energy & Cycles", q: "State two factors that increase the exothermic magnitude of lattice energy.", a: "1. Higher ionic charge (greater electrostatic attraction).\n2. Smaller ionic radius (ions pack closer together)." },
+            { id: 23, paper: "P4", topic: "Lattice Energy & Cycles", q: "State Hess's Law relationship linking Enthalpy of Solution ($\\Delta_{\\text{sol}}H$), Lattice Energy (LE), and Hydration Enthalpies ($\\Delta_{\\text{hyd}}H$).", a: "• $\\Delta_{\\text{sol}}H = \\text{LE (dissociation)} + \\sum \\Delta_{\\text{hyd}}H$ (or $\\Delta_{\\text{sol}}H = -\\text{LE (formation)} + \\sum \\Delta_{\\text{hyd}}H$)." },
+            { id: 24, paper: "P4", topic: "Lattice Energy & Cycles", q: "Why is hydration enthalpy of $\\text{Al}^{3+}$ much more exothermic than $\\text{Na}^+$?", a: "• $\\text{Al}^{3+}$ has much higher charge density (higher charge, smaller radius), forming stronger ion-dipole bonds with water." },
+            { id: 25, paper: "P4", topic: "Lattice Energy & Cycles", q: "Define 1st Electron Affinity.", a: "• Enthalpy change when 1 mole of gaseous atoms each gains 1 electron to form 1 mole of gaseous 1- ions." },
+            { id: 26, paper: "P4", topic: "Lattice Energy & Cycles", q: "Why is 2nd Electron Affinity of Oxygen ENDOTHERMIC?", a: "• Adding a negative electron to an already negative $\\text{O}^-$ ion requires overcoming strong electrostatic repulsion." },
+            { id: 27, paper: "P4", topic: "Lattice Energy & Cycles", q: "Why does $\\text{BaSO}_4$ have a very endothermic $\\Delta_{\\text{sol}}H$ compared to $\\text{MgSO}_4$?", a: "• As cation size increases down Group 2, hydration enthalpy decreases more rapidly than lattice energy, making solution process unfavorable." },
+            { id: 28, paper: "P4", topic: "Lattice Energy & Cycles", q: "What ionic properties maximize polarization of an anion?", a: "• High cation charge density (small radius, high charge) and large polarisable anion electron cloud." },
+            { id: 29, paper: "P4", topic: "Lattice Energy & Cycles", q: "Define Enthalpy of Atomisation.", a: "• Enthalpy change when 1 mole of gaseous atoms is formed from an element in its standard state." },
+            { id: 30, paper: "P4", topic: "Lattice Energy & Cycles", q: "Why is theoretical lattice energy accurate for $\\text{NaCl}$ but inaccurate for $\\text{AgI}$?", a: "• $\\text{NaCl}$ is almost 100% ionic.\n• $\\text{AgI}$ has significant covalent character due to polarization of large $\\text{I}^-$ by $\\text{Ag}^+$." },
+
+            { id: 31, paper: "P4", topic: "Acids, Bases & Buffers", q: "Formula for pH of strong monoprotic acid vs weak monoprotic acid.", a: "• Strong acid: $\\text{pH} = -\\log_{10}[\\text{Acid}]$.\n• Weak acid: $[\\text{H}^+] \\approx \\sqrt{K_a [\\text{HA}]} \\implies \\text{pH} = -\\log_{10}\\sqrt{K_a [\\text{HA}]}$." },
+            { id: 32, paper: "P4", topic: "Acids, Bases & Buffers", q: "Why does $K_w$ increase with temperature?", a: "• Water auto-ionisation ($\\text{H}_2\\text{O} \\rightleftharpoons \\text{H}^+ + \\text{OH}^-$) is ENDOTHERMIC.\n• Increasing $T$ shifts equilibrium right, increasing $K_w$." },
+            { id: 33, paper: "P4", topic: "Acids, Bases & Buffers", q: "How does an acidic buffer resist pH change when small amount of $\\text{OH}^-$ is added?", a: "• Added $\\text{OH}^-$ reacts with weak acid molecules: $\\text{HA} + \\text{OH}^- \\rightarrow \\text{A}^- + \\text{H}_2\\text{O}$.\n• $[\\text{HA}]$ and $[\\text{A}^-]$ remain large, maintaining stable $[\\text{H}^+]$ ratio." },
+            { id: 34, paper: "P4", topic: "Acids, Bases & Buffers", q: "What relationship holds at half-neutralisation volume during weak acid titration with strong base?", a: "• $[\\text{HA}] = [\\text{A}^-] \\implies K_a = [\\text{H}^+] \\implies \\text{pH} = \\text{p}K_a$." },
+            { id: 35, paper: "P4", topic: "Acids, Bases & Buffers", q: "Why is methyl orange UNSUITABLE for weak acid - strong base titration?", a: "• Methyl orange $pK_{\\text{In}}$ range (3.1-4.4) lies below steep vertical pH equivalence jump (7-10)." },
+            { id: 36, paper: "P4", topic: "Acids, Bases & Buffers", q: "Calculate pH of neutral water at 50°C where $K_w = 5.48 \\times 10^{-14} \\text{ mol}^2\\text{dm}^{-6}$.", a: "• $[\\text{H}^+] = \\sqrt{K_w} = 2.34 \\times 10^{-7} \\text{ mol dm}^{-3}$.\n• $\\text{pH} = -\\log_{10}(2.34 \\times 10^{-7}) = 6.63$ (water remains neutral because $[\\text{H}^+] = [\\text{OH}^-]$)." },
+            { id: 37, paper: "P4", topic: "Acids, Bases & Buffers", q: "Define Brønsted-Lowry acid and conjugate base.", a: "• Brønsted-Lowry acid: Proton ($\\text{H}^+$) donor.\n• Conjugate base: Species remaining after acid donates a proton." },
+            { id: 38, paper: "P4", topic: "Acids, Bases & Buffers", q: "Why does strong base titration curve start at low pH and end near pH 13?", a: "• Fully dissociated strong acid has very high initial $[\\text{H}^+]$ (low pH); excess strong base fully dissociates into $[\\text{OH}^-]$ (high pH)." },
+            { id: 39, paper: "P4", topic: "Acids, Bases & Buffers", q: "Formula for buffer pH using Henderson-Hasselbalch equation.", a: "• $\\text{pH} = \\text{p}K_a + \\log_{10}\\left(\\frac{[\\text{Conjugate Base}]}{[\\text{Weak Acid}]}\\right)$." },
+            { id: 40, paper: "P4", topic: "Acids, Bases & Buffers", q: "Why does blood buffer system rely on carbonic acid/hydrogencarbonate ($\\text{H}_2\\text{CO}_3/\\text{HCO}_3^-$)?", a: "• Maintains blood pH strictly between 7.35 and 7.45; excess acid is exhaled as $\\text{CO}_2$ gas via lungs." },
+
+            { id: 41, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "Why does $S_N1$ mechanism of chiral halogenoalkane result in a RACEMIC mixture?", a: "• $S_N1$ forms a PLANAR carbocation intermediate.\n• Nucleophile attacks top or bottom face with 50:50 equal probability." },
+            { id: 42, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "Why does $S_N2$ mechanism cause INVERSION of optical configuration?", a: "• One-step concerted mechanism where nucleophile performs BACKSIDE attack opposite leaving group." },
+            { id: 43, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "Why do tertiary halogenoalkanes react exclusively via $S_N1$?", a: "• 3 alkyl groups stabilize carbocation intermediate (+I effect).\n• Steric hindrance prevents nucleophilic backside $S_N2$ attack." },
+            { id: 44, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "State rate equations for $S_N1$ and $S_N2$ reactions of haloalkane RX.", a: "• $S_N1$: Rate = $k[\\text{RX}]$ (1st order overall).\n• $S_N2$: Rate = $k[\\text{RX}][\\text{Nu}^-]$ (2nd order overall)." },
+            { id: 45, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "Why do primary halogenoalkanes react primarily via $S_N2$?", a: "• Primary carbocations are unstable.\n• Minimal steric hindrance allows nucleophile backside attack." },
+            { id: 46, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "Which haloalkane hydrolyses fastest with $\\text{AgNO}_3$(aq): 1-chlorobutane, 1-bromobutane, or 1-iodobutane?", a: "• 1-iodobutane (weakest C-I bond enthalpy breaks fastest)." },
+            { id: 47, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "What reagent converts halogenoalkane to nitrile extending carbon chain by 1?", a: "• Potassium cyanide (KCN) in ethanol heated under reflux." },
+            { id: 48, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "What is observed when haloalkane reacts with ethanolic silver nitrate?", a: "• Precipitate forms: AgCl (white), AgBr (cream), AgI (yellow)." },
+            { id: 49, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "Why does nucleophilic addition of HCN to propanal produce a racemic mixture?", a: "• Carbonyl carbon $\\text{C=O}$ is PLANAR.\n• $\\text{CN}^-$ attacks top or bottom face with equal 50:50 probability." },
+            { id: 50, paper: "P4", topic: "Mechanisms & Halogenoalkanes", q: "Role of trace $\\text{NaOH}$ added to HCN during nucleophilic addition to carbonyls.", a: "• Generates strong $\\text{CN}^-$ nucleophile by deprotonating HCN: $\\text{HCN} + \\text{OH}^- \\rightarrow \\text{CN}^- + \\text{H}_2\\text{O}$." },
+
+            { id: 51, paper: "P4", topic: "Carbonyls & Esters", q: "Reagent and observation for general test for carbonyl group ($\\text{C=O}$).", a: "• 2,4-dinitrophenylhydrazine (2,4-DNPH / Brady's reagent).\n• Yellow/orange/red precipitate forms." },
+            { id: 52, paper: "P4", topic: "Carbonyls & Esters", q: "How to distinguish aldehyde from ketone using Tollens' reagent?", a: "• Aldehyde: Forms silver mirror ($\\text{Ag}^+$ reduced to $\\text{Ag}$). ketone: No reaction." },
+            { id: 53, paper: "P4", topic: "Carbonyls & Esters", q: "Fehling's solution observation with aldehydes.", a: "• Blue solution forms brick-red precipitate ($\\text{Cu}_2\\text{O}$)." },
+            { id: 54, paper: "P4", topic: "Carbonyls & Esters", q: "Iodoform test reagents and positive observation for methyl ketones.", a: "• $\\text{I}_2 + \\text{NaOH}$(aq).\n• Pale yellow precipitate (triiodomethane, $\\text{CHI}_3$) with antiseptic smell." },
+            { id: 55, paper: "P4", topic: "Carbonyls & Esters", q: "Reducing agent to convert carboxylic acid to 1° alcohol.", a: "• Lithium tetrahydridoaluminate ($\text{LiAlH}_4$) in dry ether." },
+            { id: 56, paper: "P4", topic: "Carbonyls & Esters", q: "Products of alkaline ester hydrolysis (saponification) of ethyl ethanoate with $\\text{NaOH}$.", a: "• Sodium ethanoate ($\text{CH}_3\text{COONa}$) and ethanol ($\text{CH}_3\text{CH}_2\text{OH}$)." },
+            { id: 57, paper: "P4", topic: "Carbonyls & Esters", q: "Why is alkaline ester hydrolysis irreversible while acid hydrolysis is reversible?", a: "• Carboxylate anion ($\text{RCOO}^-$) formed in alkali is resonance-stabilized and unreactive towards nucleophilic attack by alcohol." },
+            { id: 58, paper: "P4", topic: "Carbonyls & Esters", q: "Reagents to prepare acyl chloride from carboxylic acid.", a: "• Phosphorus(V) chloride ($\text{PCl}_5$) or thionyl chloride ($\text{SOCl}_2$)." },
+            { id: 59, paper: "P4", topic: "Carbonyls & Esters", q: "Reaction of acyl chloride with water observation.", a: "• Vigorous reaction producing steamy/misty fumes of $\text{HCl}$ gas." },
+            { id: 60, paper: "P4", topic: "Carbonyls & Esters", q: "Why do carboxylic acids have higher boiling points than alcohols of similar $M_r$?", a: "• Form stable hydrogen-bonded dimers in solid/liquid state." },
+
+            { id: 61, paper: "P4", topic: "Polymers & Spectroscopy", q: "Define condensation polymerisation.", a: "• Monomers with two functional groups join together with elimination of a small molecule (e.g. $\\text{H}_2\\text{O}$ or $\\text{HCl}$)." },
+            { id: 62, paper: "P4", topic: "Polymers & Spectroscopy", q: "Monomers used to synthesize Nylon-6,6.", a: "• Hexane-1,6-dioic acid and hexane-1,6-diamine." },
+            { id: 63, paper: "P4", topic: "Polymers & Spectroscopy", q: "Monomers for polyester Kevlar / Terylene (PET).", a: "• Benzene-1,4-dicarboxylic acid and ethane-1,2-diol." },
+            { id: 64, paper: "P4", topic: "Polymers & Spectroscopy", q: "Why are polyamides biodegradable while addition polymers (polyalkenes) are not?", a: "• Amide links ($-\\text{CONH}-$) undergo hydrolysis by water/acid/alkali in environment; polyalkene $\\text{C-C}$ backbone is non-polar and inert." },
+            { id: 65, paper: "P4", topic: "Polymers & Spectroscopy", q: "Information given by number of peaks in $^{13}\\text{C}$ NMR spectrum.", a: "• Number of chemically non-equivalent carbon environments." },
+            { id: 66, paper: "P4", topic: "Polymers & Spectroscopy", q: "Information given by peak integration in $^1\\text{H}$ NMR spectrum.", a: "• Relative number of hydrogen (proton) atoms in each environment." },
+            { id: 67, paper: "P4", topic: "Polymers & Spectroscopy", q: "State the $n+1$ rule for $^1\\text{H}$ NMR peak splitting.", a: "• Proton peak is split into $n+1$ sub-peaks, where $n$ is number of equivalent protons on adjacent carbon atoms." },
+            { id: 68, paper: "P4", topic: "Polymers & Spectroscopy", q: "Peak multiplicity for $-\\text{CH}_2-$ protons adjacent to $-\\text{CH}_3$ group.", a: "• Quartet ($3 + 1 = 4$ sub-peaks with ratio 1:3:3:1)." },
+            { id: 69, paper: "P4", topic: "Polymers & Spectroscopy", q: "Why is Tetramethylsilane (TMS) used as NMR reference standard?", a: "• Gives single sharp peak at $\\delta = 0\\text{ ppm}$, inert, non-toxic, low boiling point." },
+            { id: 70, paper: "P4", topic: "Polymers & Spectroscopy", q: "IR absorption range for ester carbonyl group ($\\text{C=O}$).", a: "• Strong, sharp absorption band at $1735-1750\\text{ cm}^{-1}$." },
+
+            { id: 71, paper: "P4", topic: "Advanced Spectroscopy", q: "What fragment ion causes peak at $m/z = 45$ in carboxylic acid mass spec?", a: "• $[\\text{COOH}]^+$." },
+            { id: 72, paper: "P4", topic: "Advanced Spectroscopy", q: "What fragment ion causes peak at $m/z = 43$ in propanone mass spec?", a: "• $[\\text{CH}_3\\text{CO}]^+$ or $[\\text{C}_3\\text{H}_7]^+$." },
+            { id: 73, paper: "P4", topic: "Advanced Spectroscopy", q: "Why does high-resolution $^1\\text{H}$ NMR distinguish propanal from propanone?", a: "• Propanal: 3 environments, splitting present (aldehyde proton singlet at $\\delta 9.8$).\n• Propanone: 1 symmetrical carbon environment (singlet at $\\delta 2.1$)." },
+            { id: 74, paper: "P4", topic: "Advanced Spectroscopy", q: "Why is $\\text{D}_2\\text{O}$ added to sample in $^1\\text{H}$ NMR spectroscopy?", a: "• Exchangeable $-\\text{OH}$ and $-\\text{NH}-$ protons swap with deuterium ($\\text{D}$), causing those peaks to disappear and confirming functional group." },
+            { id: 75, paper: "P4", topic: "Advanced Spectroscopy", q: "Why are deuterated solvents (e.g. $\\text{CDCl}_3$) used in NMR?", a: "• Deuterium ($^2\\text{H}$) nucleus does not absorb radio frequency in $^1\\text{H}$ NMR range, avoiding solvent interference." },
+            { id: 76, paper: "P4", topic: "Advanced Spectroscopy", q: "Identify structure of $M_r = 60$ compound with IR peak at $1715\\text{ cm}^{-1}$ and $2500-3300\\text{ cm}^{-1}$ broad band.", a: "• Ethanoic acid ($\\text{CH}_3\\text{COOH}$) containing $\\text{C=O}$ and carboxylic acid $\\text{O-H}$." },
+            { id: 77, paper: "P4", topic: "Advanced Spectroscopy", q: "How many $^{13}\\text{C}$ NMR peaks for pentan-3-one?", a: "• 3 peaks (symmetrical structure: C1/C5, C2/C4, C3)." },
+            { id: 78, paper: "P4", topic: "Advanced Spectroscopy", q: "How many $^{13}\\text{C}$ NMR peaks for pentan-2-one?", a: "• 5 peaks (asymmetrical structure)." },
+            { id: 79, paper: "P4", topic: "Advanced Spectroscopy", q: "IR absorption difference between alcohol and carboxylic acid $\\text{O-H}$ stretch.", a: "• Alcohol $\\text{O-H}$: Smooth broad band at $3200-3600\\text{ cm}^{-1}$.\n• Acid $\\text{O-H}$: Very broad band overlapping $\\text{C-H}$ at $2500-3300\\text{ cm}^{-1}$." },
+            { id: 80, paper: "P4", topic: "Advanced Spectroscopy", q: "What causes $M+1$ peak in mass spectrometry?", a: "• Small natural abundance ($1.1\\%$) of Carbon-13 ($^{13}\\text{C}$) isotope." },
+
+            { id: 81, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Define chiral center.", a: "• Carbon atom bonded to four different atoms or groups of atoms." },
+            { id: 82, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Why is a racemic mixture optically inactive?", a: "• Contains equal 50:50 amounts of enantiomers; clockwise rotation of plane-polarised light by one enantiomer cancels anti-clockwise rotation by the other." },
+            { id: 83, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "How to test optical activity of a sample?", a: "• Pass plane-polarised light through polarimeter tube; optically active sample rotates plane of polarisation." },
+            { id: 84, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Reagent to convert ketone to 2° alcohol.", a: "• Sodium tetrahydridoborate(III) ($\\text{NaBH}_4$) in aqueous solution." },
+            { id: 85, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Convert propanone to 2-hydroxy-2-methylpropanenitrile.", a: "• Add $\\text{KCN}$ and dilute $\\text{H}_2\\text{SO}_4$ (or $\\text{HCN}$ with trace $\\text{NaOH}$)." },
+            { id: 86, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Convert ester methyl propanoate back to propanoic acid and methanol.", a: "• Reflux with dilute aqueous acid catalyst ($\\text{HCl}$ or $\\text{H}_2\\text{SO}_4$)." },
+            { id: 87, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Why does propanoic acid react with $\\text{Na}_2\\text{CO}_3$ while propan-1-ol does not?", a: "• Carboxylic acid is acidic enough to liberate $\\text{CO}_2$ gas from carbonate; alcohols are not acidic enough." },
+            { id: 88, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Define enantiomers.", a: "• Non-superimposable mirror-image stereoisomers." },
+            { id: 89, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "Why does 2-chlorobutane form optical isomers while 1-chlorobutane does not?", a: "• C2 in 2-chlorobutane is bonded to 4 different groups ($-\\text{H}$, $-\\text{Cl}$, $-\\text{CH}_3$, $-\\text{CH}_2\\text{CH}_3$); C1 in 1-chlorobutane has two identical $-\\text{H}$ atoms." },
+            { id: 90, paper: "P4", topic: "Organic Synthesis & Isomerism", q: "What reagent converts ester to alcohol and carboxylate salt?", a: "• Reflux with aqueous sodium hydroxide ($\text{NaOH}(aq)$)." },
+
+            { id: 91, paper: "P4", topic: "Quantitative Kinetics", q: "If doubling $[A]$ quadruples rate and tripling $[B]$ triples rate, write rate equation.", a: "• Rate = $k[A]^2[B]$." },
+            { id: 92, paper: "P4", topic: "Quantitative Kinetics", q: "How to calculate initial rate from concentration-time graph?", a: "• Draw tangent to curve at $t = 0$ and measure its gradient." },
+            { id: 93, paper: "P4", topic: "Quantitative Kinetics", q: "Why is half-life independent of initial concentration for 1st-order reactions?", a: "• Integrated rate equation $t_{1/2} = \\frac{\\ln 2}{k}$ depends strictly on rate constant $k$." },
+            { id: 94, paper: "P4", topic: "Quantitative Kinetics", q: "What is order of reaction if graph of Rate vs $[A]^2$ is a straight line through origin?", a: "• 2nd order with respect to $A$." },
+            { id: 95, paper: "P4", topic: "Quantitative Kinetics", q: "How does 10°C temperature rise affect typical reaction rate?", a: "• Approximately DOUBLES the rate due to higher fraction of collisions with $E \\ge E_a$." },
+            { id: 96, paper: "P4", topic: "Quantitative Kinetics", q: "Why does activation energy $E_a$ remain constant when temperature increases?", a: "• $E_a$ is an intrinsic minimum energy barrier determined by reaction mechanism structure." },
+            { id: 97, paper: "P4", topic: "Quantitative Kinetics", q: "In rate equation Rate = $k[A][B]$, if volume of system is halved, how does rate change?", a: "• Halving volume doubles concentrations of both $A$ and $B$; rate increases by factor of $2 \\times 2 = 4$." },
+            { id: 98, paper: "P4", topic: "Quantitative Kinetics", q: "What step in mechanism determines rate equation?", a: "• The slowest step (rate-determining step)." },
+            { id: 99, paper: "P4", topic: "Quantitative Kinetics", q: "How to prove zero order from concentration-time graph?", a: "• Show graph is a straight line with constant negative slope." },
+            { id: 100, paper: "P4", topic: "Quantitative Kinetics", q: "Convert gradient $m = -5200\\text{ K}$ from Arrhenius plot to $E_a$ in $\\text{kJ mol}^{-1}$.", a: "• $E_a = -(-5200) \\times 8.314 = 43232.8\\text{ J mol}^{-1} = 43.2\\text{ kJ mol}^{-1}$." },
+
+            /* ------------ PAPER 5 (101-200) ------------ */
+            { id: 101, paper: "P5", topic: "Electrochemistry", q: "Define Standard Electrode Potential ($E^\\circ$).", a: "• EMF of a half-cell relative to standard hydrogen electrode (SHE) under standard conditions (298 K, 100 kPa, $1.00\\text{ mol dm}^{-3}$ ions)." },
+            { id: 102, paper: "P5", topic: "Electrochemistry", q: "State components and conditions of Standard Hydrogen Electrode (SHE).", a: "• Platinum electrode coated with platinum black.\n• $\\text{H}_2$ gas at 100 kPa and 298 K.\n• $1.00\\text{ mol dm}^{-3}$ $\\text{H}^+$(aq) solution." },
+            { id: 103, paper: "P5", topic: "Electrochemistry", q: "Formula for $E^\\circ_{\\text{cell}}$ and condition for thermodynamic feasibility.", a: "• $E^\\circ_{\\text{cell}} = E^\\circ_{\\text{reduction}} - E^\\circ_{\\text{oxidation}}$.\n• Feasible if $E^\\circ_{\\text{cell}} > 0\\text{ V}$." },
+            { id: 104, paper: "P5", topic: "Electrochemistry", q: "Why might a reaction with positive $E^\\circ_{\\text{cell}}$ fail to occur in lab?", a: "1. High activation energy $E_a$ (kinetic stability).\n2. Non-standard concentration conditions." },
+            { id: 105, paper: "P5", topic: "Electrochemistry", q: "Equation linking $E^\\circ_{\\text{cell}}$ to Total Entropy Change ($\\Delta S_{\\text{tot}}$).", a: "• $\\Delta S_{\\text{tot}} = \\frac{n F E^\\circ_{\\text{cell}}}{T}$." },
+            { id: 106, paper: "P5", topic: "Electrochemistry", q: "Write overall equation and standard EMF for acidic $\\text{H}_2-\\text{O}_2$ fuel cell.", a: "• $2\\text{H}_2(g) + \\text{O}_2(g) \\rightarrow 2\\text{H}_2\\text{O}(l)$.\n• $E^\\circ_{\\text{cell}} = +1.23\\text{ V}$." },
+            { id: 107, paper: "P5", topic: "Electrochemistry", q: "Write anode half-equation for acidic $\\text{H}_2-\\text{O}_2$ fuel cell.", a: "• $2\\text{H}_2(g) \\rightarrow 4\\text{H}^+(aq) + 4e^-$." },
+            { id: 108, paper: "P5", topic: "Electrochemistry", q: "Write cathode half-equation for alkaline $\\text{H}_2-\\text{O}_2$ fuel cell.", a: "• $\\text{O}_2(g) + 2\\text{H}_2\\text{O}(l) + 4e^- \\rightarrow 4\\text{OH}^-(aq)$." },
+            { id: 109, paper: "P5", topic: "Electrochemistry", q: "Why does doubling stoichiometry coefficients NOT change $E^\\circ$ value?", a: "• $E^\\circ$ is an INTENSIVE property (voltage per unit charge) independent of total moles." },
+            { id: 110, paper: "P5", topic: "Electrochemistry", q: "Function of salt bridge in electrochemical cell.", a: "• Allows ion migration to complete circuit while preventing bulk solution mixing (e.g. filter paper soaked in saturated $\\text{KNO}_3$)." },
+
+            { id: 111, paper: "P5", topic: "Transition Metals", q: "Define transition metal.", a: "• d-block element forming one or more stable ions with an INCOMPLETELY FILLED d-orbital." },
+            { id: 112, paper: "P5", topic: "Transition Metals", q: "Why are Scandium ($\text{Sc}$) and Zinc ($\text{Zn}$) NOT transition metals?", a: "• $\\text{Sc}^{3+}$ is $3d^0$ (empty d-subshell).\n• $\\text{Zn}^{2+}$ is $3d^{10}$ (full d-subshell)." },
+            { id: 113, paper: "P5", topic: "Transition Metals", q: "Write full electronic configuration for $\\text{Cu}^+$ and $\\text{Cu}^{2+}$ ions.", a: "• $\\text{Cu}^+$: $1s^2 2s^2 2p^6 3s^2 3p^6 3d^{10}$.\n• $\\text{Cu}^{2+}$: $1s^2 2s^2 2p^6 3s^2 3p^6 3d^9$." },
+            { id: 114, paper: "P5", topic: "Transition Metals", q: "Why are $4s$ electrons removed before $3d$ electrons during transition metal ion formation?", a: "• Once filled with electrons, $3d$ subshell experiences greater nuclear attraction and becomes lower in energy than $4s$." },
+            { id: 115, paper: "P5", topic: "Transition Metals", q: "Explain origin of color in transition metal complex ions.", a: "• Ligands split degenerate $3d$ orbitals into two energy levels (gap $\\Delta E$).\n• $d$-electrons absorb specific frequencies of visible light ($\\Delta E = h\\nu$) for $d$-$d$ promotion.\n• Complementary color is transmitted." },
+            { id: 116, paper: "P5", topic: "Transition Metals", q: "Why are $\\text{Sc}^{3+}$ and $\\text{Zn}^{2+}$ solutions colorless?", a: "• $\\text{Sc}^{3+}$ ($3d^0$): No electrons to promote.\n• $\\text{Zn}^{2+}$ ($3d^{10}$): No vacant $3d$ orbital for promotion." },
+            { id: 117, paper: "P5", topic: "Transition Metals", q: "Define ligand and coordination number.", a: "• Ligand: Atom, ion or molecule donating a lone pair of electrons to central metal ion forming a dative bond.\n• Coordination number: Total number of dative bonds formed to metal ion." },
+            { id: 118, paper: "P5", topic: "Transition Metals", q: "Shape and bond angle for $[\text{CuCl}_4]^{2-}$.", a: "• Tetrahedral with $109.5^\circ$ bond angles (large $\\text{Cl}^-$ ligands cause steric hindrance)." },
+            { id: 119, paper: "P5", topic: "Transition Metals", q: "Shape, bond angle, and medical use of cis-platin.", a: "• Square planar geometry ($90^\circ$).\n• Anti-cancer chemotherapy drug." },
+            { id: 120, paper: "P5", topic: "Transition Metals", q: "Explain the chelate effect in terms of entropy.", a: "• Replacing monodentate ligands with multidentate ligands increases total particle count in solution.\n• Creates positive system entropy ($\\Delta S_{\\text{sys}} > 0$), making $\\Delta G$ negative and complex highly stable." },
+
+            { id: 121, paper: "P5", topic: "Transition Metal Reactions", q: "Colors of Vanadium in oxidation states +5, +4, +3, +2.", a: "• +5 ($\\text{VO}_2^+$): Yellow.\n• +4 ($\\text{VO}^{2+}$): Blue.\n• +3 ($\\text{V}^{3+}$): Green.\n• +2 ($\\text{V}^{2+}$): Violet." },
+            { id: 122, paper: "P5", topic: "Transition Metal Reactions", q: "Observations when dropwise and excess $\\text{NaOH}$ added to $\\text{Cr}^{3+}$(aq).", a: "• Dropwise: Green precipitate $\\text{Cr(OH)}_3$.\n• Excess: Redissolves to dark green solution $[\\text{Cr(OH)}_6]^{3-}$ (amphoteric)." },
+            { id: 123, paper: "P5", topic: "Transition Metal Reactions", q: "Observations when dropwise and excess $\\text{NH}_3$ added to $\\text{Cu}^{2+}$(aq).", a: "• Dropwise: Pale blue ppt $\\text{Cu(OH)}_2$.\n• Excess: Redissolves to deep blue solution $[\\text{Cu(NH}_3)_4(\\text{H}_2\\text{O})_2]^{2+}$." },
+            { id: 124, paper: "P5", topic: "Transition Metal Reactions", q: "Observation for $\\text{Fe}^{2+}$(aq) with $\\text{NaOH}$(aq) on standing in air.", a: "• Green precipitate $\\text{Fe(OH)}_2$ turns red-brown on surface due to air oxidation to $\\text{Fe(OH)}_3$." },
+            { id: 125, paper: "P5", topic: "Transition Metal Reactions", q: "Why is $[\text{Fe}(\text{H}_2\text{O})_6]^{3+}$ more acidic than $[\text{Fe}(\text{H}_2\text{O})_6]^{2+}$?", a: "• $\\text{Fe}^{3+}$ has higher charge density and polarizing power, weakening $\\text{O-H}$ bonds in coordinated water ligands to release $\\text{H}^+$." },
+            { id: 126, paper: "P5", topic: "Transition Metal Reactions", q: "Equation and color change for dichromate/chromate equilibrium upon adding acid/alkali.", a: "• $\\text{Cr}_2\\text{O}_7^{2-} + \\text{H}_2\\text{O} \\rightleftharpoons 2\\text{CrO}_4^{2-} + 2\\text{H}^+$.\n• Orange (dichromate) $\\rightleftharpoons$ Yellow (chromate)." },
+            { id: 127, paper: "P5", topic: "Transition Metal Reactions", q: "Reagent used to reduce $\\text{Cr}_2\\text{O}_7^{2-}$ to $\\text{Cr}^{3+}$ and $\\text{Cr}^{2+}$.", a: "• Zinc metal in dilute hydrochloric acid." },
+            { id: 128, paper: "P5", topic: "Transition Metal Reactions", q: "Why does carbon monoxide cause haemoglobin poisoning?", a: "• $\\text{CO}$ forms a stronger dative bond with $\\text{Fe}^{2+}$ than $\\text{O}_2$, undergoing irreversible ligand exchange." },
+            { id: 129, paper: "P5", topic: "Transition Metal Reactions", q: "Observation when concentrated $\\text{HCl}$ added to pink $[\text{Co}(\text{H}_2\text{O})_6]^{2+}$.", a: "• Solution turns blue due to formation of tetrahedral $[\text{CoCl}_4]^{2-}$." },
+            { id: 130, paper: "P5", topic: "Transition Metal Reactions", q: "Define bidentate ligand with an example.", a: "• Donates TWO lone pairs forming TWO dative bonds to one metal ion (e.g. 1,2-diaminoethane or ethanedioate)." },
+
+            { id: 131, paper: "P5", topic: "Catalysis", q: "Outline 3 steps of heterogeneous catalysis.", a: "1. Adsorption of reactants onto catalyst active surface.\n2. Reaction on surface (bonds weakened).\n3. Desorption of products." },
+            { id: 132, paper: "P5", topic: "Catalysis", q: "Catalyst and equations for Contact Process.", a: "• Vanadium(V) oxide ($\\text{V}_2\\text{O}_5$).\n• $\\text{SO}_2 + \\text{V}_2\\text{O}_5 \\rightarrow \\text{SO}_3 + \\text{V}_2\\text{O}_4$.\n• $\\text{V}_2\\text{O}_4 + \\frac{1}{2}\\text{O}_2 \\rightarrow \\text{V}_2\\text{O}_5$." },
+            { id: 133, paper: "P5", topic: "Catalysis", q: "Why is reaction between $\\text{I}^-$ and $\\text{S}_2\\text{O}_8^{2-}$ slow without catalyst?", a: "• Both reactants are negative anions; high activation energy due to electrostatic repulsion." },
+            { id: 134, paper: "P5", topic: "Catalysis", q: "How does $\\text{Fe}^{2+}$ homogeneously catalyse $\\text{I}^- / \\text{S}_2\\text{O}_8^{2-}$ reaction?", a: "• 1. $\\text{S}_2\\text{O}_8^{2-} + 2\\text{Fe}^{2+} \\rightarrow 2\\text{SO}_4^{2-} + 2\\text{Fe}^{3+}$.\n• 2. $2\\text{Fe}^{3+} + 2\\text{I}^- \\rightarrow 2\\text{Fe}^{2+} + \\text{I}_2$." },
+            { id: 135, paper: "P5", topic: "Catalysis", q: "Define autocatalysis with an example.", a: "• Reaction where a reaction product acts as a catalyst.\n• Example: $\\text{Mn}^{2+}$ in $\\text{MnO}_4^- / \\text{C}_2\\text{O}_4^{2-}$ redox titration." },
+            { id: 136, paper: "P5", topic: "Catalysis", q: "Shape of concentration vs time graph for autocatalytic reaction.", a: "• Sigmoidal (S-shaped): Slow initially, accelerates as catalyst product forms, then slows down as reactants consume." },
+            { id: 137, paper: "P5", topic: "Catalysis", q: "Why are transition metals effective catalysts?", a: "• Variable oxidation states allow electron transfer; vacant $d$-orbitals allow surface adsorption." },
+            { id: 138, paper: "P5", topic: "Catalysis", q: "What is catalyst poisoning?", a: "• Impurities adsorb strongly onto active sites, blocking reactants from binding (e.g. sulfur in Haber process)." },
+            { id: 139, paper: "P5", topic: "Catalysis", q: "Role of platinum/palladium in catalytic converters.", a: "• Heterogeneous catalysis converting $\\text{CO} + \\text{NO} \\rightarrow \\text{CO}_2 + \\frac{1}{2}\\text{N}_2$ on active surface." },
+            { id: 140, paper: "P5", topic: "Catalysis", q: "Why can $\\text{Fe}^{3+}$ substitute $\\text{Fe}^{2+}$ as catalyst in $\\text{I}^-/\\text{S}_2\\text{O}_8^{2-}$ reaction?", a: "• Either oxidation state works because redox cycle involves both $\\text{Fe}^{2+}\\rightarrow\\text{Fe}^{3+}$ and $\\text{Fe}^{3+}\\rightarrow\\text{Fe}^{2+}$." },
+
+            { id: 141, paper: "P5", topic: "Arenes & Benzene", q: "3 pieces of evidence disproving Kekulé structure of benzene.", a: "1. Enthalpy of hydrogenation is $-205\\text{ kJ mol}^{-1}$ (149 less exothermic than expected $-354$).\n2. X-ray: All C-C bond lengths equal ($0.139\\text{ nm}$).\n3. Resists addition, undergoes electrophilic substitution." },
+            { id: 142, paper: "P5", topic: "Arenes & Benzene", q: "Describe bonding and orbital overlap in benzene.", a: "• Planar hexagonal ring of $sp^2$ carbons.\n• Sideways overlap of unhybridised $p$-orbitals forms delocalised $\\pi$-electron cloud above and below ring." },
+            { id: 143, paper: "P5", topic: "Arenes & Benzene", q: "Reagents and temperature for nitration of benzene.", a: "• Conc $\\text{HNO}_3$ + Conc $\\text{H}_2\\text{SO}_4$ at $55^\\circ\\text{C}$." },
+            { id: 144, paper: "P5", topic: "Arenes & Benzene", q: "Equations generating nitronium electrophile ($\\text{NO}_2^+$).", a: "• $\\text{HNO}_3 + 2\\text{H}_2\\text{SO}_4 \\rightarrow \\text{NO}_2^+ + \\text{H}_3\\text{O}^+ + 2\\text{HSO}_4^-$." },
+            { id: 145, paper: "P5", topic: "Arenes & Benzene", q: "Friedel-Crafts acylation reagents for benzene.", a: "• Acyl chloride ($\\text{RCOCl}$) with anhydrous $\\text{AlCl}_3$ catalyst." },
+            { id: 146, paper: "P5", topic: "Arenes & Benzene", q: "Why does phenol react with bromine water much faster than benzene?", a: "• Oxygen lone pair delocalises into aromatic $\\pi$-ring, increasing ring electron density and polarising $\\text{Br}_2$ without catalyst." },
+            { id: 147, paper: "P5", topic: "Arenes & Benzene", q: "Observations when bromine water is added to phenol.", a: "• Orange solution decolourises; white precipitate of 2,4,6-tribromophenol forms." },
+            { id: 148, paper: "P5", topic: "Arenes & Benzene", q: "What geometry does horseshoe intermediate have in benzene electrophilic substitution?", a: "• Broken ring horseshoe spanning C2 to C6 facing attacked sp3 carbon, with positive charge inside ring." },
+            { id: 149, paper: "P5", topic: "Arenes & Benzene", q: "Reagents to convert methylbenzene to benzoic acid.", a: "• Reflux with alkaline $\\text{KMnO}_4$, then acidify with $\\text{HCl}$." },
+            { id: 150, paper: "P5", topic: "Arenes & Benzene", q: "Does phenol react with $\\text{NaHCO}_3$?", a: "• NO! Phenol is a weak acid, not strong enough to liberate $\\text{CO}_2$ from carbonates." },
+
+            { id: 151, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Rank butylamine, ammonia, phenylamine, ethanamide in order of INCREASING basicity.", a: "• Ethanamide < Phenylamine < Ammonia < Butylamine." },
+            { id: 152, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Why is butylamine a stronger base than ammonia?", a: "• Alkyl butyl group is electron-releasing (+I inductive effect), increasing electron density on N lone pair." },
+            { id: 153, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Why is phenylamine a weaker base than ammonia?", a: "• Nitrogen lone pair delocalises into aromatic $\\pi$-cloud, making it less available for proton acceptance." },
+            { id: 154, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Reagents and conditions to prepare ethylamine from bromoethane.", a: "• Heat with EXCESS ethanolic ammonia under pressure." },
+            { id: 155, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Why use EXCESS ammonia in 1° amine synthesis from haloalkanes?", a: "• Prevents primary amine product from undergoing further substitution to 2°/3° amines or quaternary salts." },
+            { id: 156, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Reagents to reduce nitrobenzene to phenylamine.", a: "• Tin (Sn) + concentrated $\\text{HCl}$ under reflux, followed by $\\text{NaOH}$(aq) to liberate free amine." },
+            { id: 157, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Conditions and reagents for diazotisation of phenylamine.", a: "• $\\text{NaNO}_2 + \\text{HCl}$ (generating $\\text{HNO}_2$) at temperature STRICTLY BELOW $10^\\circ\\text{C}$." },
+            { id: 158, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Why must diazotisation temperature be kept below 10°C?", a: "• Benzenediazonium ion decomposes above 10°C releasing $\\text{N}_2$ gas and forming phenol." },
+            { id: 159, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Coupling reaction to form an azo dye from benzenediazonium chloride.", a: "• Add to phenol dissolved in $\\text{NaOH}$(aq) kept cold below $10^\\circ\\text{C}$." },
+            { id: 160, paper: "P5", topic: "Organic Nitrogen Chemistry", q: "Define zwitterion.", a: "• Dipolar ion containing both positive ($-\\text{NH}_3^+$) and negative ($-\\text{COO}^-$) groups with zero net charge." },
+
+            { id: 161, paper: "P5", topic: "Amino Acids & Polymers", q: "Structure of alanine ($R = -\\text{CH}_3$) at pH 1.", a: "• $^+\\text{H}_3\\text{N-CH(CH}_3)\\text{-COOH}$ (fully protonated cation)." },
+            { id: 162, paper: "P5", topic: "Amino Acids & Polymers", q: "Structure of alanine at pH 13.", a: "• \\text{H}_2\\text{N-CH(CH}_3)\\text{-COO}^- (deprotonated anion)." },
+            { id: 163, paper: "P5", topic: "Amino Acids & Polymers", q: "Why is glycine the ONLY alpha-amino acid that is optically inactive?", a: "• $R = -\\text{H}$; central carbon is bonded to 2 identical hydrogens, lacking a chiral center." },
+            { id: 164, paper: "P5", topic: "Amino Acids & Polymers", q: "Define isoelectric point.", a: "• Specific pH at which an amino acid exists predominantly as neutral zwitterion." },
+            { id: 165, paper: "P5", topic: "Amino Acids & Polymers", q: "Why do amino acids have unusually high melting points for organic solids?", a: "• Solid state exists as zwitterions held by strong ionic electrostatic attractions in crystal lattice." },
+            { id: 166, paper: "P5", topic: "Amino Acids & Polymers", q: "Why is poly(ethenol) water soluble despite being an addition polymer?", a: "• Contains abundant side $-\\text{OH}$ groups that form extensive hydrogen bonds with water molecules." },
+            { id: 167, paper: "P5", topic: "Amino Acids & Polymers", q: "Equation for reaction of ethanoyl chloride with methylamine.", a: "• $\\text{CH}_3\\text{COCl} + 2\\text{CH}_3\\text{NH}_2 \\rightarrow \\text{CH}_3\\text{CONHCH}_3 + \\text{CH}_3\\text{NH}_3^+\\text{Cl}^-$." },
+            { id: 168, paper: "P5", topic: "Amino Acids & Polymers", q: "What type of linkage holds amino acids together in proteins?", a: "• Peptide bond (amide link: $-\\text{CONH}-$)." },
+            { id: 169, paper: "P5", topic: "Amino Acids & Polymers", q: "Products when Nylon-6,6 undergoes acidic hydrolysis.", a: "• Hexanedioic acid and diammonium salt $^+\\text{H}_3\\text{N-(CH}_2)_6\\text{-NH}_3^+ 2\\text{Cl}^-$." },
+            { id: 170, paper: "P5", topic: "Amino Acids & Polymers", q: "Products when Nylon-6,6 undergoes alkaline hydrolysis.", a: "• Dicarboxylate salt $^-\\text{OOC-(CH}_2)_4\\text{-COO}^- 2\\text{Na}^+$ and hexane-1,6-diamine." },
+
+            { id: 171, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Reagents and conditions to form Grignard reagent.", a: "• Reflux haloalkane with Magnesium turnings in ANHYDROUS DRY ETHER." },
+            { id: 172, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Why must glassware be completely dry when preparing Grignard reagents ($\text{RMgX}$)?", a: "• Water destroys Grignard: $\\text{RMgX} + \\text{H}_2\\text{O} \\rightarrow \\text{RH} + \\text{Mg(OH)X}$ forming alkanes." },
+            { id: 173, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Product of $\\text{CH}_3\\text{MgBr} + \\text{CO}_2$ followed by dilute acid workup.", a: "• Ethanoic acid ($\\text{CH}_3\\text{COOH}$) (extends carbon chain by 1)." },
+            { id: 174, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Product of $\\text{CH}_3\\text{MgBr} + \\text{HCHO}$ (methanal) followed by acid.", a: "• Ethanol (1° alcohol)." },
+            { id: 175, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Product of $\\text{CH}_3\\text{MgBr} + \\text{CH}_3\\text{CHO}$ (ethanal) followed by acid.", a: "• Propan-2-ol (2° alcohol)." },
+            { id: 176, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Product of $\\text{CH}_3\\text{MgBr} + \\text{CH}_3\\text{COCH}_3$ (propanone) followed by acid.", a: "• 2-methylpropan-2-ol (3° alcohol)." },
+            { id: 177, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Equation for preparation of aspirin from 2-hydroxybenzoic acid.", a: "• 2-hydroxybenzoic acid + ethanoic anhydride $\\rightarrow$ Aspirin + ethanoic acid." },
+            { id: 178, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Why is ethanoic anhydride preferred over ethanoyl chloride in industrial synthesis of aspirin?", a: "• Safer rate, cheaper, forms harmless ethanoic acid (not corrosive toxic $\\text{HCl}$ gas)." },
+            { id: 179, paper: "P5", topic: "Organic Synthesis & Grignard", q: "Formula for Atom Economy.", a: "• $\\text{Atom Economy} = \\frac{\\text{Molar mass of desired product}}{\\sum \\text{Molar masses of all products}} \\times 100\\%$." },
+            { id: 180, paper: "P5", topic: "Organic Synthesis & Grignard", q: "How to calculate overall yield for a 3-step synthesis with yields 80%, 70%, 50%?", a: "• Overall yield = $0.80 \\times 0.70 \\times 0.50 = 0.28 = 28\\%$." },
+
+            { id: 181, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Convert propanenitrile to propylamine.", a: "• Reduce with $\\text{LiAlH}_4$ in dry ether followed by dilute acid." },
+            { id: 182, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Convert nitrobenzene to 1,3-dinitrobenzene.", a: "• Conc $\\text{HNO}_3$ + Conc $\\text{H}_2\\text{SO}_4$ heated ABOVE $100^\\circ\\text{C}$." },
+            { id: 183, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Why is $-\\text{NO}_2$ group 3-directing in aromatic substitution?", a: "• Electron-withdrawing group deactivates 2- and 4- positions relative to 3- position." },
+            { id: 184, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Why is $-\\text{OH}$ group 2,4-directing in phenol?", a: "• Electron-donating group increases electron density at 2-, 4-, and 6- positions." },
+            { id: 185, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Reagent to reduce propanamide to propylamines.", a: "• $\\text{LiAlH}_4$ in dry ether." },
+            { id: 186, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "How does melting point test confirm aspirin purity?", a: "• Pure aspirin melts sharply at $138^\\circ\\text{C}$; impurities lower melting point and broaden temperature range." },
+            { id: 187, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Why is ethanol added during alkali hydrolysis of immiscible esters?", a: "• Acts as mutual solvent to homogenise organic ester and aqueous $\\text{NaOH}$." },
+            { id: 188, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Formula for calculating overall percentage error.", a: "• $\\% \\text{Uncertainty} = \\frac{\\text{Total Apparatus Uncertainty}}{\\text{Measured Value}} \\times 100\\%$." },
+            { id: 189, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "Why does 2-methylphenol have 5 peaks in $^{13}\\text{C}$ NMR?", a: "• Asymmetrical aromatic ring giving 5 unique carbon environments." },
+            { id: 190, paper: "P5", topic: "Advanced Synthesis & Analysis", q: "How to convert phenylamine to bromobenzene?", a: "• Diazotise at $<10^\\circ\\text{C}$ to benzenediazonium chloride, then warm with Copper(I) bromide ($\\text{CuBr}$)." },
+
+            { id: 191, paper: "P5", topic: "Synoptic Synthesis Routes", q: "Outline 2-step synthesis of phenylmethanol from benzene.", a: "1. Benzene + $\\text{CH}_3\\text{Cl}/\\text{AlCl}_3 \\rightarrow$ Methylbenzene.\n2. Oxidation with alkaline $\\text{KMnO}_4$ then reduction of acid with $\\text{LiAlH}_4$." },
+            { id: 192, paper: "P5", topic: "Synoptic Synthesis Routes", q: "Why does phenylamine react with aqueous $\\text{Br}_2$ without catalyst?", a: "• $-\\text{NH}_2$ lone pair activates benzene ring by increasing $\\pi$-cloud electron density." },
+            { id: 193, paper: "P5", topic: "Synoptic Synthesis Routes", q: "Observation when phenylamine reacts with bromine water.", a: "• Decolourises bromine water and forms white precipitate of 2,4,6-tribromophenylamine." },
+            { id: 194, paper: "P5", topic: "Synoptic Synthesis Routes", q: "Why is Kevlar extremely strong and heat resistant?", a: "• Rigid planar aromatic rings with extensive inter-chain hydrogen bonding between polyamide linkages." },
+            { id: 195, paper: "P5", topic: "Synoptic Synthesis Routes", q: "What reagent distinguishes primary amine from amide?", a: "• $\\text{HCl}$(aq): Amine dissolves forming salt; amide does not react in cold." },
+            { id: 196, paper: "P5", topic: "Synoptic Synthesis Routes", q: "Why is Grignard addition to aldehydes carried out in two distinct stages?", a: "• Stage 1 (addition) requires dry ether; Stage 2 (acid hydrolysis) uses water which would destroy Grignard." },
+            { id: 197, paper: "P5", topic: "Synoptic Synthesis Routes", q: "What byproduct forms when ethanoic anhydride reacts with phenylamine?", a: "• Ethanoic acid ($\\text{CH}_3\\text{COOH}$)." },
+            { id: 198, paper: "P5", topic: "Synoptic Synthesis Routes", q: "Why does phenoxide ion have greater stability than ethoxide ion?", a: "• Negative charge on oxygen delocalises into aromatic $\\pi$-electron ring." },
+            { id: 199, paper: "P5", topic: "Synoptic Synthesis Routes", q: "What is observed when benzenediazonium chloride solution is warmed above 10°C?", a: "• Effervescence ($\\text{N}_2$ gas evolved) and smell of phenol." },
+            { id: 200, paper: "P5", topic: "Synoptic Synthesis Routes", q: "Why does addition polymerisation of ethenol fail directly?", a: "• Ethenol ($\\text{CH}_2=\\text{CHOH}$) tautomerises rapidly into ethanal ($\\text{CH}_3\\text{CHO}$); poly(ethenol) is made by hydrolysing poly(ethenyl ethanoate)." },
+
+            /* ------------ PAPER 6 (201-300) ------------ */
+            { id: 201, paper: "P6", topic: "Qualitative Analysis", q: "Observation when dropwise and excess $\\text{NaOH}$ added to $\\text{Fe}^{3+}$(aq).", a: "• Dropwise: Red-brown precipitate $\\text{Fe(OH)}_3$.\n• Excess: Precipitate is INSOLUBLE." },
+            { id: 202, paper: "P6", topic: "Qualitative Analysis", q: "Why add dilute $\\text{HNO}_3$ before adding $\\text{AgNO}_3$(aq) to test for halides?", a: "• Reacts with and removes carbonate ($\\text{CO}_3^{2-}$) or sulfite ($\\text{SO}_3^{2-}$) ions that would form false-positive white precipitates." },
+            { id: 203, paper: "P6", topic: "Qualitative Analysis", q: "Why MUST you NOT use hydrochloric acid ($\text{HCl}$) to acidify silver nitrate test?", a: "• Introduces chloride ions ($\\text{Cl}^-$), forming immediate false-positive white precipitate of $\\text{AgCl}$!" },
+            { id: 204, paper: "P6", topic: "Qualitative Analysis", q: "How to distinguish $\\text{AgCl}$, $\\text{AgBr}$, and $\\text{AgI}$ precipitates using aqueous ammonia?", a: "• $\\text{AgCl}$: Dissolves in DILUTE $\\text{NH}_3$.\n• $\\text{AgBr}$: Dissolves in CONCENTRATED $\\text{NH}_3$.\n• $\\text{AgI}$: INSOLUBLE in concentrated $\\text{NH}_3$." },
+            { id: 205, paper: "P6", topic: "Qualitative Analysis", q: "Flame test colors for $\\text{Ba}^{2+}$, $\\text{Ca}^{2+}$, $\\text{Li}^+$, $\\text{Na}^+$, $\\text{K}^+$.", a: "• $\\text{Ba}^{2+}$: Apple-green\n• $\\text{Ca}^{2+}$: Brick-red\n• $\\text{Li}^+$: Crimson red\n• $\\text{Na}^+$: Persistent yellow\n• $\\text{K}^+$: Lilac" },
+            { id: 206, paper: "P6", topic: "Qualitative Analysis", q: "Reagents and observation confirming sulfate ion ($\\text{SO}_4^{2-}$).", a: "• Add dilute $\\text{HCl}$ followed by $\\text{BaCl}_2$(aq).\n• Formation of white precipitate ($\\text{BaSO}_4$)." },
+            { id: 207, paper: "P6", topic: "Qualitative Analysis", q: "Reagent and observation to test for carboxylic acid.", a: "• Aqueous $\\text{Na}_2\\text{CO}_3$ or $\\text{NaHCO}_3$.\n• Effervescence ($\\text{CO}_2$ gas turns limewater cloudy)." },
+            { id: 208, paper: "P6", topic: "Qualitative Analysis", q: "Reagent and observation to test for alcohol $-\\text{OH}$ group.", a: "• Solid $\\text{PCl}_5$ at room temperature.\n• Steamy/misty fumes of $\\text{HCl}$ gas (turns damp blue litmus red)." },
+            { id: 209, paper: "P6", topic: "Qualitative Analysis", q: "Reagents and observation for Iodoform test.", a: "• Iodine ($\\text{I}_2$) and aqueous $\\text{NaOH}$.\n• Pale yellow precipitate ($\\text{CHI}_3$) with antiseptic smell." },
+            { id: 210, paper: "P6", topic: "Qualitative Analysis", q: "Observation when excess $\\text{NaOH}$ is added to $\\text{Zn}^{2+}$(aq).", a: "• White precipitate $\\text{Zn(OH)}_2$ dissolves to form colorless solution $[\\text{Zn(OH)}_4]^{2-}$." },
+
+            { id: 211, paper: "P6", topic: "Purification & Apparatus", q: "Why MUST water enter bottom and exit top of distillation condenser?", a: "• Ensures cooling jacket stays completely full of water and prevents air pockets/overheating." },
+            { id: 212, paper: "P6", topic: "Purification & Apparatus", q: "Why MUST top of reflux condenser be left OPEN to atmosphere?", a: "• Prevents dangerous pressure build-up leading to explosion when heated." },
+            { id: 213, paper: "P6", topic: "Purification & Apparatus", q: "Where should thermometer bulb be placed in simple distillation setup?", a: "• Directly opposite entrance to condenser side-arm to measure true boiling temperature of vapor." },
+            { id: 214, paper: "P6", topic: "Purification & Apparatus", q: "Outline 5 steps of recrystallisation purification.", a: "1. Dissolve crude solid in MINIMUM volume of HOT solvent.\n2. Filter hot through fluted filter paper.\n3. Cool filtrate in ice bath.\n4. Filter under suction on Büchner funnel.\n5. Wash crystals with ICE-COLD solvent & dry." },
+            { id: 215, paper: "P6", topic: "Purification & Apparatus", q: "Why use MINIMUM volume of hot solvent in recrystallisation?", a: "• Produces a saturated solution so maximum yield of pure crystals forms upon cooling." },
+            { id: 216, paper: "P6", topic: "Purification & Apparatus", q: "Why wash crystals with ICE-COLD solvent during suction filtration?", a: "• Removes soluble surface impurities without dissolving pure product crystals." },
+            { id: 217, paper: "P6", topic: "Purification & Apparatus", q: "How does impurity affect melting point of an organic solid?", a: "• Lowers melting temperature and broadens melting temperature range." },
+            { id: 218, paper: "P6", topic: "Purification & Apparatus", q: "Safe heating method for flammable liquids like ether or ethanol.", a: "• Electric heating mantle or hot water bath (NO open Bunsen flames!)." },
+            { id: 219, paper: "P6", topic: "Purification & Apparatus", q: "Why add anti-bumping granules prior to heating liquids?", a: "• Provide nucleation sites for smooth bubble formation and prevent violent bumping." },
+            { id: 220, paper: "P6", topic: "Purification & Apparatus", q: "How do you know an organic liquid is dry after adding drying agent ($\\text{MgSO}_4$)?", a: "• Liquid turns clear and solid powder flows freely without clumping." },
+
+            { id: 221, paper: "P6", topic: "Quantitative Techniques", q: "Why is burette titre uncertainty DOUBLE the reading uncertainty ($\\pm 0.05\\text{ cm}^3 \\rightarrow \\pm 0.10\\text{ cm}^3$)?", a: "• Titre volume requires TWO readings (initial and final burette reading)." },
+            { id: 222, paper: "P6", topic: "Quantitative Techniques", q: "When should starch indicator be added in iodine-thiosulfate titration?", a: "• ONLY near end-point when solution turns pale straw-yellow (prevents insoluble starch-iodine complex)." },
+            { id: 223, paper: "P6", topic: "Quantitative Techniques", q: "Color change at endpoint of $\\text{KMnO}_4$ titration with acidified $\\text{Fe}^{2+}$.", a: "• Colourless to permanent faint pink ($\\text{KMnO}_4$ acts as self-indicator)." },
+            { id: 224, paper: "P6", topic: "Quantitative Techniques", q: "How to heat a sample to 'constant mass'?", a: "• Heat, cool in desiccator, weigh; repeat cycle until two consecutive weighings match within $\\pm 0.01\\text{ g}$." },
+            { id: 225, paper: "P6", topic: "Quantitative Techniques", q: "Define concordant titres.", a: "• Burette titre volumes within $0.10\\text{ cm}^3$ (or $0.20\\text{ cm}^3$) of each other." },
+            { id: 226, paper: "P6", topic: "Quantitative Techniques", q: "Why is ice-water mixture better than ice cubes alone for cooling flasks?", a: "• Ice-water liquid mixture provides maximum surface contact area with flask walls." },
+            { id: 227, paper: "P6", topic: "Quantitative Techniques", q: "Function of desiccator in solid preparation.", a: "• Keeps dry solid samples cool in dry atmosphere containing silica gel drying agent without absorbing atmospheric moisture." },
+            { id: 228, paper: "P6", topic: "Quantitative Techniques", q: "Why rate of heating in melting point apparatus must be slow ($<1^\\circ\\text{C/min}$) near MP?", a: "• Prevents thermal lag so thermometer reads true temperature of melting sample." },
+            { id: 229, paper: "P6", topic: "Quantitative Techniques", q: "What is purpose of back titration?", a: "• Used for insoluble or slow-reacting solids (e.g. $\\text{CaCO}_3$) by adding excess acid and titrating unreacted acid." },
+            { id: 230, paper: "P6", topic: "Quantitative Techniques", q: "Why invert and open tap of separating funnel periodically?", a: "• Vents built-up pressure from volatile solvent vapors or released $\\text{CO}_2$ gas." },
+
+            { id: 231, paper: "P6", topic: "Core Practicals & Safety", q: "Hazard control when using toxic phenylamine or nitrobenzene.", a: "• Work strictly in a fume cupboard wearing nitrile gloves and safety goggles." },
+            { id: 232, paper: "P6", topic: "Core Practicals & Safety", q: "What is steam distillation used for?", a: "• Distils water-immiscible high boiling organic liquids below $100^\\circ\\text{C}$ to prevent thermal decomposition." },
+            { id: 233, paper: "P6", topic: "Core Practicals & Safety", q: "What is 'salting out' during solvent extraction?", a: "• Adding $\\text{NaCl}$ to aqueous layer to decrease organic product solubility in water and force it into organic layer." },
+            { id: 234, paper: "P6", topic: "Core Practicals & Safety", q: "Observation when acyl chloride reacts with concentrated ammonia.", a: "• Dense white smoke ($\\text{NH}_4\\text{Cl}$) and white solid amide." },
+            { id: 235, paper: "P6", topic: "Core Practicals & Safety", q: "Purpose of fluted filter paper in hot filtration.", a: "• Increases surface area for rapid filtration to prevent premature crystallization in funnel." },
+            { id: 236, paper: "P6", topic: "Core Practicals & Safety", q: "Observation when $\\text{Fe}^{2+}$ reacts with potassium ferricyanide $\\text{K}_3[\\text{Fe(CN)}_6]$.", a: "• Dark Prussian blue precipitate." },
+            { id: 237, paper: "P6", topic: "Core Practicals & Safety", q: "Why use thin-walled glass capillary tube for melting point determination?", a: "• Ensures rapid, even heat transfer from heating block/oil to sample." },
+            { id: 238, paper: "P6", topic: "Core Practicals & Safety", q: "Reagent to distinguish 1°/2° alcohol from 3° alcohol.", a: "• Acidified potassium dichromate(VI) ($\\text{K}_2\\text{Cr}_2\\text{O}_7/\\text{H}^+$); turns orange to green for 1°/2°, stays orange for 3°." },
+            { id: 239, paper: "P6", topic: "Core Practicals & Safety", q: "Why volumetric pipette has lower percentage error than measuring cylinder?", a: "• Pipette is calibrated to high precision for single specific volume (narrow neck tolerance)." },
+            { id: 240, paper: "P6", topic: "Core Practicals & Safety", q: "How to test for carbonate ion ($\\text{CO}_3^{2-}$).", a: "• Add dilute $\\text{HCl}$ or $\\text{HNO}_3$; effervescence produced turns limewater cloudy." },
+
+            { id: 241, paper: "P6", topic: "Experimental Design Models", q: "How to purify crude solid aspirin sample.", a: "• Dissolve min hot ethanol, filter hot, cool in ice bath, suction filter on Büchner funnel, wash ice-cold solvent, dry in desiccator." },
+            { id: 242, paper: "P6", topic: "Experimental Design Models", q: "How to determine order with respect to $\\text{I}^-$ in persulfate-iodide clock reaction.", a: "• Keep $[\\text{S}_2\\text{O}_8^{2-}]$ constant, vary $[\\text{I}^-]$ using water to maintain total volume. Measure time $t$ for blue-black starch color; plot initial rate ($1/t$) vs $[\\text{I}^-]$." },
+            { id: 243, paper: "P6", topic: "Experimental Design Models", q: "Qualitative scheme to distinguish propan-1-ol, propanone, propanoic acid, propanoyl chloride.", a: "1. Water $\\rightarrow$ propanoyl chloride gives steamy fumes.\n2. $\\text{NaHCO}_3 \\rightarrow$ propanoic acid effervesces.\n3. Acidified $\\text{K}_2\\text{Cr}_2\\text{O}_7 \\rightarrow$ propan-1-ol turns green.\n4. Propanone remains." },
+            { id: 244, paper: "P6", topic: "Experimental Design Models", q: "Steps to prepare azo dye from phenylamine.", a: "1. Dissolve phenylamine in $\\text{HCl}$, add cold $\\text{NaNO}_2$ below $10^\\circ\\text{C}$ (diazotisation).\n2. Add diazonium solution dropwise to phenol in $\\text{NaOH}$ below $10^\\circ\\text{C}$." },
+            { id: 245, paper: "P6", topic: "Experimental Design Models", q: "How to measure activation energy $E_a$ graphically.", a: "• Measure reaction time $t$ at 5 temperatures. Convert $T$ to Kelvin. Plot $\\ln(1/t)$ vs $1/T$. $E_a = -\\text{gradient} \\times 8.314\\text{ J K}^{-1}\\text{mol}^{-1}$." },
+            { id: 246, paper: "P6", topic: "Experimental Design Models", q: "How to prepare pure dry sample of ethyl ethanoate.", a: "• Reflux ethanol + ethanoic acid + conc $\\text{H}_2\\text{SO}_4$. Distil crude ester, wash with $\\text{Na}_2\\text{CO}_3$ in separating funnel, dry with $\\text{CaCl}_2$, re-distil collecting fraction at $77^\\circ\\text{C}$." },
+            { id: 247, paper: "P6", topic: "Experimental Design Models", q: "Thermometric titration method to find neutralisation endpoint.", a: "• Record initial acid temp. Add $2\\text{ cm}^3$ portions of alkali, stir, record max temp. Plot temp vs volume, extrapolate intersecting linear lines." },
+            { id: 248, paper: "P6", topic: "Experimental Design Models", q: "How to determine percentage purity of $\\text{CaCO}_3$ in limestone by back titration.", a: "• React weighed sample with excess known $\\text{HCl}$. Titrate unreacted excess $\\text{HCl}$ with standard $\\text{NaOH}$. Moles reacted acid = Total initial acid - excess acid." },
+            { id: 249, paper: "P6", topic: "Experimental Design Models", q: "How to isolate phenylamine from reaction mixture via steam distillation.", a: "• Pass steam into flask, collect cloudy emulsion distillate, extract with ether in separating funnel, dry with $\\text{MgSO}_4$, distil off low-boiling ether." },
+            { id: 250, paper: "P6", topic: "Experimental Design Models", q: "How to test for ammonium ion ($\\text{NH}_4^+$).", a: "• Warm with $\\text{NaOH}$(aq); pungent gas evolved turns damp red litmus paper blue." },
+
+            { id: 251, paper: "P6", topic: "Exam Traps & Errors", q: "Why is heating diethyl ether over Bunsen flame dangerous?", a: "• Ether is extremely volatile and flammable; vapors ignite easily over open flames." },
+            { id: 252, paper: "P6", topic: "Exam Traps & Errors", q: "Why is filter paper alone insufficient to dry an organic liquid?", a: "• Filter paper only removes solid particles; dissolved water requires chemical drying agent (e.g. $\\text{MgSO}_4$)." },
+            { id: 253, paper: "P6", topic: "Exam Traps & Errors", q: "Why does fast heating in melting point apparatus give incorrect higher MP?", a: "• Causes thermal lag; heating block temp rises faster than sample melts, reading artificially high." },
+            { id: 254, paper: "P6", topic: "Exam Traps & Errors", q: "Why does washing crystals with warm solvent ruin yield?", a: "• Warm solvent redissolves pure product crystals into filtrate." },
+            { id: 255, paper: "P6", topic: "Exam Traps & Errors", q: "What happens if you use sulfuric acid ($\text{H}_2\text{SO}_4$) to acidify barium chloride test?", a: "• Adds sulfate ions ($\\text{SO}_4^{2-}$), creating false-positive white precipitate of $\\text{BaSO}_4$!" },
+            { id: 256, paper: "P6", topic: "Exam Traps & Errors", q: "Why must temperature be converted to Kelvin in Arrhenius plot?", a: "• Arrhenius equation thermodynamics relies on absolute temperature scale ($K = {^\circ}\text{C} + 273.15$)." },
+            { id: 257, paper: "P6", topic: "Exam Traps & Errors", q: "Why is starch NOT added at start of thiosulfate titration?", a: "• High $\\text{I}_2$ concentration binds starch irreversibly into insoluble complex." },
+            { id: 258, paper: "P6", topic: "Exam Traps & Errors", q: "Why is a seal on top of reflux condenser a explosion risk?", a: "• Vapor expansion in closed system creates dangerous pressure build-up." },
+            { id: 259, paper: "P6", topic: "Exam Traps & Errors", q: "Why is initial heating required in $\\text{KMnO}_4 / \\text{C}_2\\text{O}_4^{2-}$ titration?", a: "• Reaction is slow initially due to anion-anion repulsion until $\\text{Mn}^{2+}$ autocatalyst forms." },
+            { id: 260, paper: "P6", topic: "Exam Traps & Errors", q: "Why is $\\text{Zn(OH)}_2$ soluble in excess $\\text{NH}_3$ while $\\text{Fe(OH)}_3$ is not?", a: "• $\\text{Zn}^{2+}$ forms soluble ammine complex $[\\text{Zn(NH}_3)_4]^{2+}$; $\\text{Fe}^{3+}$ does not form stable ammine complexes." },
+
+            { id: 261, paper: "P6", topic: "Advanced Qualitative Tests", q: "Reagent and observation to test for phenol.", a: "• Bromine water decolourises forming white ppt 2,4,6-tribromophenol; or neutral $\\text{FeCl}_3$ forms purple solution." },
+            { id: 262, paper: "P6", topic: "Advanced Qualitative Tests", q: "Observation when $\\text{PCl}_5$ is added to carboxylic acid.", a: "• Vigorous effervescence and steamy fumes of $\\text{HCl}$ gas." },
+            { id: 263, paper: "P6", topic: "Advanced Qualitative Tests", q: "Observation when $\\text{Fe}^{3+}$ reacts with potassium thiocyanate ($\\text{KSCN}$).", a: "• Blood-red solution of $[\text{Fe}(\text{SCN})(\text{H}_2\text{O})_5]^{2+}$." },
+            { id: 264, paper: "P6", topic: "Advanced Qualitative Tests", q: "Observation when $\\text{Cr}^{3+}$ reacts with hydrogen peroxide in alkali.", a: "• Green solution turns yellow due to oxidation to chromate ($\\text{CrO}_4^{2-}$)." },
+            { id: 265, paper: "P6", topic: "Advanced Qualitative Tests", q: "Flame test observation for Potassium ions ($\\text{K}^+$).", a: "• Lilac flame (viewed through cobalt blue glass if $\\text{Na}^+$ present)." },
+            { id: 266, paper: "P6", topic: "Advanced Qualitative Tests", q: "How to confirm nitrate ion ($\\text{NO}_3^-$) in aqueous solution.", a: "• Devarda's alloy ($\text{Cu/Al/Zn}$) + $\\text{NaOH}$(aq) + heat; $\\text{NH}_3$ gas evolved turns damp red litmus blue." },
+            { id: 267, paper: "P6", topic: "Advanced Qualitative Tests", q: "Observation when $\\text{Fe}^{2+}$ reacts with potassium dichromate(VI).", a: "• Orange dichromate turns green ($\\text{Fe}^{2+}$ oxidised to $\\text{Fe}^{3+}$)." },
+            { id: 268, paper: "P6", topic: "Advanced Qualitative Tests", q: "Reagent to distinguish ethanal from propanone.", a: "• Tollens' reagent or Fehling's solution; positive only for ethanal." },
+            { id: 269, paper: "P6", topic: "Advanced Qualitative Tests", q: "Reagent to distinguish propan-1-ol from propan-2-ol.", a: "• Iodoform test ($\\text{I}_2/\\text{NaOH}$); yellow ppt forms only with propan-2-ol." },
+            { id: 270, paper: "P6", topic: "Advanced Qualitative Tests", q: "Observation when $\\text{Cu}^{2+}$ reacts with potassium iodide ($\\text{KI}$).", a: "• Brown solution ($\text{I}_2$) and off-white/buff precipitate of Copper(I) iodide ($\\text{CuI}$)." },
+
+            { id: 271, paper: "P6", topic: "Advanced Practical Skills", q: "Calculation: Percentage uncertainty of $25.0\\text{ cm}^3$ pipette (uncertainty $\\pm 0.06\\text{ cm}^3$).", a: "• $\\frac{0.06}{25.0} \\times 100\\% = 0.24\\%$." },
+            { id: 272, paper: "P6", topic: "Advanced Practical Skills", q: "Calculation: Percentage uncertainty of titre $23.40\\text{ cm}^3$ using burette ($\\pm 0.05\\text{ cm}^3$ per reading).", a: "• Total uncertainty = $2 \\times 0.05 = 0.10\\text{ cm}^3$.\n• $\\frac{0.10}{23.40} \\times 100\\% = 0.43\\%$." },
+            { id: 273, paper: "P6", topic: "Advanced Practical Skills", q: "Why is Buchner funnel suction filtration faster than gravity filtration?", a: "• Vacuum creates pressure differential across filter paper, pulling liquid through rapidly." },
+            { id: 274, paper: "P6", topic: "Advanced Practical Skills", q: "How to calculate percentage yield of recrystallised product.", a: "• $\\frac{\\text{Mass of dry purified crystals}}{\\text{Theoretical maximum mass}} \\times 100\\%$." },
+            { id: 275, paper: "P6", topic: "Advanced Practical Skills", q: "Why is water bath preferred over electric mantle for heating ethanol?", a: "• Water bath maintains steady temperature around $80-100^\\circ\\text{C}$ avoiding overheating." },
+            { id: 276, paper: "P6", topic: "Advanced Practical Skills", q: "Why is silica gel used inside desiccator?", a: "• Absorbs water vapor from air inside enclosure, keeping atmosphere dry." },
+            { id: 277, paper: "P6", topic: "Advanced Practical Skills", q: "How to measure $R_f$ value in Thin Layer Chromatography (TLC).", a: "• $R_f = \\frac{\\text{Distance moved by spot}}{\\text{Distance moved by solvent front}}$." },
+            { id: 278, paper: "P6", topic: "Advanced Practical Skills", q: "Why must TLC baseline be drawn in pencil rather than ink?", a: "• Ink contains dyes that dissolve in eluting solvent and contaminate chromatogram." },
+            { id: 279, paper: "P6", topic: "Advanced Practical Skills", q: "Why must solvent level in TLC tank be below pencil baseline?", a: "• Prevents sample spots from dissolving directly into bulk solvent tank." },
+            { id: 280, paper: "P6", topic: "Advanced Practical Skills", q: "How to visualize colorless spots on TLC plate.", a: "• View under UV lamp or expose plate to iodine vapor tank." },
+
+            { id: 281, paper: "P6", topic: "Synoptic Practical Problems", q: "How to prepare $250.0\\text{ cm}^3$ of standard solution from solid primary standard.", a: "• Weigh solid accurately, dissolve in beaker with distilled water, transfer quantitatively to $250\\text{ cm}^3$ volumetric flask with washings, invert to mix." },
+            { id: 282, paper: "P6", topic: "Synoptic Practical Problems", q: "Why is sodium hydroxide NOT a primary standard?", a: "• Absorbs moisture (hygroscopic) and atmospheric $\\text{CO}_2$ gas, altering exact mass." },
+            { id: 283, paper: "P6", topic: "Synoptic Practical Problems", q: "Why is hydrated iron(II) sulfate ammonium salt (Mohr's salt) preferred as primary standard over $\\text{FeSO}_4\\cdot 7\\text{H}_2\\text{O}$?", a: "• Mohr's salt is much more resistant to air oxidation." },
+            { id: 284, paper: "P6", topic: "Synoptic Practical Problems", q: "How to determine enthalpy change of neutralisation calorimetry experiment.", a: "• Measure temp of acid and base. Mix in polystyrene cup, record max temp. Calculate $q = m c \\Delta T$ and divide by moles of water formed." },
+            { id: 285, paper: "P6", topic: "Synoptic Practical Problems", q: "Why polystyrene cup used in calorimetry instead of beaker?", a: "• Low thermal conductivity insulator, minimising heat loss to surroundings." },
+            { id: 286, paper: "P6", topic: "Synoptic Practical Problems", q: "How to correct temperature rise $\\Delta T$ for heat loss in calorimetry.", a: "• Plot temp vs time, extrapolate cooling curve back to time of mixing." },
+            { id: 287, paper: "P6", topic: "Synoptic Practical Problems", q: "What reagent removes acid impurities from organic liquid in separating funnel?", a: "• Aqueous sodium hydrogencarbonate ($\\text{NaHCO}_3$)." },
+            { id: 288, paper: "P6", topic: "Synoptic Practical Problems", q: "What observation indicates acid impurities are completely neutralised in separating funnel?", a: "• Effervescence ceases and no more pressure is released upon venting." },
+            { id: 289, paper: "P6", topic: "Synoptic Practical Problems", q: "Why is gravimetric analysis highly accurate?", a: "• Relies on precise analytical balance mass measurements rather than volume titrations." },
+            { id: 290, paper: "P6", topic: "Synoptic Practical Problems", q: "Why must crucible lid be left slightly open during thermal decomposition?", a: "• Allows evolved gas (e.g. $\\text{CO}_2$) to escape while preventing solid spattering." },
+
+            { id: 291, paper: "P6", topic: "Final Review Traps", q: "Why must capillary tube be tapped gently during melting point prep?", a: "• Packs solid sample tightly to ensure efficient, uniform heat conduction." },
+            { id: 292, paper: "P6", topic: "Final Review Traps", q: "What causes broad melting range in recrystallised product?", a: "• Incomplete drying (residual solvent) or remaining impurities." },
+            { id: 293, paper: "P6", topic: "Final Review Traps", q: "Why is ethanol used as solvent in haloalkane hydrolysis with $\\text{AgNO}_3$?", a: "• Dissolves both halogenoalkane (organic) and aqueous silver nitrate." },
+            { id: 294, paper: "P6", topic: "Final Review Traps", q: "What indicator is used for titration of weak base with strong acid?", a: "• Methyl orange (color change red to yellow at pH 3.1-4.4)." },
+            { id: 295, paper: "P6", topic: "Final Review Traps", q: "What indicator is used for titration of weak acid with strong base?", a: "• Phenolphthalein (color change colorless to pink at pH 8.3-10.0)." },
+            { id: 296, paper: "P6", topic: "Final Review Traps", q: "Why no indicator is needed for weak acid - weak base titration?", a: "• No sharp vertical pH equivalence jump; pH meter must be used instead." },
+            { id: 297, paper: "P6", topic: "Final Review Traps", q: "How to clean platinum wire before flame test.", a: "• Dip in concentrated $\\text{HCl}$ and hold in hot Bunsen flame until no color is produced." },
+            { id: 298, paper: "P6", topic: "Final Review Traps", q: "Why non-luminous Bunsen flame used for flame test?", a: "• Clean, hot, colorless flame prevents yellow soot masking flame color." },
+            { id: 299, paper: "P6", topic: "Final Review Traps", q: "Why is $\\text{HNO}_3$ added before $\\text{BaCl}_2$ test forbidden?", a: "• Barium chloride requires $\\text{HCl}$; adding $\\text{HNO}_3$ is okay, but never add $\\text{H}_2\\text{SO}_4$." },
+            { id: 300, paper: "P6", topic: "Final Review Traps", q: "What is final color of iodine-thiosulfate titration at endpoint?", a: "• Blue-black to COLOURLESS." }
+        ];
+
+        // MASTER GLOSSARY DATASET (Divided by Paper)
+        const GLOSSARY_DATA = {
+            P4: [
+                { term: "Acid Dissociation Constant ($K_a$)", def: "Quantitative equilibrium measure of weak acid strength in solution ($K_a = \\frac{[\\text{H}^+][\\text{A}^-]}{[\\text{HA}]}$)." },
+                { term: "Activation Energy ($E_a$)", def: "Minimum kinetic energy required by colliding reactant molecules for a successful chemical reaction to occur." },
+                { term: "Arrhenius Equation", def: "Mathematical relationship $\\ln k = -\\frac{E_a}{RT} + \\ln A$ linking rate constant $k$, temperature $T$, and activation energy $E_a$." },
+                { term: "Born-Haber Cycle", def: "Hess's Law energy cycle applying thermodynamic steps to calculate lattice energy of ionic solids." },
+                { term: "Brønsted-Lowry Acid/Base", def: "Acid: Proton ($\\text{H}^+$) donor; Base: Proton ($\\text{H}^+$) acceptor." },
+                { term: "Buffer Solution", def: "Solution of weak acid and conjugate base that resists changes in pH when small amounts of acid or alkali are added." },
+                { term: "Carbocation", def: "Organic intermediate containing a positively charged carbon atom with three bonds." },
+                { term: "Chemical Shift ($\\delta$)", def: "NMR resonance position measured in ppm relative to tetramethylsilane (TMS) standard at $0\\text{ ppm}$." },
+                { term: "Chiral Center", def: "Carbon atom bonded to four different atoms or groups, giving rise to optical isomerism." },
+                { term: "Clock Reaction", def: "Kinetic experiment measuring time taken for a sudden visible color change proportional to initial reaction rate." },
+                { term: "Condensation Polymerisation", def: "Polymerisation where bifunctional monomers join with simultaneous elimination of small molecules ($\\text{H}_2\\text{O}$ or $\\text{HCl}$)." },
+                { term: "2,4-DNPH (Brady's Reagent)", def: "Reagent forming yellow/orange/red precipitate with aldehydes and ketones." },
+                { term: "Enthalpy of Hydration ($\\Delta_{\\text{hyd}}H$)", def: "Enthalpy change when 1 mole of gaseous ions dissolves in water to form infinitely dilute aqueous ions." },
+                { term: "Enthalpy of Solution ($\\Delta_{\\text{sol}}H$)", def: "Enthalpy change when 1 mole of ionic solid dissolves in water to form infinitely dilute solution." },
+                { term: "Entropy ($S$)", def: "Thermodynamic measure of disorder or randomness of a system / number of microstates." },
+                { term: "Equilibrium Constant ($K_c / K_p$)", def: "Ratio of product concentrations or partial pressures to reactant concentrations at equilibrium." },
+                { term: "Fehling's Solution", def: "Blue alkaline $\\text{Cu}^{2+}$ reagent reduced to brick-red $\\text{Cu}_2\\text{O}$ precipitate by aldehydes." },
+                { term: "Lattice Energy", def: "Enthalpy change when 1 mole of an ionic solid is formed from its constituent gaseous ions." },
+                { term: "Mass Spectrometry", def: "Analytical technique separating ionized molecules based on mass-to-charge ratio ($m/z$)." },
+                { term: "Nucleophilic Addition", def: "Reaction mechanism where an electron-rich nucleophile attacks an electron-deficient double bond ($\\text{C=O}$)." },
+                { term: "Racemic Mixture", def: "Equimolar mixture of two enantiomers exhibiting zero net optical rotation." },
+                { term: "Rate-Determining Step", def: "The slowest step in a multi-step reaction mechanism that dictates overall rate." },
+                { term: "$S_N1$ Mechanism", def: "Unimolecular two-step nucleophilic substitution forming carbocation intermediate, leading to racemisation." },
+                { term: "$S_N2$ Mechanism", def: "Bimolecular one-step concerted nucleophilic substitution with backside attack, causing optical inversion." },
+                { term: "Splitting Pattern ($n+1$)", def: "NMR peak division into $n+1$ sub-peaks caused by $n$ adjacent non-equivalent protons." },
+                { term: "Steric Hindrance", def: "Prevention or slowing of reaction due to spatial crowding around reactive carbon center." },
+                { term: "Stereoisomer", def: "Molecules with same structural formula but different 3D spatial arrangement of atoms." },
+                { term: "Tollens' Reagent", def: "Ammoniacal silver nitrate solution forming silver mirror with aldehydes." },
+                { term: "Thermodynamic Feasibility", def: "Criterion $\\Delta S_{\\text{tot}} > 0$ indicating spontaneous chemical reaction." },
+                { term: "Half-Life ($t_{1/2}$)", def: "Time taken for reactant concentration to decrease to half its initial value." }
+            ],
+            P5: [
+                { term: "Transition Metal", def: "d-block element forming one or more stable ions with incompletely filled d-orbitals." },
+                { term: "d-d Transition", def: "Excitation of $d$-electron from lower to higher split $3d$ orbital caused by visible light absorption." },
+                { term: "Ligand", def: "Species donating a lone pair of electrons to central metal ion to form a dative bond." },
+                { term: "Complex Ion", def: "Central metal ion surrounded by ligands bonded via dative covalent bonds." },
+                { term: "Coordination Number", def: "Total number of dative bonds formed between ligands and central metal ion." },
+                { term: "Bidentate Ligand", def: "Ligand donating two lone pairs forming two dative bonds to a single metal ion." },
+                { term: "Chelate Effect", def: "Increased stability of multidentate complexes driven by positive system entropy change ($\\Delta S_{\\text{sys}} > 0$)." },
+                { term: "Ligand Exchange", def: "Reaction replacing one set of complex ligands by another accompanied by color change." },
+                { term: "Amphoteric Hydroxide", def: "Metal hydroxide reacting with both strong acids and strong bases (e.g. $\\text{Cr(OH)}_3, \\text{Zn(OH)}_2$)." },
+                { term: "Heterogeneous Catalyst", def: "Catalyst in different physical phase from reactants, acting via surface adsorption." },
+                { term: "Homogeneous Catalyst", def: "Catalyst in same phase as reactants, acting via intermediate oxidation states." },
+                { term: "Autocatalysis", def: "Reaction where a product species acts as catalyst for reaction itself." },
+                { term: "Phenylamine", def: "Aromatic amine where nitrogen lone pair delocalises into benzene ring, reducing basicity." },
+                { term: "Amino Acid", def: "Molecule containing both amino ($-\\text{NH}_2$) and carboxyl ($-\\text{COOH}$) functional groups." },
+                { term: "Zwitterion", def: "Dipolar ion carrying both positive and negative charges with zero net charge." },
+                { term: "Isoelectric Point", def: "Specific pH at which amino acid exists predominantly as neutral zwitterion." },
+                { term: "Peptide Bond", def: "Amide linkage ($-\\text{CONH}-$) connecting amino acid units in proteins." },
+                { term: "Delocalised Structure", def: "Benzene stability model where six $\\pi$-electrons overlap across hexagonal ring." },
+                { term: "Electrophilic Substitution", def: "Characteristic aromatic reaction where electrophile replaces ring hydrogen, preserving stability." },
+                { term: "Nitration", def: "Electrophilic substitution introducing nitro group ($-\\text{NO}_2$) using conc $\\text{HNO}_3/\\text{H}_2\\text{SO}_4$." },
+                { term: "Acylation", def: "Friedel-Crafts reaction attaching acyl group ($-\\text{COR}$) using $\\text{AlCl}_3$ catalyst." },
+                { term: "Atom Economy", def: "Percentage ratio of desired product molar mass to total product molar mass." },
+                { term: "Standard Electrode Potential ($E^\\circ$)", def: "EMF of half-cell relative to SHE under standard conditions (298 K, 100 kPa, $1.00\\text{ M}$)." },
+                { term: "Standard Hydrogen Electrode (SHE)", def: "Reference platinum electrode in $1.00\\text{ M } \\text{H}^+$ with $\\text{H}_2$ gas at 100 kPa and 298 K ($E^\\circ = 0\\text{ V}$)." },
+                { term: "Grignard Reagent", def: "Organometallic compound ($\\text{RMgX}$) formed in dry ether used to extend carbon chains." },
+                { term: "Ethanoic Anhydride", def: "Safer acylating agent used in aspirin prep forming ethanoic acid instead of toxic $\\text{HCl}$." },
+                { term: "Poly(ethenol)", def: "Water-soluble addition polymer containing abundant side $-\\text{OH}$ groups." },
+                { term: "Diazotisation", def: "Reaction of primary aromatic amine with $\\text{HNO}_2$ below 10°C forming diazonium salt." },
+                { term: "Azo Dye", def: "Brightly colored compound containing $-\\text{N=N}-$ linkage between aromatic rings." },
+                { term: "Salting Out", def: "Adding $\\text{NaCl}$ to aqueous layer to decrease organic solute solubility during extraction." }
+            ],
+            P6: [
+                { term: "Recrystallisation", def: "Purification dissolving solid in minimum hot solvent, hot filtering, cooling, suction filtering, and drying." },
+                { term: "Refluxing", def: "Continual boiling and condensation in open vertical condenser to react volatile liquids without vapor loss." },
+                { term: "Steam Distillation", def: "Co-distillation of water-immiscible organic liquids below 100°C to prevent thermal decomposition." },
+                { term: "Quenching", def: "Rapidly stopping reaction aliquot by sudden cooling, dilution, or neutralisation." },
+                { term: "Suction Filtration", def: "Vacuum filtration using Büchner funnel and flask to rapidly separate solid crystals." },
+                { term: "Melting Point Range", def: "Temperature span from initial melting onset to complete liquefaction; sharp range indicates high purity." },
+                { term: "Drying Agent", def: "Anhydrous salt ($\\text{MgSO}_4, \\text{CaCl}_2$) added to organic liquids to absorb dissolved water traces." },
+                { term: "Separating Funnel", def: "Glass apparatus separating immiscible liquid phases based on density differences." },
+                { term: "Thermal Lag", def: "Temperature gap between heating block and sample caused by heating too quickly in melting point block." },
+                { term: "Fluted Filter Paper", def: "Folded filter paper increasing surface area for rapid hot filtration during recrystallisation." },
+                { term: "Back Titration", def: "Quantitative method where excess known reagent reacts with sample, and unreacted excess is titrated." },
+                { term: "Self-Indicator", def: "Titration reactant changing color at end-point without added indicator (e.g. $\\text{KMnO}_4$)." },
+                { term: "Desiccator", def: "Sealed enclosure containing drying agent (silica gel) keeping solid samples cool and dry." },
+                { term: "Anti-Bumping Granules", def: "Small stones providing nucleation sites for smooth bubble formation during boiling." },
+                { term: "Fume Cupboard", def: "Ventilated lab enclosure removing toxic, corrosive, or volatile fumes safely." },
+                { term: "Percentage Uncertainty", def: "Ratio of apparatus tolerance uncertainty to measured value multiplied by 100." },
+                { term: "Concordant Titres", def: "Burette readings within $0.10\\text{ cm}^3$ of each other used to calculate mean titre." },
+                { term: "Retention Factor ($R_f$)", def: "TLC ratio of distance travelled by spot to distance travelled by solvent front." },
+                { term: "Iodoform Test", def: "Reaction with $\\text{I}_2/\\text{NaOH}$ forming pale yellow $\\text{CHI}_3$ ppt with methyl ketones or 2° methyl alcohols." },
+                { term: "Barium Chloride Test", def: "Acidified $\\text{BaCl}_2$ test producing white $\\text{BaSO}_4$ precipitate with sulfate ions." },
+                { term: "Silver Nitrate Test", def: "Test acidifying with dilute $\\text{HNO}_3$ before $\\text{AgNO}_3$ to detect halide precipitates." },
+                { term: "Primary Standard", def: "Pure, stable solid reagent of known mass used to prepare exact concentration standard solutions." },
+                { term: "Gravimetric Analysis", def: "Quantitative determination of analyte mass by precipitation, filtration, and heating to constant mass." },
+                { term: "Constant Mass", def: "Heating and weighing solid repeatedly until two consecutive masses match within $\\pm 0.01\\text{ g}$." },
+                { term: "Capillary Tube", def: "Thin-walled glass tube used to pack dry solid sample for melting point determination." },
+                { term: "Flame Test", def: "Qualitative cation test observing atomic emission spectrum color in non-luminous Bunsen flame." },
+                { term: "Thin Layer Chromatography (TLC)", def: "Separation technique utilizing stationary silica plate and mobile solvent phase." },
+                { term: "Mobile Phase", def: "Liquid solvent or gas phase carrying analyte components through chromatography media." },
+                { term: "Stationary Phase", def: "Solid absorbent or liquid layer on solid support that selectively adsorbs analytes." },
+                { term: "Calibration Curve", def: "Graph of known standard concentrations vs absorbance or property used to quantify unknowns." }
+            ]
+        };
+
+        /* ==================== STATE VARIABLES ==================== */
+        let currentMainTab = 'flashcards';
+        let currentCardPaper = 'ALL';
+        let currentGlossarySubtab = 'P4';
+        let cardViewMode = 'deck';
+        let activeCards = [...FLASHCARDS_DATA];
+        let cardIndex = 0;
+
+        /* ==================== KATEX RENDER HELPER ==================== */
+        function initKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError : false
+                });
+            }
+        }
+
+        function reRenderMath() {
+            setTimeout(() => {
+                if (window.renderMathInElement) {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError : false
+                    });
+                }
+            }, 50);
+        }
+
+        /* ==================== NAVIGATION LOGIC ==================== */
+        function switchMainTab(tabId) {
+            currentMainTab = tabId;
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-sky-400');
+                btn.classList.add('text-slate-400');
+            });
+
+            const activeView = document.getElementById('view-' + tabId);
+            if (activeView) activeView.classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-sky-400');
+                activeBtn.classList.remove('text-slate-400');
+            }
+
+            if (tabId === 'glossary') renderGlossary();
+            reRenderMath();
+        }
+
+        /* ==================== FLASHCARD LOGIC ==================== */
+        function filterFlashcards(paper) {
+            currentCardPaper = paper;
+            document.querySelectorAll('.card-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-paper') === paper) {
+                    btn.className = 'card-filter-btn px-3 py-1.5 bg-sky-600 text-white rounded-lg text-xs font-semibold transition-all';
+                } else {
+                    btn.className = 'card-filter-btn px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-medium transition-all';
+                }
+            });
+
+            filterCardsSearch();
+        }
+
+        function filterCardsSearch() {
+            const searchVal = document.getElementById('card-search').value.toLowerCase();
+            activeCards = FLASHCARDS_DATA.filter(item => {
+                const matchPaper = (currentCardPaper === 'ALL') || (item.paper === currentCardPaper);
+                const matchSearch = item.q.toLowerCase().includes(searchVal) ||
+                                    item.a.toLowerCase().includes(searchVal) ||
+                                    item.topic.toLowerCase().includes(searchVal) ||
+                                    item.paper.toLowerCase().includes(searchVal);
+                return matchPaper && matchSearch;
+            });
+
+            cardIndex = 0;
+            if (activeCards.length > 0) {
+                updateCard();
+                if (cardViewMode === 'list') renderListView();
+            } else {
+                document.getElementById('card-front-question').innerHTML = "No flashcards found matching search.";
+                document.getElementById('card-back-answer').innerHTML = "Try adjusting your filter or search query.";
+            }
+        }
+
+        function updateCard() {
+            if (activeCards.length === 0) return;
+            const item = activeCards[cardIndex];
+            
+            document.getElementById('card-front-paper').innerText = item.paper === "P4" ? "Paper 4" : item.paper === "P5" ? "Paper 5" : "Paper 6";
+            document.getElementById('card-front-topic').innerText = item.topic;
+            document.getElementById('card-front-question').innerHTML = item.q;
+            document.getElementById('card-back-answer').innerHTML = item.a;
+
+            document.getElementById('deck-current-index').innerText = cardIndex + 1;
+            document.getElementById('deck-total-count').innerText = activeCards.length;
+            document.getElementById('jump-card-input').max = activeCards.length;
+            document.getElementById('jump-card-input').value = cardIndex + 1;
+
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.remove('card-flipped');
+            reRenderMath();
+        }
+
+        function flipCard() {
+            document.getElementById('card-inner-el').classList.toggle('card-flipped');
+        }
+
+        function nextCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex + 1) % activeCards.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex - 1 + activeCards.length) % activeCards.length;
+            updateCard();
+        }
+
+        function jumpToCard(val) {
+            let num = parseInt(val) - 1;
+            if (!isNaN(num) && num >= 0 && num < activeCards.length) {
+                cardIndex = num;
+                updateCard();
+            }
+        }
+
+        function shuffleDeck() {
+            activeCards.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (cardViewMode === 'list') renderListView();
+        }
+
+        function setCardViewMode(mode) {
+            cardViewMode = mode;
+            if (mode === 'deck') {
+                document.getElementById('deck-view-container').classList.remove('hidden');
+                document.getElementById('list-view-container').classList.add('hidden');
+                document.getElementById('card-mode-deck').className = 'px-3.5 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all whitespace-nowrap';
+                document.getElementById('card-mode-list').className = 'px-3.5 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all whitespace-nowrap';
+            } else {
+                document.getElementById('deck-view-container').classList.add('hidden');
+                document.getElementById('list-view-container').classList.remove('hidden');
+                document.getElementById('card-mode-list').className = 'px-3.5 py-2 bg-sky-600 text-white rounded-xl text-xs font-bold transition-all whitespace-nowrap';
+                document.getElementById('card-mode-deck').className = 'px-3.5 py-2 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-bold transition-all whitespace-nowrap';
+                renderListView();
+            }
+        }
+
+        function renderListView() {
+            const holder = document.getElementById('list-cards-holder');
+            holder.innerHTML = activeCards.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-bold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20 font-mono">${item.paper === "P4" ? "Paper 4" : item.paper === "P5" ? "Paper 5" : "Paper 6"}</span>
+                            <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">${item.topic}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">#${idx + 1}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-sm leading-relaxed">${item.q}</h4>
+                    <button onclick="document.getElementById('list-ans-${idx}').classList.toggle('hidden')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-300 rounded-lg text-xs font-semibold border border-slate-700">
+                        Toggle Answer
+                    </button>
+                    <div id="list-ans-${idx}" class="hidden p-3 bg-emerald-950/20 border border-emerald-500/20 text-emerald-300 text-xs rounded-xl leading-relaxed whitespace-pre-line font-mono">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        /* ==================== GLOSSARY LOGIC ==================== */
+        function switchGlossarySubtab(paperId) {
+            currentGlossarySubtab = paperId;
+            document.querySelectorAll('.gloss-subtab-btn').forEach(btn => {
+                if (btn.id === 'gloss-subtab-' + paperId) {
+                    btn.className = 'gloss-subtab-btn subtab-active px-4 py-2 rounded-xl text-xs font-semibold transition-all';
+                } else {
+                    btn.className = 'gloss-subtab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all';
+                }
+            });
+            renderGlossary();
+        }
+
+        function filterGlossary() {
+            renderGlossary();
+        }
+
+        function renderGlossary() {
+            const container = document.getElementById('glossary-container');
+            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const list = GLOSSARY_DATA[currentGlossarySubtab] || [];
+
+            const filtered = list.filter(g => {
+                return g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No terms found matching search.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map((g, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all space-y-3">
+                    <h4 class="font-bold text-cyan-400 text-base flex items-center space-x-2">
+                        <i class="fa-solid fa-bookmark text-xs text-sky-400"></i>
+                        <span>${g.term}</span>
+                    </h4>
+
+                    <div class="relative min-h-[90px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-4">
+                        <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
+
+                        <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-200">Definition Blurred</span>
+                            <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal Definition</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            reRenderMath();
+        }
+
+        function toggleGlossaryBlur(idx) {
+            const overlay = document.getElementById('gloss-blur-' + idx);
+            if (overlay) {
+                overlay.classList.toggle('opacity-0');
+                overlay.classList.toggle('pointer-events-none');
+            }
+        }
+
+        /* ==================== INITIALIZATION ==================== */
+        window.onload = function() {
+            updateCard();
+            renderGlossary();
+            reRenderMath();
+        };
+    </script>
+</body>
+</html>

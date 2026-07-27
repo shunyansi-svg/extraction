@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edexcel IAL Chemistry Master Revision Hub - Papers 1, 2 & 3</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-active {
+            border-bottom: 3px solid #06b6d4;
+            color: #06b6d4;
+            font-weight: 600;
+        }
+        .subtab-active {
+            background-color: #0284c7;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        
+        /* 3D Flashcard flip styles */
+        .card-flip {
+            perspective: 1000px;
+        }
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .card-front {
+            transform: rotateY(0deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-front {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .card-flipped .card-back {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #06b6d4;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-cyan-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-slate-900/95 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                        <span class="text-xl">🧪</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="font-bold text-lg text-white leading-tight">Edexcel IAL Chemistry IAS</h1>
+                            <span class="text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full">Papers 1, 2 & 3</span>
+                        </div>
+                        <p class="text-xs text-cyan-400 font-medium">200 High-Yield 3D Flashcards & Interactive Master Glossary</p>
+                    </div>
+                </div>
+
+                <!-- Flashcard Counter Pill -->
+                <div class="hidden md:flex items-center space-x-4 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                    <div class="text-xs font-medium text-slate-300">
+                        Total Flashcards: <span id="header-card-count" class="text-cyan-400 font-bold">200</span>
+                    </div>
+                    <div class="text-xs font-medium text-slate-300 border-l border-slate-700 pl-3">
+                        Total Glossary Terms: <span id="header-glossary-count" class="text-purple-400 font-bold">105</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Navigation Tabs -->
+            <nav class="flex space-x-1 border-t border-slate-800/50 pt-1 text-sm font-medium">
+                <button onclick="switchTab('flashcards')" id="tab-flashcards" class="tab-btn tab-active px-6 py-2.5 whitespace-nowrap flex items-center space-x-2 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-layer-group text-xs"></i> <span>3D Flashcards (200 Questions)</span>
+                </button>
+                <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-6 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
+                    <i class="fa-solid fa-book-bookmark text-emerald-400 text-xs"></i> <span>Master Vocabulary Glossary (Blur to Reveal)</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- SECTION 1: 3D FLASHCARDS TAB -->
+        <section id="view-flashcards" class="tab-view space-y-6">
+            
+            <!-- Filters & Search Toolbar -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="card-search" oninput="filterCards()" placeholder="Search question, spec point, keyword..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+
+                <!-- Paper Filters -->
+                <div class="flex flex-wrap gap-1.5 w-full md:w-auto">
+                    <button onclick="filterPaper('ALL')" class="paper-filter-btn bg-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all" data-paper="ALL">All Papers (200)</button>
+                    <button onclick="filterPaper('Paper 1')" class="paper-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-paper="Paper 1">Paper 1 (70)</button>
+                    <button onclick="filterPaper('Paper 2')" class="paper-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-paper="Paper 2">Paper 2 (70)</button>
+                    <button onclick="filterPaper('Paper 3')" class="paper-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" data-paper="Paper 3">Paper 3 (60)</button>
+                </div>
+
+                <!-- Mode & Shuffle Controls -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="shuffleDeck()" class="px-3 py-1.5 bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/30 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5">
+                        <i class="fa-solid fa-shuffle"></i> <span>Shuffle</span>
+                    </button>
+                    <button id="card-view-mode-deck" onclick="setCardViewMode('deck')" class="px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-bold transition-all">3D Flip</button>
+                    <button id="card-view-mode-list" onclick="setCardViewMode('list')" class="px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-bold transition-all">List View</button>
+                </div>
+            </div>
+
+            <!-- Deck View Component -->
+            <div id="deck-view-container" class="max-w-2xl mx-auto space-y-6">
+                
+                <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono">
+                    <div>
+                        Card <span id="deck-current-index" class="text-cyan-400 font-bold text-sm">1</span> of <span id="deck-total-count" class="font-bold text-sm">200</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>Jump to:</span>
+                        <input type="number" id="jump-card-input" min="1" max="200" onchange="jumpToCard(this.value)" class="w-16 bg-slate-900 border border-slate-700 text-cyan-300 text-center rounded p-1 text-xs font-mono">
+                    </div>
+                </div>
+
+                <!-- 3D Card Interactive Component -->
+                <div class="card-flip w-full h-96 cursor-pointer select-none" onclick="flipCard()">
+                    <div id="card-inner-el" class="card-inner relative w-full h-full rounded-2xl border border-cyan-500/30 bg-slate-900/95 shadow-2xl transition-transform duration-500">
+                        
+                        <!-- Front Face (Question) -->
+                        <div class="card-front absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 rounded-2xl border border-cyan-500/30">
+                            <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3">
+                                <div class="flex items-center space-x-2">
+                                    <span id="card-front-paper" class="text-[11px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-lg border border-cyan-500/20">Paper 1</span>
+                                    <span id="card-front-topic" class="text-[11px] font-bold text-purple-300 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">Topic 1</span>
+                                    <span id="card-front-spec" class="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono">Spec 1.2</span>
+                                </div>
+                                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full font-mono">Click to Flip</span>
+                            </div>
+
+                            <div class="text-base sm:text-lg font-bold text-slate-100 my-auto text-center px-2 leading-relaxed" id="card-front-question">
+                                Loading Question...
+                            </div>
+
+                            <div class="text-xs text-slate-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-cyan-400"></i>
+                                <span>Click card to reveal Edexcel Mark Scheme Answer</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face (Answer) -->
+                        <div class="card-back absolute inset-0 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/98 rounded-2xl border border-emerald-500/50 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                                <span class="text-xs uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                                    <span>Edexcel Mark Scheme Answer</span>
+                                </span>
+                                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Answer Revealed</span>
+                            </div>
+
+                            <div class="text-xs sm:text-sm text-slate-200 my-auto leading-relaxed overflow-y-auto max-h-56 px-2 py-1 custom-scrollbar whitespace-pre-line text-left bg-emerald-950/30 rounded-xl border border-emerald-500/20 p-3" id="card-back-answer">
+                                Loading Answer...
+                            </div>
+
+                            <div class="text-xs text-emerald-400 text-center font-medium flex items-center justify-center space-x-1.5 border-t border-slate-800 pt-3">
+                                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                                <span>Click again to flip back to question</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center px-2 gap-2">
+                    <button onclick="prevCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Previous</span>
+                    </button>
+
+                    <button onclick="nextCard()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center space-x-2 border border-slate-700">
+                        <span>Next</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Active List View Container -->
+            <div id="list-view-container" class="max-w-4xl mx-auto space-y-4 hidden">
+                <div id="list-cards-holder" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECTION 2: INTERACTIVE GLOSSARY TAB (BLUR TO REVEAL) -->
+        <section id="view-glossary" class="tab-view space-y-6 hidden">
+            
+            <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20 bg-emerald-950/10">
+                <div class="flex items-start space-x-4">
+                    <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/20">
+                        <i class="fa-solid fa-book-open-reader text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-emerald-300">Papers 1, 2 & 3 Complete Master Vocabulary Glossary</h2>
+                        <p class="text-sm text-slate-300 mt-1">100+ key terms sourced directly from Pearson Edexcel specification data pages. **Definitions are blurred by default—click any card to test your recall!**</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Glossary Sub-tabs & Search -->
+            <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="glossary-search" oninput="filterGlossary()" placeholder="Search terms (e.g., Electronegativity, Enthalpy, Reflux)..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <!-- Sub-tab Paper Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchGlossarySubtab('ALL')" id="subtab-glossary-ALL" class="glossary-subtab-btn subtab-active px-4 py-2 rounded-xl text-xs font-semibold transition-all">All Papers</button>
+                    <button onclick="switchGlossarySubtab('Paper 1')" id="subtab-glossary-Paper 1" class="glossary-subtab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all">Paper 1 Vocabulary</button>
+                    <button onclick="switchGlossarySubtab('Paper 2')" id="subtab-glossary-Paper 2" class="glossary-subtab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all">Paper 2 Vocabulary</button>
+                    <button onclick="switchGlossarySubtab('Paper 3')" id="subtab-glossary-Paper 3" class="glossary-subtab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all">Paper 3 Practical Vocabulary</button>
+                </div>
+            </div>
+
+            <!-- Glossary Cards Grid -->
+            <div id="glossary-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Dynamically populated with interactive blur cards -->
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        /* ==================== 200 HIGH-YIELD FLASHCARDS DATASET ==================== */
+        const FLASHCARDS_DATA = [
+            /* --- PAPER 1 (CARDS 1 - 70) --- */
+            { id: 1, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.1", q: "Define 'empirical formula' and 'molecular formula'.", a: "• Empirical Formula: The simplest whole-number ratio of atoms of each element in a compound.\n• Molecular Formula: The actual number of atoms of each element in one molecule of a compound." },
+            { id: 2, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.2", q: "How many total ions are present in 0.10 mol of iron(III) sulfate, Fe₂(SO₄)₃?", a: "• Moles of ions per formula unit = 2 Fe³⁺ + 3 SO₄²⁻ = 5 moles of ions.\n• Total ions = 0.10 × 5 × (6.02 × 10²³) = 3.01 × 10²³ ions." },
+            { id: 3, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.3", q: "Write the ionic equation with state symbols for the reaction between HCl(aq) and Na₂CO₃(aq).", a: "• 2H⁺(aq) + CO₃²⁻(aq) → H₂O(l) + CO₂(g)\n• Spectator ions Na⁺(aq) and Cl⁻(aq) cancel out." },
+            { id: 4, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.4", q: "Define 'relative atomic mass' (Aᵣ).", a: "• The weighted average mass of an atom of an element compared to 1/12th the mass of an atom of carbon-12." },
+            { id: 5, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.4", q: "What mass of solute is present in 250 cm³ of a 95 ppm solution?", a: "• 95 ppm = 95 mg per 1 dm³ (1 kg) solution.\n• Mass in 0.250 dm³ = 95 × 0.250 = 23.75 mg (0.02375 g)." },
+            { id: 6, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.5", q: "Convert a concentration of 0.050 mol dm⁻³ NaOH solution into g dm⁻³.", a: "• Molar mass of NaOH = 23.0 + 16.0 + 1.0 = 40.0 g mol⁻¹.\n• Concentration = 0.050 × 40.0 = 2.00 g dm⁻³." },
+            { id: 7, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.6", q: "A compound contains 85.7% C and 14.3% H. Deduce its empirical formula.", a: "• Moles C = 85.7 / 12.0 = 7.14; Moles H = 14.3 / 1.0 = 14.3.\n• Mole ratio H : C = 14.3 / 7.14 = 2 : 1 → Empirical formula = CH₂." },
+            { id: 8, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.8", q: "State the mandatory SI unit requirements when using pV = nRT.", a: "• Pressure (p) in Pascals (Pa) [kPa × 1000].\n• Volume (V) in cubic meters (m³) [dm³ / 1000].\n• Temperature (T) in Kelvin (K) [°C + 273.15]." },
+            { id: 9, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.9", q: "State the formula for percentage atom economy.", a: "• Atom Economy = (Molar mass of desired product / Sum of molar masses of all products) × 100%." },
+            { id: 10, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.10", q: "Why must a crucible be heated to 'constant mass' when finding water of crystallisation?", a: "• Repeated heating and reweighing ensures that ALL water of crystallisation has been completely driven off (complete dehydration)." },
+            
+            { id: 11, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.1", q: "State the relative charge and relative mass of protons, neutrons, and electrons.", a: "• Proton: Mass = 1, Charge = +1\n• Neutron: Mass = 1, Charge = 0\n• Electron: Mass = 1/1836 (negligible), Charge = -1." },
+            { id: 12, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.4", q: "Determine the number of protons, neutrons, and electrons in a ³¹P³⁻ ion.", a: "• Protons = 15 (atomic number)\n• Neutrons = 31 - 15 = 16\n• Electrons = 15 + 3 = 18." },
+            { id: 13, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.5", q: "Define 'isotopes'.", a: "• Atoms of the SAME element with the SAME number of protons (atomic number) but DIFFERENT number of neutrons (mass number)." },
+            { id: 14, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.6", q: "Why is a high vacuum necessary inside a mass spectrometer chamber?", a: "• Prevents sample ions from colliding with air or water vapour molecules, which would deflect them or cause loss of charge." },
+            { id: 15, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.6", q: "At what m/z value does a ²⁴Mg²⁺ ion appear in a mass spectrum?", a: "• m/z = 24 / 2 = 12 (appears at half its mass!)." },
+            { id: 16, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.7", q: "Explain the 1:2:1 peak height ratio at m/z 158, 160, 162 for Br₂⁺ molecules.", a: "• m/z 158 = ⁷⁹Br-⁷⁹Br\n• m/z 160 = ⁷⁹Br-⁸¹Br and ⁸¹Br-⁷⁹Br (two possible combinations, making it twice as high!)\n• m/z 162 = ⁸¹Br-⁸¹Br." },
+            { id: 17, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.8", q: "Write the equation for the FIRST ionisation energy of sodium.", a: "• Na(g) → Na⁺(g) + e⁻\n• MUST include gaseous state symbols (g)!" },
+            { id: 18, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.9", q: "Define an 'atomic orbital'.", a: "• A region within an atom that can hold up to TWO electrons with OPPOSITE spins." },
+            { id: 19, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.10", q: "State three factors that govern the magnitude of first ionisation energy.", a: "1. Nuclear charge (number of protons).\n2. Atomic radius (distance from nucleus).\n3. Electron shielding by inner filled quantum shells." },
+            { id: 20, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.11", q: "Explain why Boron has a lower 1st IE than Beryllium.", a: "• Boron's outer electron is in a 2p subshell (higher energy level, more shielded) than Beryllium's 2s outer electron, requiring less energy to remove." },
+            { id: 21, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.11", q: "Explain why Sulfur has a lower 1st IE than Phosphorus.", a: "• Sulfur's outer electron is paired in a 3p orbital, experiencing spin-pair repulsion from the other electron, making it easier to remove than Phosphorus's singly occupied 3p electron." },
+            { id: 22, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.12", q: "Describe the shapes of s and p orbitals.", a: "• s-orbital: Spherical.\n• p-orbital: Dumbbell-shaped with two equal symmetrical lobes along an axis." },
+            { id: 23, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.14", q: "State the full electronic configuration of Chromium (Cr, Z=24) and Copper (Cu, Z=29).", a: "• Cr: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹ 3d⁵\n• Cu: 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹ 3d¹⁰\n• (Half-filled and fully-filled d subshells offer extra stability)." },
+            { id: 24, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.14", q: "When forming a Fe²⁺ cation from Fe ([Ar] 4s² 3d⁶), which electrons are removed first?", a: "• The 4s electrons are lost FIRST! Configuration of Fe²⁺ = [Ar] 3d⁶ 4s⁰." },
+            { id: 25, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.18", q: "Why does Sulfur (S₈) have a higher melting point than Phosphorus (P₄)?", a: "• S₈ is a larger simple molecule with MORE ELECTRONS than P₄, resulting in STRONGER London dispersion forces between molecules requiring more thermal energy to break." },
+
+            { id: 26, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.1", q: "Describe visual evidence during CuCrO₄ electrolysis for the existence of ions.", a: "• Blue band of Cu²⁺ cations migrates toward the negative cathode.\n• Yellow band of CrO₄²⁻ anions migrates toward the positive anode." },
+            { id: 27, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.5", q: "Define 'ionic bonding'.", a: "• Strong electrostatic attraction between oppositely charged ions arranged in a giant 3D lattice." },
+            { id: 28, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.6", q: "Why does MgO have a higher melting point than NaCl?", a: "• Mg²⁺ and O²⁻ have higher charges (+2/-2 vs +1/-1) and smaller ionic radii, creating much stronger electrostatic attraction in the ionic lattice." },
+            { id: 29, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.7", q: "Explain the trend in ionic radius for the isoelectronic series Na⁺, Mg²⁺, Al³⁺.", a: "• Ionic radius decreases from Na⁺ to Al³⁺ because proton number increases (11 → 13), exerting a stronger nuclear pull on the same 10 electrons." },
+            { id: 30, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.9", q: "What conditions maximize cation polarising power and anion polarisability?", a: "• Cation Polarising Power: Small ionic radius and HIGH positive charge.\n• Anion Polarisability: Large ionic radius and HIGH negative charge." },
+            { id: 31, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.10", q: "Define 'covalent bond'.", a: "• Strong electrostatic attraction between two positive nuclei and the shared pair of electrons between them." },
+            { id: 32, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.11", q: "Define 'dative covalent bond'.", a: "• A covalent bond where BOTH shared electrons in the bonding pair are donated by ONE atom (e.g. NH₄⁺, H₃O⁺)." },
+            { id: 33, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.12", q: "Why does graphite conduct electricity parallel to its layers, but diamond does not?", a: "• Graphite has 3 covalent bonds per carbon, leaving 1 delocalised electron per carbon free to drift parallel to layers.\n• Diamond has all 4 valence electrons locked in fixed covalent bonds." },
+            { id: 34, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.13", q: "Define 'electronegativity'.", a: "• The power of an atom to attract a bonding pair of electrons in a covalent bond." },
+            { id: 35, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.15", q: "Why is CCl₄ non-polar overall despite containing polar C-Cl bonds?", a: "• Symmetrical tetrahedral geometry causes the 4 individual C-Cl bond dipoles to cancel each other out completely in 3D space." },
+            { id: 36, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.16", q: "State the core principle of VSEPR theory.", a: "• Electron pairs (bonding and lone) around a central atom repel each other to achieve maximum separation and minimum repulsion." },
+            { id: 37, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.16", q: "State the relative order of electron pair repulsion strength.", a: "• Lone pair - Lone pair (LP-LP) > Lone pair - Bonding pair (LP-BP) > Bonding pair - Bonding pair (BP-BP)." },
+            { id: 38, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.18", q: "Predict the shape and bond angle for NH₃.", a: "• 3 BP + 1 LP on central Nitrogen → Trigonal Pyramidal shape, bond angle 107.0°." },
+            { id: 39, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.18", q: "Predict the shape and bond angle for H₂O.", a: "• 2 BP + 2 LP on central Oxygen → Non-linear / Bent shape, bond angle 104.5°." },
+            { id: 40, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.19", q: "Predict the shape and bond angles for SF₄.", a: "• 4 BP + 1 LP on central Sulfur → See-saw shape, bond angles ~89° and 119°." },
+            { id: 41, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.19", q: "Predict the shape and bond angle for SF₆.", a: "• 6 BP + 0 LP on central Sulfur → Octahedral shape, all bond angles 90.0°." },
+            { id: 42, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.20", q: "Describe the 3D structure and bonding in metals.", a: "• Giant metallic lattice of positive metal cations surrounded by a 'sea' of mobile delocalised electrons held by electrostatic attraction." },
+            { id: 43, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.22", q: "Why does Mg have a higher melting point than Na?", a: "• Mg²⁺ has a higher charge (+2 vs +1) and smaller ionic radius, attracting a higher density of delocalised electrons in the metallic lattice." },
+
+            { id: 44, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.1", q: "Distinguish between 'hazard' and 'risk'.", a: "• Hazard: The intrinsic potential of a substance or procedure to cause harm.\n• Risk: The probability/likelihood of harm occurring under specific operational conditions." },
+            { id: 45, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.4", q: "State four characteristics of a homologous series.", a: "1. Same functional group.\n2. Same general formula.\n3. Similar chemical properties.\n4. Successive members differ by a -CH₂- unit." },
+            { id: 46, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.7", q: "Distinguish between homolytic and heterolytic bond fission.", a: "• Homolytic Fission: Bond breaks symmetrically; each atom receives one electron forming two free radicals.\n• Heterolytic Fission: Bond breaks unsymmetrically; one atom takes both electrons forming ions." },
+            { id: 47, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.8", q: "Define 'free radical' and 'electrophile'.", a: "• Free Radical: A species possessing an unpaired electron (•).\n• Electrophile: An electron pair acceptor attracted to regions of high electron density." },
+            { id: 48, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.10", q: "How many structural isomers exist for the formula C₄H₉Br?", a: "• 4 structural isomers (1-bromobutane, 2-bromobutane, 1-bromo-2-methylpropane, 2-bromo-2-methylpropane)." },
+            { id: 49, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.12", q: "Describe the industrial process of cracking.", a: "• Thermal breakdown of long-chain alkanes into shorter, higher-demand alkanes and alkenes using high temp and catalyst (e.g. Al₂O₃)." },
+            { id: 50, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.13", q: "How is toxic Nitrogen Monoxide (NO) formed in car engines?", a: "• Atmospheric N₂ and O₂ react together at the extremely high temperatures and pressures inside the internal combustion engine cylinder." },
+            { id: 51, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.14", q: "Why is Carbon Monoxide (CO) toxic?", a: "• CO binds irreversibly to hemoglobin in blood, preventing it from transporting oxygen around the body." },
+            { id: 52, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.16", q: "Explain the concept of 'carbon neutrality'.", a: "• A process in which the net release of CO₂ to the atmosphere is zero (CO₂ absorbed during biomass growth = CO₂ emitted during combustion)." },
+            { id: 53, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.18", q: "State the essential condition for the initiation step of alkane chlorination.", a: "• Ultraviolet (UV) light / radiation (provides energy for homolytic fission of Cl₂)." },
+            { id: 54, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.18", q: "Write the two propagation steps for chlorination of methane.", a: "1. Cl• + CH₄ → •CH₃ + HCl\n2. •CH₃ + Cl₂ → CH₃Cl + Cl•" },
+            { id: 55, paper: "Paper 1", topic: "Topic 4: Alkanes & Org Intro", spec: "Spec 4.18", q: "State a major limitation of free radical substitution in organic synthesis.", a: "• Multi-substitution occurs (forming CH₂Cl₂, CHCl₃, CCl₄) yielding a mixture of products that requires fractional distillation to separate." },
+
+            { id: 56, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.1", q: "Describe the bonding in a C=C double bond in terms of orbital overlap.", a: "• One sigma (σ) bond formed by head-on axial overlap of orbitals.\n• One pi (π) bond formed by sideways overlap of parallel p-orbitals above and below the internuclear axis." },
+            { id: 57, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.2", q: "State the two structural conditions required for E/Z geometric isomerism.", a: "1. Restricted rotation around the C=C double bond.\n2. TWO DIFFERENT atoms or groups attached to EACH carbon atom of the C=C double bond." },
+            { id: 58, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.2", q: "Why does chloroethene (CH₂=CHCl) NOT exhibit E/Z isomerism?", a: "• One of the C=C double bond carbons is attached to two identical hydrogen atoms!" },
+            { id: 59, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.3", q: "How are high-priority groups assigned in the CIP (Cahn-Ingold-Prelog) E/Z system?", a: "• Priority is determined strictly by the HIGHER ATOMIC NUMBER of the atom directly attached to the double-bonded carbon." },
+            { id: 60, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.4", q: "State reagents and conditions for catalytic hydrogenation of alkenes.", a: "• Hydrogen gas (H₂), Nickel catalyst (Ni), heated to 150 °C." },
+            { id: 61, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.5", q: "State the observation when bromine water is added to an alkene.", a: "• Solution changes colour from ORANGE to COLOURLESS (decolourises)." },
+            { id: 62, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.5", q: "State the observation when cold, dilute acidified KMnO₄ is added to an alkene.", a: "• Purple solution decolourises to COLOURLESS (and diol is formed)." },
+            { id: 63, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.6", q: "Explain how non-polar Cl₂ can act as an electrophile in reactions with alkenes.", a: "• Electron-dense C=C π-bond repels electrons in Cl-Cl, inducing a temporary Clδ+—Clδ- dipole." },
+            { id: 64, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.6", q: "State Markovnikov's Rule.", a: "• In electrophilic addition to unsymmetrical alkenes, H adds to the carbon with more H's, forming the major product via the more stable carbocation." },
+            { id: 65, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.6", q: "Why is 2-bromopropane the major product when propene reacts with HBr?", a: "• Proceeds via a secondary carbocation intermediate (CH₃-CH⁺-CH₃), which is MORE STABLE than a primary carbocation due to electron-donating alkyl groups." },
+            { id: 66, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.7", q: "Draw the repeat unit for poly(propene).", a: "• -[ CH(CH₃) - CH₂ ]ₙ- (single bond backbone with open brackets extending outside)." },
+            { id: 67, paper: "Paper 1", topic: "Topic 5: Alkenes", spec: "Spec 5.8", q: "Why does incinerating PVC produce toxic waste gases, and how is this mitigated?", a: "• Incinerating PVC produces toxic acidic HCl gas; mitigated by passing flue gases through alkaline gas scrubbers (e.g. CaO/Ca(OH)₂)." },
+            { id: 68, paper: "Paper 1", topic: "Topic 1: Formulae & Moles", spec: "Spec 1.8", q: "Calculate moles of gas in 480 cm³ at 298 K and 100 kPa. (R = 8.314 J mol⁻¹ K⁻¹)", a: "• V = 480 × 10⁻⁶ m³ = 4.8 × 10⁻⁴ m³; p = 100,000 Pa.\n• n = pV / RT = (100,000 × 4.8 × 10⁻⁴) / (8.314 × 298) = 0.0194 mol." },
+            { id: 69, paper: "Paper 1", topic: "Topic 3: Bonding & Structure", spec: "Spec 3.11", q: "Describe the dative covalent bonding in the dimer Al₂Cl₆.", a: "• Two lone pairs on chlorine atoms from each AlCl₃ monomer are donated into empty 3p orbitals of adjacent Aluminium atoms." },
+            { id: 70, paper: "Paper 1", topic: "Topic 2: Atomic Structure", spec: "Spec 2.16", q: "State maximum electron capacities for quantum shells n=1, n=2, n=3, and n=4.", a: "• Formula 2n² → n=1 (2e⁻), n=2 (8e⁻), n=3 (18e⁻), n=4 (32e⁻)." },
+
+            /* --- PAPER 2 (CARDS 71 - 140) --- */
+            { id: 71, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.1", q: "State standard temperature and pressure conditions for enthalpy measurements.", a: "• Pressure: 100 kPa (1 bar).\n• Specified Temperature: Usually 298 K (25 °C)." },
+            { id: 72, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.4", q: "Define 'standard enthalpy change of formation' (ΔfH°).", a: "• Enthalpy change when 1 mole of a compound is formed from its constituent elements in their standard states under standard conditions." },
+            { id: 73, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.4", q: "Define 'standard enthalpy change of combustion' (ΔcH°).", a: "• Enthalpy change when 1 mole of a substance burns completely in excess oxygen under standard conditions." },
+            { id: 74, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.4", q: "Define 'standard enthalpy change of neutralisation' (ΔneutH°).", a: "• Enthalpy change when 1 mole of water is formed from the reaction of an acid with an alkali under standard conditions." },
+            { id: 75, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.5", q: "In calorimetry (Q = mcΔT), what does 'm' represent?", a: "• Mass of the solution/liquid undergoing temperature change (e.g. 50 cm³ aqueous solution ≈ 50 g water)." },
+            { id: 76, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.6", q: "State Hess's Law.", a: "• The total enthalpy change for a reaction is independent of the route taken, provided initial and final conditions are identical." },
+            { id: 77, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.8", q: "Why is experimental ΔcH for alcohols less exothermic than data book values?", a: "1. Heat loss to surroundings.\n2. Incomplete combustion forming soot/CO.\n3. Evaporation loss of alcohol from burner before weighing." },
+            { id: 78, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.9", q: "Define 'mean bond enthalpy'.", a: "• Energy required to break 1 mole of a specified covalent bond in gaseous molecules, averaged over a range of different compounds." },
+            { id: 79, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.9", q: "Why do calculations using mean bond enthalpies differ from experimental ΔH?", a: "• Mean bond enthalpies are average values taken across many compounds, and apply strictly to gaseous states only." },
+            { id: 80, paper: "Paper 2", topic: "Topic 6: Energetics", spec: "Spec 6.8", q: "How does cooling curve extrapolation improve calorimetry accuracy?", a: "• Corrects for unavoidable heat loss to surroundings during reaction by extrapolating cooling line back to exact time of mixing." },
+
+            { id: 81, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.1", q: "Describe how London forces (instantaneous dipole-induced dipole) arise.", a: "• Continuous random movement of electrons creates a temporary instantaneous dipole, which induces a dipole in adjacent molecules, creating attraction." },
+            { id: 82, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.2", q: "State the structural conditions required for hydrogen bonding.", a: "• Hydrogen atom directly bonded to a highly electronegative atom (N, O, or F) attracting a lone pair on N, O, or F of an adjacent molecule." },
+            { id: 83, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.3", q: "Explain two anomalous properties of water resulting from hydrogen bonding.", a: "1. Abnormally high melting/boiling points compared to hydride group trend.\n2. Density of ice is LESS than liquid water (open 3D hydrogen-bonded cage structure)." },
+            { id: 84, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.5", q: "Why do branched alkanes have lower boiling points than straight-chain isomers?", a: "• Branched alkanes have a smaller surface area of contact between molecules, resulting in weaker London dispersion forces." },
+            { id: 85, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.5", q: "Why does Ethanol have a much higher boiling point than Ethanal?", a: "• Ethanol forms strong hydrogen bonds between molecules; Ethanal lacks O-H and forms weaker permanent dipole-dipole forces." },
+            { id: 86, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.5", q: "State the boiling point trend for hydrogen halides HF, HCl, HBr, HI.", a: "• HF highest (hydrogen bonding) → HCl drops sharply → HBr → HI increases (increasing electron count and London forces)." },
+            { id: 87, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.6", q: "Why are halogenoalkanes insoluble in water?", a: "• Halogenoalkanes cannot form hydrogen bonds with water molecules; energy released from breaking water H-bonds is not compensated." },
+            { id: 88, paper: "Paper 2", topic: "Topic 7: Intermolecular Forces", spec: "Spec 7.6", q: "Why is Iodine (I₂) more soluble in cyclohexane than in water?", a: "• Non-polar I₂ forms weak London forces similar to non-polar cyclohexane ('like dissolves like')." },
+
+            { id: 89, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.1", q: "State the oxidation number of Oxygen in H₂O₂, OF₂, and O₂.", a: "• H₂O₂ (peroxide) = -1\n• OF₂ = +2\n• O₂ (element) = 0." },
+            { id: 90, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.7", q: "Define a 'disproportionation reaction'.", a: "• A redox reaction in which an element in a single species is simultaneously oxidized and reduced." },
+            { id: 91, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.11", q: "Explain the trend in 1st IE down Group 2.", a: "• Decreases down Group 2 due to increasing atomic radius and increased inner shell shielding, reducing effective nuclear attraction." },
+            { id: 92, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.15", q: "State the solubility trends for Group 2 hydroxides and sulfates down the group.", a: "• Group 2 Hydroxides: Solubility INCREASES down group (Ba(OH)₂ most soluble).\n• Group 2 Sulfates: Solubility DECREASES down group (BaSO₄ insoluble)." },
+            { id: 93, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.16", q: "Explain the trend in thermal stability of Group 2 carbonates down the group.", a: "• Stability INCREASES down group. Cation size increases → lower charge density → less polarising power → distorts carbonate electron cloud less." },
+            { id: 94, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.17", q: "Explain the origin of characteristic flame test colors in Group 1 & 2 metals.", a: "• Heat energy excites electrons to higher quantum energy levels; when electrons drop back to ground state, photon light energy is emitted." },
+            { id: 95, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.17", q: "State the flame colors for Ca²⁺, Sr²⁺, Ba²⁺, Na⁺, K⁺.", a: "• Ca²⁺: Brick red; Sr²⁺: Crimson red; Ba²⁺: Apple green; Na⁺: Persistent yellow; K⁺: Lilac." },
+            { id: 96, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.24", q: "Explain the boiling point trend down Group 7 (Halogens).", a: "• Boiling point INCREASES down group because molecules have more electrons, creating stronger London dispersion forces." },
+            { id: 97, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.26", q: "Write the equation for disproportionation of Cl₂ with cold, dilute aqueous NaOH.", a: "• Cl₂(g) + 2NaOH(aq) → NaCl(aq) + NaClO(aq) + H₂O(l) (bleach formation; Cl goes 0 → -1 and +1)." },
+            { id: 98, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.26", q: "Write the equation for disproportionation of Cl₂ with hot, concentrated aqueous NaOH.", a: "• 3Cl₂(g) + 6NaOH(aq) → 5NaCl(aq) + NaClO₃(aq) + 3H₂O(l) (Cl goes 0 → -1 and +5)." },
+            { id: 99, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.27", q: "Why does solid NaBr react with conc H₂SO₄ to produce brown Br₂ gas, while NaCl does not?", a: "• Bromide (Br⁻) is a STRONGER REDUCING AGENT than Cl⁻, capable of reducing H₂SO₄ to SO₂ gas and Br₂." },
+            { id: 100, paper: "Paper 2", topic: "Topic 8: Redox & Group Chem", spec: "Spec 8.27", q: "How are AgCl, AgBr, and AgI precipitates differentiated using aqueous ammonia?", a: "• AgCl: Dissolves in DILUTE NH₃(aq).\n• AgBr: Dissolves in CONCENTRATED NH₃(aq).\n• AgI: INSOLUBLE in both dilute and conc NH₃(aq)." },
+
+            { id: 101, paper: "Paper 2", topic: "Topic 9: Kinetics & Equilibrium", spec: "Spec 9.2", q: "Define 'activation energy' (Eₐ).", a: "• The minimum kinetic energy colliding reactant particles must possess for a reaction to occur." },
+            { id: 102, paper: "Paper 2", topic: "Topic 9: Kinetics & Equilibrium", spec: "Spec 9.4", q: "Explain using Maxwell-Boltzmann curve how increasing temperature increases rate.", a: "• Curve peak shifts right and flattens; area under curve above Eₐ increases significantly, so a much larger fraction of collisions have E ≥ Eₐ." },
+            { id: 103, paper: "Paper 2", topic: "Topic 9: Kinetics & Equilibrium", spec: "Spec 9.5", q: "How does a catalyst increase reaction rate?", a: "• Provides an alternative reaction pathway with a LOWER activation energy (Eₐ), increasing proportion of successful collisions." },
+            { id: 104, paper: "Paper 2", topic: "Topic 9: Kinetics & Equilibrium", spec: "Spec 9.9", q: "State two characteristics of a system at dynamic equilibrium.", a: "1. Rate of forward reaction EQUALS rate of backward reaction.\n2. Concentrations of reactants and products remain CONSTANT in a closed system." },
+            { id: 105, paper: "Paper 2", topic: "Topic 9: Kinetics & Equilibrium", spec: "Spec 9.10", q: "State Le Chatelier's Principle.", a: "• If a system at equilibrium is disturbed, the position of equilibrium shifts to oppose or counteract the imposed change." },
+            { id: 106, paper: "Paper 2", topic: "Topic 9: Kinetics & Equilibrium", spec: "Spec 9.10", q: "How does increasing total pressure affect equilibrium for: N₂(g) + 3H₂(g) ⇌ 2NH₃(g)?", a: "• Equilibrium shifts RIGHT toward products because the right side has FEWER moles of gas (2 moles vs 4 moles)." },
+            { id: 107, paper: "Paper 2", topic: "Topic 9: Kinetics & Equilibrium", spec: "Spec 9.11", q: "Explain the compromise conditions used in hydration of ethene to ethanol.", a: "• Exothermic reaction (-42 kJ/mol): Low temp favors yield but slow rate; high temp favors rate but reduces yield. Compromise ~300 °C, 7 MPa." },
+
+            { id: 108, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.4", q: "Define 'nucleophile'.", a: "• An electron pair donor attracted to electron-deficient (δ+) carbon atoms." },
+            { id: 109, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.8", q: "State reagents and products when 1-bromopropane reacts with: (i) KOH(aq), (ii) KOH(ethanolic).", a: "• (i) KOH(aq): Nucleophilic substitution forming Propan-1-ol.\n• (ii) KOH(ethanolic) + heat: Elimination forming Propene." },
+            { id: 110, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.8", q: "State reagent and conditions to convert halogenoalkanes into nitriles.", a: "• Potassium cyanide (KCN) in ethanol, heated under reflux (increases carbon chain length by 1 carbon)." },
+            { id: 111, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.10", q: "Order 1-chlorobutane, 1-bromobutane, and 1-iodobutane by rate of hydrolysis.", a: "• Rate: 1-iodobutane > 1-bromobutane > 1-chlorobutane.\n• Reason: C-I bond enthalpy is lowest (weakest bond), breaking fastest." },
+            { id: 112, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.12", q: "Compare hydrolysis rates of primary, secondary, and tertiary halogenoalkanes.", a: "• Rate: Tertiary > Secondary > Primary (tertiary reacts via SN1 forming stable tertiary carbocations)." },
+            { id: 113, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.17", q: "State the reagent and positive observation for testing an alcohol with PCl₅.", a: "• Reagent: Solid PCl₅ added to dry sample.\n• Observation: Misty/steamy white fumes of HCl gas produced." },
+            { id: 114, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.18", q: "How to selectively oxidise propan-1-ol to (i) propanal, (ii) propanoic acid?", a: "• (i) Propanal: Distillation with acidified K₂Cr₂O₇ (propanal distils off immediately).\n• (ii) Propanoic Acid: Reflux with excess acidified K₂Cr₂O₇." },
+            { id: 115, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.18", q: "State the color change when acidified K₂Cr₂O₇ oxidises a 1° or 2° alcohol.", a: "• Orange solution changes to GREEN (Cr(VI) reduced to Cr(III))." },
+            { id: 116, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.18", q: "Why are 3° (tertiary) alcohols resistant to oxidation by acidified dichromate?", a: "• Tertiary alcohols lack a hydrogen atom attached to the C-OH carbon." },
+            { id: 117, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.19", q: "Why must water enter the BOTTOM of a Liebig reflux condenser?", a: "• Ensures the cooling jacket fills completely with water without air pockets or bubbles." },
+            { id: 118, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.21", q: "What does the Molecular Ion Peak (M⁺) in mass spectrometry indicate?", a: "• The relative molecular mass (Mᵣ) of the intact organic compound." },
+            { id: 119, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.22", q: "State the characteristic IR absorption wavenumbers for (i) Alcohol O-H, (ii) Carbonyl C=O.", a: "• (i) Alcohol O-H: Smooth broad absorption at 3200–3600 cm⁻¹.\n• (ii) Carbonyl C=O: Strong sharp peak at 1680–1750 cm⁻¹." },
+            { id: 120, paper: "Paper 2", topic: "Topic 10: Organic & Spectra", spec: "Spec 10.22", q: "How does carboxylic acid O-H absorption differ from alcohol O-H in IR spectra?", a: "• Carboxylic acid O-H shows an extremely broad 'hairy' peak at 2500–3300 cm⁻¹ overlapping C-H stretch." },
+
+            /* --- PAPER 3 PRACTICAL SKILLS (CARDS 121 - 200) --- */
+            { id: 121, paper: "Paper 3", topic: "Practical Skills: Core Practical 1", spec: "Spec CP 1", q: "Why is a gas syringe preferred over water collection for measuring CO₂ volume?", a: "• CO₂ is slightly soluble in water; collecting over water underestimates true gas volume." },
+            { id: 122, paper: "Paper 3", topic: "Practical Skills: Core Practical 1", spec: "Spec CP 1", q: "State two experimental sources of gas loss in gas collection experiments.", a: "1. Delay in replacing bung onto flask after adding solid.\n2. Incomplete sealing at glass joints." },
+            { id: 123, paper: "Paper 3", topic: "Practical Skills: Core Practical 2", spec: "Spec CP 2", q: "Why is a polystyrene cup placed inside a glass beaker in calorimetry?", a: "• Polystyrene provides thermal insulation; beaker provides mechanical stability to prevent tipping." },
+            { id: 124, paper: "Paper 3", topic: "Practical Skills: Core Practical 2", spec: "Spec CP 2", q: "State two assumptions made in simple aqueous calorimetry calculations.", a: "1. Specific heat capacity of solution equals pure water (4.18 J g⁻¹ K⁻¹).\n2. Density of solution equals 1.00 g cm⁻³." },
+            { id: 125, paper: "Paper 3", topic: "Practical Skills: Core Practical 3", spec: "Spec CP 3", q: "Why must the funnel be removed from the burette top after filling?", a: "• Remaining drops in the funnel stem can drip into the burette during titration, underestimating titre volume." },
+            { id: 126, paper: "Paper 3", topic: "Practical Skills: Core Practical 3", spec: "Spec CP 3", q: "What are 'concordant titres' in volumetric analysis?", a: "• Titre volumes that agree within ±0.10 cm³ of each other." },
+            { id: 127, paper: "Paper 3", topic: "Practical Skills: Core Practical 3", spec: "Spec CP 3", q: "State the color change of Methyl Orange at endpoint when acid is added to alkali.", a: "• Color changes from YELLOW (alkaline) to ORANGE (neutral endpoint)." },
+            { id: 128, paper: "Paper 3", topic: "Practical Skills: Core Practical 4", spec: "Spec CP 4", q: "Describe 'weighing by difference' technique.", a: "• Weigh bottle + solid → transfer solid → reweigh empty bottle → exact mass transferred = initial - final." },
+            { id: 129, paper: "Paper 3", topic: "Practical Skills: Core Practical 4", spec: "Spec CP 4", q: "Why must a volumetric flask be inverted 10–15 times after filling to mark?", a: "• To ensure thorough mixing and uniform concentration throughout the entire 250 cm³ solution." },
+            { id: 130, paper: "Paper 3", topic: "Practical Skills: Core Practical 5", spec: "Spec CP 5", q: "Why is ethanol added to test tubes during halogenoalkane hydrolysis tests?", a: "• Acts as a co-solvent to dissolve both water-soluble AgNO₃ and water-insoluble halogenoalkanes." },
+            { id: 131, paper: "Paper 3", topic: "Practical Skills: Core Practical 6", spec: "Spec CP 6", q: "Why is aqueous NaHCO₃ added to organic products in a separating funnel?", a: "• To neutralise and remove residual acidic impurities (forming CO₂ gas)." },
+            { id: 132, paper: "Paper 3", topic: "Practical Skills: Core Practical 6", spec: "Spec CP 6", q: "Why must the separating funnel tap be opened periodically during shaking?", a: "• To relieve internal pressure buildup of CO₂ gas evolved during neutralisation." },
+            { id: 133, paper: "Paper 3", topic: "Practical Skills: Core Practical 6", spec: "Spec CP 6", q: "How can you identify which layer in a separating funnel is the organic layer?", a: "• Add a few drops of water: the aqueous layer expands. Alternatively compare liquid densities." },
+            { id: 134, paper: "Paper 3", topic: "Practical Skills: Core Practical 6", spec: "Spec CP 6", q: "State observations that confirm an organic liquid is fully dry with anhydrous CaCl₂.", a: "• Liquid changes from CLOUDY to CLEAR, and additional drying agent remains free-flowing powder." },
+            { id: 135, paper: "Paper 3", topic: "Practical Skills: Core Practical 6", spec: "Spec CP 6", q: "Why are anti-bumping granules added to reaction flasks before heating?", a: "• Provide nucleation sites for smooth bubble formation, preventing superheating and violent bumping." },
+            { id: 136, paper: "Paper 3", topic: "Practical Skills: Core Practical 7", spec: "Spec CP 7", q: "Where must the thermometer bulb be placed in a distillation setup?", a: "• Level with the side-arm entrance leading to the condenser to measure vapor temperature." },
+            { id: 137, paper: "Paper 3", topic: "Practical Skills: Core Practical 7", spec: "Spec CP 7", q: "Why is an electric heating mantle preferred over a Bunsen flame for alcohols?", a: "• Alcohols are highly flammable; electric mantles eliminate naked flame ignition hazards." },
+            { id: 138, paper: "Paper 3", topic: "Practical Skills: Core Practical 8", spec: "Spec CP 8", q: "Why add dilute HNO₃ before adding AgNO₃ when testing for halide ions?", a: "• Removes interfering carbonate (CO₃²⁻) or sulfite (SO₃²⁻) ions that would form false white precipitates." },
+            { id: 139, paper: "Paper 3", topic: "Practical Skills: Core Practical 8", spec: "Spec CP 8", q: "Why MUST you NOT use HCl to acidify silver nitrate for halide tests?", a: "• HCl introduces Cl⁻ ions, which immediately react with AgNO₃ forming a false positive white AgCl ppt!" },
+            { id: 140, paper: "Paper 3", topic: "Practical Skills: Core Practical 8", spec: "Spec CP 8", q: "Describe the test and observation for Sulfate ions (SO₄²⁻).", a: "• Add dilute HCl (to remove carbonates), then BaCl₂(aq) → Positive result: WHITE PRECIPITATE of BaSO₄." },
+            { id: 141, paper: "Paper 3", topic: "Practical Skills: Techniques", spec: "Spec Tech", q: "Describe the wire cleaning method for flame tests.", a: "• Dip platinum/nichrome wire in CONCENTRATED HCl and heat in hot non-luminous Bunsen flame until clear." },
+            { id: 142, paper: "Paper 3", topic: "Practical Skills: Techniques", spec: "Spec Tech", q: "What causes 'suck-back' hazard during alkane thermal cracking?", a: "• Removing heat while tube is underwater creates a cooling vacuum, sucking cold water into hot glass tube." },
+            { id: 143, paper: "Paper 3", topic: "Practical Skills: Techniques", spec: "Spec Tech", q: "How is 'suck-back' prevented during thermal cracking experiments?", a: "• Remove delivery tube from water trough BEFORE removing the Bunsen burner flame." },
+            { id: 144, paper: "Paper 3", topic: "Practical Skills: Math", spec: "Spec Math", q: "Calculate % uncertainty for a 25.0 cm³ pipette (error ±0.06 cm³).", a: "• Pipette involves 1 reading: % Error = (0.06 / 25.00) × 100% = 0.24%." },
+            { id: 145, paper: "Paper 3", topic: "Practical Skills: Math", spec: "Spec Math", q: "Calculate % uncertainty for a burette titre of 23.50 cm³ (error ±0.05 cm³ per reading).", a: "• Burette involves 2 readings (2 × 0.05 = ±0.10 cm³): % Error = (0.10 / 23.50) × 100% = 0.43%." },
+            { id: 146, paper: "Paper 3", topic: "Practical Skills: Techniques", spec: "Spec Tech", q: "Why must thermal decomposition of nitrates be conducted in a fume cupboard?", a: "• Nitrogen dioxide (NO₂) gas evolved is toxic and irritating to lungs." },
+            { id: 147, paper: "Paper 3", topic: "Practical Skills: Core Practical 8", spec: "Spec CP 8", q: "Describe test and observation for Ammonium ions (NH₄⁺).", a: "• Warm sample with NaOH(aq) → Damp red litmus paper turned BLUE by evolved NH₃ gas." },
+            { id: 148, paper: "Paper 3", topic: "Practical Skills: Core Practical 8", spec: "Spec CP 8", q: "How to distinguish Fehling's test result for Aldehydes vs Ketones?", a: "• Aldehyde: Blue solution forms BRICK-RED precipitate (Cu₂O).\n• Ketone: Remains blue (no reaction)." },
+            { id: 149, paper: "Paper 3", topic: "Practical Skills: Core Practical 6", spec: "Spec CP 6", q: "Why cool receiving flask in an ice bath during distillation of volatile product?", a: "• Minimizes evaporation loss of volatile organic vapors into room air." },
+            { id: 150, paper: "Paper 3", topic: "Practical Skills: Core Practical 2", spec: "Spec CP 2", q: "In Q = mcΔT, why use solution volume × density instead of total reactant mass?", a: "• Heat energy is transferred directly into solvent water/solution, which undergoes the temperature change." },
+
+            /* --- AUTHENTIC PAPER 3 IAL EXAM QUESTIONS (CARDS 151 - 200) --- */
+            { id: 151, paper: "Paper 3", topic: "Practical Skills: Synthesis", spec: "Spec CP 6", q: "What is the specific function of adding anti-bumping granules prior to distillation?", a: "• Provides nucleation sites for uniform, smooth bubble formation, preventing superheating and violent bumping." },
+            { id: 152, paper: "Paper 3", topic: "Practical Skills: Apparatus", spec: "Spec Tech", q: "Why must cold water enter at the BOTTOM inlet of a Liebig condenser during reflux?", a: "• Ensures the entire cooling jacket fills completely with water without air pockets, maximizing condensation efficiency." },
+            { id: 153, paper: "Paper 3", topic: "Practical Skills: Safety", spec: "Spec Tech", q: "Explain how to prevent 'suck-back' when heating liquid paraffin over an Al₂O₃ catalyst.", a: "• Remove the delivery tube from the water trough BEFORE removing the Bunsen flame to prevent a cooling vacuum from drawing cold water into the hot glass tube." },
+            { id: 154, paper: "Paper 3", topic: "Practical Skills: Purification", spec: "Spec CP 6", q: "Describe the observation when washing crude 1-bromobutane with aqueous NaHCO₃ in a separating funnel.", a: "• Effervescence (fizzing) as CO₂ gas is evolved from neutralising residual acid impurities; pressure must be released by opening the tap periodically." },
+            { id: 155, paper: "Paper 3", topic: "Practical Skills: Apparatus", spec: "Spec CP 7", q: "Why must the thermometer bulb be placed directly level with the side-arm during distillation?", a: "• To measure the accurate boiling temperature of the vapor that is actively distilling off into the condenser." },
+            { id: 156, paper: "Paper 3", topic: "Practical Skills: Purification", spec: "Spec CP 6", q: "State two physical observations that confirm an organic liquid is completely dry after adding CaCl₂.", a: "1. The liquid changes from CLOUDY to CLEAR.\n2. Additional drying agent remains a free-flowing powder rather than clumping." },
+            { id: 157, paper: "Paper 3", topic: "Practical Skills: Calorimetry", spec: "Spec CP 2", q: "Why is a polystyrene cup placed inside a glass beaker in a reaction calorimetry experiment?", a: "• Polystyrene provides thermal insulation to minimize heat loss; the glass beaker provides stability to prevent tipping." },
+            { id: 158, paper: "Paper 3", topic: "Practical Skills: Data Analysis", spec: "Spec CP 2", q: "Why are temperature-time lines extrapolated back to the exact time of mixing in enthalpy calculations?", a: "• To correct for unavoidable heat loss to the surroundings during mixing, yielding the theoretical maximum ΔT." },
+            { id: 159, paper: "Paper 3", topic: "Practical Skills: Titration", spec: "Spec CP 3", q: "What is the mark scheme requirement for 'concordant titres' in volumetric analysis?", a: "• Two or more titre volumes that agree within ±0.10 cm³ of each other." },
+            { id: 160, paper: "Paper 3", topic: "Practical Skills: Titration", spec: "Spec CP 3", q: "State the sharp color change of Methyl Orange at the endpoint during acid-alkali titration.", a: "• Color changes permanently from YELLOW (alkaline) to ORANGE (neutral endpoint)." },
+            { id: 161, paper: "Paper 3", topic: "Practical Skills: Titration", spec: "Spec CP 3", q: "Why must the filter funnel be removed from the top of the burette after filling?", a: "• Residual drops in the funnel stem can fall into the burette during titration, underestimating the actual titre volume." },
+            { id: 162, paper: "Paper 3", topic: "Practical Skills: Math", spec: "Spec Math", q: "Calculate the percentage uncertainty in a 25.0 cm³ volume measured by a pipette (error ±0.06 cm³).", a: "• % Error = (0.06 / 25.00) × 100% = 0.24%." },
+            { id: 163, paper: "Paper 3", topic: "Practical Skills: Math", spec: "Spec Math", q: "Why does calculating a titre volume incur TWICE the uncertainty of a single reading?", a: "• Determining a titre requires two measurements: initial reading and final reading (Total error = 2 × ±0.05 = ±0.10 cm³)." },
+            { id: 164, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec Tech", q: "Describe how to clean a platinum wire before carrying out a flame test.", a: "• Dip wire into CONCENTRATED HCl and hold in hot non-luminous Bunsen flame until no color is observed." },
+            { id: 165, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec Tech", q: "State the flame colors for Na⁺, K⁺, Ca²⁺, Sr²⁺, and Ba²⁺ cations.", a: "• Na⁺: Persistent yellow; K⁺: Lilac; Ca²⁺: Brick red; Sr²⁺: Crimson red; Ba²⁺: Apple green." },
+            { id: 166, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "Why is dilute HNO₃ added prior to AgNO₃ when testing an unknown for halide ions?", a: "• Reacts with and removes interfering carbonate (CO₃²⁻) or sulfite (SO₃²⁻) ions that would form false white precipitates." },
+            { id: 167, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "Why MUST hydrochloric acid NOT be used to acidify silver nitrate solutions?", a: "• HCl introduces Cl⁻ ions into solution, forming a false positive white precipitate of AgCl immediately!" },
+            { id: 168, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "Describe the solubility of AgCl, AgBr, and AgI precipitates in dilute and concentrated NH₃(aq).", a: "• AgCl: Dissolves in DILUTE NH₃.\n• AgBr: Dissolves in CONCENTRATED NH₃.\n• AgI: INSOLUBLE in both dilute and conc NH₃." },
+            { id: 169, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "Describe the reagents and observation for confirming the presence of Sulfate ions (SO₄²⁻).", a: "• Add dilute HCl then BaCl₂(aq) → Positive observation: WHITE PRECIPITATE of BaSO₄." },
+            { id: 170, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "Describe the test and observation for Ammonium ions (NH₄⁺).", a: "• Warm with NaOH(aq) → Gas evolved turns damp red litmus paper BLUE (NH₃ gas formed)." },
+            { id: 171, paper: "Paper 3", topic: "Practical Skills: Safety", spec: "Spec Tech", q: "Why must thermal decomposition of metal nitrates be performed inside a fume cupboard?", a: "• Nitrogen dioxide (NO₂) gas evolved is toxic, corrosive, and severely irritating to the respiratory tract." },
+            { id: 172, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec Tech", q: "Why do LiNO₃ and Group 2 nitrates evolve brown gas on heating while NaNO₃ does not?", a: "• Small high-charge density Li⁺ and Group 2 cations polarise and weaken N-O bonds in nitrate, causing full decomposition to NO₂ + O₂ + oxide." },
+            { id: 173, paper: "Paper 3", topic: "Practical Skills: Gas Laws", spec: "Spec CP 1", q: "Why does collecting CO₂ over water yield a lower molar volume than using a gas syringe?", a: "• CO₂ is slightly soluble in water, so a portion dissolves in the water trough rather than being collected." },
+            { id: 174, paper: "Paper 3", topic: "Practical Skills: Technique", spec: "Spec Tech", q: "Outline the protocol for 'weighing by difference' when transferring a solid reactant.", a: "1. Weigh container + solid.\n2. Transfer solid to flask.\n3. Reweigh empty container.\n4. Subtract final mass from initial mass." },
+            { id: 175, paper: "Paper 3", topic: "Practical Skills: Solutions", spec: "Spec CP 4", q: "Why must a volumetric flask be inverted 10–15 times after making up to the mark?", a: "• Ensures complete mixing and uniform concentration throughout the entire 250 cm³ volumetric solution." },
+            { id: 176, paper: "Paper 3", topic: "Practical Skills: Organic", spec: "Spec CP 5", q: "What is the role of ethanol when testing halogenoalkane hydrolysis rates with AgNO₃(aq)?", a: "• Acts as a co-solvent to dissolve both water-soluble AgNO₃ and water-insoluble halogenoalkanes in one phase." },
+            { id: 177, paper: "Paper 3", topic: "Practical Skills: Kinetics", spec: "Spec CP 5", q: "Compare the relative hydrolysis rates of 1°, 2°, and 3° halogenoalkanes.", a: "• Tertiary (3°) > Secondary (2°) > Primary (1°). 3° hydrolyses fastest via SN1 forming stable tertiary carbocations." },
+            { id: 178, paper: "Paper 3", topic: "Practical Skills: Kinetics", spec: "Spec CP 5", q: "Compare the hydrolysis rates of 1-chlorobutane, 1-bromobutane, and 1-iodobutane.", a: "• 1-iodobutane hydrolyses fastest because C-I bond enthalpy is lowest (weakest bond), breaking easiest." },
+            { id: 179, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "State the positive test observation when solid PCl₅ is added to an alcohol.", a: "• Misty/steamy white fumes of HCl gas produced that turn damp blue litmus paper red." },
+            { id: 180, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "State the color change when a primary alcohol is warmed with acidified K₂Cr₂O₇.", a: "• Orange solution changes to GREEN (Cr(VI) reduced to Cr(III))." },
+            { id: 181, paper: "Paper 3", topic: "Practical Skills: Organic", spec: "Spec CP 7", q: "How to selectively oxidise propan-1-ol to propanal rather than propanoic acid?", a: "• Distil product off immediately as it forms using acidified K₂Cr₂O₇, preventing prolonged oxidation." },
+            { id: 182, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "State the observation when an aldehyde is warmed with Fehling's solution.", a: "• Blue solution forms a BRICK-RED precipitate of copper(I) oxide (Cu₂O)." },
+            { id: 183, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "State the observation when an alkene is shaken with cold dilute acidified KMnO₄.", a: "• Purple solution decolourises to COLOURLESS (oxidised to a diol)." },
+            { id: 184, paper: "Paper 3", topic: "Practical Skills: Safety", spec: "Spec Tech", q: "Why is a water bath or heating mantle used instead of a Bunsen flame for organic synthesis?", a: "• Organic reagents and solvents (e.g., ethanol, cyclohexene) are highly flammable." },
+            { id: 185, paper: "Paper 3", topic: "Practical Skills: Purification", spec: "Spec CP 6", q: "How can you experimentally confirm which layer in a separating funnel is the aqueous layer?", a: "• Add a few drops of distilled water: the layer that increases in volume is the aqueous layer." },
+            { id: 186, paper: "Paper 3", topic: "Practical Skills: Purification", spec: "Spec CP 6", q: "Why is crude 1-bromobutane washed with concentrated HCl in a separating funnel?", a: "• Removes unreacted butan-1-ol starting material by protonating it into a soluble species." },
+            { id: 187, paper: "Paper 3", topic: "Practical Skills: Apparatus", spec: "Spec CP 7", q: "Why is the receiving flask submerged in an ice bath during volatile product distillation?", a: "• Minimizes evaporation loss of low-boiling organic vapor into the room air." },
+            { id: 188, paper: "Paper 3", topic: "Practical Skills: Calorimetry", spec: "Spec CP 2", q: "State two default assumptions in simple Q = mcΔT aqueous calorimetry.", a: "1. Specific heat capacity c = 4.18 J g⁻¹ K⁻¹ (pure water).\n2. Solution density = 1.00 g cm⁻³." },
+            { id: 189, paper: "Paper 3", topic: "Practical Skills: Calorimetry", spec: "Spec CP 2", q: "What is the primary benefit of putting a lid on a polystyrene cup during calorimetry?", a: "• Reduces heat loss to surroundings via convection currents and evaporation." },
+            { id: 190, paper: "Paper 3", topic: "Practical Skills: Safety", spec: "Spec Tech", q: "Why does cold water suck-back cause glass breaking during thermal cracking?", a: "• Sudden thermal shock from cold water entering red-hot glass causes severe contraction and shattering." },
+            { id: 191, paper: "Paper 3", topic: "Practical Skills: Volumetric", spec: "Spec CP 4", q: "Outline steps to prepare 250 cm³ standard solution from a weighed solid.", a: "Dissolve solid in beaker with distilled water → transfer with washings to 250 cm³ flask → fill to mark → invert 15 times." },
+            { id: 192, paper: "Paper 3", topic: "Practical Skills: Volumetric", spec: "Spec CP 3", q: "Why must a conical flask be rinsed with distilled water and NOT titrant before titration?", a: "• Rinsing with titrant leaves residual moles of reagent inside, contaminating and skewing titre calculations." },
+            { id: 193, paper: "Paper 3", topic: "Practical Skills: Apparatus", spec: "Spec CP 2", q: "Why does a digital thermometer provide lower percentage uncertainty than a glass thermometer?", a: "• Higher resolution (e.g., ±0.01 °C vs ±0.5 °C) reduces measurement error in ΔT." },
+            { id: 194, paper: "Paper 3", topic: "Practical Skills: Volumetric", spec: "Spec CP 3", q: "How can percentage uncertainty of a burette reading be reduced without changing glassware?", a: "• Increase the mass/concentration of analyte to obtain a larger titre volume." },
+            { id: 195, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "Describe the qualitative test and observation for Carbonate ions (CO₃²⁻).", a: "• Add dilute HCl → Effervescence; evolved gas turns limewater milky/cloudy (CO₂)." },
+            { id: 196, paper: "Paper 3", topic: "Practical Skills: Synthesis", spec: "Spec CP 6", q: "Why is an ice bath used when adding conc H₂SO₄ to an alcohol during halogenoalkane prep?", a: "• Highly exothermic reaction; cooling prevents violent boiling, splashing, or side reactions." },
+            { id: 197, paper: "Paper 3", topic: "Practical Skills: Qualitative", spec: "Spec CP 8", q: "State the observation when bromine water is shaken with cyclohexene.", a: "• Orange/brown solution decolourises to COLOURLESS." },
+            { id: 198, paper: "Paper 3", topic: "Practical Skills: Analysis", spec: "Spec Tech", q: "What structural group is indicated by a sharp IR absorption peak at ~1715 cm⁻¹?", a: "• Carbonyl C=O bond (found in aldehydes, ketones, or carboxylic acids)." },
+            { id: 199, paper: "Paper 3", topic: "Practical Skills: Analysis", spec: "Spec Tech", q: "How to distinguish carboxylic acid O-H from alcohol O-H in an IR spectrum?", a: "• Carboxylic acid O-H gives an extremely broad 'hairy' peak at 2500–3300 cm⁻¹; alcohol O-H gives a smooth peak at 3200–3600 cm⁻¹." },
+            { id: 200, paper: "Paper 3", topic: "Practical Skills: Analysis", spec: "Spec Tech", q: "What key molecular information is provided by the molecular ion peak M⁺ in mass spec?", a: "• The exact relative molecular mass (Mᵣ) of the intact organic molecule." }
+        ];
+
+        /* ==================== PAPERS 1, 2 & 3 MASTER GLOSSARY DATASET ==================== */
+        const GLOSSARY_DATA = [
+            /* --- PAPER 1 VOCABULARY (~35 TERMS) --- */
+            { paper: "Paper 1", term: "Atom Economy", def: "A measure of theoretical reaction efficiency: (Molar mass of desired product / Sum of molar masses of all products) × 100%." },
+            { paper: "Paper 1", term: "Atomic Number (Z)", def: "The number of protons in the nucleus of an atom, which uniquely identifies an element in the Periodic Table." },
+            { paper: "Paper 1", term: "Avogadro Constant (L)", def: "The number of fundamental particles (atoms, ions, or molecules) in one mole of a substance (6.02 × 10²³ mol⁻¹)." },
+            { paper: "Paper 1", term: "Bond Angle", def: "The internal angle formed between two adjacent covalent bonds originating from the same central atom." },
+            { paper: "Paper 1", term: "Bond Length", def: "The equilibrium distance between the nuclei of two covalently bonded atoms." },
+            { paper: "Paper 1", term: "Carbocation", def: "An organic intermediate species containing a positively charged carbon atom (+1) with three bonding pairs." },
+            { paper: "Paper 1", term: "Covalent Bond", def: "Strong electrostatic attraction between two positive nuclei and the shared pair of electrons between them." },
+            { paper: "Paper 1", term: "Dative Covalent Bond", def: "A covalent bond (coordinate bond) where both shared electrons originate from a single atom's lone pair." },
+            { paper: "Paper 1", term: "Delocalised Electrons", def: "Electrons that are not localized to a single bond or atom, but are free to move throughout a giant structure." },
+            { paper: "Paper 1", term: "Dipole Moment", def: "A quantitative measure of the overall polarity of a molecule resulting from an unsymmetrical charge distribution." },
+            { paper: "Paper 1", term: "E/Z Isomerism", def: "Stereoisomerism in alkenes caused by restricted rotation around C=C where each C has two different attached groups." },
+            { paper: "Paper 1", term: "Electronegativity", def: "The power of an atom to attract a bonding pair of electrons in a covalent bond." },
+            { paper: "Paper 1", term: "Electrophile", def: "An electron-deficient species that accepts an electron pair to form a new covalent bond." },
+            { paper: "Paper 1", term: "Electrophilic Addition", def: "An organic reaction mechanism where an electrophile attacks an electron-dense double bond, forming a single product." },
+            { paper: "Paper 1", term: "Empirical Formula", def: "The simplest whole-number ratio of atoms of each element in a compound." },
+            { paper: "Paper 1", term: "Free Radical", def: "An atom or group of atoms possessing an unpaired valence electron (e.g. Cl•)." },
+            { paper: "Paper 1", term: "Free Radical Substitution", def: "A multi-step reaction mechanism (Initiation, Propagation, Termination) where a radical replaces an H atom in an alkane." },
+            { paper: "Paper 1", term: "Heterolytic Fission", def: "The unsymmetrical breaking of a covalent bond where one atom retains both bonding electrons, forming ions." },
+            { paper: "Paper 1", term: "Homolytic Fission", def: "The symmetrical breaking of a covalent bond where each bonded atom retains one electron, forming two free radicals." },
+            { paper: "Paper 1", term: "Homologous Series", def: "A family of organic compounds sharing the same functional group, general formula, and chemical properties, differing by -CH₂-." },
+            { paper: "Paper 1", term: "Ideal Gas Law (pV=nRT)", def: "An equation relating pressure (Pa), volume (m³), moles, R (8.314 J mol⁻¹ K⁻¹), and temperature (K) for gases." },
+            { paper: "Paper 1", term: "Induced Dipole", def: "A temporary dipole created when an approaching electron cloud repels electrons in an adjacent non-polar molecule." },
+            { paper: "Paper 1", term: "Ionic Bonding", def: "Strong electrostatic attraction between oppositely charged cations and anions arranged in a giant 3D lattice." },
+            { paper: "Paper 1", term: "Ionisation Energy (1st)", def: "Energy required to remove 1 mole of electrons from 1 mole of gaseous atoms to form 1 mole of 1+ gaseous ions." },
+            { paper: "Paper 1", term: "Isoelectronic", def: "Species (atoms or ions) that possess the exact same number of electrons and ground-state electron configuration." },
+            { paper: "Paper 1", term: "Isotopes", def: "Atoms of the SAME element with the SAME number of protons but DIFFERENT number of neutrons." },
+            { paper: "Paper 1", term: "Lone Pair", def: "A pair of non-bonding valence electrons located on a central atom not shared in a covalent bond." },
+            { paper: "Paper 1", term: "Markovnikov's Rule", def: "In electrophilic addition to unsymmetrical alkenes, H adds to the carbon with more H's via the more stable carbocation." },
+            { paper: "Paper 1", term: "Mass Spectrometry", def: "An analytical technique separating ions based on m/z ratio to determine isotopic abundances and molecular mass." },
+            { paper: "Paper 1", term: "Metallic Bonding", def: "Strong electrostatic attraction between a lattice of positive metal cations and a surrounding sea of delocalised electrons." },
+            { paper: "Paper 1", term: "Molecular Formula", def: "The actual number of atoms of each element present in one molecule of a compound." },
+            { paper: "Paper 1", term: "Pi (π) Bond", def: "A covalent bond formed by sideways overlap of parallel p-orbitals above and below the internuclear axis." },
+            { paper: "Paper 1", term: "Polarising Power", def: "The ability of a cation to distort the electron cloud of an adjacent anion, highest for small radii and high charges." },
+            { paper: "Paper 1", term: "Polarisability", def: "The ease with which an anion's electron cloud can be distorted by a polarising cation, highest for large, highly charged anions." },
+            { paper: "Paper 1", term: "Relative Atomic Mass (Aᵣ)", def: "Weighted average mass of an atom of an element compared to 1/12th the mass of an atom of carbon-12." },
+            { paper: "Paper 1", term: "Sigma (σ) Bond", def: "A covalent bond formed by direct head-on axial overlap of orbitals along the internuclear axis." },
+            { paper: "Paper 1", term: "Structural Isomers", def: "Compounds possessing the same molecular formula but different structural formulae (connectivity)." },
+            { paper: "Paper 1", term: "VSEPR Theory", def: "Valence Shell Electron Pair Repulsion: electron pairs around a central atom repel each other to achieve maximum separation." },
+
+            /* --- PAPER 2 VOCABULARY (~35 TERMS) --- */
+            { paper: "Paper 2", term: "Activation Energy (Eₐ)", def: "The minimum kinetic energy that colliding reactant particles must possess for a chemical reaction to occur." },
+            { paper: "Paper 2", term: "Acidified K₂Cr₂O₇", def: "An oxidizing agent that changes from orange to green when reducing Cr(VI) to Cr(III) during oxidation of 1°/2° alcohols." },
+            { paper: "Paper 2", term: "Alcohols (1°, 2°, 3°)", def: "Organic compounds containing an -OH group, classified by the number of alkyl groups attached to the C-OH carbon." },
+            { paper: "Paper 2", term: "Aldehyde", def: "An organic compound containing a carbonyl C=O group at the terminal end of a carbon chain (-CHO)." },
+            { paper: "Paper 2", term: "Bond Enthalpy", def: "The energy required to break 1 mole of a specified covalent bond in gaseous state, averaged over many compounds." },
+            { paper: "Paper 2", term: "Calorimetry", def: "The experimental measurement of heat energy changes occurring during chemical or physical processes (Q = mcΔT)." },
+            { paper: "Paper 2", term: "Catalyst", def: "A substance that increases reaction rate by providing an alternative pathway with a lower activation energy, remaining unchanged." },
+            { paper: "Paper 2", term: "Collision Theory", def: "States that reactions occur when particles collide with energy ≥ activation energy and with correct steric orientation." },
+            { paper: "Paper 2", term: "Disproportionation", def: "A redox reaction in which an element in a single chemical species is simultaneously oxidized and reduced." },
+            { paper: "Paper 2", term: "Dynamic Equilibrium", def: "A state in a closed system where forward and reverse reaction rates are equal, and concentrations remain constant." },
+            { paper: "Paper 2", term: "Elimination Reaction", def: "A reaction where two atoms or groups are removed from adjacent carbon atoms in a molecule, forming a C=C double bond." },
+            { paper: "Paper 2", term: "Enthalpy Change (ΔH)", def: "The heat energy change measured under constant pressure conditions (kJ mol⁻¹)." },
+            { paper: "Paper 2", term: "Enthalpy of Atomisation (ΔₐH°)", def: "Enthalpy change when 1 mole of gaseous atoms is formed from an element in its standard state." },
+            { paper: "Paper 2", term: "Enthalpy of Combustion (Δ꜀H°)", def: "Enthalpy change when 1 mole of a substance burns completely in excess oxygen under standard conditions." },
+            { paper: "Paper 2", term: "Enthalpy of Formation (ΔfH°)", def: "Enthalpy change when 1 mole of a compound is formed from its constituent elements in standard states under standard conditions." },
+            { paper: "Paper 2", term: "Enthalpy of Neutralisation (ΔₙₑᵤₜH°)", def: "Enthalpy change when 1 mole of water is formed from the reaction between an acid and an alkali." },
+            { paper: "Paper 2", term: "Halogenoalkane", def: "An organic compound where one or more hydrogen atoms in an alkane have been replaced by halogen atoms." },
+            { paper: "Paper 2", term: "Hess's Law", def: "States that the total enthalpy change for a reaction is independent of the route taken, provided initial and final conditions match." },
+            { paper: "Paper 2", term: "Hydrogen Bonding", def: "Strong intermolecular force between a H atom bonded to N, O, or F and a lone pair on N, O, or F of an adjacent molecule." },
+            { paper: "Paper 2", term: "Hydrolysis", def: "A reaction in which water or aqueous hydroxide ions break chemical bonds in a molecule (e.g. halogenoalkane substitution)." },
+            { paper: "Paper 2", term: "Infrared (IR) Spectroscopy", def: "An analytical technique identifying functional groups based on characteristic absorption wavenumbers of vibrating bonds." },
+            { paper: "Paper 2", term: "Ketone", def: "An organic compound containing a carbonyl C=O group bonded between two carbon atoms within a carbon chain." },
+            { paper: "Paper 2", term: "Le Chatelier's Principle", def: "If a system at dynamic equilibrium is disturbed, the equilibrium position shifts to counteract the imposed change." },
+            { paper: "Paper 2", term: "London Dispersion Forces", def: "Weak intermolecular forces present in all molecules arising from temporary instantaneous dipoles inducing dipoles in neighboring molecules." },
+            { paper: "Paper 2", term: "Maxwell-Boltzmann Distribution", def: "A graph showing the distribution of molecular kinetic energies present in gas particles at a specified temperature." },
+            { paper: "Paper 2", term: "Molecular Ion Peak (M⁺)", def: "The peak in a mass spectrum corresponding to the mass-to-charge ratio (m/z) of the unfragmented intact molecule." },
+            { paper: "Paper 2", term: "Nucleophile", def: "An electron pair donor attracted to electron-deficient (δ+) carbon atoms." },
+            { paper: "Paper 2", term: "Nucleophilic Substitution", def: "An organic mechanism where an electron-rich nucleophile replaces a leaving group (e.g. halide ion) on a carbon atom." },
+            { paper: "Paper 2", term: "Oxidation Number", def: "The hypothetical charge an atom would possess if all its bonds were completely ionic." },
+            { paper: "Paper 2", term: "Oxidising Agent", def: "A species that accepts electrons, causing another species to be oxidized while itself being reduced." },
+            { paper: "Paper 2", term: "Permanent Dipole-Dipole Force", def: "Attractive force existing between polar molecules possessing permanent electrical dipoles." },
+            { paper: "Paper 2", term: "Reducing Agent", def: "A species that donates electrons, causing another species to be reduced while itself being oxidized." },
+            { paper: "Paper 2", term: "Standard Conditions", def: "Defined pressure of 100 kPa (1 bar) and a specified temperature (usually 298 K / 25 °C)." },
+            { paper: "Paper 2", term: "Thermal Stability", def: "A measure of the resistance of a chemical compound to breakdown upon heating." },
+
+            /* --- PAPER 3 PRACTICAL VOCABULARY (~35 TERMS) --- */
+            { paper: "Paper 3", term: "Anti-bumping Granules", def: "Inert porous ceramic pieces added before heating to provide nucleation sites for smooth bubble formation, preventing bumping." },
+            { paper: "Paper 3", term: "Burette", def: "Graduated glass tube with a tap used to accurately deliver variable, precise liquid volumes in titrations (±0.05 cm³)." },
+            { paper: "Paper 3", term: "Concordant Titres", def: "Multiple titration volume results that agree within ±0.10 cm³ of each other." },
+            { paper: "Paper 3", term: "Condenser (Liebig)", def: "Glassware jacketed by circulating cold water used to cool and condense boiling vapors back into liquid during reflux or distillation." },
+            { paper: "Paper 3", term: "Drying Agent", def: "An anhydrous salt (e.g. CaCl₂, MgSO₄) added to wet organic liquids to absorb dissolved water, turning liquid from cloudy to clear." },
+            { paper: "Paper 3", term: "Extrapolation", def: "Extending cooling curves back to the time of mixing on temperature-time graphs to determine theoretical maximum ΔT." },
+            { paper: "Paper 3", term: "Fehling's Test", def: "An alkaline copper(II) reagent used to distinguish aldehydes (brick-red Cu₂O ppt) from ketones (remains blue)." },
+            { paper: "Paper 3", term: "Flame Test", def: "A qualitative procedure detecting metal cations by observing characteristic emission light colors in a hot Bunsen flame." },
+            { paper: "Paper 3", term: "Fractional Distillation", def: "Separation technique utilizing a fractionating column to separate liquid mixtures with close boiling points." },
+            { paper: "Paper 3", term: "Fume Cupboard", def: "A ventilated laboratory enclosure designed to capture and exhaust toxic, corrosive, or flammable gases and vapors." },
+            { paper: "Paper 3", term: "Gas Syringe", def: "Calibrated glass syringe used to collect and directly measure gas volumes evolved in closed reaction systems." },
+            { paper: "Paper 3", term: "Heating Under Reflux", def: "Continuous boiling and condensation of a reaction mixture in a vertical condenser to prevent loss of volatile reactants/products." },
+            { paper: "Paper 3", term: "Indicator (Methyl Orange)", def: "Acid-base pH indicator changing from yellow in alkali to orange at neutral endpoint (pH ~3.1–4.4)." },
+            { paper: "Paper 3", term: "Limiting Reactant", def: "The reactant that is completely consumed first in a chemical reaction, determining theoretical product yield." },
+            { paper: "Paper 3", term: "Meniscus", def: "The curved upper surface of a liquid column in glassware, read strictly at eye-level from the bottom curve." },
+            { paper: "Paper 3", term: "Molar Volume", def: "The volume occupied by 1 mole of any gas under standard conditions (~24.0 dm³ mol⁻¹ at RTP)." },
+            { paper: "Paper 3", term: "Percentage Uncertainty", def: "Quantifies measurement precision: (Absolute Uncertainty × Number of Readings / Measured Value) × 100%." },
+            { paper: "Paper 3", term: "Pipette", def: "Volumetric glassware designed to accurately measure and deliver a single fixed liquid volume (e.g. 25.0 cm³)." },
+            { paper: "Paper 3", term: "Precipitation Reaction", def: "A reaction in which aqueous ions combine to form an insoluble solid product (precipitate)." },
+            { paper: "Paper 3", term: "Primary Standard", def: "A highly pure, stable, non-hygroscopic solid salt used to prepare standard solutions of known exact concentration." },
+            { paper: "Paper 3", term: "Purification", def: "A sequence of separation procedures (washing, extraction, drying, distillation) used to isolate a pure chemical product." },
+            { paper: "Paper 3", term: "Relative Rate of Hydrolysis", def: "Comparing precipitate formation speed of halogenoalkanes with AgNO₃(aq)/ethanol to assess C-X bond strength." },
+            { paper: "Paper 3", term: "Risk vs Hazard", def: "Hazard is the intrinsic potential to cause harm; Risk is the probability of harm occurring under working conditions." },
+            { paper: "Paper 3", term: "Separating Funnel", def: "Laboratory glassware used to separate two immiscible liquids of differing densities (organic and aqueous layers)." },
+            { paper: "Paper 3", term: "Simple Distillation", def: "Separation technique used to isolate a volatile liquid product from non-volatile impurities or significantly different boiling liquids." },
+            { paper: "Paper 3", term: "Specific Heat Capacity (c)", def: "Energy required to raise temperature of 1g of substance by 1 K (assumed 4.18 J g⁻¹ K⁻¹ for aqueous solutions)." },
+            { paper: "Paper 3", term: "Suck-Back", def: "Hazard where contracting cooling gas creates a vacuum, drawing cold trough water into hot glass tubes and shattering them." },
+            { paper: "Paper 3", term: "Thermal Decomposition", def: "The chemical breakdown of a substance into simpler compounds caused by heating." },
+            { paper: "Paper 3", term: "Thermometric Titration", def: "Determining titration endpoint by plotting solution temperature changes against added volume of titrant." },
+            { paper: "Paper 3", term: "Titration", def: "Quantitative volumetric procedure determining unknown solution concentration by controlled reaction with a standard solution." },
+            { paper: "Paper 3", term: "Volumetric Flask", def: "Flat-bottomed glass flask with a narrow neck calibrated to contain an exact volume when filled to mark." },
+            { paper: "Paper 3", term: "Washing (Extraction)", def: "Shaking an impure organic product with aqueous solutions (e.g. NaHCO₃) in a separating funnel to remove acidic/basic impurities." },
+            { paper: "Paper 3", term: "Weighing by Difference", def: "Technique where container + solid is weighed, solid transferred, and container reweighed to find exact mass transferred." }
+        ];
+
+        /* ==================== APP STATE & NAVIGATION ==================== */
+        let currentTab = 'flashcards';
+        let currentPaperFilter = 'ALL';
+        let currentGlossarySubtab = 'ALL';
+        let cardViewMode = 'deck';
+        let activeCards = [...FLASHCARDS_DATA];
+        let cardIndex = 0;
+
+        /* Switch Main Tabs */
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'text-cyan-400');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-cyan-400');
+                activeBtn.classList.remove('text-slate-400');
+            }
+        }
+
+        /* ==================== FLASHCARD ENGINE ==================== */
+        function updateCard() {
+            if (activeCards.length === 0) return;
+            const item = activeCards[cardIndex];
+            
+            document.getElementById('card-front-paper').innerText = item.paper;
+            document.getElementById('card-front-topic').innerText = item.topic;
+            document.getElementById('card-front-spec').innerText = item.spec;
+            document.getElementById('card-front-question').innerText = item.q;
+            document.getElementById('card-back-answer').innerText = item.a;
+
+            document.getElementById('deck-current-index').innerText = cardIndex + 1;
+            document.getElementById('deck-total-count').innerText = activeCards.length;
+            document.getElementById('jump-card-input').max = activeCards.length;
+            document.getElementById('jump-card-input').value = cardIndex + 1;
+
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.remove('card-flipped');
+        }
+
+        function flipCard() {
+            const inner = document.getElementById('card-inner-el');
+            inner.classList.toggle('card-flipped');
+        }
+
+        function nextCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex + 1) % activeCards.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            if (activeCards.length === 0) return;
+            cardIndex = (cardIndex - 1 + activeCards.length) % activeCards.length;
+            updateCard();
+        }
+
+        function jumpToCard(val) {
+            let num = parseInt(val) - 1;
+            if (!isNaN(num) && num >= 0 && num < activeCards.length) {
+                cardIndex = num;
+                updateCard();
+            }
+        }
+
+        function shuffleDeck() {
+            activeCards.sort(() => Math.random() - 0.5);
+            cardIndex = 0;
+            updateCard();
+            if (cardViewMode === 'list') renderListView();
+        }
+
+        function filterPaper(paper) {
+            currentPaperFilter = paper;
+            document.querySelectorAll('.paper-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-paper') === paper) {
+                    btn.className = 'paper-filter-btn bg-cyan-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all';
+                } else {
+                    btn.className = 'paper-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-all';
+                }
+            });
+            filterCards();
+        }
+
+        function filterCards() {
+            const searchVal = document.getElementById('card-search').value.toLowerCase();
+            activeCards = FLASHCARDS_DATA.filter(item => {
+                const matchPaper = (currentPaperFilter === 'ALL') || (item.paper === currentPaperFilter);
+                const matchSearch = item.q.toLowerCase().includes(searchVal) ||
+                                    item.a.toLowerCase().includes(searchVal) ||
+                                    item.topic.toLowerCase().includes(searchVal) ||
+                                    item.spec.toLowerCase().includes(searchVal);
+                return matchPaper && matchSearch;
+            });
+
+            document.getElementById('header-card-count').innerText = activeCards.length;
+            cardIndex = 0;
+            if (activeCards.length > 0) {
+                updateCard();
+                if (cardViewMode === 'list') renderListView();
+            } else {
+                document.getElementById('card-front-question').innerText = "No flashcards found matching filters.";
+                document.getElementById('card-back-answer').innerText = "Try adjusting your search keywords.";
+            }
+        }
+
+        function setCardViewMode(mode) {
+            cardViewMode = mode;
+            if (mode === 'deck') {
+                document.getElementById('deck-view-container').classList.remove('hidden');
+                document.getElementById('list-view-container').classList.add('hidden');
+                document.getElementById('card-view-mode-deck').className = 'px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-list').className = 'px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-bold transition-all';
+            } else {
+                document.getElementById('deck-view-container').classList.add('hidden');
+                document.getElementById('list-view-container').classList.remove('hidden');
+                document.getElementById('card-view-mode-list').className = 'px-3 py-1.5 bg-cyan-600 text-white rounded-lg text-xs font-bold transition-all';
+                document.getElementById('card-view-mode-deck').className = 'px-3 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-lg text-xs font-bold transition-all';
+                renderListView();
+            }
+        }
+
+        function renderListView() {
+            const holder = document.getElementById('list-cards-holder');
+            holder.innerHTML = activeCards.map((item, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">${item.paper}</span>
+                            <span class="text-xs font-semibold text-purple-300">${item.topic}</span>
+                            <span class="text-[10px] font-mono text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">${item.spec}</span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-mono">#${idx + 1}</span>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-sm leading-relaxed">${item.q}</h4>
+                    <button onclick="document.getElementById('list-ans-${idx}').classList.toggle('hidden')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded-lg text-xs font-semibold border border-slate-700">
+                        Toggle Mark Scheme Answer
+                    </button>
+                    <div id="list-ans-${idx}" class="hidden p-3 bg-emerald-950/20 border border-emerald-500/20 text-emerald-300 text-xs rounded-xl leading-relaxed whitespace-pre-line font-mono">
+                        ${item.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==================== INTERACTIVE GLOSSARY ENGINE ==================== */
+        function renderGlossary() {
+            const container = document.getElementById('glossary-container');
+            const searchVal = document.getElementById('glossary-search').value.toLowerCase();
+
+            const filtered = GLOSSARY_DATA.filter(g => {
+                const matchPaper = (currentGlossarySubtab === 'ALL') || (g.paper === currentGlossarySubtab);
+                const matchSearch = g.term.toLowerCase().includes(searchVal) || g.def.toLowerCase().includes(searchVal);
+                return matchPaper && matchSearch;
+            });
+
+            document.getElementById('header-glossary-count').innerText = GLOSSARY_DATA.length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching glossary terms found.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map((g, idx) => `
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/30 transition-all flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-emerald-400 text-base flex items-center space-x-2">
+                                <i class="fa-solid fa-bookmark text-xs"></i>
+                                <span>${g.term}</span>
+                            </h4>
+                            <span class="text-[10px] font-bold text-cyan-300 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 font-mono">${g.paper}</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Blur Container -->
+                    <div class="relative min-h-[90px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-4">
+                        <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
+
+                        <!-- Blur Overlay -->
+                        <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-200">Definition Blurred</span>
+                            <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal Definition</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleGlossaryBlur(idx) {
+            const overlay = document.getElementById(`gloss-blur-${idx}`);
+            if (overlay) {
+                if (overlay.classList.contains('opacity-0')) {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }
+        }
+
+        function switchGlossarySubtab(paper) {
+            currentGlossarySubtab = paper;
+            document.querySelectorAll('.glossary-subtab-btn').forEach(btn => {
+                if (btn.id === `subtab-glossary-${paper}`) {
+                    btn.className = 'glossary-subtab-btn subtab-active px-4 py-2 rounded-xl text-xs font-semibold transition-all';
+                } else {
+                    btn.className = 'glossary-subtab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition-all';
+                }
+            });
+            renderGlossary();
+        }
+
+        function filterGlossary() {
+            renderGlossary();
+        }
+
+        /* ==================== ON LOAD INITIALIZATION ==================== */
+        window.onload = function() {
+            updateCard();
+            renderGlossary();
+        };
+    </script>
+</body>
+</html>
