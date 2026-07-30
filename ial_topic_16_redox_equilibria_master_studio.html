@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAL Chemistry Topic 16: Redox Equilibria — Master Studio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="safeInitKaTeX()"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        .blur-answer { filter: blur(6px); transition: filter .25s ease, background-color .25s ease; user-select: none; cursor: pointer; }
+        .blur-answer:hover, .blur-answer.revealed { filter: blur(0); user-select: auto; background-color: rgba(34,211,238,.2) !important; }
+        .ambient-bg {
+            background:
+                radial-gradient(1100px 480px at 85% -8%, rgba(34,211,238,.12), transparent 60%),
+                radial-gradient(900px 420px at 5% 108%, rgba(244,63,94,.08), transparent 60%),
+                radial-gradient(700px 380px at 50% 40%, rgba(16,185,129,.05), transparent 60%),
+                #020617;
+        }
+        details > summary::-webkit-details-marker { display: none; }
+        .cell-canvas-bg { background: linear-gradient(180deg,#0b1220 0%,#020617 100%); }
+        .token-chip { transition: transform .15s ease, box-shadow .15s ease; }
+        .token-chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(34,211,238,.25); }
+    </style>
+</head>
+<body class="ambient-bg text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-cyan-500/20 p-2 rounded-lg border border-cyan-500/30">
+                    <span class="text-2xl">🔋</span>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight text-cyan-300">IAL Chemistry Topic 16: Redox Equilibria — Master Studio</h1>
+                    <p class="text-xs text-slate-400">WCH15 · Electrode potentials, cell diagrams, $E^\ominus_{cell}$, feasibility &amp; disproportionation (Spec 16.1 – 16.19)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800">Edexcel Spec 16.1 – 16.19</span>
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800">Unit 5 · Paper 5</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar (flex-wrap, short labels) -->
+    <nav class="bg-slate-900/90 border-b border-slate-800 sticky top-[57px] z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-2 flex flex-wrap">
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-cyan-300 font-bold border-b-2 border-cyan-400 bg-cyan-950/40 transition">1. Syllabus</button>
+            <button onclick="switchTab('cell')" id="btn-cell" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">2. The Cell</button>
+            <button onclick="switchTab('diagram')" id="btn-diagram" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">3. Cell Diagrams</button>
+            <button onclick="switchTab('potential')" id="btn-potential" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">4. Calculate E°</button>
+            <button onclick="switchTab('feasibility')" id="btn-feasibility" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">5. Feasibility</button>
+            <button onclick="switchTab('vanadium')" id="btn-vanadium" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">6. Vanadium</button>
+            <button onclick="switchTab('she')" id="btn-she" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">7. SHE &amp; Conditions</button>
+            <button onclick="switchTab('apps')" id="btn-apps" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">8. Disprop &amp; Fuel Cells</button>
+            <button onclick="switchTab('titration')" id="btn-titration" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">9. Titration Drill</button>
+            <button onclick="switchTab('booklet')" id="btn-booklet" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">10. Data Booklet</button>
+            <button onclick="switchTab('review')" id="btn-review" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition">11. Final Review</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- ==================== TAB 1: SYLLABUS MASTER OVERVIEW ==================== -->
+        <section id="tab-syllabus" class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+                <div class="border-b border-slate-800 pb-4 mb-6">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Topic 16 Learning Points &amp; Mark Scheme Secrets (Spec 16.1 – 16.19)</h2>
+                    <p class="text-xs text-slate-400 mt-1">Essential learning goals and examiner watch-outs across Redox Equilibria — electrode potentials, electrochemical cells, feasibility and redox titrations.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Card 1: 16.1 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 16.1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Redox foundations</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">1. Oxidation &amp; Reduction — Electrons and Oxidation Numbers</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Oxidation</b> = loss of electrons / increase in oxidation number; <b>reduction</b> = gain of electrons / decrease.</li>
+                                    <li>Assign oxidation numbers to s-, p- and d-block species (e.g. Mn in $\text{MnO}_4^-$ is +7).</li>
+                                    <li>Identify the oxidising agent (is reduced) and reducing agent (is oxidised).</li>
+                                    <li>Write and balance half-equations, including $\text{H}^+$, $\text{H}_2\text{O}$ and electrons.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Balance half-equations fully: atoms first, then O with $\text{H}_2\text{O}$, H with $\text{H}^+$, then charge with $\text{e}^-$. The oxidising agent is the species that is <b>reduced</b> — students swap these constantly.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: 16.2-16.3 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 16.2 – 16.3</span>
+                                <span class="text-[10px] text-slate-400 font-mono">$E^\ominus$ &amp; standard conditions</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">2. Standard Electrode Potential, $E^\ominus$</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>$E^\ominus$ = the emf of a half-cell compared with the <b>standard hydrogen electrode</b> under standard conditions.</li>
+                                    <li>Standard conditions: <b>298 K</b>, <b>100 kPa</b> (gases), <b>1.00 mol dm⁻³</b> (ions).</li>
+                                    <li>More positive $E^\ominus$ = greater tendency to be <b>reduced</b> (stronger oxidising agent).</li>
+                                    <li>More negative $E^\ominus$ = greater tendency to be <b>oxidised</b> (stronger reducing agent).</li>
+                                    <li>$E^\ominus$ values are quoted as <b>reduction</b> potentials (IUPAC convention).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">You must list <b>all three</b> standard conditions for full marks. $E^\ominus$ is an <b>intensive</b> property — multiplying the equation does NOT change $E^\ominus$.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: 16.4 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold px-2 py-0.5 bg-emerald-950 rounded border border-emerald-800">Spec 16.4</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Standard hydrogen electrode</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">3. The Standard Hydrogen Electrode (SHE)</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>SHE: <b>platinum</b> electrode in contact with $\text{H}^+(aq)$ at 1.00 mol dm⁻³ and $\text{H}_2(g)$ at 100 kPa, 298 K.</li>
+                                    <li>By definition $E^\ominus(\text{SHE}) = 0.00\ \text{V}$.</li>
+                                    <li>Platinum is used because it is <b>inert</b> and its porous/platinised surface catalyses the $\text{H}_2/\text{H}^+$ equilibrium.</li>
+                                    <li>A reference electrode is needed because a single half-cell's potential <b>cannot be measured alone</b> — only a difference between two.</li>
+                                    <li>Half-reaction: $2\text{H}^+(aq) + 2\text{e}^- \rightleftharpoons \text{H}_2(g)$.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">State <b>platinum</b> (not carbon) and give the reason (inert + catalytic surface). See the annotated SHE diagram in the SHE &amp; Conditions tab.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: 16.5-16.6 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-amber-400 uppercase font-bold px-2 py-0.5 bg-amber-950 rounded border border-amber-800">Spec 16.5 – 16.6</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Measuring $E^\ominus$</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">4. Measuring Standard Electrode Potentials</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Metal/ion half-cell: the metal dips into a 1.00 mol dm⁻³ solution of its own ions, connected to the SHE.</li>
+                                    <li>Ion/ion half-cell (e.g. $\text{Fe}^{3+}/\text{Fe}^{2+}$): an <b>inert Pt electrode</b> dips into a solution containing both ions.</li>
+                                    <li>The measured emf of the cell (vs SHE) is the $E^\ominus$ of the half-cell.</li>
+                                    <li>Core Practical 12: build and investigate simple electrochemical cells.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">For ion/ion systems there is no solid metal of the element, so an <b>inert conductor (Pt)</b> is essential — a common exam point.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: 16.7 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-rose-400 uppercase font-bold px-2 py-0.5 bg-rose-950 rounded border border-rose-800">Spec 16.7</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Calculating $E^\ominus_{cell}$</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">5. Calculating the Standard Cell emf</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>$E^\ominus_{cell} = E^\ominus_{\text{reduction}} - E^\ominus_{\text{oxidation}} = E^\ominus_{\text{cathode}} - E^\ominus_{\text{anode}} = E^\ominus_{RHS} - E^\ominus_{LHS}$.</li>
+                                    <li>The half-cell with the <b>more positive</b> $E^\ominus$ undergoes <b>reduction</b> (cathode, RHS).</li>
+                                    <li>The half-cell with the <b>more negative</b> $E^\ominus$ undergoes <b>oxidation</b> (anode, LHS).</li>
+                                    <li>Do NOT multiply $E^\ominus$ by coefficients when balancing electrons.</li>
+                                    <li>A positive $E^\ominus_{cell}$ means the cell reaction is feasible as written.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">The full step-by-step method is on the <b>Calculate E°</b> tab. The classic error is multiplying $E^\ominus$ by the balancing number — $E^\ominus$ never scales.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: 16.8 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-cyan-400 uppercase font-bold px-2 py-0.5 bg-cyan-950 rounded border border-cyan-800">Spec 16.8</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Cell diagrams</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">6. Writing Cell Diagrams (Conventional Representation)</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Convention: <b>oxidation (anode) on the LEFT, reduction (cathode) on the RIGHT</b>.</li>
+                                    <li>Single vertical line $|$ = phase boundary; double line $\parallel$ = salt bridge.</li>
+                                    <li>Write the oxidised form nearest the salt bridge: e.g. $\text{Zn}(s)\,|\,\text{Zn}^{2+}(aq)\,\parallel\,\text{Cu}^{2+}(aq)\,|\,\text{Cu}(s)$.</li>
+                                    <li>For ion/ion half-cells include the inert Pt electrode at the outer end: $\text{Pt}\,|\,\text{Fe}^{2+},\text{Fe}^{3+}\,\parallel\,\cdots$</li>
+                                    <li>Commas separate species in the same phase.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Practise assembling diagrams token-by-token in the <b>Cell Diagrams</b> tab. Getting LHS/RHS the wrong way round, or omitting Pt, are the top lost marks.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 7: 16.9 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 16.9</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Why conditions matter</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">7. Importance of Conditions When Measuring $E$</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Electrode potentials depend on concentration, temperature and pressure (Le Chatelier on the half-cell equilibrium).</li>
+                                    <li>Changing $[\text{ion}]$ shifts the half-cell equilibrium and changes $E$ from $E^\ominus$.</li>
+                                    <li>Standard conditions fix these so values are comparable and reproducible.</li>
+                                    <li>Increasing the concentration of a species being reduced makes $E$ more positive.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Explain via Le Chatelier: e.g. raising $[\text{Cu}^{2+}]$ drives $\text{Cu}^{2+}+2\text{e}^-\rightleftharpoons\text{Cu}$ right, making $E$ more positive. Try the concentration slider in The Cell tab.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: 16.10-16.11 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 16.10 – 16.11</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Feasibility &amp; thermodynamics</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">8. Predicting Feasibility &amp; the Thermodynamic Link</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>A reaction is thermodynamically feasible if $E^\ominus_{cell} > 0$.</li>
+                                    <li>$E^\ominus_{cell}$ is directly proportional to $\Delta S_{total}$: $\Delta S_{total} = \dfrac{nFE^\ominus_{cell}}{T}$.</li>
+                                    <li>$E^\ominus_{cell}$ is directly proportional to $\ln K$: $\ln K = \dfrac{nFE^\ominus_{cell}}{RT}$.</li>
+                                    <li>Positive $E^\ominus_{cell}$ → positive $\Delta S_{total}$ → $K > 1$ → products favoured.</li>
+                                    <li>Given a set of half-reactions and $E^\ominus$ values, combine them to test feasibility.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Use the <b>Feasibility</b> tab to test any two systems from the data booklet. State "$E^\ominus_{cell}$ is positive, so the reaction is feasible" — and remember it says nothing about rate.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 9: 16.12 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold px-2 py-0.5 bg-emerald-950 rounded border border-emerald-800">Spec 16.12</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Limitations of $E^\ominus$ predictions</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">9. Limitations of $E^\ominus$ Predictions</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Kinetic stability:</b> a feasible reaction ($E^\ominus_{cell}>0$) may be extremely slow due to a high activation energy.</li>
+                                    <li><b>Non-standard conditions:</b> real concentrations/pressures differ from 1.00 mol dm⁻³ / 100 kPa, shifting $E$.</li>
+                                    <li>So a predicted-feasible reaction may not be observed, and a predicted-non-feasible one may occur under non-standard conditions.</li>
+                                    <li>Give examples (e.g. concentrated acid changing the outcome of $\text{MnO}_4^-$ reductions).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">"Thermodynamically feasible but kinetically stable" is the phrase examiners want. Always mention both limitations for full marks.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 10: 16.13 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-amber-400 uppercase font-bold px-2 py-0.5 bg-amber-950 rounded border border-amber-800">Spec 16.13</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Electrochemical series</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">10. The Electrochemical Series</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Standard electrode potentials are <b>reduction potentials</b>, listed from most negative to most positive.</li>
+                                    <li>Top (most negative) = strongest reducing agents (easily oxidised).</li>
+                                    <li>Bottom (most positive) = strongest oxidising agents (easily reduced).</li>
+                                    <li>A species higher up reduces the oxidised form of any species below it.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">The data booklet lists all 31 systems as reductions. Use the series to quickly spot which species is reduced and which oxidised.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 11: 16.14 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-rose-400 uppercase font-bold px-2 py-0.5 bg-rose-950 rounded border border-rose-800">Spec 16.14</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Disproportionation</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">11. Disproportionation Reactions</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Disproportionation: the <b>same element</b> is simultaneously oxidised and reduced.</li>
+                                    <li>Test feasibility by combining the element's two relevant half-reactions.</li>
+                                    <li>Example: $\text{H}_2\text{O}_2 \rightarrow \text{H}_2\text{O} + \text{O}_2$; $E^\ominus_{cell} = +1.77 - (+0.68) = +1.09\ \text{V}$ (feasible).</li>
+                                    <li>Oxygen in $\text{H}_2\text{O}_2$ (−1) is both oxidised to 0 ($\text{O}_2$) and reduced to −2 ($\text{H}_2\text{O}$).</li>
+                                    <li>Use $E^\ominus$ values to predict whether a species will disproportionate.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Show the oxidation numbers changing in both directions. The <b>Disprop &amp; Applications</b> tab has a step-by-step $\text{H}_2\text{O}_2$ worked example and a predictor.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 12: 16.15-16.17 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-cyan-400 uppercase font-bold px-2 py-0.5 bg-cyan-950 rounded border border-cyan-800">Spec 16.15 – 16.17</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Redox titrations</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">12. Redox Titrations — $\text{MnO}_4^-$/Fe²⁺ and Iodine/Thiosulfate</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 6 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>$\text{MnO}_4^- + 8\text{H}^+ + 5\text{e}^- \rightarrow \text{Mn}^{2+} + 4\text{H}_2\text{O}$ (self-indicating: purple → colourless).</li>
+                                    <li>$\text{MnO}_4^-$ : Fe²⁺ ratio is 1 : 5.</li>
+                                    <li>Iodine/thiosulfate: $\text{I}_2 + 2\text{S}_2\text{O}_3^{2-} \rightarrow 2\text{I}^- + \text{S}_4\text{O}_6^{2-}$ (1 : 2), starch indicator (blue-black → colourless).</li>
+                                    <li>Carry out structured and unstructured titration calculations (moles → ratio → concentration/percentage).</li>
+                                    <li>Core Practicals 13a &amp; 13b: perform both titrations.</li>
+                                    <li>Link to indirect determinations (e.g. % iron in tablets, % copper in brass).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Get the mole ratios right (1:5 and 1:2). Add starch only near the end-point of the iodine titration. $\text{MnO}_4^-$ needs acid ($\text{H}^+$) — state dilute $\text{H}_2\text{SO}_4$.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 13: 16.16 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 16.16</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Uncertainty</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">13. Uncertainty &amp; Validity of Results</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Estimate the uncertainty of a measurement (e.g. burette ±0.05 cm³ per reading).</li>
+                                    <li>Calculate percentage uncertainty and combine them for a final result.</li>
+                                    <li>Discuss how uncertainty affects the validity of a calculated concentration/percentage.</li>
+                                    <li>Suggest improvements (repeat readings, more precise apparatus, larger titres).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">A titre uses <b>two</b> burette readings, so the burette uncertainty is doubled. Show the % uncertainty working — it is usually worth 2 marks.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 14: 16.18-16.19 -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 16.18 – 16.19</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Fuel cells</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">14. Hydrogen–Oxygen Fuel Cells</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>A fuel cell converts the energy of fuel + oxygen reaction directly into a voltage.</li>
+                                    <li>Hydrogen-rich fuels (methanol, etc.) are used as well as pure $\text{H}_2$.</li>
+                                    <li>Acidic electrolyte: anode $\text{H}_2 \rightarrow 2\text{H}^+ + 2\text{e}^-$; cathode $\text{O}_2 + 4\text{H}^+ + 4\text{e}^- \rightarrow 2\text{H}_2\text{O}$.</li>
+                                    <li>Alkaline electrolyte: anode $\text{H}_2 + 2\text{OH}^- \rightarrow 2\text{H}_2\text{O} + 2\text{e}^-$; cathode $\text{O}_2 + 2\text{H}_2\text{O} + 4\text{e}^- \rightarrow 4\text{OH}^-$.</li>
+                                    <li>Advantages: high efficiency, only water produced; disadvantages: $\text{H}_2$ storage, cost, infrastructure.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Know <b>both</b> the acidic and alkaline electrode reactions — examiners specify which electrolyte. Overall: $2\text{H}_2 + \text{O}_2 \rightarrow 2\text{H}_2\text{O}$.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Out of scope -->
+                <div class="mt-6 p-4 bg-rose-950/20 border border-rose-900/40 rounded-xl text-xs text-slate-300">
+                    <b class="text-rose-300">Related but covered elsewhere:</b> the Nernst equation (quantitative non-standard potentials) is beyond the IAL spec — only the qualitative Le Chatelier effect is required. Electrolysis and industrial electrochemistry are not in this topic. The full fuel-cell economics discussion is in the Topic 16 revision hub.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: THE CELL (SIMULATOR) ==================== -->
+        <section id="tab-cell" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Interactive Simulation · Spec 16.4 – 16.7, 16.9</span>
+                        <h2 class="text-xl font-bold text-white mt-1">The Electrochemical Cell — Watch the Electrons Flow</h2>
+                        <p class="text-xs text-slate-400 mt-1">Choose two half-cells. The more positive one is reduced (cathode, +); the more negative is oxidised (anode, −). Electrons travel through the wire; the salt bridge completes the circuit.</p>
+                    </div>
+                    <button onclick="window.toggleCellSpin()" id="cell-spin-btn" class="px-3 py-1.5 rounded-lg bg-cyan-600 text-white text-xs font-bold transition shadow">⚡ Electron flow: ON</button>
+                </div>
+
+                <!-- Half-cell selectors -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                        <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">Left beaker</span>
+                        <select id="cell-left" onchange="window.updateCellSim()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 text-xs font-mono">
+                            <option value="zn" selected>Zn²⁺/Zn  (E° = −0.76 V)</option>
+                            <option value="cu">Cu²⁺/Cu  (E° = +0.34 V)</option>
+                            <option value="ag">Ag⁺/Ag  (E° = +0.80 V)</option>
+                            <option value="fe">Fe³⁺/Fe²⁺ (Pt)  (E° = +0.77 V)</option>
+                        </select>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                        <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">Right beaker</span>
+                        <select id="cell-right" onchange="window.updateCellSim()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 text-xs font-mono">
+                            <option value="zn">Zn²⁺/Zn  (E° = −0.76 V)</option>
+                            <option value="cu" selected>Cu²⁺/Cu  (E° = +0.34 V)</option>
+                            <option value="ag">Ag⁺/Ag  (E° = +0.80 V)</option>
+                            <option value="fe">Fe³⁺/Fe²⁺ (Pt)  (E° = +0.77 V)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Canvas -->
+                <div class="w-full flex justify-center">
+                    <canvas id="cell-canvas" class="cell-canvas-bg rounded-xl border border-slate-800 w-full max-w-3xl" style="height:380px"></canvas>
+                </div>
+
+                <!-- Readouts -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="p-4 bg-slate-950 border border-rose-800/50 rounded-xl space-y-1.5">
+                        <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">Anode (−) · oxidation</span>
+                        <p id="cell-anode-eq" class="text-xs font-mono text-slate-200"></p>
+                        <p id="cell-anode-note" class="text-[11px] text-slate-400"></p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-emerald-800/60 rounded-xl space-y-1.5 text-center">
+                        <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">Standard cell emf</span>
+                        <p id="cell-emf" class="text-2xl font-extrabold text-emerald-300 font-mono"></p>
+                        <p id="cell-emf-working" class="text-[11px] font-mono text-slate-400"></p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-sky-800/50 rounded-xl space-y-1.5">
+                        <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">Cathode (+) · reduction</span>
+                        <p id="cell-cathode-eq" class="text-xs font-mono text-slate-200"></p>
+                        <p id="cell-cathode-note" class="text-[11px] text-slate-400"></p>
+                    </div>
+                </div>
+
+                <!-- Overall equation + salt bridge -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-1.5">
+                        <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">Overall cell reaction (balanced)</span>
+                        <p id="cell-overall" class="text-sm font-mono text-emerald-300"></p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-1.5">
+                        <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">Salt bridge — keeps the circuit neutral</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">Anions (e.g. NO₃⁻) drift toward the <b class="text-rose-300">anode</b> to balance the positive ions being made; cations (e.g. K⁺) drift toward the <b class="text-sky-300">cathode</b> to replace the positive ions being removed. Without it, charge would build up and the current would stop.</p>
+                    </div>
+                </div>
+
+                <!-- Concentration (Le Chatelier) -->
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">Change the cathode ion concentration (Le Chatelier, Spec 16.9)</span>
+                        <span id="cell-conc-val" class="font-mono text-xs text-amber-300">1.00 mol dm⁻³</span>
+                    </div>
+                    <input id="cell-conc" type="range" min="0.1" max="2" step="0.05" value="1" oninput="window.updateConc()" class="w-full accent-amber-400">
+                    <p id="cell-conc-note" class="text-[11px] text-slate-300 leading-relaxed"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: CELL DIAGRAMS (BUILDER) ==================== -->
+        <section id="tab-diagram" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Method + Practice · Spec 16.8</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Writing Cell Diagrams — the IUPAC Convention</h2>
+                    <p class="text-xs text-slate-400 mt-1">Learn the four rules, then assemble real cell diagrams token by token and get instant feedback.</p>
+                </div>
+
+                <!-- The method -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="p-4 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-1">
+                        <span class="text-cyan-300 font-extrabold text-lg block">1</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Oxidation on the LEFT, reduction on the RIGHT.</b> The anode (more negative $E^\ominus$) is written first.</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-1">
+                        <span class="text-cyan-300 font-extrabold text-lg block">2</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">$|$ = phase boundary, $\parallel$ = salt bridge.</b> The salt bridge sits in the middle.</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-1">
+                        <span class="text-cyan-300 font-extrabold text-lg block">3</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Oxidised form next to the salt bridge.</b> e.g. $\text{Zn}\,|\,\text{Zn}^{2+}\,\parallel\,\text{Cu}^{2+}\,|\,\text{Cu}$.</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-1">
+                        <span class="text-cyan-300 font-extrabold text-lg block">4</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Ion/ion half-cells need inert Pt</b> at the outer end; a comma separates same-phase species.</p>
+                    </div>
+                </div>
+
+                <!-- Scenario picker -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <button onclick="window.pickDiagramScenario('zncu')" id="dg-scen-zncu" class="p-3 rounded-lg border border-cyan-500 bg-cyan-950/30 text-left transition hover:border-cyan-400">
+                        <span class="font-bold text-xs text-cyan-300 block">Scenario 1</span>
+                        <span class="text-[11px] text-slate-300">Zn | Cu (Daniell cell)</span>
+                    </button>
+                    <button onclick="window.pickDiagramScenario('fecu')" id="dg-scen-fecu" class="p-3 rounded-lg border border-slate-800 bg-slate-950 text-left transition hover:border-cyan-400">
+                        <span class="font-bold text-xs text-cyan-300 block">Scenario 2</span>
+                        <span class="text-[11px] text-slate-400">Fe²⁺/Fe³⁺ | Cu</span>
+                    </button>
+                    <button onclick="window.pickDiagramScenario('agfe')" id="dg-scen-agfe" class="p-3 rounded-lg border border-slate-800 bg-slate-950 text-left transition hover:border-cyan-400">
+                        <span class="font-bold text-xs text-cyan-300 block">Scenario 3</span>
+                        <span class="text-[11px] text-slate-400">Ag | Fe³⁺/Fe²⁺</span>
+                    </button>
+                    <button onclick="window.pickDiagramScenario('znag')" id="dg-scen-znag" class="p-3 rounded-lg border border-slate-800 bg-slate-950 text-left transition hover:border-cyan-400">
+                        <span class="font-bold text-xs text-cyan-300 block">Scenario 4</span>
+                        <span class="text-[11px] text-slate-400">Zn | Ag</span>
+                    </button>
+                </div>
+
+                <!-- Prompt -->
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-amber-300 uppercase tracking-wider">Target cell</span>
+                        <span id="dg-target-emf" class="font-mono text-emerald-400 font-bold"></span>
+                    </div>
+                    <p id="dg-prompt" class="text-xs text-slate-200 leading-relaxed font-mono"></p>
+                </div>
+
+                <!-- Assembly area -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-slate-300 uppercase tracking-wider">Your assembled cell diagram:</span>
+                        <button onclick="window.clearDiagram()" class="text-[11px] text-rose-400 hover:underline">Clear bench</button>
+                    </div>
+                    <div id="dg-slots" class="min-h-[64px] p-3 bg-slate-950 border-2 border-dashed border-slate-700 rounded-xl flex flex-wrap items-center gap-2 justify-center font-mono text-sm"></div>
+                    <div>
+                        <span class="text-xs text-slate-400 block mb-2">Click tokens in the correct order (left → right):</span>
+                        <div id="dg-palette" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <button onclick="window.checkDiagram()" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-lg shadow transition">Check my cell diagram</button>
+                    <div id="dg-feedback" class="hidden text-xs p-3.5 rounded-lg border leading-relaxed"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: CALCULATE E° ==================== -->
+        <section id="tab-potential" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">The Method · Spec 16.7</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Calculating $E^\ominus_{cell}$ — Step by Step</h2>
+                    <p class="text-xs text-slate-400 mt-1">This is the calculation students find hardest. Follow the four steps in order, every time — the interactive below walks you through them.</p>
+                </div>
+
+                <!-- The 4-step method -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="p-4 bg-slate-950 border border-emerald-800/50 rounded-xl space-y-1">
+                        <span class="text-emerald-300 font-extrabold text-lg block">Step 1</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Write both $E^\ominus$ values</b> exactly as given (they are reduction potentials).</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-emerald-800/50 rounded-xl space-y-1">
+                        <span class="text-emerald-300 font-extrabold text-lg block">Step 2</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">The more positive one is reduced</b> (cathode). The other is reversed to oxidation (anode).</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-emerald-800/50 rounded-xl space-y-1">
+                        <span class="text-emerald-300 font-extrabold text-lg block">Step 3</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">$E^\ominus_{cell} = E^\ominus_{red} - E^\ominus_{ox}$.</b> Do NOT multiply $E^\ominus$ by any coefficient.</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-emerald-800/50 rounded-xl space-y-1">
+                        <span class="text-emerald-300 font-extrabold text-lg block">Step 4</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Balance the electrons</b> and add the half-equations for the overall reaction.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive calculator -->
+                <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                    <span class="text-emerald-300 font-bold text-xs uppercase tracking-wider block">Try it — pick any two half-cells from the data booklet</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select id="pot-a" onchange="window.calcPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 text-xs font-mono"></select>
+                        <select id="pot-b" onchange="window.calcPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 text-xs font-mono"></select>
+                    </div>
+                    <div id="pot-steps" class="space-y-3"></div>
+                </div>
+
+                <!-- Worked example -->
+                <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                    <span class="text-amber-300 font-bold text-xs uppercase tracking-wider block">Worked example — the Daniell cell</span>
+                    <p class="text-[11px] text-slate-300">Given $E^\ominus(\text{Zn}^{2+}/\text{Zn}) = -0.76\ \text{V}$ and $E^\ominus(\text{Cu}^{2+}/\text{Cu}) = +0.34\ \text{V}$, calculate $E^\ominus_{cell}$ and write the overall equation.</p>
+                    <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-[11px] leading-relaxed">
+                        Step 2: Cu is more positive → Cu²⁺ reduced (cathode); Zn oxidised (anode).<br>
+                        Step 3: $E^\ominus_{cell} = +0.34 - (-0.76) = +1.10\ \text{V}$<br>
+                        Step 4: $\text{Zn} \rightarrow \text{Zn}^{2+} + 2\text{e}^-$ and $\text{Cu}^{2+} + 2\text{e}^- \rightarrow \text{Cu}$ (electrons already equal)<br>
+                        Overall: $\text{Zn}(s) + \text{Cu}^{2+}(aq) \rightarrow \text{Zn}^{2+}(aq) + \text{Cu}(s)$
+                    </div>
+                    <p class="text-[11px] text-amber-200">⚠️ If the question gave you the Ag/Zn cell, you would still NOT double $E^\ominus(\text{Ag}^+/\text{Ag})$ even though you double the silver half-equation to balance electrons.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: FEASIBILITY ==================== -->
+        <section id="tab-feasibility" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Prediction Engine · Spec 16.10 – 16.12</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Predicting Feasibility from $E^\ominus$ Values</h2>
+                    <p class="text-xs text-slate-400 mt-1">A reaction is thermodynamically feasible if $E^\ominus_{cell} > 0$ (then $\Delta S_{total} > 0$ and $K > 1$). Test any two systems, then try the prediction challenge.</p>
+                </div>
+
+                <!-- Free tester -->
+                <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                    <span class="text-cyan-300 font-bold text-xs uppercase tracking-wider block">Free tester — any two systems from the 31 in the data booklet</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select id="feas-a" onchange="window.calcFeasibility()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 text-xs font-mono"></select>
+                        <select id="feas-b" onchange="window.calcFeasibility()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 text-xs font-mono"></select>
+                    </div>
+                    <div id="feas-result" class="space-y-3"></div>
+                </div>
+
+                <!-- Prediction challenge -->
+                <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                    <span class="text-amber-300 font-bold text-xs uppercase tracking-wider block">Prediction challenge — will these reactions go?</span>
+                    <p class="text-[11px] text-slate-400">Each card gives a proposed reaction with the relevant $E^\ominus$ values. Predict feasible or not, then reveal the worked answer.</p>
+                    <div id="feas-challenges" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 6: VANADIUM STEPWISE REDUCTION ==================== -->
+        <section id="tab-vanadium" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Animated Multi-Step Redox · Spec 16.10, 16.12</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Vanadium Stepwise Reduction — Watch the Colours Change</h2>
+                        <p class="text-xs text-slate-400 mt-1">Zinc ($E^\ominus = -0.76\ \text{V}$) reduces vanadium(V) one electron at a time. Each step has its own $E^\ominus_{cell}$ — keep adding zinc and see how far the reduction goes.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.vanadiumNext()" id="v-next-btn" class="px-3 py-1.5 rounded-lg bg-cyan-600 text-white text-xs font-bold transition shadow hover:bg-cyan-500">🧪 Add zinc → next step</button>
+                        <button onclick="window.vanadiumReset()" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-cyan-300 text-xs font-bold transition">↺ Reset</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                    <!-- Beaker canvas -->
+                    <div class="w-full flex justify-center">
+                        <canvas id="vanadium-canvas" class="cell-canvas-bg rounded-xl border border-slate-800 w-full max-w-md" style="height:380px"></canvas>
+                    </div>
+
+                    <!-- Step info -->
+                    <div class="space-y-4">
+                        <div id="v-step-panel" class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-3"></div>
+                        <div id="v-ecell-panel" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 font-mono text-[11px]"></div>
+                    </div>
+                </div>
+
+                <!-- Progress strip -->
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                    <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">The four reduction steps (each with its own $E^\ominus_{cell}$)</span>
+                    <div id="v-progress" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+                </div>
+
+                <!-- Why it stops -->
+                <div class="p-4 bg-amber-950/30 border border-amber-800/60 rounded-xl space-y-1">
+                    <span class="text-amber-300 font-bold text-xs uppercase tracking-wider block">💡 Why does the reduction stop at V²⁺?</span>
+                    <p class="text-[11px] text-amber-200 leading-relaxed">The first three steps all have <b>positive</b> $E^\ominus_{cell}$ (+1.76, +1.10, +0.50 V), so they are feasible. But the fourth step, $\text{V}^{2+} + 2\text{e}^- \rightarrow \text{V}$, has $E^\ominus_{cell} = -1.18 - (-0.76) = \mathbf{-0.42\ V}$ — <b>negative</b>, so zinc cannot reduce V²⁺ to vanadium metal. The reaction halts, leaving a violet V²⁺ solution. This is a classic exam question on using $E^\ominus$ to predict how far a reaction goes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 7: SHE & CONDITIONS ==================== -->
+        <section id="tab-she" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Reference Electrode · Spec 16.3 – 16.4, 16.9</span>
+                    <h2 class="text-xl font-bold text-white mt-1">The Standard Hydrogen Electrode</h2>
+                    <p class="text-xs text-slate-400 mt-1">Every $E^\ominus$ is measured against this one electrode, defined as exactly 0.00 V.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                    <!-- SHE diagram (SVG) -->
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl">
+                        <svg viewBox="0 0 420 340" class="w-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Standard hydrogen electrode diagram">
+                            <rect x="0" y="0" width="420" height="340" rx="10" fill="#0b1220"/>
+                            <!-- beaker -->
+                            <path d="M90 120 L90 290 Q90 305 105 305 L255 305 Q270 305 270 290 L270 120" fill="none" stroke="#64748b" stroke-width="2.5"/>
+                            <!-- solution -->
+                            <rect x="92" y="160" width="176" height="143" fill="rgba(56,189,248,0.18)"/>
+                            <text x="180" y="240" text-anchor="middle" font-size="12" fill="#7dd3fc" font-family="monospace">H⁺(aq) 1.00 mol dm⁻³</text>
+                            <text x="180" y="258" text-anchor="middle" font-size="10" fill="#475569" font-family="monospace">(e.g. HCl), 298 K</text>
+                            <!-- Pt electrode -->
+                            <rect x="165" y="100" width="30" height="180" rx="3" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1.5"/>
+                            <text x="180" y="150" text-anchor="middle" font-size="11" fill="#0f172a" font-weight="bold" font-family="sans-serif">Pt</text>
+                            <!-- H2 gas jacket -->
+                            <path d="M140 60 L140 200 Q140 215 155 215 L205 215 Q220 215 220 200 L220 60" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="5 4"/>
+                            <text x="180" y="80" text-anchor="middle" font-size="11" fill="#a5f3fc" font-family="monospace">H₂(g)</text>
+                            <text x="180" y="95" text-anchor="middle" font-size="10" fill="#67e8f9" font-family="monospace">100 kPa</text>
+                            <!-- bubbles -->
+                            <circle cx="155" cy="180" r="4" fill="rgba(165,243,252,0.5)"/>
+                            <circle cx="200" cy="165" r="3" fill="rgba(165,243,252,0.5)"/>
+                            <circle cx="170" cy="195" r="3" fill="rgba(165,243,252,0.5)"/>
+                            <!-- wire out -->
+                            <line x1="180" y1="100" x2="180" y2="40" stroke="#94a3b8" stroke-width="2.5"/>
+                            <line x1="180" y1="40" x2="330" y2="40" stroke="#94a3b8" stroke-width="2.5"/>
+                            <!-- voltmeter -->
+                            <circle cx="350" cy="40" r="22" fill="#0f172a" stroke="#34d399" stroke-width="2"/>
+                            <text x="350" y="45" text-anchor="middle" font-size="13" fill="#34d399" font-weight="bold">V</text>
+                            <text x="350" y="80" text-anchor="middle" font-size="10" fill="#34d399" font-family="monospace">0.00 V</text>
+                            <!-- labels with leader lines -->
+                            <line x1="195" y1="120" x2="300" y2="120" stroke="#475569" stroke-width="1"/>
+                            <text x="305" y="124" font-size="10" fill="#cbd5e1" font-family="sans-serif">platinum electrode</text>
+                            <text x="305" y="138" font-size="9" fill="#64748b" font-family="sans-serif">(inert, platinised surface)</text>
+                            <line x1="220" y1="185" x2="300" y2="185" stroke="#475569" stroke-width="1"/>
+                            <text x="305" y="189" font-size="10" fill="#cbd5e1" font-family="sans-serif">H₂ bubbles over Pt</text>
+                            <line x1="268" y1="270" x2="300" y2="270" stroke="#475569" stroke-width="1"/>
+                            <text x="305" y="274" font-size="10" fill="#cbd5e1" font-family="sans-serif">to the other half-cell</text>
+                            <!-- half equation -->
+                            <text x="180" y="325" text-anchor="middle" font-size="11" fill="#a5f3fc" font-family="monospace">2H⁺(aq) + 2e⁻ ⇌ H₂(g)   E° = 0.00 V</text>
+                        </svg>
+                    </div>
+
+                    <!-- Why + conditions -->
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                            <span class="text-cyan-300 font-bold text-xs uppercase tracking-wider block">Why a reference electrode is needed</span>
+                            <p class="text-[11px] text-slate-300 leading-relaxed">You can never measure the potential of a <b>single</b> half-cell — a voltmeter only reads the <b>difference</b> between two. So we define one electrode as exactly 0.00 V (the SHE) and measure everything else against it.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                            <span class="text-cyan-300 font-bold text-xs uppercase tracking-wider block">Why platinum?</span>
+                            <p class="text-[11px] text-slate-300 leading-relaxed">There is no solid metal in the $\text{H}^+/\text{H}_2$ system, so we need an <b>inert conductor</b>. Platinum is unreactive and its platinised (rough) surface <b>catalyses</b> the $\text{H}_2 \rightleftharpoons 2\text{H}^+$ equilibrium so it responds quickly.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                            <span class="text-cyan-300 font-bold text-xs uppercase tracking-wider block">The three standard conditions (learn these)</span>
+                            <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-relaxed">
+                                <li>Temperature = <b>298 K</b> (25 °C)</li>
+                                <li>Gas pressure = <b>100 kPa</b> (for $\text{H}_2$)</li>
+                                <li>Ion concentration = <b>1.00 mol dm⁻³</b> (for $\text{H}^+$)</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-amber-950/30 border border-amber-800/60 rounded-xl space-y-1">
+                            <span class="text-amber-300 font-bold text-xs uppercase tracking-wider block">💡 Examiner watch-out</span>
+                            <p class="text-[11px] text-amber-200 leading-relaxed">A common alternative is the <b>calomel electrode</b> — it doesn't need $\text{H}_2$ gas, which is awkward to handle. You may be asked why SHE is rarely used in school labs (hydrogen is flammable; the setup is fiddly).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 7: DISPROPORTIONATION & APPLICATIONS ==================== -->
+        <section id="tab-apps" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Applications · Spec 16.14 – 16.19</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Disproportionation, Fuel Cells &amp; Redox Titrations</h2>
+                </div>
+
+                <!-- Disproportionation worked example -->
+                <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                    <span class="text-rose-300 font-bold text-xs uppercase tracking-wider block">Disproportionation — worked example ($\text{H}_2\text{O}_2$)</span>
+                    <p class="text-[11px] text-slate-300 leading-relaxed">Hydrogen peroxide contains oxygen in the <b>−1</b> oxidation state, which can be both oxidised (to 0 in $\text{O}_2$) and reduced (to −2 in $\text{H}_2\text{O}$) — so it disproportionates.</p>
+                    <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-[11px] leading-relaxed">
+                        Reduction: $\text{H}_2\text{O}_2 + 2\text{H}^+ + 2\text{e}^- \rightarrow 2\text{H}_2\text{O}\quad E^\ominus = +1.77\ \text{V}$<br>
+                        Oxidation (reversed): $\text{H}_2\text{O}_2 \rightarrow \text{O}_2 + 2\text{H}^+ + 2\text{e}^-\quad E^\ominus = +0.68\ \text{V}$<br>
+                        $E^\ominus_{cell} = +1.77 - (+0.68) = +1.09\ \text{V} > 0 \Rightarrow$ <b>feasible</b><br>
+                        Overall: $2\text{H}_2\text{O}_2 \rightarrow 2\text{H}_2\text{O} + \text{O}_2$
+                    </div>
+                    <p class="text-[11px] text-slate-400">Yet $\text{H}_2\text{O}_2$ sits on the shelf for months — a perfect example of <b>thermodynamically feasible but kinetically stable</b> (Spec 16.12). A catalyst (e.g. $\text{MnO}_2$) speeds it up.</p>
+                </div>
+
+                <!-- Fuel cells -->
+                <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                    <span class="text-emerald-300 font-bold text-xs uppercase tracking-wider block">Hydrogen–oxygen fuel cell — both electrolytes</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-1.5">
+                            <span class="text-[11px] font-bold text-sky-300 block">Acidic electrolyte (H⁺)</span>
+                            <p class="text-[11px] font-mono text-slate-300">Anode: $\text{H}_2 \rightarrow 2\text{H}^+ + 2\text{e}^-$</p>
+                            <p class="text-[11px] font-mono text-slate-300">Cathode: $\text{O}_2 + 4\text{H}^+ + 4\text{e}^- \rightarrow 2\text{H}_2\text{O}$</p>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-1.5">
+                            <span class="text-[11px] font-bold text-purple-300 block">Alkaline electrolyte (OH⁻)</span>
+                            <p class="text-[11px] font-mono text-slate-300">Anode: $\text{H}_2 + 2\text{OH}^- \rightarrow 2\text{H}_2\text{O} + 2\text{e}^-$</p>
+                            <p class="text-[11px] font-mono text-slate-300">Cathode: $\text{O}_2 + 2\text{H}_2\text{O} + 4\text{e}^- \rightarrow 4\text{OH}^-$</p>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Overall (both): $2\text{H}_2 + \text{O}_2 \rightarrow 2\text{H}_2\text{O}$. Advantages: high efficiency, only water produced. Disadvantages: $\text{H}_2$ storage/transport, cost of Pt catalyst, lack of refuelling infrastructure.</p>
+                </div>
+
+                <!-- Redox titrations -->
+                <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                    <span class="text-amber-300 font-bold text-xs uppercase tracking-wider block">Redox titrations — the two you must know (Core Practicals 13a/13b)</span>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-[11px] text-slate-300 min-w-[640px]">
+                            <thead class="bg-slate-900 text-amber-400 font-mono text-[10px] border-b border-slate-800">
+                                <tr><th class="p-2"></th><th class="p-2">$\text{MnO}_4^-$ / Fe²⁺</th><th class="p-2">Iodine / thiosulfate</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/80">
+                                <tr><td class="p-2 font-bold text-slate-200">Half-equation</td><td class="p-2 font-mono">$\text{MnO}_4^- + 8\text{H}^+ + 5\text{e}^- \rightarrow \text{Mn}^{2+} + 4\text{H}_2\text{O}$</td><td class="p-2 font-mono">$\text{I}_2 + 2\text{S}_2\text{O}_3^{2-} \rightarrow 2\text{I}^- + \text{S}_4\text{O}_6^{2-}$</td></tr>
+                                <tr><td class="p-2 font-bold text-slate-200">Mole ratio</td><td class="p-2">$\text{MnO}_4^- : \text{Fe}^{2+} = 1:5$</td><td class="p-2">$\text{I}_2 : \text{S}_2\text{O}_3^{2-} = 1:2$</td></tr>
+                                <tr><td class="p-2 font-bold text-slate-200">Indicator</td><td class="p-2">self-indicating (purple → colourless)</td><td class="p-2">starch (blue-black → colourless), add near end-point</td></tr>
+                                <tr><td class="p-2 font-bold text-slate-200">Conditions</td><td class="p-2">acidified with dilute $\text{H}_2\text{SO}_4$</td><td class="p-2">neutral / slightly acidic</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 9: TITRATION DRILL ==================== -->
+        <section id="tab-titration" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Calculation Practice · Spec 16.15 – 16.17</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Redox Titration Drill — Worked Step by Step</h2>
+                    <p class="text-xs text-slate-400 mt-1">Five exam-style calculations covering both titrations and the indirect determinations. Try each one yourself, then reveal the full worked solution. The method is always: <b class="text-cyan-300">moles → ratio → answer</b>.</p>
+                </div>
+
+                <!-- Method recap -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-1">
+                        <span class="text-cyan-300 font-extrabold text-lg block">1</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Moles of the titrant</b> = concentration × volume (in dm³).</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-1">
+                        <span class="text-cyan-300 font-extrabold text-lg block">2</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Use the mole ratio</b> from the balanced equation (1:5 for $\text{MnO}_4^-$/Fe²⁺; 1:2 for I₂/thiosulfate).</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-1">
+                        <span class="text-cyan-300 font-extrabold text-lg block">3</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed"><b class="text-slate-100">Convert to what's asked</b> — concentration, mass, or percentage. Watch scaling factors (e.g. 250/25).</p>
+                    </div>
+                </div>
+
+                <!-- Problems (rendered by JS) -->
+                <div id="titration-problems" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 10: DATA BOOKLET ==================== -->
+        <section id="tab-booklet" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Reference · Spec 16.13</span>
+                    <h2 class="text-xl font-bold text-white mt-1">The Electrochemical Series — All 31 Standard Electrode Potentials</h2>
+                    <p class="text-xs text-slate-400 mt-1">Listed from most negative (strongest reducing agents, top) to most positive (strongest oxidising agents, bottom). A species higher up will reduce the oxidised form of any species below it.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-950 border border-rose-800/50 rounded-xl">
+                        <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">Top of the series (most negative)</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed mt-1">Strong <b>reducing agents</b> — they are easily oxidised (lose electrons). E.g. Na, Mg, Al, Zn. These sit at the top and push electrons out.</p>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-sky-800/50 rounded-xl">
+                        <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">Bottom of the series (most positive)</span>
+                        <p class="text-[11px] text-slate-300 leading-relaxed mt-1">Strong <b>oxidising agents</b> — they are easily reduced (gain electrons). E.g. $\text{MnO}_4^-$, $\text{H}_2\text{O}_2$, $\text{Cl}_2$. These sit at the bottom and pull electrons in.</p>
+                    </div>
+                </div>
+                <div id="booklet-table" class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 11: FINAL REVIEW ==================== -->
+        <section id="tab-review" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-4">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Final Review</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Complete Topic 16 Inventory &amp; Master Trap Checklist</h2>
+                </div>
+
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <a href="#rev-core" class="px-2.5 py-1 rounded-lg bg-cyan-950/60 text-cyan-300 border border-cyan-800 hover:bg-cyan-900/50">Core ideas</a>
+                    <a href="#rev-calc" class="px-2.5 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800 hover:bg-emerald-900/50">Calculations</a>
+                    <a href="#rev-apps" class="px-2.5 py-1 rounded-lg bg-amber-950/60 text-amber-300 border border-amber-800 hover:bg-amber-900/50">Applications</a>
+                    <a href="#rev-vanadium" class="px-2.5 py-1 rounded-lg bg-violet-950/60 text-violet-300 border border-violet-800 hover:bg-violet-900/50">Vanadium &amp; Titrations</a>
+                    <a href="#rev-traps" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/50">Master Traps</a>
+                </div>
+
+                <details id="rev-core" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-cyan-300">⚡ Core Ideas</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]">
+                                <thead class="bg-slate-950 text-cyan-400 font-mono text-[10px] border-b border-slate-800">
+                                    <tr><th class="p-2.5">#</th><th class="p-2.5">Concept</th><th class="p-2.5">Key statement</th><th class="p-2.5">Examiner trap</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 bg-slate-900/50">
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-cyan-300">1</td><td class="p-2.5 font-bold text-slate-200">$E^\ominus$ definition</td><td class="p-2.5">emf vs SHE under standard conditions</td><td class="p-2.5 text-amber-200/90 text-[10px]">list all 3 conditions</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-cyan-300">2</td><td class="p-2.5 font-bold text-slate-200">Standard conditions</td><td class="p-2.5">298 K, 100 kPa, 1.00 mol dm⁻³</td><td class="p-2.5 text-amber-200/90 text-[10px]">100 kPa, not 1 atm</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-cyan-300">3</td><td class="p-2.5 font-bold text-slate-200">SHE</td><td class="p-2.5">Pt, H₂ 100 kPa, H⁺ 1.00 M, E°=0.00 V</td><td class="p-2.5 text-amber-200/90 text-[10px]">say why Pt is used</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-cyan-300">4</td><td class="p-2.5 font-bold text-slate-200">Cell diagram</td><td class="p-2.5">ox ‖ red; | = phase, ‖ = salt bridge</td><td class="p-2.5 text-amber-200/90 text-[10px]">don't omit Pt for ion/ion</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-cyan-300">5</td><td class="p-2.5 font-bold text-slate-200">Electrochemical series</td><td class="p-2.5">reduction potentials, − to +</td><td class="p-2.5 text-amber-200/90 text-[10px]">top = strongest reducing agent</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-cyan-300">6</td><td class="p-2.5 font-bold text-slate-200">Conditions effect</td><td class="p-2.5">Le Chatelier shifts E from E°</td><td class="p-2.5 text-amber-200/90 text-[10px]">explain via the half-cell equilibrium</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+                <details id="rev-calc" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-emerald-300">🧮 Calculations</span> <span class="text-slate-500 font-mono text-xs ml-2">4 items</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]">
+                                <thead class="bg-slate-950 text-emerald-400 font-mono text-[10px] border-b border-slate-800">
+                                    <tr><th class="p-2.5">#</th><th class="p-2.5">Skill</th><th class="p-2.5">Formula / rule</th><th class="p-2.5">Examiner trap</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 bg-slate-900/50">
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">1</td><td class="p-2.5 font-bold text-slate-200">$E^\ominus_{cell}$</td><td class="p-2.5">$E^\ominus_{red} - E^\ominus_{ox}$ (more positive reduced)</td><td class="p-2.5 text-amber-200/90 text-[10px]">never multiply E° by coefficients</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">2</td><td class="p-2.5 font-bold text-slate-200">Feasibility</td><td class="p-2.5">$E^\ominus_{cell} > 0$ → feasible</td><td class="p-2.5 text-amber-200/90 text-[10px]">says nothing about rate</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">3</td><td class="p-2.5 font-bold text-slate-200">Thermodynamic link</td><td class="p-2.5">$\Delta S_{total} \propto E^\ominus_{cell}$, $\ln K \propto E^\ominus_{cell}$</td><td class="p-2.5 text-amber-200/90 text-[10px]">positive E° → K > 1</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">4</td><td class="p-2.5 font-bold text-slate-200">Disproportionation</td><td class="p-2.5">combine the element's two half-reactions</td><td class="p-2.5 text-amber-200/90 text-[10px]">show oxidation numbers both ways</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+                <details id="rev-apps" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-amber-300">🔬 Applications</span> <span class="text-slate-500 font-mono text-xs ml-2">3 items</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]">
+                                <thead class="bg-slate-950 text-amber-400 font-mono text-[10px] border-b border-slate-800">
+                                    <tr><th class="p-2.5">#</th><th class="p-2.5">Topic</th><th class="p-2.5">Key facts</th><th class="p-2.5">Examiner trap</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 bg-slate-900/50">
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-amber-300">1</td><td class="p-2.5 font-bold text-slate-200">Fuel cells</td><td class="p-2.5">know acidic AND alkaline electrode reactions; overall $2\text{H}_2+\text{O}_2\rightarrow2\text{H}_2\text{O}$</td><td class="p-2.5 text-amber-200/90 text-[10px]">write the one for the electrolyte given</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-amber-300">2</td><td class="p-2.5 font-bold text-slate-200">$\text{MnO}_4^-$/Fe²⁺ titration</td><td class="p-2.5">1:5 ratio, self-indicating, acidified</td><td class="p-2.5 text-amber-200/90 text-[10px]">state dilute $\text{H}_2\text{SO}_4$</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-amber-300">3</td><td class="p-2.5 font-bold text-slate-200">Iodine/thiosulfate</td><td class="p-2.5">1:2 ratio, starch near end-point</td><td class="p-2.5 text-amber-200/90 text-[10px]">starch too early = poor end-point</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+                <details id="rev-vanadium" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-violet-300">🌈 Vanadium &amp; Titrations (the exam favourites)</span> <span class="text-slate-500 font-mono text-xs ml-2">2 items</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]">
+                                <thead class="bg-slate-950 text-violet-400 font-mono text-[10px] border-b border-slate-800">
+                                    <tr><th class="p-2.5">#</th><th class="p-2.5">Topic</th><th class="p-2.5">Key facts</th><th class="p-2.5">Examiner trap</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 bg-slate-900/50">
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-violet-300">1</td><td class="p-2.5 font-bold text-slate-200">Vanadium reduction by Zn</td><td class="p-2.5">yellow VO₂⁺(+5) → blue VO²⁺(+4) → green V³⁺(+3) → violet V²⁺(+2); stops at V²⁺ because V²⁺→V has E°cell = −0.42 V</td><td class="p-2.5 text-amber-200/90 text-[10px]">learn the four colours AND why it stops</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-violet-300">2</td><td class="p-2.5 font-bold text-slate-200">Redox titration method</td><td class="p-2.5">moles → ratio → answer; MnO₄⁻:Fe²⁺ = 1:5; I₂:S₂O₃²⁻ = 1:2; watch 250/25 scaling</td><td class="p-2.5 text-amber-200/90 text-[10px]">indirect Cu determination: 2Cu²⁺ → I₂ → 2S₂O₃²⁻</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+                <details id="rev-traps" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-rose-300">⚠️ Master Trap Checklist</span> <span class="text-slate-500 font-mono text-xs ml-2">cross-cutting</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-4 pb-4 pt-2 border-t border-slate-800/80">
+                        <ul class="text-[11px] text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed columns-1 md:columns-2 gap-6">
+                            <li>$E^\ominus$ never scales with the balancing number.</li>
+                            <li>More positive $E^\ominus$ = reduced = cathode = RHS.</li>
+                            <li>$E^\ominus_{cell} = E^\ominus_{red} - E^\ominus_{ox}$, keep the signs.</li>
+                            <li>Cell diagram: oxidation LEFT, reduction RIGHT.</li>
+                            <li>Ion/ion half-cells need an inert Pt electrode.</li>
+                            <li>SHE = Pt, H₂ 100 kPa, H⁺ 1.00 M, 298 K, 0.00 V.</li>
+                            <li>Feasible = $E^\ominus_{cell} > 0$ — but rate is a separate question.</li>
+                            <li>"Thermodynamically feasible but kinetically stable."</li>
+                            <li>Disproportionation = same element oxidised AND reduced.</li>
+                            <li>Oxidising agent is the species that is reduced.</li>
+                            <li>$\text{MnO}_4^-$/Fe²⁺ ratio is 1:5; iodine/thiosulfate is 1:2.</li>
+                            <li>Fuel cell: write the half-reactions for the electrolyte given.</li>
+                            <li>Burette uncertainty is doubled (two readings per titre).</li>
+                            <li>Changing concentration shifts E (Le Chatelier), not E°.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- INSERT_POINT -->
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            IAL Chemistry Topic 16: Redox Equilibria — Master Studio · WCH15 · Edexcel Spec 16.1–16.19 · Cell simulator, diagram builder, E° calculator &amp; feasibility tester included
+        </div>
+    </footer>
+
+    <script>
+        // ---------- KaTeX safe init ----------
+        function safeInitKaTeX() {
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) { console.warn('KaTeX render:', e); }
+            }
+        }
+        window.safeInitKaTeX = safeInitKaTeX;
+
+        // ---------- Main tab switcher ----------
+        function switchTab(tabId) {
+            var tabs = ['syllabus','cell','diagram','potential','feasibility','vanadium','she','apps','titration','booklet','review'];
+            tabs.forEach(function(t) {
+                var sec = document.getElementById('tab-' + t);
+                var btn = document.getElementById('btn-' + t);
+                if (sec) { if (t === tabId) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+                if (btn) {
+                    if (t === tabId) {
+                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-cyan-300 font-bold border-b-2 border-cyan-400 bg-cyan-950/40 transition';
+                    } else {
+                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-cyan-300 font-medium border-b-2 border-transparent transition';
+                    }
+                }
+            });
+            if (tabId === 'cell') { setTimeout(initCellSim, 80); }
+            if (tabId === 'vanadium') { setTimeout(initVanadium, 80); }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(safeInitKaTeX, 60);
+        }
+        window.switchTab = switchTab;
+
+        // ---------- Blur quiz helpers ----------
+        window.toggleSingleBlur = function(el) { if (el) el.classList.toggle('revealed'); };
+        window.toggleActiveRecall = function(containerId, btnId) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+            var answers = container.querySelectorAll('.blur-answer');
+            var btn = document.getElementById(btnId);
+            var isRevealed = false;
+            answers.forEach(function(a) { if (a.classList.contains('revealed')) isRevealed = true; });
+            answers.forEach(function(a) { if (isRevealed) a.classList.remove('revealed'); else a.classList.add('revealed'); });
+            if (btn) btn.innerText = isRevealed ? '👁️ Reveal All Blanks' : '🙈 Hide All Blanks';
+        };
+
+        // ==================== DATA ====================
+        const HALF_CELLS = {
+            zn: { key:'zn', name:'Zinc', e0:-0.76, n:2, ion:'Zn²⁺', redEq:'Zn²⁺(aq) + 2e⁻ ⇌ Zn(s)', ox:'Zn(s) → Zn²⁺(aq) + 2e⁻', red:'Zn²⁺(aq) + 2e⁻ → Zn(s)', solColor:'rgba(148,163,184,0.30)', metalColor:'#94a3b8', metalLabel:'Zn', type:'metal' },
+            cu: { key:'cu', name:'Copper', e0:0.34, n:2, ion:'Cu²⁺', redEq:'Cu²⁺(aq) + 2e⁻ ⇌ Cu(s)', ox:'Cu(s) → Cu²⁺(aq) + 2e⁻', red:'Cu²⁺(aq) + 2e⁻ → Cu(s)', solColor:'rgba(59,130,246,0.35)', metalColor:'#f97316', metalLabel:'Cu', type:'metal' },
+            ag: { key:'ag', name:'Silver', e0:0.80, n:1, ion:'Ag⁺', redEq:'Ag⁺(aq) + e⁻ ⇌ Ag(s)', ox:'Ag(s) → Ag⁺(aq) + e⁻', red:'Ag⁺(aq) + e⁻ → Ag(s)', solColor:'rgba(226,232,240,0.25)', metalColor:'#e2e8f0', metalLabel:'Ag', type:'metal' },
+            fe: { key:'fe', name:'Iron(III)/Iron(II)', e0:0.77, n:1, ion:'Fe³⁺/Fe²⁺', redEq:'Fe³⁺(aq) + e⁻ ⇌ Fe²⁺(aq)', ox:'Fe²⁺(aq) → Fe³⁺(aq) + e⁻', red:'Fe³⁺(aq) + e⁻ → Fe²⁺(aq)', solColor:'rgba(251,191,36,0.30)', metalColor:'#cbd5e1', metalLabel:'Pt', type:'ion' }
+        };
+
+        const DATA_BOOKLET = [
+            { id:1,  eq:'Na⁺ + e⁻ ⇌ Na', e0:-2.71 }, { id:2,  eq:'Mg²⁺ + 2e⁻ ⇌ Mg', e0:-2.37 },
+            { id:3,  eq:'Al³⁺ + 3e⁻ ⇌ Al', e0:-1.66 }, { id:4,  eq:'V²⁺ + 2e⁻ ⇌ V', e0:-1.18 },
+            { id:5,  eq:'Zn²⁺ + 2e⁻ ⇌ Zn', e0:-0.76 }, { id:6,  eq:'Cr³⁺ + 3e⁻ ⇌ Cr', e0:-0.74 },
+            { id:7,  eq:'Fe²⁺ + 2e⁻ ⇌ Fe', e0:-0.44 }, { id:8,  eq:'Cr³⁺ + e⁻ ⇌ Cr²⁺', e0:-0.41 },
+            { id:9,  eq:'V³⁺ + e⁻ ⇌ V²⁺', e0:-0.26 }, { id:10, eq:'Ni²⁺ + 2e⁻ ⇌ Ni', e0:-0.25 },
+            { id:11, eq:'2H⁺ + 2e⁻ ⇌ H₂', e0:0.00 }, { id:12, eq:'S₄O₆²⁻ + 2e⁻ ⇌ 2S₂O₃²⁻', e0:0.09 },
+            { id:13, eq:'Cu²⁺ + e⁻ ⇌ Cu⁺', e0:0.15 }, { id:14, eq:'Cu²⁺ + 2e⁻ ⇌ Cu', e0:0.34 },
+            { id:15, eq:'VO²⁺ + 2H⁺ + e⁻ ⇌ V³⁺ + H₂O', e0:0.34 }, { id:16, eq:'O₂ + 2H₂O + 4e⁻ ⇌ 4OH⁻', e0:0.40 },
+            { id:17, eq:'S₂O₃²⁻ + 6H⁺ + 4e⁻ ⇌ 2S + 3H₂O', e0:0.47 },
+            { id:18, eq:'Cu⁺ + e⁻ ⇌ Cu', e0:0.52 }, { id:19, eq:'I₂ + 2e⁻ ⇌ 2I⁻', e0:0.54 },
+            { id:20, eq:'O₂ + 2H⁺ + 2e⁻ ⇌ H₂O₂', e0:0.68 }, { id:21, eq:'Fe³⁺ + e⁻ ⇌ Fe²⁺', e0:0.77 },
+            { id:22, eq:'Ag⁺ + e⁻ ⇌ Ag', e0:0.80 }, { id:23, eq:'NO₃⁻ + 2H⁺ + e⁻ ⇌ NO₂ + H₂O', e0:0.80 },
+            { id:24, eq:'ClO⁻ + H₂O + 2e⁻ ⇌ Cl⁻ + 2OH⁻', e0:0.89 }, { id:25, eq:'VO₂⁺ + 2H⁺ + e⁻ ⇌ VO²⁺ + H₂O', e0:1.00 },
+            { id:26, eq:'Br₂ + 2e⁻ ⇌ 2Br⁻', e0:1.09 }, { id:27, eq:'O₂ + 4H⁺ + 4e⁻ ⇌ 2H₂O', e0:1.23 },
+            { id:28, eq:'Cr₂O₇²⁻ + 14H⁺ + 6e⁻ ⇌ 2Cr³⁺ + 7H₂O', e0:1.33 }, { id:29, eq:'Cl₂ + 2e⁻ ⇌ 2Cl⁻', e0:1.36 },
+            { id:30, eq:'MnO₄⁻ + 8H⁺ + 5e⁻ ⇌ Mn²⁺ + 4H₂O', e0:1.51 }, { id:31, eq:'H₂O₂ + 2H⁺ + 2e⁻ ⇌ 2H₂O', e0:1.77 }
+        ];
+
+        // ==================== CELL SIMULATOR ====================
+        const cellApp = { initialized:false, spinning:true, phase:0, left:'zn', right:'cu' };
+
+        function pathPoint(pts, t) {
+            let total = 0; const segs = [];
+            for (let i = 0; i < pts.length - 1; i++) { const l = Math.hypot(pts[i+1].x-pts[i].x, pts[i+1].y-pts[i].y); segs.push(l); total += l; }
+            let d = t * total;
+            for (let i = 0; i < segs.length; i++) {
+                if (d <= segs[i]) { const f = d / segs[i]; return { x: pts[i].x + (pts[i+1].x-pts[i].x)*f, y: pts[i].y + (pts[i+1].y-pts[i].y)*f }; }
+                d -= segs[i];
+            }
+            return pts[pts.length-1];
+        }
+
+        function drawCell() {
+            const canvas = document.getElementById('cell-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth || 720;
+            const h = canvas.height = 380;
+            ctx.clearRect(0, 0, w, h);
+            const sc = w / 600; // scale factor (design at 600 wide)
+            const L = HALF_CELLS[cellApp.left], R = HALF_CELLS[cellApp.right];
+            const identical = (cellApp.left === cellApp.right);
+            const anodeLeft = identical ? null : (L.e0 <= R.e0);
+            const anode = identical ? L : (anodeLeft ? L : R);
+            const cathode = identical ? R : (anodeLeft ? R : L);
+            const ecell = identical ? 0 : (cathode.e0 - anode.e0);
+
+            function beaker(x0, x1) {
+                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.moveTo(x0, 160); ctx.lineTo(x0, 300); ctx.quadraticCurveTo(x0, 312, x0+12, 312);
+                ctx.lineTo(x1-12, 312); ctx.quadraticCurveTo(x1, 312, x1, 300); ctx.lineTo(x1, 160); ctx.stroke();
+            }
+            function solution(x0, x1, color) { ctx.fillStyle = color; ctx.fillRect(x0+3, 195, (x1-x0)-6, 114); }
+            function electrode(x, color, label) {
+                ctx.fillStyle = color; ctx.fillRect(x-7, 105, 14, 175);
+                ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1; ctx.strokeRect(x-7, 105, 14, 175);
+                ctx.fillStyle = '#0f172a'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText(label, x, 130);
+            }
+            // beakers + solutions + electrodes
+            beaker(50*sc, 230*sc); solution(50*sc, 230*sc, L.solColor); electrode(80*sc, L.metalColor, L.metalLabel);
+            beaker(370*sc, 550*sc); solution(370*sc, 550*sc, R.solColor); electrode(506*sc, R.metalColor, R.metalLabel);
+            // solution labels
+            ctx.fillStyle = '#94a3b8'; ctx.font = (11*sc)+'px monospace'; ctx.textAlign = 'center';
+            ctx.fillText(L.ion + '(aq)', 140*sc, 250*sc);
+            ctx.fillText(R.ion + '(aq)', 460*sc, 250*sc);
+
+            // wire + voltmeter
+            ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2.5;
+            ctx.beginPath(); ctx.moveTo(80*sc, 105); ctx.lineTo(80*sc, 55*sc); ctx.lineTo(274*sc, 55*sc); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(326*sc, 55*sc); ctx.lineTo(506*sc, 55*sc); ctx.lineTo(506*sc, 105); ctx.stroke();
+            ctx.beginPath(); ctx.arc(300*sc, 55*sc, 26*sc, 0, Math.PI*2); ctx.fillStyle = '#0f172a'; ctx.fill(); ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2; ctx.stroke();
+            ctx.fillStyle = '#34d399'; ctx.font = 'bold '+(13*sc)+'px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('V', 300*sc, 52*sc);
+            ctx.font = 'bold '+(11*sc)+'px monospace';
+            ctx.fillText((ecell>=0?'+':'')+ecell.toFixed(2), 300*sc, 68*sc);
+
+            // salt bridge
+            ctx.strokeStyle = 'rgba(148,163,184,0.5)'; ctx.lineWidth = 14*sc; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(200*sc, 215); ctx.lineTo(200*sc, 135*sc); ctx.lineTo(400*sc, 135*sc); ctx.lineTo(400*sc, 215); ctx.stroke();
+            ctx.strokeStyle = 'rgba(15,23,42,0.9)'; ctx.lineWidth = 9*sc;
+            ctx.beginPath(); ctx.moveTo(200*sc, 215); ctx.lineTo(200*sc, 135*sc); ctx.lineTo(400*sc, 135*sc); ctx.lineTo(400*sc, 215); ctx.stroke();
+            ctx.lineCap = 'butt';
+
+            // electrode labels (anode/cathode)
+            if (!identical) {
+                const ax = anodeLeft ? 80*sc : 506*sc, cx = anodeLeft ? 506*sc : 80*sc;
+                ctx.font = 'bold '+(11*sc)+'px sans-serif';
+                ctx.fillStyle = '#f87171'; ctx.fillText('ANODE (−)', ax, 95); ctx.fillText('oxidation', ax, 330);
+                ctx.fillStyle = '#38bdf8'; ctx.fillText('CATHODE (+)', cx, 95); ctx.fillText('reduction', cx, 330);
+            } else {
+                ctx.fillStyle = '#94a3b8'; ctx.font = 'bold '+(12*sc)+'px sans-serif';
+                ctx.fillText('Identical half-cells: E°cell = 0.00 V — no net electron flow', 300*sc, 95);
+            }
+
+            // electrons along the wire (anode -> cathode)
+            if (!identical && cellApp.spinning) {
+                let pts = anodeLeft
+                    ? [{x:80*sc,y:105},{x:80*sc,y:55*sc},{x:274*sc,y:55*sc},{x:326*sc,y:55*sc},{x:506*sc,y:55*sc},{x:506*sc,y:105}]
+                    : [{x:506*sc,y:105},{x:506*sc,y:55*sc},{x:326*sc,y:55*sc},{x:274*sc,y:55*sc},{x:80*sc,y:55*sc},{x:80*sc,y:105}];
+                for (let i = 0; i < 7; i++) {
+                    const p = pathPoint(pts, (cellApp.phase + i/7) % 1);
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 4*sc, 0, Math.PI*2); ctx.fillStyle = '#fbbf24'; ctx.fill();
+                    ctx.fillStyle = '#0f172a'; ctx.font = 'bold '+(7*sc)+'px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+                    ctx.fillText('e⁻', p.x, p.y); ctx.textBaseline='alphabetic';
+                }
+                // salt bridge ions
+                const anionTarget = anodeLeft ? 200*sc : 400*sc;
+                const catTarget = anodeLeft ? 400*sc : 200*sc;
+                const io = Math.sin(cellApp.phase * Math.PI * 2);
+                ctx.font = 'bold '+(9*sc)+'px sans-serif'; ctx.textAlign='center';
+                ctx.fillStyle = '#f87171'; ctx.fillText('NO₃⁻', anionTarget + (anodeLeft?1:-1)*io*8*sc, 135*sc+3);
+                ctx.fillStyle = '#38bdf8'; ctx.fillText('K⁺', catTarget + (anodeLeft?-1:1)*io*8*sc, 135*sc+3);
+            }
+        }
+
+        function cellLoop() {
+            requestAnimationFrame(cellLoop);
+            if (document.getElementById('tab-cell').classList.contains('hidden')) return;
+            if (cellApp.spinning) { cellApp.phase = (cellApp.phase + 0.004) % 1; }
+            drawCell();
+        }
+
+        function initCellSim() {
+            if (!cellApp.initialized) { cellApp.initialized = true; cellLoop(); }
+            updateCellSim();
+        }
+        window.initCellSim = initCellSim;
+
+        function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+        function updateCellSim() {
+            cellApp.left = document.getElementById('cell-left').value;
+            cellApp.right = document.getElementById('cell-right').value;
+            const L = HALF_CELLS[cellApp.left], R = HALF_CELLS[cellApp.right];
+            const identical = (cellApp.left === cellApp.right);
+            const anodeLeft = identical ? null : (L.e0 <= R.e0);
+            const anode = identical ? L : (anodeLeft ? L : R);
+            const cathode = identical ? R : (anodeLeft ? R : L);
+            const ecell = identical ? 0 : (cathode.e0 - anode.e0);
+            document.getElementById('cell-anode-eq').textContent = identical ? '—' : anode.ox;
+            document.getElementById('cell-cathode-eq').textContent = identical ? '—' : cathode.red;
+            document.getElementById('cell-anode-note').textContent = identical ? 'No net oxidation (identical half-cells).' : anode.name + ' · E° = ' + (anode.e0>=0?'+':'') + anode.e0.toFixed(2) + ' V';
+            document.getElementById('cell-cathode-note').textContent = identical ? 'No net reduction (identical half-cells).' : cathode.name + ' · E° = ' + (cathode.e0>=0?'+':'') + cathode.e0.toFixed(2) + ' V';
+            document.getElementById('cell-emf').textContent = (ecell>=0?'+':'') + ecell.toFixed(2) + ' V';
+            document.getElementById('cell-emf-working').textContent = identical ? 'E°cell = 0.00 V' :
+                'E°cell = ' + (cathode.e0>=0?'+':'') + cathode.e0.toFixed(2) + ' − (' + (anode.e0>=0?'+':'') + anode.e0.toFixed(2) + ')';
+            // balanced overall
+            if (identical) { document.getElementById('cell-overall').textContent = 'No net reaction.'; }
+            else {
+                const g = gcd(anode.n, cathode.n), mA = cathode.n/g, mC = anode.n/g;
+                const strip = function(s){ return s.replace(/\s*\+\s*\d*\s*e⁻/g, '').trim(); };
+                const aR = strip(anode.ox.split(' → ')[0]), aP = strip(anode.ox.split(' → ')[1]);
+                const cR = strip(cathode.red.split(' → ')[0]), cP = strip(cathode.red.split(' → ')[1]);
+                document.getElementById('cell-overall').textContent =
+                    (mA>1?mA:'') + aR + ' + ' + (mC>1?mC:'') + cR + ' → ' + (mA>1?mA:'') + aP + ' + ' + (mC>1?mC:'') + cP;
+            }
+            drawCell();
+        }
+        window.updateCellSim = updateCellSim;
+
+        window.toggleCellSpin = function() {
+            cellApp.spinning = !cellApp.spinning;
+            document.getElementById('cell-spin-btn').innerText = '⚡ Electron flow: ' + (cellApp.spinning ? 'ON' : 'OFF');
+        };
+
+        window.updateConc = function() {
+            const v = parseFloat(document.getElementById('cell-conc').value);
+            document.getElementById('cell-conc-val').textContent = v.toFixed(2) + ' mol dm⁻³';
+            const note = document.getElementById('cell-conc-note');
+            if (Math.abs(v - 1) < 0.001) note.innerHTML = 'Standard concentration (1.00 mol dm⁻³): the measured potential equals the standard value <b>E°</b>.';
+            else if (v > 1) note.innerHTML = 'Higher [ion] drives the reduction equilibrium <b>further right</b> (Le Chatelier), making the cathode potential <b>more positive</b> — the cell emf E rises above E°. This is why E° is only valid at 1.00 mol dm⁻³.';
+            else note.innerHTML = 'Lower [ion] shifts the reduction equilibrium <b>left</b>, making the cathode potential <b>less positive</b> — the cell emf E falls below E°.';
+        };
+
+        // ==================== CELL DIAGRAM BUILDER ====================
+        const DIAGRAM_SCENARIOS = {
+            zncu: { prompt:'Daniell cell — zinc is oxidised, copper is reduced. E°cell = +1.10 V.', emf:'+1.10 V',
+                    tokens:['Zn(s)','Zn²⁺(aq)','Cu²⁺(aq)','Cu(s)','Pt','Fe²⁺(aq)','Ag⁺(aq)'],
+                    answer:['Zn(s)','|','Zn²⁺(aq)','||','Cu²⁺(aq)','|','Cu(s)'] },
+            fecu: { prompt:'Fe²⁺/Fe³⁺ (on Pt) is oxidised, Cu²⁺ is reduced. E°cell = +0.43 V.', emf:'+0.43 V',
+                    tokens:['Pt','Fe²⁺(aq)','Fe³⁺(aq)','Cu²⁺(aq)','Cu(s)','Zn(s)','|'],
+                    answer:['Pt','|','Fe²⁺(aq), Fe³⁺(aq)','||','Cu²⁺(aq)','|','Cu(s)'] },
+            agfe: { prompt:'Silver is oxidised, Fe³⁺ is reduced (on Pt). E°cell = −0.03 V (as written, non-spontaneous).', emf:'+0.03 V (Fe³⁺|Ag cell)',
+                    tokens:['Ag(s)','Ag⁺(aq)','Fe³⁺(aq)','Fe²⁺(aq)','Pt','Cu(s)'],
+                    answer:['Ag(s)','|','Ag⁺(aq)','||','Fe³⁺(aq), Fe²⁺(aq)','|','Pt'] },
+            znag: { prompt:'Zinc is oxidised, silver is reduced. E°cell = +1.56 V.', emf:'+1.56 V',
+                    tokens:['Zn(s)','Zn²⁺(aq)','Ag⁺(aq)','Ag(s)','Pt','Cu²⁺(aq)'],
+                    answer:['Zn(s)','|','Zn²⁺(aq)','||','Ag⁺(aq)','|','Ag(s)'] }
+        };
+        let dgCurrent = 'zncu';
+        let dgPlaced = [];
+
+        function renderDiagramPalette() {
+            const pal = document.getElementById('dg-palette');
+            const sc = DIAGRAM_SCENARIOS[dgCurrent];
+            pal.innerHTML = '';
+            const extras = ['|', '||'];
+            const all = sc.tokens.concat(extras.filter(e => sc.tokens.indexOf(e) < 0));
+            all.forEach(function(tok) {
+                const b = document.createElement('button');
+                b.className = 'token-chip px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-cyan-300 font-mono text-xs hover:border-cyan-400 transition';
+                b.textContent = tok;
+                b.onclick = function() { dgPlaced.push(tok); renderDiagramSlots(); };
+                pal.appendChild(b);
+            });
+        }
+        function renderDiagramSlots() {
+            const slots = document.getElementById('dg-slots');
+            slots.innerHTML = '';
+            if (dgPlaced.length === 0) { slots.innerHTML = '<span class="text-slate-600 text-xs">Click tokens below, in order from left (oxidation) to right (reduction)…</span>'; return; }
+            dgPlaced.forEach(function(tok, i) {
+                const chip = document.createElement('span');
+                const isSep = (tok === '|' || tok === '||');
+                chip.className = 'px-2.5 py-1 rounded-lg font-mono text-sm ' + (isSep ? 'text-amber-400 font-bold' : 'bg-slate-800 border border-slate-700 text-slate-100');
+                chip.textContent = tok;
+                chip.title = 'click to remove';
+                chip.style.cursor = 'pointer';
+                chip.onclick = function() { dgPlaced.splice(i, 1); renderDiagramSlots(); };
+                slots.appendChild(chip);
+            });
+        }
+        window.pickDiagramScenario = function(key) {
+            dgCurrent = key; dgPlaced = [];
+            ['zncu','fecu','agfe','znag'].forEach(function(k) {
+                const b = document.getElementById('dg-scen-' + k);
+                if (k === key) b.className = 'p-3 rounded-lg border border-cyan-500 bg-cyan-950/30 text-left transition hover:border-cyan-400';
+                else b.className = 'p-3 rounded-lg border border-slate-800 bg-slate-950 text-left transition hover:border-cyan-400';
+            });
+            document.getElementById('dg-prompt').textContent = DIAGRAM_SCENARIOS[key].prompt;
+            document.getElementById('dg-target-emf').textContent = 'E°cell = ' + DIAGRAM_SCENARIOS[key].emf;
+            document.getElementById('dg-feedback').classList.add('hidden');
+            renderDiagramPalette(); renderDiagramSlots();
+        };
+        window.clearDiagram = function() { dgPlaced = []; renderDiagramSlots(); };
+        window.checkDiagram = function() {
+            const sc = DIAGRAM_SCENARIOS[dgCurrent];
+            const fb = document.getElementById('dg-feedback');
+            fb.classList.remove('hidden');
+            // normalise: join and compare ignoring spaces; treat "Fe²⁺(aq), Fe³⁺(aq)" as one token
+            const user = dgPlaced.join(' ').replace(/\s*,\s*/g, ', ').replace(/\s+/g, ' ').trim();
+            const ans = sc.answer.join(' ').replace(/\s*,\s*/g, ', ').replace(/\s+/g, ' ').trim();
+            if (user === ans) {
+                fb.className = 'text-xs p-3.5 rounded-lg border leading-relaxed bg-emerald-950/50 border-emerald-700 text-emerald-200';
+                fb.innerHTML = '<b>✓ Correct!</b> ' + ans + ' — oxidation on the left, reduction on the right, salt bridge in the middle.' + (dgCurrent==='fecu'||dgCurrent==='agfe' ? ' Note the inert Pt and the comma between same-phase ions.' : '');
+            } else {
+                fb.className = 'text-xs p-3.5 rounded-lg border leading-relaxed bg-rose-950/50 border-rose-700 text-rose-200';
+                fb.innerHTML = '<b>✗ Not quite.</b> Check: (1) is oxidation on the LEFT? (2) oxidised form next to the salt bridge? (3) single | for phase boundaries, ‖ for the bridge? (4) Pt included for ion/ion half-cells? <br><span class="text-slate-400">Correct answer: <span class="font-mono text-emerald-300">' + ans + '</span></span>';
+            }
+        };
+
+        // ==================== E° CALCULATOR + FEASIBILITY ====================
+        function populateSelects() {
+            ['pot-a','pot-b','feas-a','feas-b'].forEach(function(id) {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '';
+                DATA_BOOKLET.forEach(function(d, i) {
+                    const o = document.createElement('option');
+                    o.value = i;
+                    o.textContent = d.eq + '   (E° = ' + (d.e0>=0?'+':'') + d.e0.toFixed(2) + ' V)';
+                    sel.appendChild(o);
+                });
+            });
+            document.getElementById('pot-a').value = String(DATA_BOOKLET.findIndex(d=>d.eq.indexOf('Zn²⁺')===0));
+            document.getElementById('pot-b').value = String(DATA_BOOKLET.findIndex(d=>d.eq.indexOf('Cu²⁺ + 2e⁻')===0));
+            document.getElementById('feas-a').value = String(DATA_BOOKLET.findIndex(d=>d.eq.indexOf('Cl₂')===0));
+            document.getElementById('feas-b').value = String(DATA_BOOKLET.findIndex(d=>d.eq.indexOf('Fe³⁺')===0));
+        }
+
+        window.calcPotential = function() {
+            const A = DATA_BOOKLET[+document.getElementById('pot-a').value];
+            const B = DATA_BOOKLET[+document.getElementById('pot-b').value];
+            const out = document.getElementById('pot-steps');
+            const red = (A.e0 >= B.e0) ? A : B;
+            const ox = (A.e0 >= B.e0) ? B : A;
+            const ecell = red.e0 - ox.e0;
+            out.innerHTML =
+                '<div class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-[11px] font-mono text-slate-300"><b class="text-emerald-300">Step 1 — both E° values:</b><br>' + A.eq + '  E° = ' + (A.e0>=0?'+':'') + A.e0.toFixed(2) + ' V<br>' + B.eq + '  E° = ' + (B.e0>=0?'+':'') + B.e0.toFixed(2) + ' V</div>' +
+                '<div class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-[11px] text-slate-300"><b class="text-emerald-300">Step 2 — assign roles:</b> more positive is <b class="text-sky-300">reduced (cathode)</b>: ' + red.eq + '. The other is <b class="text-rose-300">oxidised (anode)</b>: ' + ox.eq + ' (written in reverse).</div>' +
+                '<div class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-[11px] font-mono text-slate-300"><b class="text-emerald-300">Step 3 — E°cell:</b> ' + (red.e0>=0?'+':'') + red.e0.toFixed(2) + ' − (' + (ox.e0>=0?'+':'') + ox.e0.toFixed(2) + ') = <b class="text-emerald-300 text-sm">' + (ecell>=0?'+':'') + ecell.toFixed(2) + ' V</b>  (E° is NOT multiplied by any coefficient)</div>' +
+                '<div class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-[11px] text-slate-300"><b class="text-emerald-300">Step 4 — balance electrons</b> and add the half-equations. E°cell ' + (ecell>0?'&gt; 0 → the reaction is <b class="text-emerald-300">feasible</b> as written.':ecell===0?'= 0 → the system is at equilibrium.':'&lt; 0 → the reaction is <b class="text-rose-300">not feasible</b> as written (the reverse is).') + '</div>';
+        };
+
+        window.calcFeasibility = function() {
+            const A = DATA_BOOKLET[+document.getElementById('feas-a').value];
+            const B = DATA_BOOKLET[+document.getElementById('feas-b').value];
+            const out = document.getElementById('feas-result');
+            const red = (A.e0 >= B.e0) ? A : B;
+            const ox = (A.e0 >= B.e0) ? B : A;
+            const ecell = red.e0 - ox.e0;
+            const feasible = ecell > 0.0001;
+            out.innerHTML =
+                '<div class="p-4 rounded-lg border ' + (feasible ? 'bg-emerald-950/50 border-emerald-700' : 'bg-rose-950/50 border-rose-700') + ' space-y-2">' +
+                '<div class="font-mono text-xs text-slate-300">' + red.eq + '  (reduced, E° = ' + (red.e0>=0?'+':'') + red.e0.toFixed(2) + ' V)<br>' + ox.eq + '  (oxidised, E° = ' + (ox.e0>=0?'+':'') + ox.e0.toFixed(2) + ' V)</div>' +
+                '<div class="font-mono text-sm">E°cell = ' + (red.e0>=0?'+':'') + red.e0.toFixed(2) + ' − (' + (ox.e0>=0?'+':'') + ox.e0.toFixed(2) + ') = <b class="' + (feasible?'text-emerald-300':'text-rose-300') + '">' + (ecell>=0?'+':'') + ecell.toFixed(2) + ' V</b></div>' +
+                '<div class="text-xs ' + (feasible?'text-emerald-200':'text-rose-200') + '"><b>' + (feasible ? '✓ Thermodynamically FEASIBLE' : '✗ NOT feasible as written') + '</b> — E°cell is ' + (feasible?'positive':'negative') + ', so ΔS_total is ' + (feasible?'positive':'negative') + ' and K is ' + (feasible?'> 1 (products favoured)':'< 1 (reactants favoured)') + '. ' + (feasible ? 'Remember: this says nothing about how fast it goes.' : 'The reverse reaction would be feasible.') + '</div>' +
+                '</div>';
+        };
+
+        const FEAS_CHALLENGES = [
+            { rxn:'Chlorine oxidises Fe²⁺ to Fe³⁺', a:'Cl₂ + 2e⁻ ⇌ 2Cl⁻   E° = +1.36 V', b:'Fe³⁺ + e⁻ ⇌ Fe²⁺   E° = +0.77 V', ans:true, why:'Cl₂ is reduced (+1.36), Fe²⁺ oxidised. E°cell = 1.36 − 0.77 = +0.59 V &gt; 0 → feasible.' },
+            { rxn:'Iodine oxidises Fe²⁺ to Fe³⁺', a:'I₂ + 2e⁻ ⇌ 2I⁻   E° = +0.54 V', b:'Fe³⁺ + e⁻ ⇌ Fe²⁺   E° = +0.77 V', ans:false, why:'I₂ (+0.54) is less positive than Fe³⁺/Fe²⁺ (+0.77), so it cannot oxidise Fe²⁺. E°cell = 0.54 − 0.77 = −0.23 V &lt; 0.' },
+            { rxn:'Zinc reduces Cu²⁺ to copper metal', a:'Cu²⁺ + 2e⁻ ⇌ Cu   E° = +0.34 V', b:'Zn²⁺ + 2e⁻ ⇌ Zn   E° = −0.76 V', ans:true, why:'Cu²⁺ reduced (+0.34), Zn oxidised (−0.76). E°cell = 0.34 − (−0.76) = +1.10 V &gt; 0 → feasible.' },
+            { rxn:'Copper reduces Zn²⁺ to zinc metal', a:'Zn²⁺ + 2e⁻ ⇌ Zn   E° = −0.76 V', b:'Cu²⁺ + 2e⁻ ⇌ Cu   E° = +0.34 V', ans:false, why:'Zn²⁺ (−0.76) is the weaker oxidising agent; Cu cannot reduce it. E°cell = −0.76 − 0.34 = −1.10 V &lt; 0.' },
+            { rxn:'Acidified MnO₄⁻ oxidises Cl⁻ to Cl₂', a:'MnO₄⁻ + 8H⁺ + 5e⁻ ⇌ Mn²⁺ + 4H₂O   E° = +1.51 V', b:'Cl₂ + 2e⁻ ⇌ 2Cl⁻   E° = +1.36 V', ans:true, why:'E°cell = 1.51 − 1.36 = +0.15 V &gt; 0 → feasible. This is why you must NOT acidify permanganate titrations with HCl!' },
+            { rxn:'H₂O₂ disproportionates to H₂O and O₂', a:'H₂O₂ + 2H⁺ + 2e⁻ ⇌ 2H₂O   E° = +1.77 V', b:'O₂ + 2H⁺ + 2e⁻ ⇌ H₂O₂   E° = +0.68 V', ans:true, why:'H₂O₂ is both reduced (+1.77) and oxidised (0.68). E°cell = 1.77 − 0.68 = +1.09 V &gt; 0 → feasible, though kinetically slow.' }
+        ];
+
+        function renderChallenges() {
+            const wrap = document.getElementById('feas-challenges');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            FEAS_CHALLENGES.forEach(function(c, idx) {
+                const card = document.createElement('div');
+                card.className = 'p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2';
+                card.innerHTML =
+                    '<p class="text-xs font-bold text-slate-100">' + (idx+1) + '. ' + c.rxn + '?</p>' +
+                    '<p class="text-[10px] font-mono text-slate-400 leading-relaxed">' + c.a + '<br>' + c.b + '</p>' +
+                    '<div class="flex gap-2">' +
+                    '<button data-i="'+idx+'" data-v="1" class="fc-btn flex-1 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-emerald-300 text-[11px] font-bold hover:border-emerald-500 transition">Feasible</button>' +
+                    '<button data-i="'+idx+'" data-v="0" class="fc-btn flex-1 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-rose-300 text-[11px] font-bold hover:border-rose-500 transition">Not feasible</button>' +
+                    '</div>' +
+                    '<div id="fc-fb-'+idx+'" class="hidden text-[11px] p-2.5 rounded-lg border leading-relaxed"></div>';
+                wrap.appendChild(card);
+            });
+            wrap.querySelectorAll('.fc-btn').forEach(function(btn) {
+                btn.onclick = function() {
+                    const i = +btn.getAttribute('data-i');
+                    const guess = btn.getAttribute('data-v') === '1';
+                    const c = FEAS_CHALLENGES[i];
+                    const fb = document.getElementById('fc-fb-' + i);
+                    fb.classList.remove('hidden');
+                    const correct = (guess === c.ans);
+                    fb.className = 'text-[11px] p-2.5 rounded-lg border leading-relaxed ' + (correct ? 'bg-emerald-950/50 border-emerald-700 text-emerald-200' : 'bg-rose-950/50 border-rose-700 text-rose-200');
+                    fb.innerHTML = (correct ? '<b>✓ Correct.</b> ' : '<b>✗ Not quite.</b> ') + c.why;
+                };
+            });
+        }
+
+        // ==================== VANADIUM STEPWISE REDUCTION ====================
+        const V_STEPS = [
+            { ox:'+5', ion:'VO₂⁺', color:'#eab308', colorName:'yellow', eq:'VO₂⁺ + 2H⁺ + e⁻ → VO²⁺ + H₂O', e0:1.00 },
+            { ox:'+4', ion:'VO²⁺', color:'#3b82f6', colorName:'blue',   eq:'VO²⁺ + 2H⁺ + e⁻ → V³⁺ + H₂O',  e0:0.34 },
+            { ox:'+3', ion:'V³⁺',  color:'#22c55e', colorName:'green',  eq:'V³⁺ + e⁻ → V²⁺',               e0:-0.26 },
+            { ox:'+2', ion:'V²⁺',  color:'#a855f7', colorName:'violet', eq:'V²⁺ + 2e⁻ → V',                e0:-1.18 }
+        ];
+        const vanadiumApp = { step:0, initialized:false, curColor:[234,179,8], tgtColor:[234,179,8], bubbles:[], stopped:false };
+
+        function hexToRgb(h) { const n = parseInt(h.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+
+        function drawVanadium() {
+            const canvas = document.getElementById('vanadium-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth || 448;
+            const h = canvas.height = 380;
+            ctx.clearRect(0,0,w,h);
+            // interpolate color
+            for (let i=0;i<3;i++) vanadiumApp.curColor[i] += (vanadiumApp.tgtColor[i]-vanadiumApp.curColor[i])*0.06;
+            const c = vanadiumApp.curColor.map(Math.round);
+            const solCol = 'rgba('+c[0]+','+c[1]+','+c[2]+',0.55)';
+            // beaker
+            ctx.strokeStyle='#64748b'; ctx.lineWidth=2.5;
+            ctx.beginPath(); ctx.moveTo(w*0.22,70); ctx.lineTo(w*0.22,330); ctx.quadraticCurveTo(w*0.22,345,w*0.25,345);
+            ctx.lineTo(w*0.75,345); ctx.quadraticCurveTo(w*0.78,345,w*0.78,330); ctx.lineTo(w*0.78,70); ctx.stroke();
+            // solution
+            ctx.fillStyle=solCol; ctx.fillRect(w*0.225,110,w*0.55,232);
+            // zinc granules
+            ctx.fillStyle='#94a3b8';
+            [[0.35,325,14],[0.5,332,16],[0.65,326,13],[0.43,338,11],[0.58,340,12]].forEach(function(g){
+                ctx.beginPath(); ctx.ellipse(w*g[0],g[1],g[2],g[2]*0.7,0.3,0,Math.PI*2); ctx.fill();
+            });
+            ctx.fillStyle='#475569'; ctx.font='bold 11px sans-serif'; ctx.textAlign='center';
+            ctx.fillText('Zn', w*0.5, 336);
+            // bubbles (only while reacting / not stopped)
+            if (vanadiumApp.bubbles.length===0) for(let i=0;i<10;i++) vanadiumApp.bubbles.push({x:Math.random(),y:Math.random(),r:2+Math.random()*3,s:0.002+Math.random()*0.003});
+            if (!vanadiumApp.stopped) {
+                ctx.fillStyle='rgba(255,255,255,0.35)';
+                vanadiumApp.bubbles.forEach(function(b){
+                    b.y -= b.s; if (b.y<0) b.y=1;
+                    ctx.beginPath(); ctx.arc(w*(0.25+b.x*0.5), 115+b.y*215, b.r,0,Math.PI*2); ctx.fill();
+                });
+            }
+            // label
+            const st = V_STEPS[vanadiumApp.step];
+            ctx.fillStyle='#e2e8f0'; ctx.font='bold 16px sans-serif'; ctx.textAlign='center';
+            ctx.fillText('Vanadium(' + st.ox + ')  ·  ' + st.ion, w/2, 45);
+            ctx.fillStyle=st.color; ctx.font='bold 13px sans-serif';
+            ctx.fillText(st.colorName + ' solution', w/2, 92);
+            if (vanadiumApp.stopped) {
+                ctx.fillStyle='#f87171'; ctx.font='bold 13px sans-serif';
+                ctx.fillText('⛔ Reduction stops here — V²⁺ → V is not feasible', w/2, 26);
+            }
+        }
+        function vanadiumLoop(){ requestAnimationFrame(vanadiumLoop); if(!document.getElementById('tab-vanadium').classList.contains('hidden')) drawVanadium(); }
+
+        function renderVStep() {
+            const st = V_STEPS[vanadiumApp.step];
+            const panel = document.getElementById('v-step-panel');
+            const ecell = document.getElementById('v-ecell-panel');
+            let html = '<span class="text-[11px] font-bold uppercase tracking-wider" style="color:'+st.color+'">Current solution</span>';
+            html += '<p class="text-sm text-slate-100 font-bold">Vanadium(' + st.ox + ') as ' + st.ion + ' — <span style="color:'+st.color+'">' + st.colorName + '</span></p>';
+            if (vanadiumApp.step === 0) {
+                html += '<p class="text-[11px] text-slate-400 leading-relaxed">You start with vanadium(V) (yellow). Press <b>Add zinc</b> — zinc is a strong enough reducing agent to begin reducing it, one electron at a time.</p>';
+            } else {
+                const prev = V_STEPS[vanadiumApp.step-1];
+                const ecellVal = prev.e0 - (-0.76);
+                html += '<p class="text-[11px] text-slate-300 leading-relaxed">Just reduced from ' + prev.ion + ' (' + prev.colorName + ') via:</p>';
+                html += '<p class="text-xs font-mono text-emerald-300">' + prev.eq + '</p>';
+            }
+            panel.innerHTML = html;
+            // E°cell working for the step that just happened (or the next step if at start)
+            const idx = vanadiumApp.step === 0 ? 0 : vanadiumApp.step - 1;
+            const s = V_STEPS[idx];
+            const ecellVal = s.e0 - (-0.76);
+            const feasible = ecellVal > 0;
+            let e = '<span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">' + (vanadiumApp.step===0 ? 'First step available' : 'Step ' + vanadiumApp.step + ' — E°cell check') + '</span>';
+            e += '<div class="text-slate-300 leading-relaxed">' + s.eq + '  E° = ' + (s.e0>=0?'+':'') + s.e0.toFixed(2) + ' V<br>Zn → Zn²⁺ + 2e⁻  E° = +0.76 V (oxidation)</div>';
+            e += '<div class="text-slate-200">E°cell = ' + (s.e0>=0?'+':'') + s.e0.toFixed(2) + ' − (−0.76) = <b class="' + (feasible?'text-emerald-300':'text-rose-300') + '">' + (ecellVal>=0?'+':'') + ecellVal.toFixed(2) + ' V</b></div>';
+            e += '<div class="' + (feasible?'text-emerald-300':'text-rose-300') + ' font-bold">' + (feasible ? '✓ Feasible — this step proceeds' : '✗ Not feasible — reduction cannot occur') + '</div>';
+            ecell.innerHTML = e;
+        }
+        function renderVProgress() {
+            const wrap = document.getElementById('v-progress');
+            wrap.innerHTML = '';
+            V_STEPS.forEach(function(s, i) {
+                const ecellVal = s.e0 - (-0.76);
+                const feasible = ecellVal > 0;
+                const isCurrent = (i === vanadiumApp.step);
+                const card = document.createElement('div');
+                card.className = 'p-3 rounded-lg border space-y-1.5 ' + (isCurrent ? 'bg-slate-800/70 border-cyan-500' : 'bg-slate-950 border-slate-800');
+                card.innerHTML =
+                    '<div class="flex items-center gap-2"><span class="inline-block w-3.5 h-3.5 rounded-full" style="background:'+s.color+'"></span><span class="text-[11px] font-bold text-slate-200">'+s.ion+'</span><span class="text-[10px] text-slate-500">('+s.ox+')</span></div>' +
+                    '<div class="text-[10px] font-mono text-slate-400">'+s.eq+'</div>' +
+                    '<div class="text-[10px] font-mono ' + (feasible?'text-emerald-300':'text-rose-300') + '">E°cell = '+(ecellVal>=0?'+':'')+ecellVal.toFixed(2)+' V '+(feasible?'✓':'✗')+'</div>';
+                wrap.appendChild(card);
+            });
+        }
+        window.vanadiumNext = function() {
+            if (vanadiumApp.step < 3) {
+                vanadiumApp.step++;
+                vanadiumApp.tgtColor = hexToRgb(V_STEPS[vanadiumApp.step].color);
+                vanadiumApp.stopped = false;
+            } else {
+                vanadiumApp.stopped = true; // attempt V2+ -> V, not feasible
+            }
+            renderVStep(); renderVProgress();
+        };
+        window.vanadiumReset = function() {
+            vanadiumApp.step = 0; vanadiumApp.stopped = false;
+            vanadiumApp.tgtColor = hexToRgb(V_STEPS[0].color);
+            renderVStep(); renderVProgress();
+        };
+        function initVanadium(){ if(!vanadiumApp.initialized){ vanadiumApp.initialized=true; vanadiumLoop(); } renderVStep(); renderVProgress(); }
+
+        // ==================== TITRATION DRILL ====================
+        const TITRATION_PROBLEMS = [
+            { type:'MnO₄⁻ / Fe²⁺', color:'purple',
+              q:'25.0 cm³ of acidified Fe²⁺(aq) is titrated with 0.0200 mol dm⁻³ KMnO₄. The end-point (first permanent pale pink) is reached at 21.50 cm³. Calculate the concentration of Fe²⁺.',
+              ans:0.0860, unit:'mol dm⁻³',
+              steps:['Moles of MnO₄⁻ = 0.0200 × (21.50/1000) = 4.30 × 10⁻⁴ mol','Ratio MnO₄⁻ : Fe²⁺ = 1 : 5, so moles Fe²⁺ = 5 × 4.30 × 10⁻⁴ = 2.15 × 10⁻³ mol','[Fe²⁺] = 2.15 × 10⁻³ / (25.0/1000) = 0.0860 mol dm⁻³'] },
+            { type:'MnO₄⁻ / Fe²⁺', color:'purple',
+              q:'An iron tablet (1.40 g) is dissolved in dilute H₂SO₄ and made up to 250 cm³. A 25.0 cm³ portion requires 18.60 cm³ of 0.0100 mol dm⁻³ KMnO₄ for complete oxidation. Calculate the percentage of iron in the tablet. (Ar Fe = 55.8)',
+              ans:37.1, unit:'%',
+              steps:['Moles MnO₄⁻ = 0.0100 × 0.01860 = 1.86 × 10⁻⁴ mol','Moles Fe²⁺ in 25.0 cm³ = 5 × 1.86 × 10⁻⁴ = 9.30 × 10⁻⁴ mol','Moles Fe²⁺ in 250 cm³ = 9.30 × 10⁻³ mol (×10 scaling)','Mass Fe = 9.30 × 10⁻³ × 55.8 = 0.519 g','% Fe = (0.519 / 1.40) × 100 = 37.1 %'] },
+            { type:'I₂ / S₂O₃²⁻', color:'amber',
+              q:'25.0 cm³ of an iodine solution requires 22.40 cm³ of 0.100 mol dm⁻³ Na₂S₂O₃ for complete reaction (starch end-point). Calculate the concentration of iodine.',
+              ans:0.0448, unit:'mol dm⁻³',
+              steps:['Moles S₂O₃²⁻ = 0.100 × 0.02240 = 2.24 × 10⁻³ mol','Ratio I₂ : S₂O₃²⁻ = 1 : 2, so moles I₂ = 2.24 × 10⁻³ / 2 = 1.12 × 10⁻³ mol','[I₂] = 1.12 × 10⁻³ / 0.0250 = 0.0448 mol dm⁻³'] },
+            { type:'I₂ / S₂O₃²⁻ (indirect)', color:'amber',
+              q:'0.500 g of brass is dissolved in nitric acid to give Cu²⁺(aq). Excess KI is added (2Cu²⁺ + 4I⁻ → 2CuI + I₂) and the liberated iodine requires 23.50 cm³ of 0.100 mol dm⁻³ thiosulfate. Calculate the % copper. (Ar Cu = 63.5)',
+              ans:29.8, unit:'%',
+              steps:['Moles S₂O₃²⁻ = 0.100 × 0.02350 = 2.35 × 10⁻³ mol','Moles I₂ = 2.35 × 10⁻³ / 2 = 1.175 × 10⁻³ mol','From 2Cu²⁺ → I₂, moles Cu²⁺ = 2 × 1.175 × 10⁻³ = 2.35 × 10⁻³ mol','Mass Cu = 2.35 × 10⁻³ × 63.5 = 0.149 g','% Cu = (0.149 / 0.500) × 100 = 29.8 %'] },
+            { type:'MnO₄⁻ / Fe²⁺ (find x)', color:'purple',
+              q:'6.95 g of hydrated iron(II) sulfate, FeSO₄·xH₂O, is made up to 250 cm³. A 25.0 cm³ portion requires 25.00 cm³ of 0.0200 mol dm⁻³ KMnO₄. Find x. (M FeSO₄ = 151.9, M H₂O = 18.0)',
+              ans:7, unit:'',
+              steps:['Moles MnO₄⁻ = 0.0200 × 0.02500 = 5.00 × 10⁻⁴ mol','Moles Fe²⁺ in 25 cm³ = 2.50 × 10⁻³; in 250 cm³ = 2.50 × 10⁻² mol = moles of FeSO₄·xH₂O','M(FeSO₄·xH₂O) = 6.95 / 2.50 × 10⁻² = 278 g mol⁻¹','Mass of xH₂O = 278 − 151.9 = 126.1','x = 126.1 / 18.0 = 7.0 → x = 7 (FeSO₄·7H₂O)'] }
+        ];
+        function renderTitrationProblems() {
+            const wrap = document.getElementById('titration-problems');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            TITRATION_PROBLEMS.forEach(function(p, idx) {
+                const card = document.createElement('div');
+                card.className = 'p-5 bg-slate-950 border border-slate-800 rounded-xl space-y-3';
+                const badgeColor = p.color === 'purple' ? 'bg-purple-950 text-purple-300 border-purple-800' : 'bg-amber-950 text-amber-300 border-amber-800';
+                card.innerHTML =
+                    '<div class="flex items-center gap-2"><span class="text-cyan-300 font-extrabold">' + (idx+1) + '</span><span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ' + badgeColor + '">' + p.type + '</span></div>' +
+                    '<p class="text-xs text-slate-200 leading-relaxed">' + p.q + '</p>' +
+                    '<div class="flex flex-wrap items-center gap-2">' +
+                    '<input id="tit-ans-'+idx+'" type="text" placeholder="your answer" class="bg-slate-900 border border-slate-700 text-slate-100 rounded px-3 py-1.5 text-xs font-mono w-36 focus:border-cyan-500 outline-none">' +
+                    (p.unit ? '<span class="text-[11px] text-slate-500 font-mono">'+p.unit+'</span>' : '') +
+                    '<button data-i="'+idx+'" class="tit-check px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-[11px] font-bold transition">Check</button>' +
+                    '<button data-i="'+idx+'" class="tit-solve px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-cyan-300 text-[11px] font-bold hover:border-cyan-500 transition">Show worked solution</button>' +
+                    '</div>' +
+                    '<div id="tit-fb-'+idx+'" class="hidden text-[11px] p-3 rounded-lg border leading-relaxed"></div>' +
+                    '<div id="tit-sol-'+idx+'" class="hidden p-3 bg-slate-900 border border-slate-800 rounded-lg space-y-1.5"></div>';
+                wrap.appendChild(card);
+            });
+            wrap.querySelectorAll('.tit-check').forEach(function(btn){
+                btn.onclick = function(){
+                    const i = +btn.getAttribute('data-i');
+                    const p = TITRATION_PROBLEMS[i];
+                    const fb = document.getElementById('tit-fb-'+i);
+                    const raw = document.getElementById('tit-ans-'+i).value.replace(/[^\d.\-]/g,'');
+                    const val = parseFloat(raw);
+                    fb.classList.remove('hidden');
+                    if (isNaN(val)) { fb.className='text-[11px] p-3 rounded-lg border leading-relaxed bg-slate-900 border-slate-700 text-slate-300'; fb.innerHTML='Enter a numerical answer first.'; return; }
+                    const ok = Math.abs(val - p.ans) <= Math.max(Math.abs(p.ans)*0.02, 0.005);
+                    fb.className = 'text-[11px] p-3 rounded-lg border leading-relaxed ' + (ok?'bg-emerald-950/50 border-emerald-700 text-emerald-200':'bg-rose-950/50 border-rose-700 text-rose-200');
+                    fb.innerHTML = ok ? '<b>✓ Correct!</b> ' + p.ans + (p.unit?' '+p.unit:'') + ' — well done.' : '<b>✗ Not quite.</b> Your answer: ' + val + '. Check the mole ratio and any scaling factor (e.g. 250/25), then try again — or reveal the solution.';
+                };
+            });
+            wrap.querySelectorAll('.tit-solve').forEach(function(btn){
+                btn.onclick = function(){
+                    const i = +btn.getAttribute('data-i');
+                    const sol = document.getElementById('tit-sol-'+i);
+                    sol.classList.toggle('hidden');
+                    if (!sol.classList.contains('hidden')) {
+                        sol.innerHTML = '<span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">Worked solution</span>' +
+                            TITRATION_PROBLEMS[i].steps.map(function(s,k){ return '<div class="text-[11px] font-mono text-slate-300"><span class="text-cyan-400 font-bold">'+(k+1)+'.</span> '+s+'</div>'; }).join('') +
+                            '<div class="text-[11px] font-bold text-emerald-300">Answer: ' + TITRATION_PROBLEMS[i].ans + (TITRATION_PROBLEMS[i].unit?' '+TITRATION_PROBLEMS[i].unit:'') + '</div>';
+                    }
+                };
+            });
+        }
+
+        // ==================== DATA BOOKLET ====================
+        function renderBooklet() {
+            const wrap = document.getElementById('booklet-table');
+            if (!wrap) return;
+            const min = -2.71, max = 1.77;
+            let html = '<table class="w-full text-left text-[11px] text-slate-300 min-w-[640px]"><thead class="bg-slate-900 text-cyan-400 font-mono text-[10px] border-b border-slate-800"><tr><th class="p-2.5">#</th><th class="p-2.5">Half-equation (reduction)</th><th class="p-2.5">E° / V</th><th class="p-2.5 w-[26%]">Position in series</th></tr></thead><tbody class="divide-y divide-slate-800/80">';
+            DATA_BOOKLET.forEach(function(d) {
+                const pct = ((d.e0 - min) / (max - min)) * 100;
+                const barColor = d.e0 < 0 ? '#f87171' : (d.e0 < 0.8 ? '#fbbf24' : '#38bdf8');
+                html += '<tr class="hover:bg-slate-900/60 transition"><td class="p-2.5 font-mono text-slate-500">'+d.id+'</td><td class="p-2.5 font-mono text-slate-200">'+d.eq+'</td><td class="p-2.5 font-mono '+(d.e0>=0?'text-sky-300':'text-rose-300')+' font-bold">'+(d.e0>=0?'+':'')+d.e0.toFixed(2)+'</td>' +
+                    '<td class="p-2.5"><div class="h-2 rounded-full bg-slate-800 relative overflow-hidden"><div class="h-full rounded-full" style="width:'+pct+'%;background:'+barColor+'"></div></div></td></tr>';
+            });
+            html += '</tbody></table>';
+            wrap.innerHTML = html;
+        }
+
+        // ---------- Init ----------
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab('syllabus');
+            populateSelects();
+            window.calcPotential();
+            window.calcFeasibility();
+            renderChallenges();
+            window.pickDiagramScenario('zncu');
+            window.updateConc();
+            renderTitrationProblems();
+            renderBooklet();
+            initVanadium();
+            setTimeout(safeInitKaTeX, 120);
+        });
+    </script>
+</body>
+</html>

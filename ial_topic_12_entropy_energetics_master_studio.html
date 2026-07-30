@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAL Topic 12: Entropy and Energetics — Master Studio (WCH13)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        .tab-btn-active {
+            border-bottom: 3px solid #fbbf24;
+            color: #fbbf24;
+            font-weight: 700;
+            background-color: rgba(251, 191, 36, 0.12);
+        }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .blur-answer {
+            filter: blur(6px);
+            transition: filter 0.25s ease, background-color 0.25s ease;
+            user-select: none;
+            cursor: pointer;
+        }
+        .blur-answer:hover, .blur-answer.revealed {
+            filter: blur(0);
+            user-select: auto;
+            background-color: rgba(251, 191, 36, 0.18) !important;
+        }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        .bar-anim { transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+        .rl-flash { animation: rlflash 0.9s ease; }
+        @keyframes rlflash { 0% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.7); } 100% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0); } }
+    </style>
+    <script>
+        function safeInitKaTeX() {
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) { console.warn(e); }
+            }
+        }
+        window.safeInitKaTeX = safeInitKaTeX;
+
+        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-amber-400 font-bold border-b-2 border-amber-400 bg-amber-950/40 transition flex items-center gap-1.5 rounded-t-md";
+        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md";
+
+        window.switchTab = function(tabId) {
+            const tabs = ['syllabus', 'entropy', 'feasibility', 'bornhaber', 'covalency', 'solution', 'solver', 'review'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                const btn = document.getElementById('btn-' + t);
+                if (el) el.classList.toggle('hidden', t !== tabId);
+                if (btn) btn.className = (t === tabId) ? TAB_ACTIVE : TAB_INACTIVE;
+            });
+            if (tabId === 'feasibility') setTimeout(drawFeasibility, 40);
+            if (tabId === 'bornhaber') setTimeout(drawBH, 40);
+            if (tabId === 'solution') setTimeout(drawSolutionCycle, 40);
+            setTimeout(safeInitKaTeX, 50);
+        };
+
+        window.switchMode = function(prefix, mode) {
+            ['explorer','map','quiz','traps'].forEach(m => {
+                const el = document.getElementById(prefix + '-mode-' + m);
+                const btn = document.getElementById(prefix + '-mode-btn-' + m);
+                if (el) el.classList.toggle('hidden', m !== mode);
+                if (btn) {
+                    const on = m === mode;
+                    const colors = { c1: 'sky', c2: 'emerald', c3: 'violet', c4: 'amber', c5: 'rose' };
+                    const c = colors[prefix] || 'sky';
+                    btn.className = on
+                        ? 'px-3.5 py-1.5 rounded-lg bg-' + c + '-600 text-white font-bold text-xs'
+                        : 'px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs';
+                }
+            });
+            if (prefix === 'c2' && mode === 'map') setTimeout(drawFeasibility, 40);
+            if (prefix === 'c3' && mode === 'map') setTimeout(drawBH, 40);
+            if (prefix === 'c5' && mode === 'map') setTimeout(drawSolutionCycle, 40);
+            setTimeout(safeInitKaTeX, 50);
+        };
+
+        window.selectCard = function(prefix, n, total) {
+            for (let i = 1; i <= total; i++) {
+                const card = document.getElementById(prefix + '-card-' + i);
+                const btn = document.getElementById(prefix + '-btn-' + i);
+                if (card) card.classList.toggle('hidden', i !== n);
+                if (btn) {
+                    const on = i === n;
+                    const colors = {
+                        c1: ['border-sky-500 bg-sky-950/70 text-sky-300 font-bold', 'border-slate-800 bg-slate-900/80 text-slate-400'],
+                        c2: ['border-emerald-500 bg-emerald-950/70 text-emerald-300 font-bold', 'border-slate-800 bg-slate-900/80 text-slate-400'],
+                        c3: ['border-violet-500 bg-violet-950/70 text-violet-300 font-bold', 'border-slate-800 bg-slate-900/80 text-slate-400'],
+                        c4: ['border-amber-500 bg-amber-950/70 text-amber-300 font-bold', 'border-slate-800 bg-slate-900/80 text-slate-400'],
+                        c5: ['border-rose-500 bg-rose-950/70 text-rose-300 font-bold', 'border-slate-800 bg-slate-900/80 text-slate-400']
+                    };
+                    const pair = colors[prefix] || colors.c1;
+                    btn.className = 'p-2.5 rounded-lg border text-left transition w-full text-xs ' + (on ? pair[0] : pair[1]);
+                }
+            }
+            setTimeout(safeInitKaTeX, 50);
+        };
+
+        window.toggleSingleBlur = function(el) { if (el) el.classList.toggle('revealed'); };
+        window.toggleActiveRecall = function(containerId, btnId) {
+            const container = document.getElementById(containerId);
+            const btn = document.getElementById(btnId);
+            if (!container) return;
+            const answers = container.querySelectorAll('.blur-answer');
+            let revealed = false;
+            answers.forEach(a => { if (a.classList.contains('revealed')) revealed = true; });
+            answers.forEach(a => { if (revealed) a.classList.remove('revealed'); else a.classList.add('revealed'); });
+            if (btn) btn.innerText = revealed ? '👁️ Reveal All Blanks' : '🙈 Hide All Blanks';
+        };
+
+        // ---------- Engine A map: ΔS sign predictor ----------
+        const DS_PROCESSES = {
+            melt:    { eq: 'H₂O(s) → H₂O(l)', sign: '+', why: 'Melting breaks the rigid lattice — molecules gain positional freedom. ΔS is positive (but much smaller than vaporisation).' },
+            boil:    { eq: 'H₂O(l) → H₂O(g)', sign: '++', why: 'Vaporisation: liquid → gas is the biggest entropy jump there is. Molecules go from touching to freely dispersed.' },
+            nacl:    { eq: 'NaCl(s) → Na⁺(aq) + Cl⁻(aq)', sign: '+', why: 'The ordered lattice breaks into free mobile ions — disorder increases overall, even though some water molecules become ordered around the ions.' },
+            caso4ppt:{ eq: 'Ca²⁺(aq) + SO₄²⁻(aq) → CaSO₄(s)', sign: '−', why: 'Free aqueous ions lock into a rigid crystal lattice — a large decrease in disorder.' },
+            haber:   { eq: 'N₂(g) + 3H₂(g) → 2NH₃(g)', sign: '−', why: '4 mol of gas → 2 mol of gas. Fewer gas molecules means fewer ways to disperse energy — ΔS negative. (The dominant factor in most reactions.)' },
+            decompc: { eq: 'CaCO₃(s) → CaO(s) + CO₂(g)', sign: '+', why: 'A solid produces a gas molecule — large increase in disorder even though one solid becomes another.' },
+            no2:     { eq: '2NO(g) + O₂(g) → 2NO₂(g)', sign: '−', why: '3 mol of gas → 2 mol of gas: fewer gas molecules, smaller entropy.' },
+            iodine:  { eq: 'I₂(s) → I₂(g)', sign: '++', why: 'Sublimation: solid straight to gas — a very large entropy increase.' },
+            carbon:  { eq: 'C(s) + O₂(g) → CO₂(g)', sign: '≈0', why: '1 mol of gas → 1 mol of gas. The solid loses order but the gas count is unchanged, so ΔS is small (slightly positive here).' },
+            nh4no3:  { eq: 'NH₄NO₃(s) → NH₄⁺(aq) + NO₃⁻(aq)', sign: '+', why: 'Lattice breaks into two mobile aqueous ions per formula unit — disorder increases. This is why the endothermic dissolution is spontaneous (cold packs!).' }
+        };
+        window.predictDSSign = function() {
+            const key = document.getElementById('dss-process')?.value;
+            const guess = document.getElementById('dss-guess')?.value;
+            const out = document.getElementById('dss-result');
+            if (!out) return;
+            const p = DS_PROCESSES[key];
+            if (!p || !guess) { out.innerHTML = "<span class='text-rose-300'>Pick a process and your prediction first.</span>"; return; }
+            const ok = guess === p.sign;
+            out.innerHTML =
+                "<div class='p-3 bg-slate-900 border border-slate-700 rounded-lg space-y-1.5 text-[11px]'>" +
+                "<div class='font-mono text-sky-300 text-xs'>" + p.eq + "</div>" +
+                "<div><b class='text-slate-300'>Your prediction:</b> <span class='" + (ok ? 'text-emerald-300' : 'text-rose-300') + " font-bold'>" + guess + "</span> · <b class='text-slate-300'>Actual:</b> <span class='text-amber-300 font-bold'>" + p.sign + "</span> " + (ok ? '✅' : '❌') + "</div>" +
+                "<div class='text-slate-300'>" + p.why + "</div>" +
+                "<div class='text-amber-200/90 pt-1 border-t border-slate-800'>Count <b>moles of gas</b> first — it dominates. Then state changes, then dissolving.</div>" +
+                "</div>";
+        };
+
+        // ---------- Engine B map: Feasibility workbench ----------
+        const FEAS_PRESETS = {
+            nh4no3:  { dh: 26,   ds: 109,  label: 'NH₄NO₃ dissolving · ΔH = +26 kJ mol⁻¹ · ΔS_sys = +109 J K⁻¹ mol⁻¹' },
+            caco3:   { dh: 178,  ds: 160,  label: 'CaCO₃ decomposition · ΔH = +178 kJ mol⁻¹ · ΔS_sys = +160 J K⁻¹ mol⁻¹' },
+            methane: { dh: -890, ds: -243, label: 'CH₄ combustion · ΔH = −890 kJ mol⁻¹ · ΔS_sys = −243 J K⁻¹ mol⁻¹' },
+            no2dimer:{ dh: -57,  ds: -176, label: '2NO₂ → N₂O₄ · ΔH = −57 kJ mol⁻¹ · ΔS_sys = −176 J K⁻¹ mol⁻¹' }
+        };
+        window.setFeasPreset = function(key) {
+            const p = FEAS_PRESETS[key];
+            if (!p) return;
+            document.getElementById('fh-dh').value = p.dh;
+            document.getElementById('fh-ds').value = p.ds;
+            document.getElementById('fh-dh-lab').textContent = p.dh + ' kJ mol⁻¹';
+            document.getElementById('fh-ds-lab').textContent = p.ds + ' J K⁻¹ mol⁻¹';
+            const note = document.getElementById('fh-preset-note');
+            if (note) note.textContent = p.label;
+            drawFeasibility();
+        };
+        function drawFeasibility() {
+            const canvas = document.getElementById('fh-canvas');
+            if (!canvas || canvas.offsetParent === null) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.max(canvas.parentElement.clientWidth || 640, 340);
+            const h = 340;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            const dH = parseFloat(document.getElementById('fh-dh')?.value || 0);      // kJ
+            const dSsys = parseFloat(document.getElementById('fh-ds')?.value || 0);   // J/K
+            const Tcur = parseFloat(document.getElementById('fh-t')?.value || 298);   // K
+            const dl = document.getElementById('fh-dh-lab'); if (dl) dl.textContent = dH + ' kJ mol⁻¹';
+            const sl = document.getElementById('fh-ds-lab'); if (sl) sl.textContent = dSsys + ' J K⁻¹ mol⁻¹';
+            const tl = document.getElementById('fh-t-lab'); if (tl) tl.textContent = Tcur + ' K';
+
+            const dSsurr = (Tcur > 0) ? -dH * 1000 / Tcur : 0;
+            const dStot = dSsys + dSsurr;
+            const Tstar = (dSsys !== 0) ? dH * 1000 / dSsys : null;
+
+            const padL = 62, padR = 20, padT = 24, padB = 40;
+            const pw = w - padL - padR, ph = h - padT - padB;
+            const Tmin = 100, Tmax = 2000;
+            const f = (T) => dSsys - dH * 1000 / T;
+
+            let yMin = -50, yMax = 50;
+            for (let T = Tmin; T <= Tmax; T += 20) { const v = f(T); if (v < yMin) yMin = v; if (v > yMax) yMax = v; }
+            const span = (yMax - yMin) * 0.12; yMin -= span; yMax += span;
+            const X = (T) => padL + (T - Tmin) / (Tmax - Tmin) * pw;
+            const Y = (v) => padT + ph - (v - yMin) / (yMax - yMin) * ph;
+
+            // feasible shading (where curve > 0)
+            ctx.fillStyle = 'rgba(52, 211, 153, 0.07)';
+            ctx.beginPath();
+            let started = false;
+            for (let T = Tmin; T <= Tmax; T += 10) {
+                const v = f(T);
+                if (v > 0) {
+                    if (!started) { ctx.moveTo(X(T), Y(0)); started = true; }
+                    ctx.lineTo(X(T), Y(v));
+                }
+            }
+            if (started) { ctx.lineTo(X(Tmax), Y(0)); ctx.closePath(); ctx.fill(); }
+
+            // grid + axes
+            ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const v = yMin + (yMax - yMin) * i / 4;
+                ctx.beginPath(); ctx.moveTo(padL, Y(v)); ctx.lineTo(padL + pw, Y(v)); ctx.stroke();
+                ctx.fillStyle = '#64748b'; ctx.font = '10px monospace'; ctx.textAlign = 'right';
+                ctx.fillText(Math.round(v), padL - 6, Y(v) + 3);
+            }
+            // zero line
+            ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.4;
+            ctx.beginPath(); ctx.moveTo(padL, Y(0)); ctx.lineTo(padL + pw, Y(0)); ctx.stroke();
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + ph); ctx.lineTo(padL + pw, padT + ph); ctx.stroke();
+            ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('Temperature T (K)', padL + pw / 2, h - 8);
+            ctx.save(); ctx.translate(14, padT + ph / 2); ctx.rotate(-Math.PI / 2);
+            ctx.fillText('ΔS total (J K⁻¹ mol⁻¹)', 0, 0); ctx.restore();
+            ctx.fillStyle = '#64748b'; ctx.font = '10px monospace';
+            [300, 800, 1300, 1800].forEach(T => ctx.fillText(T, X(T), padT + ph + 14));
+
+            // curve
+            ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2.8;
+            ctx.beginPath();
+            for (let T = Tmin; T <= Tmax; T += 8) {
+                const x = X(T), y = Y(f(T));
+                if (T === Tmin) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // crossover T*
+            if (Tstar !== null && Tstar > Tmin && Tstar < Tmax) {
+                ctx.setLineDash([5, 4]); ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.4;
+                ctx.beginPath(); ctx.moveTo(X(Tstar), Y(0)); ctx.lineTo(X(Tstar), padT + 14); ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+                ctx.fillText('T* = ' + Math.round(Tstar) + ' K (ΔS total = 0)', Math.min(X(Tstar) + 6, w - 170), padT + 14);
+            }
+
+            // current T marker
+            ctx.setLineDash([3, 3]); ctx.strokeStyle = '#f472b6'; ctx.lineWidth = 1.4;
+            ctx.beginPath(); ctx.moveTo(X(Tcur), Y(0)); ctx.lineTo(X(Tcur), Y(dStot)); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#f472b6';
+            ctx.beginPath(); ctx.arc(X(Tcur), Y(dStot), 5.5, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.2; ctx.stroke();
+
+            // readouts
+            const r1 = document.getElementById('fh-dssurr'); if (r1) r1.textContent = dSsurr.toFixed(1) + ' J K⁻¹ mol⁻¹';
+            const r2 = document.getElementById('fh-dstot'); if (r2) r2.textContent = dStot.toFixed(1) + ' J K⁻¹ mol⁻¹';
+            const r3 = document.getElementById('fh-tstar');
+            if (r3) r3.textContent = (Tstar === null) ? '— (ΔS_sys = 0)' : (Tstar > 0 ? Math.round(Tstar) + ' K' : 'not physical (T < 0)');
+            const badge = document.getElementById('fh-verdict');
+            if (badge) {
+                const feas = dStot > 0;
+                badge.textContent = feas ? '✅ FEASIBLE at ' + Tcur + ' K (ΔS total > 0)' : '❌ NOT FEASIBLE at ' + Tcur + ' K (ΔS total < 0)';
+                badge.className = 'px-3 py-1.5 rounded-lg text-xs font-bold border ' + (feas ? 'bg-emerald-950/60 text-emerald-300 border-emerald-700' : 'bg-rose-950/60 text-rose-300 border-rose-700');
+            }
+            const quad = document.getElementById('fh-quadrant');
+            if (quad) {
+                let q;
+                if (dH < 0 && dSsys > 0) q = 'Exothermic + more disorder → feasible at ALL temperatures.';
+                else if (dH > 0 && dSsys < 0) q = 'Endothermic + less disorder → NEVER feasible at any temperature.';
+                else if (dH > 0 && dSsys > 0) q = 'Endothermic + more disorder → feasible only ABOVE T* (entropy-driven, e.g. dissolving NH₄NO₃, decomposing CaCO₃).';
+                else q = 'Exothermic + less disorder → feasible only BELOW T* (enthalpy-driven, e.g. combustion, dimerising NO₂).';
+                quad.textContent = q;
+            }
+        }
+        window.drawFeasibility = drawFeasibility;
+
+        // ---------- Engine C map: Born–Haber solver ----------
+        const BH_DATA = {
+            nacl:  { name: 'NaCl', steps: [
+                        { key: 'atM',  label: 'ΔatH(Na): Na(s) → Na(g)', v: 107 },
+                        { key: 'ie',   label: 'IE₁(Na): Na(g) → Na⁺(g) + e⁻', v: 496 },
+                        { key: 'atX',  label: 'ΔatH(Cl): ½Cl₂(g) → Cl(g)', v: 122 },
+                        { key: 'ea',   label: 'EA₁(Cl): Cl(g) + e⁻ → Cl⁻(g)', v: -346 } ],
+                     fH: -411 },
+            naf:   { name: 'NaF', steps: [
+                        { key: 'atM',  label: 'ΔatH(Na): Na(s) → Na(g)', v: 107 },
+                        { key: 'ie',   label: 'IE₁(Na): Na(g) → Na⁺(g) + e⁻', v: 496 },
+                        { key: 'atX',  label: 'ΔatH(F): ½F₂(g) → F(g)', v: 79 },
+                        { key: 'ea',   label: 'EA₁(F): F(g) + e⁻ → F⁻(g)', v: -328 } ],
+                     fH: -576 },
+            mgcl2: { name: 'MgCl₂', steps: [
+                        { key: 'atM',  label: 'ΔatH(Mg): Mg(s) → Mg(g)', v: 148 },
+                        { key: 'ie',   label: 'IE₁+IE₂(Mg): Mg(g) → Mg²⁺(g) + 2e⁻', v: 2189 },
+                        { key: 'atX',  label: '2×ΔatH(Cl): Cl₂(g) → 2Cl(g)', v: 244 },
+                        { key: 'ea',   label: '2×EA₁(Cl): 2Cl(g) + 2e⁻ → 2Cl⁻(g)', v: -692 } ],
+                     fH: -641 },
+            mgo:   { name: 'MgO', steps: [
+                        { key: 'atM',  label: 'ΔatH(Mg): Mg(s) → Mg(g)', v: 148 },
+                        { key: 'ie',   label: 'IE₁+IE₂(Mg): Mg(g) → Mg²⁺(g) + 2e⁻', v: 2189 },
+                        { key: 'atX',  label: 'ΔatH(O): ½O₂(g) → O(g)', v: 249 },
+                        { key: 'ea',   label: 'EA₁+EA₂(O): O(g) + 2e⁻ → O²⁻(g)', v: 657 } ],
+                     fH: -602 }
+        };
+        let bhUnknown = 'LE';
+        window.setBHUnknown = function(u) { bhUnknown = u; drawBH(); };
+        function bhLE(d) { return d.steps.reduce((s, x) => s + x.v, 0) - d.fH; }
+        function drawBH() {
+            const canvas = document.getElementById('bh-canvas');
+            if (!canvas || canvas.offsetParent === null) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.max(canvas.parentElement.clientWidth || 640, 340);
+            const h = 380;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            const key = document.getElementById('bh-compound')?.value || 'nacl';
+            const d = BH_DATA[key];
+            const LE = bhLE(d);
+            const E_el = 0;
+            const E_at = d.steps[0].v + d.steps[2].v;
+            const E_ion = E_at + d.steps[1].v + d.steps[3].v;
+            const E_solid = d.fH;
+
+            const levels = [E_el, E_at, E_ion, E_solid];
+            let lo = Math.min.apply(null, levels), hi = Math.max.apply(null, levels);
+            const pad = (hi - lo) * 0.14; lo -= pad; hi += pad;
+            const padL = 64, padR = 16, padT = 26, padB = 34;
+            const pw = w - padL - padR, ph = h - padT - padB;
+            const Y = (E) => padT + ph - (E - lo) / (hi - lo) * ph;
+
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + ph); ctx.lineTo(padL + pw, padT + ph); ctx.stroke();
+            ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace'; ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const E = lo + (hi - lo) * i / 4;
+                ctx.fillText(Math.round(E), padL - 6, Y(E) + 3);
+                ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(padL, Y(E)); ctx.lineTo(padL + pw, Y(E)); ctx.stroke();
+            }
+            ctx.save(); ctx.translate(14, padT + ph / 2); ctx.rotate(-Math.PI / 2);
+            ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('Enthalpy (kJ mol⁻¹)', 0, 0); ctx.restore();
+
+            const boxes = [
+                { x0: 0.04, x1: 0.20, E: E_el,    label: 'Elements', sub: d.name + ' from elements' },
+                { x0: 0.28, x1: 0.46, E: E_at,    label: 'Gaseous atoms', sub: '' },
+                { x0: 0.54, x1: 0.72, E: E_ion,   label: 'Gaseous ions', sub: '' },
+                { x0: 0.80, x1: 0.96, E: E_solid, label: d.name + '(s)', sub: 'ΔfH = ' + d.fH }
+            ];
+            boxes.forEach(b => {
+                const x0 = padL + b.x0 * pw, x1 = padL + b.x1 * pw, y = Y(b.E);
+                ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.6;
+                ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+                ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText(b.label, (x0 + x1) / 2, y - 8);
+                if (b.sub) { ctx.fillStyle = '#64748b'; ctx.font = '9px monospace'; ctx.fillText(b.sub, (x0 + x1) / 2, y + 14); }
+            });
+
+            function arrow(xFrac, E1, E2, label, color, unknown) {
+                const x = padL + xFrac * pw;
+                const y1 = Y(E1), y2 = Y(E2);
+                ctx.strokeStyle = unknown ? '#f59e0b' : color;
+                ctx.fillStyle = unknown ? '#f59e0b' : color;
+                ctx.lineWidth = unknown ? 2.4 : 1.8;
+                if (unknown) ctx.setLineDash([5, 4]);
+                ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
+                ctx.setLineDash([]);
+                const dir = y2 < y1 ? -1 : 1;
+                ctx.beginPath();
+                ctx.moveTo(x, y2); ctx.lineTo(x - 4, y2 - dir * 8); ctx.lineTo(x + 4, y2 - dir * 8); ctx.closePath(); ctx.fill();
+                ctx.font = (unknown ? 'bold ' : '') + '10px monospace'; ctx.textAlign = 'left';
+                ctx.fillText(unknown ? label + ' = ?' : label, x + 6, (y1 + y2) / 2 + 3);
+            }
+            arrow(0.245, E_el, E_at, 'ΔatH ' + (d.steps[0].v + d.steps[2].v), '#a78bfa', bhUnknown === 'atH');
+            arrow(0.505, E_at, E_ion, 'IE+EA ' + (d.steps[1].v + d.steps[3].v), '#a78bfa', bhUnknown === 'IEEA');
+            arrow(0.765, E_ion, E_solid, '−LE ' + (bhUnknown === 'LE' ? '' : '(' + (-LE) + ')'), '#34d399', bhUnknown === 'LE');
+            arrow(0.015, E_el, E_solid, 'ΔfH ' + (bhUnknown === 'fH' ? '' : d.fH), '#f87171', bhUnknown === 'fH');
+
+            const tbl = document.getElementById('bh-steps');
+            if (tbl) {
+                tbl.innerHTML = d.steps.map(s =>
+                    "<div class='flex justify-between gap-2 p-2 bg-slate-900 rounded border border-slate-800'><span class='text-slate-300'>" + s.label + "</span><span class='font-mono text-violet-300 font-bold'>" + s.v + "</span></div>"
+                ).join('') +
+                "<div class='flex justify-between gap-2 p-2 bg-slate-900 rounded border border-slate-800'><span class='text-slate-300'>ΔfH(" + d.name + ")</span><span class='font-mono text-rose-300 font-bold'>" + d.fH + "</span></div>" +
+                "<div class='flex justify-between gap-2 p-2 bg-emerald-950/40 rounded border border-emerald-800'><span class='text-emerald-300 font-bold'>Lattice energy (dissociation)</span><span class='font-mono text-emerald-300 font-bold'>+" + LE + " kJ mol⁻¹</span></div>";
+            }
+            window._bhAnswer = { LE: LE, fH: d.fH, atH: d.steps[0].v + d.steps[2].v, IEEA: d.steps[1].v + d.steps[3].v };
+        }
+        window.drawBH = drawBH;
+        window.checkBH = function() {
+            const out = document.getElementById('bh-check-out');
+            const input = parseFloat(document.getElementById('bh-input')?.value);
+            if (!out) return;
+            const ans = (window._bhAnswer || {})[bhUnknown];
+            if (isNaN(input) || ans === undefined) { out.innerHTML = "<span class='text-rose-300'>Enter a value (signs matter!).</span>"; return; }
+            const ok = Math.abs(input - ans) <= Math.abs(ans) * 0.02;
+            out.innerHTML = ok
+                ? "<span class='text-emerald-300 font-bold'>✅ Correct: " + ans + " kJ mol⁻¹.</span> <span class='text-slate-300'>Hess: the direct route (elements → solid) equals the route via gaseous ions.</span>"
+                : "<span class='text-rose-300 font-bold'>❌ Not quite.</span> <span class='text-slate-300'>Sum the steps to gaseous ions, then apply ΔfH = Σsteps − LE. Answer: <b class='text-amber-300'>" + ans + " kJ mol⁻¹</b>.</span>";
+        };
+
+        // ---------- Engine D map: polarisation comparator ----------
+        const POLAR_DATA = {
+            nacl: { name: 'NaCl', theo: 787, exp: 790, cat: 'Na⁺ (large, +1)', an: 'Cl⁻' },
+            nabr: { name: 'NaBr', theo: 747, exp: 751, cat: 'Na⁺ (large, +1)', an: 'Br⁻' },
+            nai:  { name: 'NaI',  theo: 704, exp: 713, cat: 'Na⁺ (large, +1)', an: 'I⁻' },
+            lii:  { name: 'LiI',  theo: 734, exp: 759, cat: 'Li⁺ (small, +1)', an: 'I⁻ (large)' },
+            agcl: { name: 'AgCl', theo: 770, exp: 905, cat: 'Ag⁺ (polarising)', an: 'Cl⁻' },
+            mgo:  { name: 'MgO',  theo: 3795, exp: 3845, cat: 'Mg²⁺ (small, +2)', an: 'O²⁻' }
+        };
+        window.comparePolar = function() {
+            const key = document.getElementById('polar-compound')?.value;
+            const d = POLAR_DATA[key];
+            if (!d) return;
+            const gap = d.exp - d.theo;
+            const pct = Math.min(100, Math.round(gap / d.theo * 100 * 18));
+            const maxV = d.theo * 1.25;
+            const bt = document.getElementById('polar-bar-theo'); if (bt) bt.style.width = (d.theo / maxV * 100) + '%';
+            const be = document.getElementById('polar-bar-exp'); if (be) be.style.width = (d.exp / maxV * 100) + '%';
+            const vt = document.getElementById('polar-val-theo'); if (vt) vt.textContent = '+' + d.theo + ' kJ mol⁻¹';
+            const ve = document.getElementById('polar-val-exp'); if (ve) ve.textContent = '+' + d.exp + ' kJ mol⁻¹';
+            const gm = document.getElementById('polar-meter'); if (gm) gm.style.width = pct + '%';
+            const verdict = document.getElementById('polar-verdict');
+            if (verdict) {
+                let txt, cls;
+                if (gap <= 15) { txt = 'Close agreement → bonding is essentially <b>ionic</b>. The perfect ionic model works for ' + d.name + ' (' + d.cat + ' / ' + d.an + ').'; cls = 'text-emerald-300'; }
+                else if (gap <= 60) { txt = 'Small gap → <b>slight covalent character</b>. ' + d.cat + ' polarises ' + d.an + ' a little.'; cls = 'text-amber-300'; }
+                else { txt = 'Large gap → <b>significant covalent character</b>. ' + d.cat + ' strongly distorts the electron cloud of ' + d.an + ' — extra electron sharing makes the real lattice stronger than the ionic model predicts.'; cls = 'text-rose-300'; }
+                verdict.innerHTML = "<b class='" + cls + "'>Gap: +" + gap + " kJ mol⁻¹ (experimental more endothermic than theoretical).</b> <span class='text-slate-300'>" + txt + "</span>";
+            }
+        };
+
+        // ---------- Engine E map: solution cycle ----------
+        const SOL_DATA = {
+            nacl:    { name: 'NaCl',    LE: 790, hydC: -406, hydA: -364, dHsol: 3.9,  dSsys: 43,   verdict: 'soluble' },
+            kcl:     { name: 'KCl',     LE: 717, hydC: -322, hydA: -364, dHsol: 17.2, dSsys: 76,   verdict: 'soluble' },
+            mgso4:   { name: 'MgSO₄',   LE: 2833, hydC: -1920, hydA: -1004, dHsol: -91, dSsys: -210, verdict: 'soluble (exothermic)' },
+            caso4:   { name: 'CaSO₄',   LE: 2650, hydC: -1650, hydA: -1004, dHsol: -18, dSsys: -140, verdict: 'sparingly soluble' },
+            baso4:   { name: 'BaSO₄',   LE: 2360, hydC: -1305, hydA: -1004, dHsol: 26,  dSsys: -102, verdict: 'insoluble' },
+            mgoh2:   { name: 'Mg(OH)₂', LE: 2926, hydC: -1920, hydA: 2 * -460, dHsol: 37, dSsys: -222, verdict: 'insoluble' },
+            baoh2:   { name: 'Ba(OH)₂', LE: 2018, hydC: -1305, hydA: 2 * -460, dHsol: -52, dSsys: -124, verdict: 'soluble' }
+        };
+        function drawSolutionCycle() {
+            const canvas = document.getElementById('sol-canvas');
+            if (!canvas || canvas.offsetParent === null) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.max(canvas.parentElement.clientWidth || 640, 340);
+            const h = 320;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, 0, w, h);
+
+            const key = document.getElementById('sol-compound')?.value || 'nacl';
+            const d = SOL_DATA[key];
+            const E_solid = 0, E_gas = d.LE, E_aq = d.LE + d.hydC + d.hydA;
+            let lo = Math.min(E_solid, E_aq), hi = E_gas;
+            const pad = (hi - lo) * 0.12; lo -= pad; hi += pad;
+            const padL = 64, padR = 16, padT = 26, padB = 30;
+            const pw = w - padL - padR, ph = h - padT - padB;
+            const Y = (E) => padT + ph - (E - lo) / (hi - lo) * ph;
+
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + ph); ctx.lineTo(padL + pw, padT + ph); ctx.stroke();
+            ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace'; ctx.textAlign = 'right';
+            for (let i = 0; i <= 4; i++) {
+                const E = lo + (hi - lo) * i / 4;
+                ctx.fillText(Math.round(E), padL - 6, Y(E) + 3);
+                ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(padL, Y(E)); ctx.lineTo(padL + pw, Y(E)); ctx.stroke();
+            }
+            ctx.save(); ctx.translate(14, padT + ph / 2); ctx.rotate(-Math.PI / 2);
+            ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('Enthalpy (kJ mol⁻¹)', 0, 0); ctx.restore();
+
+            const lv = [
+                { x0: 0.06, x1: 0.30, E: E_solid, label: d.name + '(s)' },
+                { x0: 0.40, x1: 0.64, E: E_gas, label: 'Gaseous ions' },
+                { x0: 0.74, x1: 0.97, E: E_aq, label: 'Aqueous ions' }
+            ];
+            lv.forEach(b => {
+                const x0 = padL + b.x0 * pw, x1 = padL + b.x1 * pw, y = Y(b.E);
+                ctx.strokeStyle = '#fb7185'; ctx.lineWidth = 2.6;
+                ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+                ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText(b.label, (x0 + x1) / 2, y - 8);
+            });
+            function arrow(xFrac, E1, E2, label, color) {
+                const x = padL + xFrac * pw;
+                const y1 = Y(E1), y2 = Y(E2);
+                ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 1.8;
+                ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
+                const dir = y2 < y1 ? -1 : 1;
+                ctx.beginPath(); ctx.moveTo(x, y2); ctx.lineTo(x - 4, y2 - dir * 8); ctx.lineTo(x + 4, y2 - dir * 8); ctx.closePath(); ctx.fill();
+                ctx.font = '10px monospace'; ctx.textAlign = 'left';
+                ctx.fillText(label, x + 6, (y1 + y2) / 2 + 3);
+            }
+            arrow(0.355, E_solid, E_gas, '+LE ' + d.LE, '#fbbf24');
+            arrow(0.695, E_gas, E_aq, 'ΣΔhydH ' + (d.hydC + d.hydA), '#38bdf8');
+            arrow(0.035, E_solid, E_aq, 'ΔsolH ' + d.dHsol, '#34d399');
+
+            const dSsurr = -d.dHsol * 1000 / 298;
+            const dStot = d.dSsys + dSsurr;
+            const read = document.getElementById('sol-readout');
+            if (read) {
+                read.innerHTML =
+                    "<div class='grid grid-cols-2 sm:grid-cols-4 gap-2 text-center'>" +
+                    "<div class='p-2 bg-slate-900 rounded-lg border border-slate-800'><div class='text-[10px] text-slate-400'>ΔsolH</div><div class='font-mono font-bold text-emerald-300 text-sm'>" + d.dHsol + " kJ</div></div>" +
+                    "<div class='p-2 bg-slate-900 rounded-lg border border-slate-800'><div class='text-[10px] text-slate-400'>ΔS_sys</div><div class='font-mono font-bold text-sky-300 text-sm'>" + d.dSsys + " J K⁻¹</div></div>" +
+                    "<div class='p-2 bg-slate-900 rounded-lg border border-slate-800'><div class='text-[10px] text-slate-400'>ΔS_surr (298 K)</div><div class='font-mono font-bold text-amber-300 text-sm'>" + dSsurr.toFixed(0) + " J K⁻¹</div></div>" +
+                    "<div class='p-2 bg-slate-900 rounded-lg border border-slate-800'><div class='text-[10px] text-slate-400'>ΔS_total</div><div class='font-mono font-bold " + (dStot > 0 ? 'text-emerald-300' : 'text-rose-300') + " text-sm'>" + dStot.toFixed(0) + " J K⁻¹</div></div>" +
+                    "</div>" +
+                    "<p class='text-[11px] text-slate-300 mt-2'>" + (dStot > 0 ? '✅ ΔS_total > 0 → dissolving is feasible: <b>' + d.name + ' is ' + d.verdict + '</b>.' : '❌ ΔS_total < 0 → dissolving is not feasible under standard conditions: <b>' + d.name + ' is ' + d.verdict + '</b>.') + " <span class='text-slate-500'>(Representative data for prediction practice.)</span></p>";
+            }
+        }
+        window.drawSolutionCycle = drawSolutionCycle;
+
+        // ---------- Solver ----------
+        window.calcDSTotal = function() {
+            const dH = parseFloat(document.getElementById('sv-dh')?.value);
+            const dS = parseFloat(document.getElementById('sv-ds')?.value);
+            const T = parseFloat(document.getElementById('sv-t')?.value);
+            const out = document.getElementById('sv-out');
+            if (!out) return;
+            if (isNaN(dH) || isNaN(dS) || isNaN(T) || T <= 0) { out.innerHTML = "<span class='text-rose-300'>Enter ΔH (kJ mol⁻¹), ΔS_sys (J K⁻¹ mol⁻¹) and T (K).</span>"; return; }
+            const dSsurr = -dH * 1000 / T;
+            const dStot = dS + dSsurr;
+            const Tstar = dS !== 0 ? dH * 1000 / dS : null;
+            out.innerHTML =
+                "<div class='p-3 bg-slate-900 border border-slate-700 rounded-lg text-[11px] space-y-1'>" +
+                "<div>ΔS_surr = −ΔH/T = −(" + dH + " × 1000)/" + T + " = <b class='text-amber-300'>" + dSsurr.toFixed(1) + " J K⁻¹ mol⁻¹</b></div>" +
+                "<div>ΔS_total = " + dS + " + (" + dSsurr.toFixed(1) + ") = <b class='" + (dStot > 0 ? 'text-emerald-300' : 'text-rose-300') + "'>" + dStot.toFixed(1) + " J K⁻¹ mol⁻¹</b> → " + (dStot > 0 ? '<b class="text-emerald-300">FEASIBLE</b>' : '<b class="text-rose-300">not feasible</b>') + " at " + T + " K</div>" +
+                (Tstar !== null && Tstar > 0 ? "<div>Crossover: feasible " + (dS > 0 ? 'above' : 'below') + " T* = <b class='text-sky-300'>" + Math.round(Tstar) + " K</b> (" + (Tstar - 273).toFixed(0) + " °C)</div>" : '') +
+                "</div>";
+        };
+        window.calcBHLE = function() {
+            const fH = parseFloat(document.getElementById('sv-fh')?.value);
+            const atH = parseFloat(document.getElementById('sv-at')?.value);
+            const IEEA = parseFloat(document.getElementById('sv-ieea')?.value);
+            const out = document.getElementById('sv-bh-out');
+            if (!out) return;
+            if (isNaN(fH) || isNaN(atH) || isNaN(IEEA)) { out.innerHTML = "<span class='text-rose-300'>Fill all three boxes (signs matter).</span>"; return; }
+            const LE = atH + IEEA - fH;
+            out.innerHTML = "<div class='p-3 bg-slate-900 border border-slate-700 rounded-lg text-[11px]'>LE = Σ(steps to gaseous ions) − ΔfH = " + atH + " + (" + IEEA + ") − (" + fH + ") = <b class='text-emerald-300'>+" + LE + " kJ mol⁻¹</b> (dissociation, endothermic).</div>";
+        };
+        window.calcSolution = function() {
+            const LE = parseFloat(document.getElementById('sv-le')?.value);
+            const hc = parseFloat(document.getElementById('sv-hc')?.value);
+            const ha = parseFloat(document.getElementById('sv-ha')?.value);
+            const out = document.getElementById('sv-sol-out');
+            if (!out) return;
+            if (isNaN(LE) || isNaN(hc) || isNaN(ha)) { out.innerHTML = "<span class='text-rose-300'>Fill all three boxes (hydration values are negative).</span>"; return; }
+            const dHsol = LE + hc + ha;
+            out.innerHTML = "<div class='p-3 bg-slate-900 border border-slate-700 rounded-lg text-[11px]'>ΔsolH = LE + ΔhydH(cation) + ΔhydH(anion) = " + LE + " + (" + hc + ") + (" + ha + ") = <b class='" + (dHsol >= 0 ? 'text-amber-300' : 'text-emerald-300') + "'>" + dHsol + " kJ mol⁻¹</b>. " + (dHsol > 0 ? 'Endothermic — dissolving needs a positive ΔS_sys to be feasible.' : 'Exothermic — helps feasibility, but ΔS_sys can still veto it.') + "</div>";
+        };
+        window.unitCheck = function() {
+            const dH = parseFloat(document.getElementById('sv-uh')?.value);
+            const dS = parseFloat(document.getElementById('sv-us')?.value);
+            const out = document.getElementById('sv-unit-out');
+            if (!out) return;
+            if (isNaN(dH) || isNaN(dS)) { out.innerHTML = "<span class='text-rose-300'>Enter both values as given in the question.</span>"; return; }
+            out.innerHTML = "<div class='p-3 bg-slate-900 border border-slate-700 rounded-lg text-[11px]'>For ΔS_surr = −ΔH/T you need ΔH in <b class='text-amber-300'>J mol⁻¹</b>: ΔH = " + dH + " kJ mol⁻¹ = <b class='text-emerald-300'>" + (dH * 1000) + " J mol⁻¹</b>. Pair it with ΔS = " + dS + " J K⁻¹ mol⁻¹. <span class='text-rose-300'>Dividing raw kJ by T next to J-valued ΔS is the #1 lost mark in this topic.</span></div>";
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            switchTab('syllabus');
+            ['c1','c2','c3','c4','c5'].forEach(p => switchMode(p, 'explorer'));
+            selectCard('c1', 1, 5);
+            selectCard('c2', 1, 5);
+            selectCard('c3', 1, 4);
+            selectCard('c4', 1, 3);
+            selectCard('c5', 1, 4);
+            const bind = (id, ev, fn) => document.getElementById(id)?.addEventListener(ev, fn);
+            const syncLab = (id, labId, suffix) => {
+                const el = document.getElementById(id);
+                const lab = document.getElementById(labId);
+                if (el && lab) lab.textContent = el.value + (suffix || '');
+            };
+            bind('fh-dh', 'input', () => { syncLab('fh-dh', 'fh-dh-lab', ' kJ mol⁻¹'); drawFeasibility(); });
+            bind('fh-ds', 'input', () => { syncLab('fh-ds', 'fh-ds-lab', ' J K⁻¹ mol⁻¹'); drawFeasibility(); });
+            bind('fh-t', 'input', () => { syncLab('fh-t', 'fh-t-lab', ' K'); drawFeasibility(); });
+            bind('bh-compound', 'change', drawBH);
+            bind('sol-compound', 'change', drawSolutionCycle);
+            window.addEventListener('resize', () => { drawFeasibility(); drawBH(); drawSolutionCycle(); });
+            setTimeout(safeInitKaTeX, 300);
+        });
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div>
+                <h1 class="text-lg font-extrabold tracking-tight text-amber-400">IAL Topic 12: Entropy and Energetics — Master Studio</h1>
+                <p class="text-[11px] text-slate-400 mt-0.5">WCH13/01 · Unit 4 · Syllabus <span class="text-amber-300 font-mono">12.1–12.19</span> (12A Entropy + 12B Lattice Energy) · English exam wording</p>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[10px]">
+                <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">ΔS concepts</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">Feasibility</span>
+                <span class="px-2 py-0.5 rounded bg-violet-950 text-violet-300 border border-violet-800 font-mono">Born–Haber</span>
+                <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-mono">Covalency</span>
+                <span class="px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-mono">Solution cycles</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-slate-900/95 border-b border-slate-800 text-xs font-medium sticky top-[57px] z-30 backdrop-blur-md shadow-md">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-1.5 flex flex-wrap items-stretch gap-x-0.5 gap-y-1">
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-amber-400 font-bold border-b-2 border-amber-400 bg-amber-950/40 transition flex items-center gap-1.5 rounded-t-md"><span>📚 1. Syllabus</span></button>
+            <button onclick="switchTab('entropy')" id="btn-entropy" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>⚡ 2. Entropy</span></button>
+            <button onclick="switchTab('feasibility')" id="btn-feasibility" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🧮 3. ΔS &amp; Feasibility</span></button>
+            <button onclick="switchTab('bornhaber')" id="btn-bornhaber" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🏗️ 4. Born–Haber</span></button>
+            <button onclick="switchTab('covalency')" id="btn-covalency" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🔬 5. Covalency</span></button>
+            <button onclick="switchTab('solution')" id="btn-solution" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>💧 6. Solution</span></button>
+            <button onclick="switchTab('solver')" id="btn-solver" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🛠️ 7. Solver</span></button>
+            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>📋 8. Final Review</span></button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- SYLLABUS MASTER OVERVIEW -->
+        <section id="tab-syllabus" class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+                <div class="border-b border-slate-800 pb-4 mb-6">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Topic 12 Entropy &amp; Energetics · Learning Points &amp; Mark Scheme Secrets (Spec 12.1 – 12.19)</h2>
+                    <p class="text-xs text-slate-400 mt-1">Every assessment point elaborated with key learning goals and IAL examiner watch-outs. WCH13/01 · Unit 4.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 12.1 – 12.2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Why ΔH fails · what S is</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Enthalpy is not the boss — entropy is disorder</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Argue from evidence: <b>endothermic reactions can be spontaneous</b> at room temperature (NH₄NO₃ dissolving; Ba(OH)₂·8H₂O + NH₄Cl), so ΔH alone cannot decide whether a reaction occurs.</li>
+                                    <li>Define <b>entropy</b> as a measure of the <b>disorder</b> of a system.</li>
+                                    <li>Describe disorder in two ways: random <b>dispersal of molecules</b> (positions) and dispersal of <b>energy quanta</b> between molecules.</li>
+                                    <li>Link more possible arrangements (more ways to spread out) → higher entropy.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">“Exothermic = spontaneous” is a guaranteed lost mark — quote an endothermic counter-example. Say “dispersal of energy <b>quanta</b>”, not just “energy spreads out”, for the full definition.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 12.3 – 12.4</span>
+                                <span class="text-[10px] text-slate-400 font-mono">S vs T &amp; state · direction</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">How entropy changes — and which way things naturally go</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>State that entropy of a substance <b>increases with temperature</b> (more energy quanta to disperse).</li>
+                                    <li>Order: $S$(solid) &lt; $S$(liquid) &lt;&lt; $S$(gas); a <b>perfect crystal at 0 K has zero entropy</b>.</li>
+                                    <li>Note standard molar entropies $S^\circ$ are <b>absolute</b> values (unlike enthalpies, which are changes).</li>
+                                    <li>Interpret the <b>natural direction of change</b> as the direction of increasing <b>total</b> entropy — e.g. a gas spreads spontaneously through a room and never re-collects.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">It is the <b>total</b> entropy (universe) that must increase — a system’s entropy can fall (freezing water) as long as the surroundings gain more. The gas-diffusion example is a favourite 1-mark “explain the natural direction” stem.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold px-2 py-0.5 bg-emerald-950 rounded border border-emerald-800">Spec 12.5</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Why ΔS happens</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Three situations that change entropy</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Changes of state:</b> solid → liquid → gas; the big jump is vaporisation (molecules escape the liquid entirely).</li>
+                                    <li><b>Dissolving an ionic lattice:</b> ordered crystal → free mobile ions usually raises entropy, but ordering of water around ions can make ΔS negative for some salts (e.g. CaSO₄).</li>
+                                    <li><b>Reactions changing gas moles:</b> more moles of gas on the product side → large positive ΔS; fewer → negative. This is usually the dominant factor.</li>
+                                    <li>Predict the <b>sign</b> of ΔS for unfamiliar reactions using these three rules.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Count <b>gas moles only</b> — solids and liquids barely count. CaCO₃(s) → CaO(s) + CO₂(g) is positive even with two solids, because a gas appears. Practise in Engine A’s sign predictor.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-amber-400 uppercase font-bold px-2 py-0.5 bg-amber-950 rounded border border-amber-800">Spec 12.6 – 12.7</span>
+                                <span class="text-[10px] text-slate-400 font-mono">ΔS total · ΔS system</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">The two entropy changes and how to calculate ΔS<sub>system</sub></h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>State: $\Delta S_\text{total} = \Delta S_\text{system} + \Delta S_\text{surroundings}$ — system = the chemicals; surroundings = everything else.</li>
+                                    <li>Calculate $\Delta S_\text{system} = \Sigma S^\circ(\text{products}) - \Sigma S^\circ(\text{reactants})$ from tabulated standard entropies.</li>
+                                    <li>Multiply each $S^\circ$ by its balancing coefficient and keep state symbols in mind.</li>
+                                    <li>Units throughout: J K⁻¹ mol⁻¹.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Products minus reactants — the same order as Hess, but with absolute $S^\circ$ values (no elements-equal-zero rule here; elements have real entropies).</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-rose-400 uppercase font-bold px-2 py-0.5 bg-rose-950 rounded border border-rose-800">Spec 12.8</span>
+                                <span class="text-[10px] text-slate-400 font-mono">ΔS surroundings</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">ΔS<sub>surroundings</sub> = −ΔH/T and the unit trap</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Use $\Delta S_\text{surroundings} = -\dfrac{\Delta H}{T}$ with $T$ in kelvin.</li>
+                                    <li>Reason it: exothermic reactions heat the surroundings → more dispersal of energy quanta → positive ΔS<sub>surr</sub>.</li>
+                                    <li>See the $T$ in the denominator: the same ΔH creates a <b>smaller</b> ΔS<sub>surr</sub> at high temperature.</li>
+                                    <li>Combine to get $\Delta S_\text{total}$.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">ΔH is tabulated in <b>kJ</b>, ΔS in <b>J</b> — convert ΔH × 1000 before dividing, or your ΔS<sub>surr</sub> is 1000× too small. This single slip costs more marks than any concept in the topic.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-cyan-400 uppercase font-bold px-2 py-0.5 bg-cyan-950 rounded border border-cyan-800">Spec 12.9 – 12.10</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Feasibility · T*</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Feasibility, the crossover temperature, and the ΔG option</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>A reaction is feasible when $\Delta S_\text{total} > 0$ — even if one component is negative (the other must outweigh it).</li>
+                                    <li>Explain endothermic spontaneity: a large positive ΔS<sub>system</sub> beats a negative ΔS<sub>surroundings</sub>.</li>
+                                    <li>Explain temperature dependence: higher $T$ shrinks |ΔS<sub>surr</sub>|, so endothermic reactions become feasible when hot.</li>
+                                    <li>Calculate the feasibility temperature from $\Delta S_\text{total} = 0$ → $T = \dfrac{\Delta H}{\Delta S_\text{system}}$ (ΔH in J!).</li>
+                                    <li>Know $\Delta G = \Delta H - T\Delta S_\text{system}$ is <b>allowed</b> in answers but not required.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Mark schemes (Jan 2026, Oct 2025) award T* via ΔS<sub>total</sub> = 0. “Feasible” ≠ “fast” — say nothing about rate unless asked. Test all four sign combinations in Engine B’s workbench.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 12.11</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Stability types</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Thermodynamic vs kinetic stability</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Thermodynamic stability:</b> judged by ΔS<sub>total</sub> (or ΔG) — will it happen at all?</li>
+                                    <li><b>Kinetic stability:</b> judged by activation energy — how fast?</li>
+                                    <li>Classic case: diamond → graphite is thermodynamically feasible but kinetically stable (huge $E_a$) at room temperature.</li>
+                                    <li>Mg ribbon in air: feasible (very negative ΔG) yet sits unchanged until ignited — kinetic barrier.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">“Thermodynamically unstable but kinetically stable” is the exact phrase examiners look for. Never write “stable” alone — say which kind.</p>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 flex items-center gap-3 pt-2">
+                        <span class="text-xs font-bold text-violet-400 uppercase tracking-widest whitespace-nowrap">12B · Lattice Energy</span>
+                        <div class="h-px flex-grow bg-slate-800"></div>
+                        <span class="text-[10px] text-slate-500 font-mono whitespace-nowrap">Spec 12.12 – 12.19</span>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 12.12</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Five definitions</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">The definitions that Born–Haber questions assume</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Lattice energy:</b> energy required to separate one mole of an ionic solid into its gaseous ions (endothermic, + in IAL convention).</li>
+                                    <li><b>Δ<sub>f</sub>H:</b> enthalpy change when one mole of compound forms from its elements in standard states (100 kPa, stated T).</li>
+                                    <li><b>Δ<sub>at</sub>H:</b> one mole of gaseous atoms from the element in its standard state (always endothermic).</li>
+                                    <li><b>First IE:</b> energy to remove one mole of electrons from one mole of gaseous atoms.</li>
+                                    <li><b>First EA:</b> enthalpy change when one mole of gaseous atoms each gains one electron (exothermic for F, Cl; <b>second</b> EA is endothermic — e.g. O⁻ → O²⁻).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Every definition must say “<b>one mole</b>” and name the states. Some data books give lattice energy as the exothermic formation — check the sign convention in the question before calculating.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold px-2 py-0.5 bg-emerald-950 rounded border border-emerald-800">Spec 12.13</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Born–Haber cycles</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Construct Born–Haber cycles and calculate with them</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Build the cycle: elements → gaseous atoms (Δ<sub>at</sub>H) → gaseous ions (IE, EA) → ionic solid (−LE), with Δ<sub>f</sub>H as the direct route.</li>
+                                    <li>Apply Hess: $\Delta_f H = \Sigma\Delta_\text{at} H + \Sigma IE + \Sigma EA - LE$, so $LE = \Sigma\Delta_\text{at} H + \Sigma IE + \Sigma EA - \Delta_f H$.</li>
+                                    <li>Handle divalent compounds: two ionisation energies, doubled atomisation/EA for X₂ (MgCl₂, MgO).</li>
+                                    <li>Draw energy-level diagrams with endothermic arrows up, exothermic down.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Forgetting to <b>double</b> Δ<sub>at</sub>H and EA for the halogen (Cl₂ → 2Cl) is the classic MgCl₂ slip. EA₂ for oxygen is <b>endothermic</b> (+) — O⁻ repels the second electron. Solve cycles live in Engine C.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-amber-400 uppercase font-bold px-2 py-0.5 bg-amber-950 rounded border border-amber-800">Spec 12.14 – 12.15</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Covalency evidence</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Experimental vs theoretical lattice energy → covalent character</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Theoretical LE:</b> from electrostatic theory assuming a perfect ionic model — point charges, spherical ions, no covalency.</li>
+                                    <li><b>Experimental LE:</b> from the Born–Haber cycle (real thermochemical data).</li>
+                                    <li>Close agreement → ionic bonding; experimental value of greater magnitude → <b>covalent character</b> (extra electron sharing strengthens the lattice).</li>
+                                    <li>Explain via <b>polarisation</b>: a small, highly charged cation distorts a large anion’s electron cloud.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Name both players: “small, highly charged <b>cation</b> polarises the large <b>anion</b>”. Compare pairs (NaCl vs AgCl; LiF vs LiI) — the gap grows with anion size and cation charge density.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-rose-400 uppercase font-bold px-2 py-0.5 bg-rose-950 rounded border border-rose-800">Spec 12.16 – 12.17</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Solution cycles</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Δ<sub>sol</sub>H, Δ<sub>hyd</sub>H and the dissolving energy cycle</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Δ<sub>sol</sub>H:</b> enthalpy change when one mole of an ionic solid dissolves to give aqueous ions (can be + or −).</li>
+                                    <li><b>Δ<sub>hyd</sub>H:</b> enthalpy change when one mole of gaseous ions becomes aqueous ions — always exothermic (ion–dipole attraction to water).</li>
+                                    <li>Build the cycle: solid → gaseous ions (+LE) → aqueous ions (ΣΔ<sub>hyd</sub>H).</li>
+                                    <li>Calculate: $\Delta_\text{sol} H = LE + \Delta_\text{hyd} H(\text{cation}) + \Delta_\text{hyd} H(\text{anion})$.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Sign discipline: LE enters as a positive (dissociation) term; both hydration values are negative. A positive Δ<sub>sol</sub>H does <b>not</b> mean insoluble — entropy can still drive dissolving (NaCl!).</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-cyan-400 uppercase font-bold px-2 py-0.5 bg-cyan-950 rounded border border-cyan-800">Spec 12.18 – 12.19</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Trends · solubility</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">Charge/radius effects and predicting solubility</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Smaller ions and higher charges → more exothermic Δ<sub>hyd</sub>H (stronger ion–dipole) and larger lattice energy (stronger electrostatic attraction).</li>
+                                    <li>Predict solubility: dissolving is feasible when $\Delta S_\text{total(sol)} = \Delta S_\text{sys} + (-\Delta_\text{sol} H / T) > 0$.</li>
+                                    <li>Discuss Unit 2 trends: Group 2 <b>hydroxides</b> more soluble down the group; Group 2 <b>sulfates</b> less soluble down the group.</li>
+                                    <li>Reason the split: with small OH⁻ the lattice energy change dominates down the group; with large SO₄²⁻ the hydration energy change dominates.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Given-data questions want the <b>calculation</b> (ΔS<sub>total</sub> sign), then the trend discussion. Do not write “like dissolves like” — use energy + entropy language. Explore real salts in Engine E.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-6 p-4 bg-rose-950/20 border border-rose-900/40 rounded-xl text-xs text-slate-300">
+                    <b class="text-rose-300">Out of scope in this studio:</b> Topic <b>13 Chemical Equilibria</b> ($K_c$ expressions — next topic), statistical thermodynamics (Boltzmann equation), and detailed transition-metal cycles. $\Delta G = \Delta H - T\Delta S_\text{system}$ is <b>permitted</b> in answers but not required — the studio teaches the ΔS<sub>total</sub> route as primary.
+                </div>
+            </div>
+        </section>
+
+        <!-- ENGINE A: ENTROPY CONCEPTS -->
+        <section id="tab-entropy" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-3 flex flex-col md:flex-row justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Engine A · Syllabus 12.1–12.5</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Entropy Concepts Suite</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-sky-950 text-sky-300 rounded-lg border border-sky-800 text-xs font-mono h-fit">5 concept cards + sign predictor</span>
+                </div>
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="switchMode('c1','explorer')" id="c1-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs">📚 Module 1: Inspector</button>
+                    <button onclick="switchMode('c1','map')" id="c1-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🗺️ Module 2: ΔS Sign Predictor</button>
+                    <button onclick="switchMode('c1','quiz')" id="c1-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🎯 Module 3: Blanks</button>
+                    <button onclick="switchMode('c1','traps')" id="c1-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">⚡ Module 4: Traps</button>
+                </div>
+
+                <div id="c1-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5">
+                        <button onclick="selectCard('c1',1,5)" id="c1-btn-1" class="p-2.5 rounded-lg border border-sky-500 bg-sky-950/70 text-sky-300 font-bold text-left w-full text-xs">1. Enthalpy is not the boss (12.1)</button>
+                        <button onclick="selectCard('c1',2,5)" id="c1-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">2. What entropy actually is (12.2)</button>
+                        <button onclick="selectCard('c1',3,5)" id="c1-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">3. S vs temperature &amp; state (12.3)</button>
+                        <button onclick="selectCard('c1',4,5)" id="c1-btn-4" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">4. The natural direction (12.4)</button>
+                        <button onclick="selectCard('c1',5,5)" id="c1-btn-5" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">5. Why ΔS changes (12.5)</button>
+                    </div>
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 text-xs">
+                        <div id="c1-card-1" class="space-y-3 font-sans">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. Endothermic yet spontaneous (12.1)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                ΔH &gt; 0 but still happens ⇒ something else drives reactions: entropy
+                            </div>
+                            <p class="text-slate-300 text-[11px]"><b>Evidence:</b> NH₄NO₃ dissolving in water (instant cold packs, ΔH ≈ +26 kJ mol⁻¹); Ba(OH)₂·8H₂O(s) + 2NH₄Cl(s) → BaCl₂ + 2NH₃ + 10H₂O — temperature plunges below 0 °C yet the reaction runs, releasing ammonia gas.</p>
+                            <p class="text-slate-300 text-[11px]">If enthalpy alone controlled reactions, every spontaneous change would be exothermic. It isn’t.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>State that enthalpy changes alone do not control whether reactions occur.</li><li>Quote an endothermic spontaneous example in any “why is entropy needed?” answer.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>“All spontaneous reactions are exothermic” — always false; one counter-example ends the claim.</li></ul></div>
+                        </div>                        <div id="c1-card-2" class="hidden space-y-3 font-sans">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Entropy = disorder (12.2)</span>
+                            <p class="text-slate-300 text-[11px]"><b>Definition:</b> entropy measures the disorder of a system — in terms of the <b>random dispersal of molecules</b> (where they can be) and of <b>energy quanta between molecules</b> (how energy is shared out).</p>
+                            <p class="text-slate-300 text-[11px]">More ways to arrange the molecules and energy → higher entropy. A gas has vastly more arrangements than a crystal.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Give both halves of the definition: molecules AND energy quanta.</li><li>Symbol and units: $S$, J K⁻¹ mol⁻¹.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>“Randomness” alone is thin — “dispersal of energy quanta” is the mark-scheme phrase that separates full answers.</li></ul></div>
+                        </div>                        <div id="c1-card-3" class="hidden space-y-3 font-sans">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. Entropy vs temperature and state (12.3)</span>
+                            <p class="text-slate-300 text-[11px]"><b>Temperature:</b> hotter → more energy quanta available to disperse → $S$ rises.</p>
+                            <p class="text-slate-300 text-[11px]"><b>State:</b> $S$(s) &lt; $S$(l) &lt;&lt; $S$(g). The vaporisation jump dwarfs melting.</p>
+                            <p class="text-slate-300 text-[11px]"><b>Zero point:</b> a perfect crystal at 0 K has $S = 0$ — so standard molar entropies are <b>absolute</b> values, unlike enthalpies which only ever come as changes.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Rank entropies of the same substance in three states.</li><li>Explain why $S^\circ$ values can be tabulated as absolute numbers.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Do not say elements have zero entropy — only perfect crystals at 0 K do.</li></ul></div>
+                        </div>                        <div id="c1-card-4" class="hidden space-y-3 font-sans">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. The natural direction of change (12.4)</span>
+                            <p class="text-slate-300 text-[11px]">Changes naturally go in the direction of <b>increasing total entropy</b> (system + surroundings).</p>
+                            <p class="text-slate-300 text-[11px]"><b>Iconic example:</b> open a gas jar in a room and the gas spreads out — it never spontaneously re-collects into the jar, though nothing forbids it energetically. The dispersed state simply has overwhelmingly more arrangements.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Interpret any one-way process (diffusion, heat flow, mixing) as total-entropy increase.</li><li>Stress “total” — the system alone may lose entropy.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Water freezing at −10 °C: system entropy falls, but the surroundings gain more — total still rises. A favourite “explain” stem.</li></ul></div>
+                        </div>                        <div id="c1-card-5" class="hidden space-y-3 font-sans">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">5. Why entropy changes occur (12.5)</span>
+                            <p class="text-slate-300 text-[11px]"><b>i. Changes of state:</b> melting frees molecules a little; vaporisation frees them completely (big +ΔS).</p>
+                            <p class="text-slate-300 text-[11px]"><b>ii. Dissolving an ionic lattice:</b> crystal → mobile ions usually +ΔS, but water molecules ordering around small/charged ions can tip it negative (CaSO₄, some carbonates).</p>
+                            <p class="text-slate-300 text-[11px]"><b>iii. Gas-mole changes:</b> the heavyweight. More gas moles on the right → large +ΔS; fewer → −ΔS. Solids/liquids barely register.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Classify any given ΔS by which of the three causes dominates.</li><li>Predict signs fast: gas count first, state change second, dissolving third.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>CaCO₃(s) → CaO(s) + CO₂(g): positive despite two solids — a gas appears.</li><li>H₂(g) + Cl₂(g) → 2HCl(g): ΔS ≈ 0 — equal gas moles.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c1-mode-map" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                    <span class="font-bold text-sky-300 uppercase">🗺️ ΔS sign predictor</span>
+                    <p class="text-slate-400 text-[11px]">Pick a process, commit to a sign, then reveal the reasoning. (++ = large increase, ≈0 ≈ small.)</p>
+                    <div class="grid md:grid-cols-3 gap-3">
+                        <select id="dss-process" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 font-mono">
+                            <option value="melt">H₂O(s) → H₂O(l)</option>
+                            <option value="boil">H₂O(l) → H₂O(g)</option>
+                            <option value="nacl">NaCl(s) → Na⁺(aq) + Cl⁻(aq)</option>
+                            <option value="caso4ppt">Ca²⁺(aq) + SO₄²⁻(aq) → CaSO₄(s)</option>
+                            <option value="haber">N₂(g) + 3H₂(g) → 2NH₃(g)</option>
+                            <option value="decompc">CaCO₃(s) → CaO(s) + CO₂(g)</option>
+                            <option value="no2">2NO(g) + O₂(g) → 2NO₂(g)</option>
+                            <option value="iodine">I₂(s) → I₂(g)</option>
+                            <option value="carbon">C(s) + O₂(g) → CO₂(g)</option>
+                            <option value="nh4no3">NH₄NO₃(s) → NH₄⁺(aq) + NO₃⁻(aq)</option>
+                        </select>
+                        <select id="dss-guess" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 font-mono">
+                            <option value="">— your prediction —</option>
+                            <option value="++">++ (large increase)</option>
+                            <option value="+">+ (increase)</option>
+                            <option value="≈0">≈0 (roughly zero)</option>
+                            <option value="−">− (decrease)</option>
+                        </select>
+                        <button onclick="predictDSSign()" class="px-4 py-2 bg-sky-700 hover:bg-sky-600 rounded-lg font-bold text-white">Reveal &amp; explain</button>
+                    </div>
+                    <div id="dss-result" class="text-slate-400 text-[11px]">Prediction appears here.</div>
+                </div>
+
+                <div id="c1-mode-quiz" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono">
+                    <div id="c1-quiz-container" class="space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-sky-300">Multi-blank quiz · Entropy concepts</span>
+                            <button id="c1-toggle-all-btn" onclick="toggleActiveRecall('c1-quiz-container','c1-toggle-all-btn')" class="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-800 rounded">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">Definition</span>
+                                <p>Entropy measures <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">disorder</span></p>
+                                <p>Dispersal of molecules and of <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">energy quanta</span></p>
+                                <p>Units: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">J K⁻¹ mol⁻¹</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">Trends</span>
+                                <p>Order: solid &lt; liquid &lt; <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">gas</span></p>
+                                <p>Perfect crystal at 0 K: S = <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">zero</span></p>
+                                <p>S° values are <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">absolute</span> (unlike ΔH)</p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">Sign rules</span>
+                                <p>More moles of <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">gas</span> → +ΔS</p>
+                                <p>Natural direction: total entropy <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">increases</span></p>
+                                <p>Endothermic reactions <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded font-bold cursor-pointer">can be spontaneous</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c1-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-3">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ Entropy traps</span>
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> “Spontaneous = exothermic.”<br><span class="text-slate-300">NH₄NO₃ dissolving is endothermic and spontaneous.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Counting solids/liquids for ΔS sign.<br><span class="text-slate-300">Gas moles dominate; C(s) + O₂(g) → CO₂(g) is ≈0.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> “Entropy of the universe can decrease.”<br><span class="text-slate-300">Total entropy always increases for a feasible change — the system’s may fall.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Elements have zero entropy.<br><span class="text-slate-300">Only perfect crystals at 0 K. O₂(g) at 298 K has a real, positive S°.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENGINE B: ΔS & FEASIBILITY -->
+        <section id="tab-feasibility" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-3 flex flex-col md:flex-row justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Engine B · Syllabus 12.6–12.11</span>
+                        <h2 class="text-xl font-bold text-white mt-1">ΔS Calculations &amp; Feasibility Workbench</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-950 text-emerald-300 rounded-lg border border-emerald-800 text-xs font-mono h-fit">5 cards + live ΔS-total curve</span>
+                </div>
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="switchMode('c2','explorer')" id="c2-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs">📚 Module 1: Inspector</button>
+                    <button onclick="switchMode('c2','map')" id="c2-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🗺️ Module 2: Feasibility Workbench</button>
+                    <button onclick="switchMode('c2','quiz')" id="c2-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🎯 Module 3: Blanks</button>
+                    <button onclick="switchMode('c2','traps')" id="c2-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">⚡ Module 4: Traps</button>
+                </div>
+
+                <div id="c2-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5">
+                        <button onclick="selectCard('c2',1,5)" id="c2-btn-1" class="p-2.5 rounded-lg border border-emerald-500 bg-emerald-950/70 text-emerald-300 font-bold text-left w-full text-xs">1. Two entropy changes (12.6)</button>
+                        <button onclick="selectCard('c2',2,5)" id="c2-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">2. ΔS system from data (12.7)</button>
+                        <button onclick="selectCard('c2',3,5)" id="c2-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">3. ΔS surroundings = −ΔH/T (12.8)</button>
+                        <button onclick="selectCard('c2',4,5)" id="c2-btn-4" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">4. Feasibility &amp; T* (12.9–12.10)</button>
+                        <button onclick="selectCard('c2',5,5)" id="c2-btn-5" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">5. Thermodynamic vs kinetic (12.11)</button>
+                    </div>
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 text-xs">
+                        <div id="c2-card-1" class="space-y-3 font-sans">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. System + surroundings = total (12.6)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                $\Delta S_\text{total} = \Delta S_\text{system} + \Delta S_\text{surroundings}$
+                            </div>
+                            <p class="text-slate-300 text-[11px]"><b>System</b> = the reacting chemicals. <b>Surroundings</b> = everything else (the beaker, the air, the universe beyond the flask).</p>
+                            <p class="text-slate-300 text-[11px]">Second law: a change is feasible only if the <b>total</b> entropy increases. Either part may be negative — the sum decides.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Write the equation from memory and define both terms.</li><li>State the feasibility criterion: ΔS_total &gt; 0.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Never judge feasibility from ΔS_system alone — half the class does.</li></ul></div>
+                        </div>                        <div id="c2-card-2" class="hidden space-y-3 font-sans">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Calculating ΔS system (12.7)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                $\Delta S_\text{system} = \Sigma S^\circ(\text{products}) - \Sigma S^\circ(\text{reactants})$
+                            </div>
+                            <p class="text-slate-300 text-[11px]">Worked: for N₂ + 3H₂ → 2NH₃ with S° = 192, 131, 193 J K⁻¹ mol⁻¹: ΔS_sys = 2(193) − [192 + 3(131)] = 386 − 585 = <b>−199 J K⁻¹ mol⁻¹</b>. Negative — 4 gas moles became 2.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Apply coefficients; keep products-minus-reactants order.</li><li>Sanity-check the sign against the gas-mole count afterwards.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Elements are NOT zero here — every species contributes its real S°.</li></ul></div>
+                        </div>                        <div id="c2-card-3" class="hidden space-y-3 font-sans">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. ΔS surroundings = −ΔH/T (12.8)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                $\Delta S_\text{surr} = -\dfrac{\Delta H}{T}$ &nbsp;·&nbsp; T in kelvin · ΔH in <b>J</b>
+                            </div>
+                            <p class="text-slate-300 text-[11px]"><b>Why the minus sign:</b> exothermic (ΔH &lt; 0) reactions dump heat into the surroundings → more dispersal of energy quanta there → positive ΔS_surr.</p>
+                            <p class="text-slate-300 text-[11px]"><b>Why ÷T:</b> the same heat makes a bigger mess in a cold surroundings than a hot one — like shouting in a library vs a concert.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Convert ΔH from kJ to J before dividing (×1000).</li><li>Explain both the sign and the temperature dependence in words.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>The kJ/J slip is the single most common lost mark in Unit 4 physical chemistry. Convert first, always.</li></ul></div>
+                        </div>                        <div id="c2-card-4" class="hidden space-y-3 font-sans">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. Feasibility and the crossover temperature (12.9–12.10)</span>
+                            <p class="text-slate-300 text-[11px]"><b>Four cases:</b> exo + ΔS_sys&gt;0 → always feasible · endo + ΔS_sys&lt;0 → never · endo + ΔS_sys&gt;0 → feasible <b>above</b> T* · exo + ΔS_sys&lt;0 → feasible <b>below</b> T*.</p>
+                            <p class="text-slate-300 text-[11px]"><b>Crossover:</b> set ΔS_total = 0 → $T^* = \dfrac{\Delta H}{\Delta S_\text{system}}$ (ΔH in J). CaCO₃ decomposition: T* = 178000/160 ≈ 1112 K (839 °C) — why lime kilns run hot.</p>
+                            <p class="text-slate-300 text-[11px]"><b>ΔG route (allowed, not required):</b> $\Delta G = \Delta H - T\Delta S_\text{system}$; feasible when ΔG &lt; 0 — same physics, different bookkeeping.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Classify any reaction into the four cases from the two signs.</li><li>Calculate T* and state “feasible above/below” correctly.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Mark schemes award T* via ΔS_total = 0. “Feasible” says nothing about speed — don’t volunteer rate comments.</li></ul></div>
+                        </div>                        <div id="c2-card-5" class="hidden space-y-3 font-sans">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">5. Thermodynamic vs kinetic stability (12.11)</span>
+                            <p class="text-slate-300 text-[11px]"><b>Thermodynamic:</b> is the change feasible (ΔS_total &gt; 0)? <b>Kinetic:</b> how fast — set by the activation energy.</p>
+                            <p class="text-slate-300 text-[11px]"><b>Diamond → graphite:</b> feasible at room temperature, yet diamonds persist for geological time — the rearrangement barrier is enormous. <b>Thermodynamically unstable, kinetically stable.</b></p>
+                            <p class="text-slate-300 text-[11px]"><b>Mg + O₂:</b> hugely feasible, but the ribbon waits for a flame to supply the activation energy.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Distinguish the two stabilities and name the controlling factor for each (ΔS_total vs Eₐ).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Use the full phrase “kinetically stable because of a high activation energy” — “stable” alone scores nothing.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c2-mode-map" class="hidden space-y-3">
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <button onclick="setFeasPreset('nh4no3')" class="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 rounded-lg text-white font-bold">NH₄NO₃ dissolving</button>
+                        <button onclick="setFeasPreset('caco3')" class="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 rounded-lg text-white font-bold">CaCO₃ decomposition</button>
+                        <button onclick="setFeasPreset('methane')" class="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 rounded-lg text-white font-bold">CH₄ combustion</button>
+                        <button onclick="setFeasPreset('no2dimer')" class="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 rounded-lg text-white font-bold">2NO₂ → N₂O₄</button>
+                        <span id="fh-preset-note" class="text-slate-400 text-[11px] self-center"></span>
+                    </div>
+                    <div class="flex flex-wrap gap-4 items-end text-xs">
+                        <label class="text-slate-300">ΔH
+                            <input id="fh-dh" type="range" min="-1000" max="1000" step="5" value="26" class="block w-48">
+                            <span id="fh-dh-lab" class="text-amber-300 font-mono text-[10px]">26 kJ mol⁻¹</span>
+                        </label>
+                        <label class="text-slate-300">ΔS system
+                            <input id="fh-ds" type="range" min="-400" max="400" step="5" value="109" class="block w-48">
+                            <span id="fh-ds-lab" class="text-sky-300 font-mono text-[10px]">109 J K⁻¹ mol⁻¹</span>
+                        </label>
+                        <label class="text-slate-300">Temperature
+                            <input id="fh-t" type="range" min="100" max="2000" step="10" value="298" class="block w-48">
+                            <span id="fh-t-lab" class="text-pink-300 font-mono text-[10px]">298 K</span>
+                        </label>
+                    </div>
+                    <canvas id="fh-canvas" class="w-full rounded-xl border border-slate-800 bg-slate-950" style="height:340px;min-height:340px"></canvas>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                        <div class="p-2.5 bg-slate-950 border border-slate-800 rounded-lg"><span class="text-[10px] text-slate-400 block">ΔS surroundings</span><span id="fh-dssurr" class="font-mono font-bold text-amber-300">—</span></div>
+                        <div class="p-2.5 bg-slate-950 border border-slate-800 rounded-lg"><span class="text-[10px] text-slate-400 block">ΔS total</span><span id="fh-dstot" class="font-mono font-bold text-emerald-300">—</span></div>
+                        <div class="p-2.5 bg-slate-950 border border-slate-800 rounded-lg"><span class="text-[10px] text-slate-400 block">Crossover T*</span><span id="fh-tstar" class="font-mono font-bold text-sky-300">—</span></div>
+                        <div class="p-2.5 bg-slate-950 border border-slate-800 rounded-lg flex items-center"><span id="fh-verdict" class="text-[11px] font-bold">—</span></div>
+                    </div>
+                    <p id="fh-quadrant" class="text-[11px] text-slate-300"></p>
+                    <p class="text-[10px] text-slate-500">Green shading = feasible region (ΔS_total &gt; 0). Drag ΔH and ΔS_sys through all four sign combinations and watch the curve flip between “always”, “never”, “hot only” and “cold only”.</p>
+                </div>
+
+                <div id="c2-mode-quiz" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono">
+                    <div id="c2-quiz-container" class="space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-emerald-300">Multi-blank quiz · ΔS &amp; feasibility</span>
+                            <button id="c2-toggle-all-btn" onclick="toggleActiveRecall('c2-quiz-container','c2-toggle-all-btn')" class="px-3 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">Equations</span>
+                                <p>ΔS_total = ΔS_sys + <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">ΔS_surr</span></p>
+                                <p>ΔS_surr = <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">−ΔH/T</span></p>
+                                <p>ΔS_sys = ΣS°(products) − <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">ΣS°(reactants)</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">Feasibility</span>
+                                <p>Feasible when ΔS_total is <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">&gt; 0</span></p>
+                                <p>T* when ΔS_total = <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">0</span>, so T* = <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">ΔH/ΔS_sys</span></p>
+                                <p>Endo + +ΔS_sys: feasible <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">above T*</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">Killers</span>
+                                <p>ΔH must be in <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded font-bold cursor-pointer">J</span> when dividing by T</p>
+                                <p>Feasible ≠ <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">fast</span></p>
+                                <p>Diamond: thermodynamically unstable, <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">kinetically stable</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c2-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-3">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ Feasibility traps</span>
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Dividing kJ by T next to J-valued ΔS.<br><span class="text-slate-300">ΔS_surr comes out 1000× too small and the verdict flips. Convert ΔH ×1000 first.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Judging feasibility from ΔS_system alone.<br><span class="text-slate-300">Water freezing has negative ΔS_sys — it’s feasible below 0 °C because ΔS_surr wins.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> “Feasible means the reaction happens quickly.”<br><span class="text-slate-300">Feasibility is thermodynamic; speed is kinetic (Eₐ). Diamond again.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> T* with ΔH still in kJ.<br><span class="text-slate-300">T = ΔH/ΔS_sys needs ΔH in J — otherwise T* is 1000× too small.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENGINE C: BORN–HABER -->
+        <section id="tab-bornhaber" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-3 flex flex-col md:flex-row justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-violet-400 uppercase tracking-widest">Engine C · Syllabus 12.12–12.13</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Born–Haber Cycle Workbench</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-violet-950 text-violet-300 rounded-lg border border-violet-800 text-xs font-mono h-fit">4 compounds · energy diagram</span>
+                </div>
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="switchMode('c3','explorer')" id="c3-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-violet-600 text-white font-bold text-xs">📚 Module 1: Inspector</button>
+                    <button onclick="switchMode('c3','map')" id="c3-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🗺️ Module 2: Cycle Solver</button>
+                    <button onclick="switchMode('c3','quiz')" id="c3-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🎯 Module 3: Blanks</button>
+                    <button onclick="switchMode('c3','traps')" id="c3-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">⚡ Module 4: Traps</button>
+                </div>
+
+                <div id="c3-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5">
+                        <button onclick="selectCard('c3',1,4)" id="c3-btn-1" class="p-2.5 rounded-lg border border-violet-500 bg-violet-950/70 text-violet-300 font-bold text-left w-full text-xs">1. The five definitions (12.12)</button>
+                        <button onclick="selectCard('c3',2,4)" id="c3-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">2. Anatomy of the cycle (12.13)</button>
+                        <button onclick="selectCard('c3',3,4)" id="c3-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">3. Worked example: NaCl</button>
+                        <button onclick="selectCard('c3',4,4)" id="c3-btn-4" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">4. Divalent compounds: MgCl₂ &amp; MgO</button>
+                    </div>
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 text-xs">
+                        <div id="c3-card-1" class="space-y-3 font-sans">
+                            <span class="text-violet-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. Five definitions you must own (12.12)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                Lattice energy: separate 1 mol ionic solid → gaseous ions (endothermic, +)
+                            </div>
+                            <p class="text-slate-300 text-[11px]"><b>Δ<sub>f</sub>H:</b> 1 mol compound from elements in standard states. <b>Δ<sub>at</sub>H:</b> 1 mol gaseous atoms from the element (always +). <b>IE₁:</b> remove 1 mol e⁻ from 1 mol gaseous atoms (+). <b>EA₁:</b> 1 mol gaseous atoms each gain 1 e⁻ (− for F/Cl).</p>
+                            <p class="text-slate-300 text-[11px]"><b>EA₂ is endothermic:</b> O⁻(g) + e⁻ → O²⁻(g) needs energy — an electron is forced onto a negative ion.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Recite all five with “one mole” and states included.</li><li>Know the sign of each: ΔatH +, IE +, EA₁ −, EA₂ +, LE + (IAL convention).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Some questions define LE as the exothermic formation — read the given definition before writing signs.</li></ul></div>
+                        </div>                        <div id="c3-card-2" class="hidden space-y-3 font-sans">
+                            <span class="text-violet-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Anatomy of a Born–Haber cycle (12.13)</span>
+                            <p class="text-slate-300 text-[11px]">Two routes from elements to ionic solid, equal by Hess’s law:</p>
+                            <p class="text-slate-300 text-[11px]"><b>Direct:</b> elements → solid ($\Delta_f H$, usually down). <b>Indirect:</b> elements → gaseous atoms (Δ<sub>at</sub>H, up) → gaseous ions (IE up, EA usually down) → solid (releases the lattice energy).</p>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                $\Delta_f H = \Sigma\Delta_\text{at} H + \Sigma IE + \Sigma EA - LE$ &nbsp;⇒&nbsp; $LE = \Sigma\Delta_\text{at} H + \Sigma IE + \Sigma EA - \Delta_f H$
+                            </div>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Draw the energy-level diagram: endothermic arrows up, exothermic down, gaseous ions at the top.</li><li>Rearrange the Hess statement for any unknown, not just LE.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Subtracting a negative ΔfH becomes addition — the most common arithmetic slip in these calculations.</li></ul></div>
+                        </div>                        <div id="c3-card-3" class="hidden space-y-3 font-sans">
+                            <span class="text-violet-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. Worked example: NaCl</span>
+                            <p class="text-slate-300 text-[11px]">Data (kJ mol⁻¹): Δ<sub>f</sub>H = −411 · Δ<sub>at</sub>H(Na) = +107 · IE₁(Na) = +496 · Δ<sub>at</sub>H(Cl) = +122 (½Cl₂ → Cl) · EA₁(Cl) = −346.</p>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                LE = 107 + 496 + 122 + (−346) − (−411) = +790 kJ mol⁻¹
+                            </div>
+                            <p class="text-slate-300 text-[11px]">Sanity check: lattice energies are large and endothermic in this convention — hundreds to thousands of kJ mol⁻¹. A small or negative answer means a sign went wrong.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Reproduce this calculation from the cycle without notes.</li><li>Remember ΔatH(Cl) is for ½Cl₂ → Cl — one Cl atom per NaCl.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Show the full sum with signs — method marks survive arithmetic slips.</li></ul></div>
+                        </div>                        <div id="c3-card-4" class="hidden space-y-3 font-sans">
+                            <span class="text-violet-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. Divalent compounds: MgCl₂ and MgO</span>
+                            <p class="text-slate-300 text-[11px]"><b>MgCl₂:</b> two chlorines → double Δ<sub>at</sub>H(Cl) and double EA. Two charges on Mg → IE₁ + IE₂ (1451 kJ mol⁻¹ for the second — much larger, removing e⁻ from Mg⁺).</p>
+                            <p class="text-slate-300 text-[11px]"><b>MgO adds a twist:</b> oxygen’s second electron affinity is <b>endothermic</b> (O⁻ → O²⁻, ≈ +798 kJ mol⁻¹). The O²⁻ ion only exists because the huge lattice energy of Mg²⁺O²⁻ pays for it.</p>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                MgCl₂: LE = 148 + 2189 + 244 + (−692) − (−641) = +2530 kJ mol⁻¹
+                            </div>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Build cycles for 2+/2− compounds without dropping doubled terms.</li><li>Explain why EA₂ is positive in words (repulsion onto a negative ion).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="text-slate-300 list-disc ml-4 mt-1 text-[11px] space-y-0.5"><li>Exam favourites: MgO, MgCl₂, NaF (Oct 2025, Jan 2024). Doubling errors are the marker’s gift — don’t wrap it.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c3-mode-map" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                    <span class="font-bold text-violet-300 uppercase">🗺️ Born–Haber cycle solver</span>
+                    <p class="text-slate-400 text-[11px]">Pick a compound, choose which quantity to hide, solve it from the diagram, then check.</p>
+                    <div class="grid md:grid-cols-4 gap-3 items-end">
+                        <select id="bh-compound" class="w-full bg-slate-900 border border-slate-700 text-violet-300 rounded p-2 font-mono">
+                            <option value="nacl">NaCl</option>
+                            <option value="naf">NaF</option>
+                            <option value="mgcl2">MgCl₂</option>
+                            <option value="mgo">MgO</option>
+                        </select>
+                        <select id="bh-unknown" onchange="setBHUnknown(this.value)" class="w-full bg-slate-900 border border-slate-700 text-violet-300 rounded p-2 font-mono">
+                            <option value="LE">Hide: Lattice energy</option>
+                            <option value="fH">Hide: ΔfH</option>
+                            <option value="atH">Hide: Σ ΔatH</option>
+                            <option value="IEEA">Hide: Σ IE+EA</option>
+                        </select>
+                        <input type="number" step="any" id="bh-input" placeholder="your answer (kJ mol⁻¹)" class="w-full bg-slate-900 border border-slate-700 rounded p-2 font-mono text-violet-300">
+                        <button onclick="checkBH()" class="px-4 py-2 bg-violet-700 hover:bg-violet-600 rounded-lg font-bold text-white">Check (±2%)</button>
+                    </div>
+                    <canvas id="bh-canvas" class="w-full rounded-xl border border-slate-800 bg-slate-950" style="height:380px;min-height:380px"></canvas>
+                    <div id="bh-check-out" class="text-slate-400 text-[11px]"></div>
+                    <div id="bh-steps" class="grid md:grid-cols-3 gap-2 text-[11px]"></div>
+                </div>
+
+                <div id="c3-mode-quiz" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono">
+                    <div id="c3-quiz-container" class="space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-violet-300">Multi-blank quiz · Born–Haber</span>
+                            <button id="c3-toggle-all-btn" onclick="toggleActiveRecall('c3-quiz-container','c3-toggle-all-btn')" class="px-3 py-1 bg-violet-950 text-violet-300 border border-violet-800 rounded">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-violet-300 font-bold block">Signs</span>
+                                <p>ΔatH is always <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">endothermic</span></p>
+                                <p>First EA (F, Cl) is <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">exothermic</span></p>
+                                <p>Second EA (O⁻ → O²⁻) is <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded font-bold cursor-pointer">endothermic</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-violet-300 font-bold block">The cycle</span>
+                                <p>LE = Σ steps to ions − <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">ΔfH</span></p>
+                                <p>MgCl₂: double ΔatH(Cl) and double <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">EA</span></p>
+                                <p>Mg needs IE₁ + <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">IE₂</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-violet-300 font-bold block">Definitions</span>
+                                <p>LE: separate 1 mol solid into <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">gaseous ions</span></p>
+                                <p>ΔatH: 1 mol gaseous <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">atoms</span></p>
+                                <p>IAL convention: LE is <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">positive</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c3-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-3">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ Born–Haber traps</span>
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Forgetting to double ΔatH and EA for X₂.<br><span class="text-slate-300">Cl₂ gives 2 Cl atoms — MgCl₂ needs both halogen terms ×2.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Treating EA₂ as exothermic.<br><span class="text-slate-300">O⁻ repels the incoming electron — EA₂ ≈ +798 kJ mol⁻¹.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Sign errors with negative ΔfH.<br><span class="text-slate-300">LE = Σsteps − (−411) = Σsteps + 411. Two negatives make a plus.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Mixing LE conventions mid-question.<br><span class="text-slate-300">Decide dissociation (+) vs formation (−) from the question’s definition and stick to it.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENGINE D: COVALENCY -->
+        <section id="tab-covalency" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-3 flex flex-col md:flex-row justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Engine D · Syllabus 12.14–12.15</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Covalent Character &amp; Polarisation</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-amber-950 text-amber-300 rounded-lg border border-amber-800 text-xs font-mono h-fit">6 compound comparator</span>
+                </div>
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="switchMode('c4','explorer')" id="c4-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-amber-600 text-white font-bold text-xs">📚 Module 1: Inspector</button>
+                    <button onclick="switchMode('c4','map')" id="c4-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🗺️ Module 2: Comparator</button>
+                    <button onclick="switchMode('c4','quiz')" id="c4-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🎯 Module 3: Blanks</button>
+                    <button onclick="switchMode('c4','traps')" id="c4-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">⚡ Module 4: Traps</button>
+                </div>
+
+                <div id="c4-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5">
+                        <button onclick="selectCard('c4',1,3)" id="c4-btn-1" class="p-2.5 rounded-lg border border-amber-500 bg-amber-950/70 text-amber-300 font-bold text-left w-full text-xs">1. The perfect ionic model (12.14)</button>
+                        <button onclick="selectCard('c4',2,3)" id="c4-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">2. Experimental vs theoretical LE</button>
+                        <button onclick="selectCard('c4',3,3)" id="c4-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">3. Polarisation (12.15)</button>
+                    </div>
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 text-xs">
+                        <div id="c4-card-1" class="space-y-3 font-sans">
+                            <span class="text-amber-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. The theoretical lattice energy (12.14)</span>
+                            <p class="text-slate-300 text-[11px]">Electrostatic theory calculates LE assuming a <b>perfect ionic model</b>: ions are point charges / perfect spheres with no distortion — pure electrostatic attraction, zero covalency.</p>
+                            <p class="text-slate-300 text-[11px]">It is a <b>model</b> — useful precisely because real compounds can deviate from it, and the deviation is measurable.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>State the two assumptions: spherical ions, purely electrostatic (no covalent character).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>“Perfectly spherical ions” is a mark point on its own — don’t paraphrase it away.</li></ul></div>
+                        </div>                        <div id="c4-card-2" class="hidden space-y-3 font-sans">
+                            <span class="text-amber-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Comparing experimental and theoretical LE (12.14)</span>
+                            <p class="text-slate-300 text-[11px]"><b>Experimental LE</b> comes from the Born–Haber cycle (real data). <b>Theoretical LE</b> comes from the ionic model.</p>
+                            <p class="text-slate-300 text-[11px]"><b>Close agreement</b> (NaCl: 790 vs 787) → bonding well described as ionic. <b>Experimental value of greater magnitude</b> (AgCl: 905 vs 770) → extra attraction the model can’t explain → <b>covalent character</b> (electron sharing strengthens the lattice).</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Given two values, state the degree of covalent character and why.</li><li>Phrase it: “experimental more endothermic than theoretical (dissociation convention) ⇒ covalent character”.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>The conclusion must be comparative — quoting one number alone scores nothing.</li></ul></div>
+                        </div>                        <div id="c4-card-3" class="hidden space-y-3 font-sans">
+                            <span class="text-amber-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. Polarisation — the mechanism (12.15)</span>
+                            <p class="text-slate-300 text-[11px]">A <b>small, highly charged cation</b> (high charge density: Li⁺, Mg²⁺, Al³⁺, Ag⁺) attracts the anion’s electron cloud so strongly that it <b>distorts</b> (polarises) it. The cloud shifts toward the cation → partial <b>electron sharing</b> → covalent character.</p>
+                            <p class="text-slate-300 text-[11px]">The anion must be <b>large and polarisable</b> (I⁻ &gt; Br⁻ &gt; Cl⁻ &gt; F⁻; S²⁻, O²⁻) — its outer electrons are loosely held.</p>
+                            <p class="text-slate-300 text-[11px]"><b>Trends:</b> for one cation, covalency grows down the halide group (LiF ionic → LiI covalent-leaning). For one anion, it grows with cation charge density (NaCl ≈ ionic vs AgCl covalent — hence silver halides’ odd solubilities).</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Name both actors in every answer: polarising cation + polarisable anion.</li><li>Explain the distortion → sharing → stronger-than-predicted lattice chain.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>“The cation is polarised” reverses the roles — instant mark loss. Cations polarise; anions are polarised.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c4-mode-map" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                    <span class="font-bold text-amber-300 uppercase">🗺️ Experimental vs theoretical comparator</span>
+                    <p class="text-slate-400 text-[11px]">Pick a compound — watch the gap open and the covalency meter respond. (Representative literature values, dissociation convention.)</p>
+                    <select id="polar-compound" onchange="comparePolar()" class="w-full md:w-1/3 bg-slate-900 border border-slate-700 text-amber-300 rounded p-2 font-mono">
+                        <option value="nacl">NaCl — Na⁺ / Cl⁻</option>
+                        <option value="nabr">NaBr — Na⁺ / Br⁻</option>
+                        <option value="nai">NaI — Na⁺ / I⁻</option>
+                        <option value="lii">LiI — Li⁺ / I⁻</option>
+                        <option value="agcl">AgCl — Ag⁺ / Cl⁻</option>
+                        <option value="mgo">MgO — Mg²⁺ / O²⁻</option>
+                    </select>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2"><span class="w-24 text-slate-400 shrink-0">Theoretical</span><div class="flex-grow h-5 bg-slate-900 rounded border border-slate-800 overflow-hidden"><div id="polar-bar-theo" class="h-full bg-violet-500/80 bar-anim" style="width:0%"></div></div><span id="polar-val-theo" class="font-mono text-violet-300 w-32 text-right shrink-0">—</span></div>
+                        <div class="flex items-center gap-2"><span class="w-24 text-slate-400 shrink-0">Experimental</span><div class="flex-grow h-5 bg-slate-900 rounded border border-slate-800 overflow-hidden"><div id="polar-bar-exp" class="h-full bg-amber-500/80 bar-anim" style="width:0%"></div></div><span id="polar-val-exp" class="font-mono text-amber-300 w-32 text-right shrink-0">—</span></div>
+                        <div class="flex items-center gap-2 pt-1"><span class="w-24 text-slate-400 shrink-0">Covalency</span><div class="flex-grow h-2.5 bg-slate-900 rounded-full border border-slate-800 overflow-hidden"><div id="polar-meter" class="h-full bg-gradient-to-r from-emerald-500 via-amber-400 to-rose-500 bar-anim" style="width:0%"></div></div></div>
+                    </div>
+                    <div id="polar-verdict" class="p-3 bg-slate-900 border border-slate-700 rounded-lg text-[11px]">Pick a compound to compare.</div>
+                </div>
+
+                <div id="c4-mode-quiz" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono">
+                    <div id="c4-quiz-container" class="space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-amber-300">Multi-blank quiz · Covalency</span>
+                            <button id="c4-toggle-all-btn" onclick="toggleActiveRecall('c4-quiz-container','c4-toggle-all-btn')" class="px-3 py-1 bg-amber-950 text-amber-300 border border-amber-800 rounded">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-amber-300 font-bold block">The comparison</span>
+                                <p>Theoretical LE assumes a <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">perfect ionic model</span></p>
+                                <p>Experimental LE comes from the <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">Born–Haber cycle</span></p>
+                                <p>Experimental &gt; theoretical ⇒ <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded font-bold cursor-pointer">covalent character</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-amber-300 font-bold block">Polarisation</span>
+                                <p>The <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">cation</span> polarises the <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">anion</span></p>
+                                <p>Best polariser: small + <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">highly charged</span> cation</p>
+                                <p>Most polarisable: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded font-bold cursor-pointer">large</span> anion (I⁻ &gt; F⁻)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c4-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-3">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ Covalency traps</span>
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> “The anion polarises the cation.”<br><span class="text-slate-300">Roles reversed. Small dense cations polarise; large anions get polarised.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Bigger gap = more ionic.<br><span class="text-slate-300">Opposite: the gap IS the covalency. Agreement = ionic.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Comparing LE magnitudes across different compounds.<br><span class="text-slate-300">Compare exp vs theo for the SAME compound — MgO’s huge LE says nothing about covalency by itself.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Forgetting the anion side of the story.<br><span class="text-slate-300">LiF vs LiI: same cation, different gap — anion polarisability drives the trend.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENGINE E: SOLUTION & SOLUBILITY -->
+        <section id="tab-solution" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-3 flex flex-col md:flex-row justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Engine E · Syllabus 12.16–12.19</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Solution Cycles &amp; Solubility</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-rose-950 text-rose-300 rounded-lg border border-rose-800 text-xs font-mono h-fit">7 salts · live ΔS verdict</span>
+                </div>
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="switchMode('c5','explorer')" id="c5-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-rose-600 text-white font-bold text-xs">📚 Module 1: Inspector</button>
+                    <button onclick="switchMode('c5','map')" id="c5-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🗺️ Module 2: Solubility Explorer</button>
+                    <button onclick="switchMode('c5','quiz')" id="c5-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">🎯 Module 3: Blanks</button>
+                    <button onclick="switchMode('c5','traps')" id="c5-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 text-xs">⚡ Module 4: Traps</button>
+                </div>
+
+                <div id="c5-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5">
+                        <button onclick="selectCard('c5',1,4)" id="c5-btn-1" class="p-2.5 rounded-lg border border-rose-500 bg-rose-950/70 text-rose-300 font-bold text-left w-full text-xs">1. ΔsolH &amp; ΔhydH defined (12.16)</button>
+                        <button onclick="selectCard('c5',2,4)" id="c5-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">2. The solution energy cycle (12.17)</button>
+                        <button onclick="selectCard('c5',3,4)" id="c5-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">3. Charge &amp; radius effects (12.18)</button>
+                        <button onclick="selectCard('c5',4,4)" id="c5-btn-4" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 text-left w-full text-xs">4. Predicting solubility (12.19)</button>
+                    </div>
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 text-xs">
+                        <div id="c5-card-1" class="space-y-3 font-sans">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. Two more definitions (12.16)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                ΔsolH: 1 mol solid → aqueous ions · ΔhydH: 1 mol gaseous ions → aqueous ions (always −)
+                            </div>
+                            <p class="text-slate-300 text-[11px]"><b>Δ<sub>sol</sub>H</b> can be positive (NH₄NO₃, KCl) or negative (NaOH, MgSO₄) — either sign is normal.</p>
+                            <p class="text-slate-300 text-[11px]"><b>Δ<sub>hyd</sub>H</b> is always exothermic: gaseous ions form ion–dipole attractions with water molecules, releasing energy.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Write both definitions with “one mole” and states.</li><li>Explain why hydration is always exothermic (ion–dipole bonds forming).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>ΔhydH is per mole of IONS — Mg²⁺ and 2Cl⁻ contribute three separate hydration terms.</li></ul></div>
+                        </div>                        <div id="c5-card-2" class="hidden space-y-3 font-sans">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. The solution energy cycle (12.17)</span>
+                            <p class="text-slate-300 text-[11px]">Two routes from solid to aqueous ions: rip the lattice apart first (endothermic, +LE), then hydrate the ions (exothermic).</p>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                $\Delta_\text{sol} H = LE + \Delta_\text{hyd} H(\text{cation}) + \Delta_\text{hyd} H(\text{anion})$
+                            </div>
+                            <p class="text-slate-300 text-[11px]">NaCl: 790 + (−406) + (−364) ≈ +20 kJ mol⁻¹ (representative data) — slightly endothermic, yet NaCl dissolves readily. Enthalpy is not the boss here either: the entropy gain of freeing the ions drives it.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Draw the three-level diagram: solid → gaseous ions → aqueous ions.</li><li>Rearrange for any unknown (LE from solubility data is a classic).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Signs: LE enters positive; both hydration terms negative. A positive ΔsolH ≠ insoluble.</li></ul></div>
+                        </div>                        <div id="c5-card-3" class="hidden space-y-3 font-sans">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. Ionic charge and radius effects (12.18)</span>
+                            <p class="text-slate-300 text-[11px]"><b>Smaller ions / higher charge</b> → stronger electrostatics → <b>larger lattice energy</b> AND <b>more exothermic Δ<sub>hyd</sub>H</b>. Both move together — solubility depends on which moves faster.</p>
+                            <p class="text-slate-300 text-[11px]">Down Group 2 (Mg²⁺ → Ba²⁺): cation radius grows → LE and |ΔhydH| both shrink.</p>
+                            <p class="text-slate-300 text-[11px]">With the <b>small OH⁻</b> anion, lattice energy falls faster → ΔsolH becomes more favourable → <b>hydroxides more soluble down the group</b>. With the <b>large SO₄²⁻</b> anion, hydration energy falls faster → <b>sulfates less soluble down the group</b>.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>State the charge/radius effect on LE and ΔhydH separately.</li><li>Explain why the two Group 2 trends run in opposite directions.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Always say which term “dominates the change” — vague “gets weaker” answers score low.</li></ul></div>
+                        </div>                        <div id="c5-card-4" class="hidden space-y-3 font-sans">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. Predicting solubility with entropy (12.19)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-xs">
+                                $\Delta S_\text{total(sol)} = \Delta S_\text{sys} + \dfrac{-\Delta_\text{sol} H}{T}$ &nbsp;— dissolving is feasible when &gt; 0
+                            </div>
+                            <p class="text-slate-300 text-[11px]">BaSO₄: ΔS_sys ≈ −102 J K⁻¹ mol⁻¹ (ions order water more than the lattice loses) and ΔS_surr ≈ −87 → ΔS_total ≈ −189 → insoluble. NaCl: ΔS_sys ≈ +43, ΔS_surr ≈ −13 → +30 → soluble.</p>
+                            <p class="text-slate-300 text-[11px]">For large anions (SO₄²⁻), ΔS_sys of dissolving is strongly negative — the hydration ordering penalty — which is the entropy-side reason the sulfates resist dissolving.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Given ΔsolH and S° values, compute ΔS_total and conclude soluble/insoluble.</li><li>Link the Unit 2 hydroxide/sulfate trends to these energy terms.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Conclusion first (“insoluble”), then the numbers. Marker-friendly order.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c5-mode-map" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                    <span class="font-bold text-rose-300 uppercase">🗺️ Solubility explorer</span>
+                    <p class="text-slate-400 text-[11px]">Pick a salt — the cycle, the energy diagram and the entropy verdict update together. (Representative data for prediction practice.)</p>
+                    <select id="sol-compound" class="w-full md:w-1/3 bg-slate-900 border border-slate-700 text-rose-300 rounded p-2 font-mono">
+                        <option value="nacl">NaCl — soluble</option>
+                        <option value="kcl">KCl — soluble</option>
+                        <option value="mgso4">MgSO₄ — soluble</option>
+                        <option value="caso4">CaSO₄ — sparingly soluble</option>
+                        <option value="baso4">BaSO₄ — insoluble</option>
+                        <option value="mgoh2">Mg(OH)₂ — insoluble</option>
+                        <option value="baoh2">Ba(OH)₂ — soluble</option>
+                    </select>
+                    <canvas id="sol-canvas" class="w-full rounded-xl border border-slate-800 bg-slate-950" style="height:320px;min-height:320px"></canvas>
+                    <div id="sol-readout" class="text-slate-400 text-[11px]"></div>
+                </div>
+
+                <div id="c5-mode-quiz" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs font-mono">
+                    <div id="c5-quiz-container" class="space-y-3">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-rose-300">Multi-blank quiz · Solution &amp; solubility</span>
+                            <button id="c5-toggle-all-btn" onclick="toggleActiveRecall('c5-quiz-container','c5-toggle-all-btn')" class="px-3 py-1 bg-rose-950 text-rose-300 border border-rose-800 rounded">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">Definitions</span>
+                                <p>ΔhydH is always <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">exothermic</span></p>
+                                <p>ΔsolH can be <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">+ or −</span></p>
+                                <p>Hydration = ion–<span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">dipole</span> attraction to water</p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">The cycle</span>
+                                <p>ΔsolH = LE + Σ<span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">ΔhydH</span></p>
+                                <p>LE enters with a <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-sky-300 rounded font-bold cursor-pointer">positive</span> sign</p>
+                                <p>+ΔsolH ⇒ <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded font-bold cursor-pointer">not necessarily insoluble</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">Trends</span>
+                                <p>Group 2 hydroxides: solubility <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded font-bold cursor-pointer">increases</span> down</p>
+                                <p>Group 2 sulfates: solubility <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded font-bold cursor-pointer">decreases</span> down</p>
+                                <p>Small ion + high charge ⇒ LE <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded font-bold cursor-pointer">larger</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="c5-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-3">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ Solution traps</span>
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> “Endothermic dissolving can’t happen.”<br><span class="text-slate-300">NH₄NO₃ and NaCl both dissolve with +ΔsolH — entropy drives them.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Flipping the LE sign in the solution cycle.<br><span class="text-slate-300">Solid → gaseous ions is the endothermic leg: +LE, then negative hydrations.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Reversing the Group 2 trends.<br><span class="text-slate-300">Hydroxides ↑ down the group; sulfates ↓. Mnemonic: “OH yes, SO no”.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> “Like dissolves like” in an energetics answer.<br><span class="text-slate-300">Use ΔsolH + ΔS_sys + ΔS_total language — that’s what the marks are for.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLVER -->
+        <section id="tab-solver" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-3">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Interactive toolkit</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Entropy &amp; Energetics Solver</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                        <b class="text-emerald-300">A. ΔS total &amp; feasibility (12.8–12.9)</b>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="text-slate-400">ΔH (kJ)
+                                <input id="sv-dh" type="number" step="any" value="178" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-emerald-300 font-mono">
+                            </label>
+                            <label class="text-slate-400">ΔS_sys (J/K)
+                                <input id="sv-ds" type="number" step="any" value="160" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-emerald-300 font-mono">
+                            </label>
+                            <label class="text-slate-400">T (K)
+                                <input id="sv-t" type="number" step="any" value="298" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-emerald-300 font-mono">
+                            </label>
+                        </div>
+                        <button onclick="calcDSTotal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-bold">Calculate</button>
+                        <div id="sv-out" class="text-slate-300 text-[11px]"></div>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                        <b class="text-violet-300">B. Born–Haber lattice energy (12.13)</b>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="text-slate-400">ΣΔatH
+                                <input id="sv-at" type="number" step="any" value="229" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-violet-300 font-mono">
+                            </label>
+                            <label class="text-slate-400">Σ(IE+EA)
+                                <input id="sv-ieea" type="number" step="any" value="150" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-violet-300 font-mono">
+                            </label>
+                            <label class="text-slate-400">ΔfH
+                                <input id="sv-fh" type="number" step="any" value="-411" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-violet-300 font-mono">
+                            </label>
+                        </div>
+                        <button onclick="calcBHLE()" class="px-4 py-2 bg-violet-700 hover:bg-violet-600 rounded-lg text-white font-bold">Calculate LE</button>
+                        <div id="sv-bh-out" class="text-slate-300 text-[11px]"></div>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                        <b class="text-rose-300">C. Solution cycle ΔsolH (12.17)</b>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="text-slate-400">LE (+)
+                                <input id="sv-le" type="number" step="any" value="790" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-rose-300 font-mono">
+                            </label>
+                            <label class="text-slate-400">ΔhydH cat (−)
+                                <input id="sv-hc" type="number" step="any" value="-406" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-rose-300 font-mono">
+                            </label>
+                            <label class="text-slate-400">ΔhydH an (−)
+                                <input id="sv-ha" type="number" step="any" value="-364" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-rose-300 font-mono">
+                            </label>
+                        </div>
+                        <button onclick="calcSolution()" class="px-4 py-2 bg-rose-700 hover:bg-rose-600 rounded-lg text-white font-bold">Calculate ΔsolH</button>
+                        <div id="sv-sol-out" class="text-slate-300 text-[11px]"></div>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                        <b class="text-amber-300">D. Unit trap checker</b>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="text-slate-400">ΔH as given (kJ)
+                                <input id="sv-uh" type="number" step="any" value="-890" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-amber-300 font-mono">
+                            </label>
+                            <label class="text-slate-400">ΔS as given (J/K)
+                                <input id="sv-us" type="number" step="any" value="-243" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded p-2 text-amber-300 font-mono">
+                            </label>
+                        </div>
+                        <button onclick="unitCheck()" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 rounded-lg text-white font-bold">Convert &amp; pair</button>
+                        <div id="sv-unit-out" class="text-slate-300 text-[11px]"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REVIEW -->
+        <section id="tab-review" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-4 space-y-2">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Master Final Review</span>
+                    <h2 class="text-xl font-bold text-white">Topic 12 Entropy &amp; Energetics · Full recap &amp; IAL examination tips</h2>
+                    <div class="flex flex-wrap gap-2 text-[11px]">
+                        <a href="#rev-concepts" class="px-2.5 py-1 rounded-lg bg-sky-950/60 text-sky-300 border border-sky-800">Entropy 12.1–12.5</a>
+                        <a href="#rev-equations" class="px-2.5 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800">Equations &amp; units</a>
+                        <a href="#rev-feas" class="px-2.5 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800">Feasibility 4 cases</a>
+                        <a href="#rev-defs" class="px-2.5 py-1 rounded-lg bg-violet-950/60 text-violet-300 border border-violet-800">Definitions 12.12/12.16</a>
+                        <a href="#rev-bh" class="px-2.5 py-1 rounded-lg bg-violet-950/60 text-violet-300 border border-violet-800">Born–Haber 12.13</a>
+                        <a href="#rev-cov" class="px-2.5 py-1 rounded-lg bg-amber-950/60 text-amber-300 border border-amber-800">Covalency 12.14–12.15</a>
+                        <a href="#rev-sol" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800">Solution 12.16–12.19</a>
+                        <a href="#rev-traps" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800">Trap checklist</a>
+                    </div>
+                </div>
+
+                <details id="rev-concepts" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-sky-300">⚡ Entropy fundamentals (12.1–12.5)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>Endothermic reactions can be spontaneous (NH₄NO₃ dissolving; Ba(OH)₂·8H₂O + NH₄Cl) ⇒ ΔH alone doesn’t decide.</li>
+                            <li>Entropy = disorder: random dispersal of <b>molecules</b> and of <b>energy quanta</b>. Units J K⁻¹ mol⁻¹.</li>
+                            <li>S rises with T; S(s) &lt; S(l) &lt;&lt; S(g); perfect crystal at 0 K: S = 0; S° values are absolute.</li>
+                            <li>Natural direction = increasing <b>total</b> entropy (gas spreading through a room).</li>
+                            <li>ΔS sign rules: gas-mole change dominates; then state change; then dissolving (usually +, sometimes −).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details id="rev-equations" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-emerald-300">🧮 The equations and the unit discipline (12.6–12.8)</summary>
+                    <div class="px-4 pb-4 overflow-x-auto space-y-3">
+                        <table class="w-full text-[11px] text-slate-300 min-w-[560px]">
+                            <thead class="text-emerald-300 border-b border-slate-800"><tr><th class="p-2 text-left">Quantity</th><th class="p-2 text-left">Equation</th><th class="p-2 text-left">Watch</th></tr></thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr><td class="p-2 font-bold">ΔS_system</td><td class="p-2">ΣS°(products) − ΣS°(reactants)</td><td class="p-2">Coefficients ×; elements NOT zero</td></tr>
+                                <tr><td class="p-2 font-bold">ΔS_surroundings</td><td class="p-2">−ΔH / T</td><td class="p-2">ΔH in <b>J</b>; T in K</td></tr>
+                                <tr><td class="p-2 font-bold">ΔS_total</td><td class="p-2">ΔS_sys + ΔS_surr</td><td class="p-2">&gt; 0 ⇒ feasible</td></tr>
+                                <tr><td class="p-2 font-bold">Crossover T*</td><td class="p-2">ΔH / ΔS_sys (ΔS_total = 0)</td><td class="p-2">ΔH in J again</td></tr>
+                                <tr><td class="p-2 font-bold">ΔG (optional)</td><td class="p-2">ΔH − TΔS_sys</td><td class="p-2">&lt; 0 ⇒ feasible — allowed, not required</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+
+                <details id="rev-feas" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-emerald-300">🎯 Feasibility — the four cases (12.9–12.11)</summary>
+                    <div class="px-4 pb-4 overflow-x-auto space-y-3">
+                        <table class="w-full text-[11px] text-slate-300 min-w-[560px]">
+                            <thead class="text-emerald-300 border-b border-slate-800"><tr><th class="p-2 text-left">ΔH</th><th class="p-2 text-left">ΔS_sys</th><th class="p-2 text-left">Feasible</th><th class="p-2 text-left">Example</th></tr></thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr><td class="p-2">− exothermic</td><td class="p-2">+ more disorder</td><td class="p-2 text-emerald-300">Always</td><td class="p-2">— (rare combination)</td></tr>
+                                <tr><td class="p-2">+ endothermic</td><td class="p-2">− less disorder</td><td class="p-2 text-rose-300">Never</td><td class="p-2">—</td></tr>
+                                <tr><td class="p-2">+ endothermic</td><td class="p-2">+ more disorder</td><td class="p-2 text-amber-300">Above T*</td><td class="p-2">CaCO₃ decomposition (T* ≈ 1112 K); NH₄NO₃ dissolving (T* ≈ 238 K)</td></tr>
+                                <tr><td class="p-2">− exothermic</td><td class="p-2">− less disorder</td><td class="p-2 text-amber-300">Below T*</td><td class="p-2">CH₄ combustion; 2NO₂ → N₂O₄</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="text-[11px] text-slate-400"><b>Stability:</b> thermodynamic (ΔS_total / ΔG) vs kinetic (Eₐ). Diamond: thermodynamically unstable, kinetically stable.</p>
+                    </div>
+                </details>
+
+                <details id="rev-defs" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-violet-300">📖 Seven definitions to recite (12.12 &amp; 12.16)</summary>
+                    <div class="px-4 pb-4 overflow-x-auto">
+                        <table class="w-full text-[11px] text-slate-300 min-w-[640px]">
+                            <thead class="text-violet-300 border-b border-slate-800"><tr><th class="p-2 text-left">Term</th><th class="p-2 text-left">Definition (per mole)</th><th class="p-2 text-left">Sign</th></tr></thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr><td class="p-2 font-bold">Lattice energy</td><td class="p-2">Separate 1 mol ionic solid → gaseous ions</td><td class="p-2 text-emerald-300">+ (IAL convention)</td></tr>
+                                <tr><td class="p-2 font-bold">ΔfH</td><td class="p-2">Form 1 mol compound from elements in standard states</td><td class="p-2">±</td></tr>
+                                <tr><td class="p-2 font-bold">ΔatH</td><td class="p-2">1 mol gaseous atoms from element in standard state</td><td class="p-2 text-emerald-300">always +</td></tr>
+                                <tr><td class="p-2 font-bold">First IE</td><td class="p-2">Remove 1 mol e⁻ from 1 mol gaseous atoms</td><td class="p-2 text-emerald-300">+</td></tr>
+                                <tr><td class="p-2 font-bold">First EA</td><td class="p-2">1 mol gaseous atoms each gain 1 e⁻</td><td class="p-2 text-rose-300">− (F, Cl) · EA₂ is +</td></tr>
+                                <tr><td class="p-2 font-bold">ΔsolH</td><td class="p-2">Dissolve 1 mol solid → aqueous ions</td><td class="p-2">±</td></tr>
+                                <tr><td class="p-2 font-bold">ΔhydH</td><td class="p-2">1 mol gaseous ions → aqueous ions</td><td class="p-2 text-rose-300">always −</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+
+                <details id="rev-bh" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-violet-300">🏗️ Born–Haber method (12.13)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <p><b>Route equality (Hess):</b> ΔfH = ΣΔatH + ΣIE + ΣEA − LE ⇒ LE = ΣΔatH + ΣIE + ΣEA − ΔfH.</p>
+                        <p><b>NaCl check:</b> LE = 107 + 496 + 122 + (−346) − (−411) = <b class="text-emerald-300">+790 kJ mol⁻¹</b>.</p>
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>Divalent compounds: IE₁ + IE₂; double ΔatH(X) and EA for X₂.</li>
+                            <li>EA₂(O) is endothermic (+798) — O²⁻ only survives inside a huge lattice.</li>
+                            <li>Energy diagram: gaseous ions at the top; endothermic arrows up, exothermic down.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details id="rev-cov" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-amber-300">🔬 Covalency checklist (12.14–12.15)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>Theoretical LE: perfect ionic model — spherical ions, purely electrostatic.</li>
+                            <li>Experimental LE (Born–Haber) of greater magnitude ⇒ covalent character.</li>
+                            <li>Mechanism: small, highly charged cation <b>polarises</b> a large anion → electron cloud distortion → sharing.</li>
+                            <li>Gap grows: bigger anion (F⁻ → I⁻) and denser cation (Na⁺ → Ag⁺, Li⁺ → Mg²⁺).</li>
+                            <li>Examples: NaCl 790 vs 787 (ionic) · LiI 759 vs 734 · AgCl 905 vs 770 (covalent).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details id="rev-sol" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-rose-300">💧 Solution cycles &amp; solubility (12.16–12.19)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <p><b>Cycle:</b> ΔsolH = LE + ΔhydH(cation) + ΔhydH(anion). LE positive; hydrations negative.</p>
+                        <p><b>Solubility test:</b> ΔS_total(sol) = ΔS_sys + (−ΔsolH/T) &gt; 0 ⇒ dissolving feasible.</p>
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>Smaller/higher-charged ions ⇒ larger LE and more exothermic ΔhydH.</li>
+                            <li>Group 2 hydroxides: more soluble down the group (lattice term dominates the change).</li>
+                            <li>Group 2 sulfates: less soluble down the group (hydration term dominates the change).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details id="rev-traps" open class="bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-rose-300">⚠️ Master trap checklist (last-minute)</summary>
+                    <ul class="px-4 pb-4 list-disc ml-5 text-[11px] text-slate-300 space-y-1">
+                        <li>ΔH in <b>J</b> whenever it meets T or a J-valued ΔS — the topic’s #1 killer.</li>
+                        <li>Feasibility needs ΔS<b>_total</b> &gt; 0 — never judge by ΔS_sys or ΔH alone.</li>
+                        <li>Feasible ≠ fast. Diamond: thermodynamically unstable, kinetically stable.</li>
+                        <li>ΔS sign: count gas moles first; solids/liquids barely count.</li>
+                        <li>S° of elements is NOT zero (only perfect crystals at 0 K).</li>
+                        <li>Born–Haber: double ΔatH and EA for X₂; IE₁ + IE₂ for 2+ metals; EA₂(O) is +.</li>
+                        <li>LE convention: IAL uses endothermic dissociation (+) — check the question’s definition.</li>
+                        <li>Covalency: cation polarises anion (never reversed); gap = covalent character.</li>
+                        <li>ΔhydH always exothermic; ΔsolH can be either sign; +ΔsolH ≠ insoluble.</li>
+                        <li>Group 2: hydroxides ↑ solubility down; sulfates ↓.</li>
+                    </ul>
+                </details>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 py-4 text-center text-[10px] text-slate-500">
+        IAL Topic 12: Entropy and Energetics — Master Studio · WCH13 · 12.1–12.19 · Single-file Master Studio standard
+    </footer>
+</body>
+</html>

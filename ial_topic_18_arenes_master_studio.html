@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAL Topic 18: Organic Chemistry — Arenes Master Studio (WCH15)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        body { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono, code, input, select { font-family: 'IBM Plex Mono', monospace; }
+        #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        header, nav, main, footer { position: relative; z-index: 1; }
+        .tab-btn-active {
+            border-bottom: 3px solid #fb923c;
+            color: #fb923c;
+            font-weight: 700;
+            background-color: rgba(251, 146, 60, 0.10);
+        }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .blur-answer {
+            filter: blur(6px);
+            transition: filter 0.25s ease, background-color 0.25s ease;
+            user-select: none;
+            cursor: pointer;
+        }
+        .blur-answer:hover, .blur-answer.revealed {
+            filter: blur(0);
+            user-select: auto;
+            background-color: rgba(251, 146, 60, 0.16) !important;
+        }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] > summary .chev { transform: rotate(90deg); }
+        .chev { transition: transform 0.2s ease; display: inline-block; }
+        .press-btn { transition: transform 0.08s ease, box-shadow 0.15s ease, background-color 0.15s ease; }
+        .press-btn:active { transform: scale(0.96); }
+        .card-hover { transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+        .card-hover:hover { transform: translateY(-2px); border-color: rgba(251,146,60,0.35); box-shadow: 0 12px 32px -12px rgba(0,0,0,0.55); }
+        .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .reveal.revealed { opacity: 1; transform: translateY(0); }
+        .mech-step { transition: opacity 0.3s ease, transform 0.3s ease; }
+    </style>
+    <script>
+        function safeInitKaTeX() {
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) { console.warn(e); }
+            }
+        }
+        window.safeInitKaTeX = safeInitKaTeX;
+
+        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold border-b-2 border-orange-400 bg-orange-950/40 transition flex items-center gap-1.5 rounded-t-md";
+        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md";
+        let curTab = 'syllabus';
+
+        window.switchTab = function(tabId) {
+            curTab = tabId;
+            const tabs = ['syllabus', 'structure', 'mechanism', 'summary', 'phenol', 'pathfinder', 'review'];
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-' + t);
+                const btn = document.getElementById('btn-' + t);
+                if (el) el.classList.toggle('hidden', t !== tabId);
+                if (btn) btn.className = (t === tabId) ? TAB_ACTIVE : TAB_INACTIVE;
+            });
+            if (tabId === 'structure') animateHydrogenation();
+            setTimeout(safeInitKaTeX, 50);
+        };
+
+        // ============ Ambient background (drifting aromatic rings) ============
+        const BG = { rings: [], init: false };
+        function initBackground() {
+            const cv = document.getElementById('bg-canvas');
+            if (!cv) return;
+            cv.width = window.innerWidth; cv.height = window.innerHeight;
+            BG.rings = [];
+            for (let i = 0; i < 10; i++) {
+                BG.rings.push({
+                    x: Math.random()*cv.width, y: Math.random()*cv.height,
+                    r: 26 + Math.random()*46,
+                    vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*6,
+                    rot: Math.random()*6.28, vr: (Math.random()-0.5)*0.3,
+                    ph: Math.random()*6.28
+                });
+            }
+            BG.init = true;
+        }
+        function drawHexagon(ctx, x, y, r, rot) {
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const a = rot + i * Math.PI / 3;
+                const px = x + r * Math.cos(a), py = y + r * Math.sin(a);
+                if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.stroke();
+        }
+        function drawBackground(dt, t) {
+            const cv = document.getElementById('bg-canvas');
+            if (!cv || !BG.init) return;
+            const ctx = cv.getContext('2d');
+            ctx.clearRect(0, 0, cv.width, cv.height);
+            BG.rings.forEach(o => {
+                o.x += o.vx*dt; o.y += o.vy*dt; o.rot += o.vr*dt;
+                if (o.x < -o.r*2) o.x = cv.width+o.r; if (o.x > cv.width+o.r*2) o.x = -o.r;
+                if (o.y < -o.r*2) o.y = cv.height+o.r; if (o.y > cv.height+o.r*2) o.y = -o.r;
+                const pulse = 0.5 + 0.5*Math.sin(t*0.6 + o.ph);
+                ctx.strokeStyle = 'rgba(251,146,60,' + (0.04 + 0.03*pulse).toFixed(3) + ')';
+                ctx.lineWidth = 1.5;
+                drawHexagon(ctx, o.x, o.y, o.r, o.rot);
+                ctx.strokeStyle = 'rgba(45,212,191,' + (0.03 + 0.025*pulse).toFixed(3) + ')';
+                ctx.beginPath();
+                ctx.arc(o.x, o.y, o.r*0.55, 0, 6.28);
+                ctx.stroke();
+            });
+        }
+        window.addEventListener('resize', function() {
+            const cv = document.getElementById('bg-canvas');
+            if (cv) { cv.width = window.innerWidth; cv.height = window.innerHeight; }
+        });
+
+        // ============ Header benzene ring (living signature) ============
+        function drawBenzeneHeader(t) {
+            const cv = document.getElementById('benzene-canvas');
+            if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = 96, h = 96;
+            cv.width = w*dpr; cv.height = h*dpr;
+            cv.style.width = w + 'px'; cv.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+            const cx = w/2, cy = h/2, R = 34;
+            // hexagon
+            ctx.strokeStyle = '#fb923c';
+            ctx.lineWidth = 2.5;
+            drawHexagon(ctx, cx, cy, R, -Math.PI/2);
+            // delocalised circle
+            ctx.strokeStyle = 'rgba(45,212,191,0.8)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, R*0.55, 0, 6.28);
+            ctx.stroke();
+            // 6 delocalised pi electrons orbiting
+            for (let i = 0; i < 6; i++) {
+                const a = t*0.9 + i * Math.PI / 3;
+                const ex = cx + R*0.55 * Math.cos(a), ey = cy + R*0.55 * Math.sin(a);
+                ctx.fillStyle = '#2dd4bf';
+                ctx.beginPath();
+                ctx.arc(ex, ey, 3, 0, 6.28);
+                ctx.fill();
+            }
+            // carbon atoms at vertices
+            ctx.fillStyle = '#fdba74';
+            for (let i = 0; i < 6; i++) {
+                const a = -Math.PI/2 + i * Math.PI / 3;
+                ctx.beginPath();
+                ctx.arc(cx + R*Math.cos(a), cy + R*Math.sin(a), 3.5, 0, 6.28);
+                ctx.fill();
+            }
+        }
+
+        // ============ Hydrogenation energy diagram (animated) ============
+        let hydroAnim = null;
+        function animateHydrogenation() {
+            if (hydroAnim) cancelAnimationFrame(hydroAnim);
+            const t0 = performance.now();
+            function frame(now) {
+                const p = Math.min(1, (now - t0) / 1200);
+                drawHydrogenation(p);
+                if (p < 1 && curTab === 'structure') hydroAnim = requestAnimationFrame(frame);
+            }
+            hydroAnim = requestAnimationFrame(frame);
+        }
+        function drawHydrogenation(progress) {
+            const cv = document.getElementById('hydro-canvas');
+            if (!cv || cv.offsetParent === null) return;
+            const ctx = cv.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.max(cv.parentElement.clientWidth || 600, 320);
+            const h = 260;
+            cv.width = w*dpr; cv.height = h*dpr;
+            cv.style.height = h + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+            const padL = 70, padR = 20, padT = 24, padB = 46;
+            const pw = w - padL - padR, ph = h - padT - padB;
+            // energy axis: 0 at top (reactants) down to -400
+            const eMax = 0, eMin = -400;
+            const Y = e => padT + (eMax - e) / (eMax - eMin) * ph;
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+ph); ctx.lineTo(padL+pw, padT+ph); ctx.stroke();
+            ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace'; ctx.textAlign = 'right';
+            for (let e = 0; e >= -400; e -= 100) {
+                ctx.fillText(String(e), padL-6, Y(e)+3);
+                ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(padL, Y(e)); ctx.lineTo(padL+pw, Y(e)); ctx.stroke();
+            }
+            ctx.save(); ctx.translate(14, padT+ph/2); ctx.rotate(-Math.PI/2);
+            ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('ΔH hydrogenation / kJ mol⁻¹', 0, 0); ctx.restore();
+            // reactant line
+            ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5; ctx.setLineDash([4,4]);
+            ctx.beginPath(); ctx.moveTo(padL, Y(0)); ctx.lineTo(padL+pw, Y(0)); ctx.stroke(); ctx.setLineDash([]);
+            ctx.fillStyle = '#94a3b8'; ctx.font = '10px sans-serif'; ctx.textAlign = 'left';
+            ctx.fillText('benzene + 3H₂ (reference 0)', padL+6, Y(0)-6);
+            // three bars
+            const bars = [
+                { x: 0.10, wdt: 0.16, val: -120, col: '#38bdf8', label: 'cyclohexene', sub: '−120 (×1)' },
+                { x: 0.40, wdt: 0.16, val: -360, col: '#64748b', label: 'hypothetical', sub: '3 × −120 = −360', dashed: true },
+                { x: 0.70, wdt: 0.16, val: -208, col: '#fb923c', label: 'benzene (real)', sub: '−208' }
+            ];
+            bars.forEach(b => {
+                const x0 = padL + b.x*pw, bw = b.wdt*pw;
+                const val = b.val * progress;
+                ctx.fillStyle = b.dashed ? 'rgba(100,116,139,0.35)' : b.col;
+                ctx.globalAlpha = b.dashed ? 0.6 : 0.85;
+                ctx.fillRect(x0, Y(0), bw, Y(val) - Y(0));
+                ctx.globalAlpha = 1;
+                if (b.dashed) {
+                    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
+                    ctx.strokeRect(x0, Y(0), bw, Y(val)-Y(0));
+                    ctx.setLineDash([]);
+                }
+                ctx.fillStyle = b.dashed ? '#94a3b8' : b.col;
+                ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText(b.label, x0+bw/2, Y(val)+16);
+                ctx.font = '10px monospace';
+                ctx.fillText(b.sub, x0+bw/2, Y(val)+30);
+            });
+            // resonance stabilisation bracket
+            if (progress > 0.95) {
+                const xB = padL + 0.78*pw;
+                ctx.strokeStyle = '#2dd4bf'; ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(xB, Y(-208)); ctx.lineTo(xB+18, Y(-208)); ctx.lineTo(xB+18, Y(-360)); ctx.lineTo(xB, Y(-360));
+                ctx.stroke();
+                ctx.fillStyle = '#2dd4bf'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+                ctx.fillText('152 kJ mol⁻¹', xB+24, (Y(-208)+Y(-360))/2 - 4);
+                ctx.font = '10px sans-serif';
+                ctx.fillText('delocalisation', xB+24, (Y(-208)+Y(-360))/2 + 10);
+                ctx.fillText('stabilisation', xB+24, (Y(-208)+Y(-360))/2 + 22);
+            }
+        }
+
+        // ============ Electrophilic substitution mechanism player ============
+        const MECH = {
+            bromination: {
+                name: 'Bromination', electrophile: '$\\text{Br}^+$',
+                gen: '$\\text{Br}_2 + \\text{FeBr}_3 \\rightarrow \\text{Br}^+ + \\text{FeBr}_4^-$',
+                genNote: 'The halogen carrier $\\text{FeBr}_3$ polarises $\\text{Br}_2$, generating the electrophile $\\text{Br}^+$.',
+                attack: '$\\text{C}_6\\text{H}_6 + \\text{Br}^+ \\rightarrow [\\text{C}_6\\text{H}_6\\text{Br}]^+$',
+                attackNote: '$\\text{Br}^+$ accepts a pair of electrons from the delocalised $\\pi$ system, forming a carbocation (arenium) intermediate. The ring temporarily loses aromaticity.',
+                regen: '$[\\text{C}_6\\text{H}_6\\text{Br}]^+ + \\text{FeBr}_4^- \\rightarrow \\text{C}_6\\text{H}_5\\text{Br} + \\text{HBr} + \\text{FeBr}_3$',
+                regenNote: '$\\text{FeBr}_4^-$ removes $\\text{H}^+$, restoring the stable delocalised ring and regenerating the $\\text{FeBr}_3$ catalyst. Observation: steamy acidic fumes of HBr.'
+            },
+            nitration: {
+                name: 'Nitration', electrophile: '$\\text{NO}_2^+$',
+                gen: '$\\text{HNO}_3 + 2\\text{H}_2\\text{SO}_4 \\rightarrow \\text{NO}_2^+ + \\text{H}_3\\text{O}^+ + 2\\text{HSO}_4^-$',
+                genNote: 'Concentrated $\\text{H}_2\\text{SO}_4$ protonates $\\text{HNO}_3$, which loses water to give the nitronium ion $\\text{NO}_2^+$. Kept at 50–60 °C.',
+                attack: '$\\text{C}_6\\text{H}_6 + \\text{NO}_2^+ \\rightarrow [\\text{C}_6\\text{H}_6\\text{NO}_2]^+$',
+                attackNote: '$\\text{NO}_2^+$ attacks the $\\pi$ system, forming the arenium carbocation intermediate.',
+                regen: '$[\\text{C}_6\\text{H}_6\\text{NO}_2]^+ + \\text{HSO}_4^- \\rightarrow \\text{C}_6\\text{H}_5\\text{NO}_2 + \\text{H}_2\\text{SO}_4$',
+                regenNote: '$\\text{HSO}_4^-$ removes $\\text{H}^+$, reforming aromatic nitrobenzene and regenerating $\\text{H}_2\\text{SO}_4$. Above 60 °C, dinitration gives 1,3-dinitrobenzene.'
+            },
+            alkylation: {
+                name: 'Friedel–Crafts Alkylation', electrophile: '$\\text{R}^+$',
+                gen: '$\\text{RCl} + \\text{AlCl}_3 \\rightarrow \\text{R}^+ + \\text{AlCl}_4^-$',
+                genNote: 'Anhydrous $\\text{AlCl}_3$ (a Lewis acid) accepts $\\text{Cl}^-$, generating a carbocation $\\text{R}^+$. Must be anhydrous — water reacts violently with $\\text{AlCl}_3$.',
+                attack: '$\\text{C}_6\\text{H}_6 + \\text{R}^+ \\rightarrow [\\text{C}_6\\text{H}_6\\text{R}]^+$',
+                attackNote: 'The carbocation attacks the $\\pi$ system, forming the arenium intermediate.',
+                regen: '$[\\text{C}_6\\text{H}_6\\text{R}]^+ + \\text{AlCl}_4^- \\rightarrow \\text{C}_6\\text{H}_5\\text{R} + \\text{HCl} + \\text{AlCl}_3$',
+                regenNote: '$\\text{AlCl}_4^-$ removes $\\text{H}^+$, giving an alkylbenzene (e.g. methylbenzene) and regenerating $\\text{AlCl}_3$. The attached R group carries NO positive charge.'
+            },
+            acylation: {
+                name: 'Friedel–Crafts Acylation', electrophile: '$\\text{RCO}^+$',
+                gen: '$\\text{RCOCl} + \\text{AlCl}_3 \\rightarrow \\text{RCO}^+ + \\text{AlCl}_4^-$',
+                genNote: 'Anhydrous $\\text{AlCl}_3$ generates the acylium ion $\\text{RCO}^+$ from an acyl chloride.',
+                attack: '$\\text{C}_6\\text{H}_6 + \\text{RCO}^+ \\rightarrow [\\text{C}_6\\text{H}_6\\text{COR}]^+$',
+                attackNote: 'The acylium ion attacks the $\\pi$ system, forming the arenium intermediate.',
+                regen: '$[\\text{C}_6\\text{H}_6\\text{COR}]^+ + \\text{AlCl}_4^- \\rightarrow \\text{C}_6\\text{H}_5\\text{COR} + \\text{HCl} + \\text{AlCl}_3$',
+                regenNote: 'Forms an aromatic ketone (e.g. phenylethanone) — a new C–C bond to the carbonyl carbon. $\\text{AlCl}_3$ is regenerated.'
+            }
+        };
+        let mechKey = 'bromination', mechStep = 0;
+        const MECH_STEPS = ['gen', 'attack', 'regen'];
+        const MECH_TITLES = ['Step 1 — Generation of the electrophile', 'Step 2 — Electrophilic attack (arenium intermediate)', 'Step 3 — Loss of H⁺ · aromaticity restored · catalyst regenerated'];
+        function renderMech() {
+            const m = MECH[mechKey];
+            const s = MECH_STEPS[mechStep];
+            document.getElementById('mech-step-title').textContent = MECH_TITLES[mechStep];
+            // m[s] already carries inline $...$ delimiters — strip them and re-wrap as display math
+            const eqRaw = m[s].replace(/^\$/, '').replace(/\$$/, '');
+            document.getElementById('mech-eq').innerHTML = '$$' + eqRaw + '$$';
+            document.getElementById('mech-note').innerHTML = m[s + 'Note'];
+            document.getElementById('mech-electrophile').innerHTML = 'Electrophile: ' + m.electrophile;
+            [0,1,2].forEach(i => {
+                const b = document.getElementById('mech-btn-' + i);
+                if (b) b.className = 'press-btn flex-1 py-2 rounded-lg text-xs font-bold ' + (i === mechStep ? 'bg-orange-600 text-white shadow' : 'bg-slate-800 hover:bg-slate-700 text-slate-300');
+            });
+            document.getElementById('mech-counter').textContent = (mechStep+1) + ' / 3';
+            setTimeout(safeInitKaTeX, 40);
+        }
+        window.setMech = function(key) { mechKey = key; mechStep = 0; renderMech(); };
+        window.setMechStep = function(i) { mechStep = i; renderMech(); };
+        window.mechNav = function(d) { mechStep = (mechStep + d + 3) % 3; renderMech(); };
+
+        // ============ Reaction pathfinder ============
+        const PATHFINDER = {
+            'benzene|br2_cat': { name: 'Bromination', type: 'Electrophilic substitution', eq: '$\\text{C}_6\\text{H}_6 + \\text{Br}_2 \\xrightarrow{\\text{FeBr}_3} \\text{C}_6\\text{H}_5\\text{Br} + \\text{HBr}$', obs: 'Steamy HBr fumes; liquid decolourises.', trap: 'Needs the $\\text{FeBr}_3$ halogen carrier — benzene will not react with $\\text{Br}_2$ alone.' },
+            'benzene|hno3': { name: 'Nitration', type: 'Electrophilic substitution', eq: '$\\text{C}_6\\text{H}_6 + \\text{HNO}_3 \\xrightarrow{\\text{H}_2\\text{SO}_4,\\ 50-60^\\circ\\text{C}} \\text{C}_6\\text{H}_5\\text{NO}_2 + \\text{H}_2\\text{O}$', obs: 'Nitrobenzene (pale yellow oil) forms.', trap: 'Keep at 50–60 °C — above 60 °C you get dinitration.' },
+            'benzene|fuming_h2so4': { name: 'Sulfonation', type: 'Electrophilic substitution', eq: '$\\text{C}_6\\text{H}_6 + \\text{H}_2\\text{SO}_4 \\rightarrow \\text{C}_6\\text{H}_5\\text{SO}_3\\text{H} + \\text{H}_2\\text{O}$', obs: 'Benzenesulfonic acid forms.', trap: 'Electrophile is neutral $\\text{SO}_3$ (or $^+\\text{SO}_3\\text{H}$), from fuming $\\text{H}_2\\text{SO}_4$.' },
+            'benzene|rcl': { name: 'Friedel–Crafts alkylation', type: 'Electrophilic substitution', eq: '$\\text{C}_6\\text{H}_6 + \\text{RCl} \\xrightarrow{\\text{AlCl}_3} \\text{C}_6\\text{H}_5\\text{R} + \\text{HCl}$', obs: 'Alkylbenzene forms.', trap: 'Anhydrous $\\text{AlCl}_3$ only — water destroys the catalyst.' },
+            'benzene|rcocl': { name: 'Friedel–Crafts acylation', type: 'Electrophilic substitution', eq: '$\\text{C}_6\\text{H}_6 + \\text{RCOCl} \\xrightarrow{\\text{AlCl}_3} \\text{C}_6\\text{H}_5\\text{COR} + \\text{HCl}$', obs: 'Aromatic ketone forms.', trap: 'Forms a C–C bond to the carbonyl carbon — electrophile is $\\text{RCO}^+$.' },
+            'benzene|h2_ni': { name: 'Hydrogenation', type: 'Addition', eq: '$\\text{C}_6\\text{H}_6 + 3\\text{H}_2 \\xrightarrow{\\text{Ni},\\ 150-200^\\circ\\text{C}} \\text{C}_6\\text{H}_{12}$', obs: 'Cyclohexane forms.', trap: 'Needs high T/pressure — the stable delocalised ring (152 kJ mol⁻¹) must be broken.' },
+            'benzene|cl2_uv': { name: 'Free-radical addition', type: 'Free-radical addition', eq: '$\\text{C}_6\\text{H}_6 + 3\\text{Cl}_2 \\xrightarrow{\\text{UV}} \\text{C}_6\\text{H}_6\\text{Cl}_6$', obs: '1,2,3,4,5,6-hexachlorocyclohexane forms.', trap: 'UV light, NO catalyst — the delocalised ring is destroyed (no internal circle in the product).' },
+            'benzene|o2': { name: 'Combustion', type: 'Combustion', eq: '$2\\text{C}_6\\text{H}_6 + 15\\text{O}_2 \\rightarrow 12\\text{CO}_2 + 6\\text{H}_2\\text{O}$', obs: 'Very smoky yellow flame.', trap: 'High C:H ratio (1:1) → incomplete combustion → soot.' },
+            'phenol|br2_water': { name: 'Bromination of phenol', type: 'Electrophilic substitution', eq: '$\\text{C}_6\\text{H}_5\\text{OH} + 3\\text{Br}_2 \\rightarrow 2,4,6\\text{-C}_6\\text{H}_2\\text{Br}_3\\text{OH} + 3\\text{HBr}$', obs: 'Bromine water decolourises + white precipitate of 2,4,6-tribromophenol.', trap: 'NO catalyst needed — the OH group activates the ring (2,4,6 positions).' },
+            'phenol|na': { name: 'Phenol + sodium', type: 'Acid–base / redox', eq: '$2\\text{C}_6\\text{H}_5\\text{OH} + 2\\text{Na} \\rightarrow 2\\text{C}_6\\text{H}_5\\text{O}^-\\text{Na}^+ + \\text{H}_2$', obs: 'Effervescence (H₂); sodium phenoxide solution.', trap: 'Shows phenol is acidic — aliphatic alcohols also react with Na, but only phenol reacts with NaOH.' },
+            'phenol|naoh': { name: 'Phenol + sodium hydroxide', type: 'Acid–base neutralisation', eq: '$\\text{C}_6\\text{H}_5\\text{OH} + \\text{NaOH} \\rightarrow \\text{C}_6\\text{H}_5\\text{O}^-\\text{Na}^+ + \\text{H}_2\\text{O}$', obs: 'Phenol dissolves to give sodium phenoxide.', trap: 'Ethanol does NOT react with NaOH — this distinguishes phenol from aliphatic alcohols.' }
+        };
+        window.runPathfinder = function() {
+            const start = document.getElementById('pf-start').value;
+            const reagent = document.getElementById('pf-reagent').value;
+            const out = document.getElementById('pf-out');
+            const key = start + '|' + reagent;
+            const r = PATHFINDER[key];
+            if (!r) { out.innerHTML = '<span class="text-rose-300">No reaction in scope for that combination.</span>'; return; }
+            out.innerHTML =
+                '<div class="p-4 bg-slate-900 border border-slate-700 rounded-xl space-y-2.5 text-xs">' +
+                '<div class="flex flex-wrap items-center gap-2"><span class="font-display font-bold text-white text-sm">' + r.name + '</span><span class="px-2 py-0.5 rounded bg-orange-950 text-orange-300 border border-orange-800 text-[10px] font-bold">' + r.type + '</span></div>' +
+                '<div class="text-emerald-300">' + r.eq + '</div>' +
+                '<div class="text-slate-300"><b>Observation:</b> ' + r.obs + '</div>' +
+                '<div class="text-amber-200"><b>💡 Trap:</b> ' + r.trap + '</div>' +
+                '</div>';
+            setTimeout(safeInitKaTeX, 40);
+        };
+
+        // ============ Master loop + init ============
+        let lastTs = 0, globalT = 0;
+        function masterLoop(ts) {
+            const dt = Math.min(0.05, (ts - lastTs)/1000 || 0.016);
+            lastTs = ts; globalT += dt;
+            drawBackground(dt, globalT);
+            drawBenzeneHeader(globalT);
+            requestAnimationFrame(masterLoop);
+        }
+        window.addEventListener('load', function() {
+            initBackground();
+            renderMech();
+            const revealObs = (typeof IntersectionObserver !== 'undefined')
+                ? new IntersectionObserver(entries => { entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('revealed'); }); }, { threshold: 0.06 })
+                : null;
+            if (revealObs) document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+            else document.querySelectorAll('.reveal').forEach(el => el.classList.add('revealed'));
+            requestAnimationFrame(masterLoop);
+            setTimeout(safeInitKaTeX, 300);
+        });
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+    <canvas id="bg-canvas"></canvas>
+
+    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="flex items-center gap-3">
+                <canvas id="benzene-canvas" class="shrink-0"></canvas>
+                <div>
+                    <h1 class="font-display text-lg font-bold tracking-tight text-orange-400">IAL Topic 18: Organic Chemistry — Arenes Master Studio</h1>
+                    <p class="text-[11px] text-slate-400 mt-0.5">WCH15/01 · Unit 5 · Paper 5 · Syllabus <span class="text-orange-300 font-mono">18.1–18.6</span> · Benzene, electrophilic substitution &amp; phenol · English exam wording</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-1.5 text-[10px]">
+                <span class="px-2 py-0.5 rounded bg-orange-950 text-orange-300 border border-orange-800 font-mono">Delocalisation</span>
+                <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">Electrophilic Substitution</span>
+                <span class="px-2 py-0.5 rounded bg-teal-950 text-teal-300 border border-teal-800 font-mono">Phenol</span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="bg-slate-900/95 border-b border-slate-800 text-xs font-medium sticky top-[88px] z-30 backdrop-blur-md shadow-md">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-1.5 flex flex-wrap items-stretch gap-x-0.5 gap-y-1">
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold border-b-2 border-orange-400 bg-orange-950/40 transition flex items-center gap-1.5 rounded-t-md"><span>📚 1. Syllabus</span></button>
+            <button onclick="switchTab('structure')" id="btn-structure" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🛡️ 2. Structure &amp; Stability</span></button>
+            <button onclick="switchTab('mechanism')" id="btn-mechanism" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>⚡ 3. Mechanism</span></button>
+            <button onclick="switchTab('summary')" id="btn-summary" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🧪 4. 10-Reaction Summary</span></button>
+            <button onclick="switchTab('phenol')" id="btn-phenol" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🌸 5. Phenol</span></button>
+            <button onclick="switchTab('pathfinder')" id="btn-pathfinder" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🧭 6. Pathfinder</span></button>
+            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>📋 7. Final Review</span></button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- ============ 1. SYLLABUS MASTER OVERVIEW ============ -->
+        <section id="tab-syllabus" class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+                <div class="border-b border-slate-800 pb-4 mb-6">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <h2 class="font-display text-xl font-bold text-white mt-1">Topic 18 Arenes · Learning Points &amp; Mark Scheme Secrets (Spec 18.1 – 18.6)</h2>
+                    <p class="text-xs text-slate-400 mt-1">Every in-scope assessment point elaborated with key learning goals and IAL examiner watch-outs. Common uses of the compounds mentioned are also expected.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between card-hover">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 18.1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Evidence for structure</span>
+                            </div>
+                            <h3 class="font-display text-sm font-bold text-white mb-3">Evidence for the structure &amp; stability of benzene</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li><b>Thermochemical:</b> hydrogenation of benzene is −208 kJ mol⁻¹, far less exothermic than 3 × cyclohexene (3 × −120 = −360) → benzene is ~152 kJ mol⁻¹ more stable than a Kekulé structure.</li>
+                                    <li><b>X-ray diffraction:</b> all six C–C bonds are equal length (0.139 nm) — between C–C (0.154) and C=C (0.134); a Kekulé structure would alternate.</li>
+                                    <li><b>Infrared:</b> no absorption for a localised C=C stretch; consistent with delocalised bonding.</li>
+                                    <li>State that benzene is planar, hexagonal, with bond angles of 120°.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Quote the <b>152 kJ mol⁻¹</b> stabilisation and the <b>equal bond lengths</b> — vague “more stable” answers lose marks. The hypothetical value is 3 × cyclohexene, not “three double bonds”.</p>
+                        </div>
+                    </div>
+
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between card-hover">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 18.2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Delocalised model</span>
+                            </div>
+                            <h3 class="font-display text-sm font-bold text-white mb-3">p-orbital overlap &amp; the delocalised π system</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Each carbon is sp² hybridised: three σ bonds (two C–C, one C–H) in a plane at 120°.</li>
+                                    <li>Each carbon has one electron in a <b>p-orbital perpendicular</b> to the ring plane.</li>
+                                    <li>The six p-orbitals overlap sideways, above and below the plane, forming a <b>delocalised π system</b> of 6 electrons.</li>
+                                    <li>Represent benzene as a hexagon with an internal circle (delocalised model).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Say the p-orbitals overlap <b>sideways / laterally, above and below the plane</b>. “Electrons move freely” is too vague — say delocalised over all six carbons.</p>
+                        </div>
+                    </div>
+
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between card-hover">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold px-2 py-0.5 bg-emerald-950 rounded border border-emerald-800">Spec 18.3</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Benzene vs alkenes</span>
+                            </div>
+                            <h3 class="font-display text-sm font-bold text-white mb-3">Why benzene resists bromination (vs alkenes)</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Alkenes have a <b>localised</b> π bond with high electron density → readily polarise Br₂ → addition at room temperature, no catalyst.</li>
+                                    <li>Benzene’s π electrons are <b>delocalised</b> over six carbons → lower local electron density → cannot polarise Br₂ alone.</li>
+                                    <li>Benzene needs a halogen carrier (FeBr₃) to generate a strong electrophile, and undergoes <b>substitution</b> (preserving the ring) rather than addition.</li>
+                                    <li>Addition would destroy the delocalised system (energetically unfavourable); substitution restores it.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">The mark is for <b>delocalised vs localised electron density</b> — and for substitution preserving the stable ring. “Benzene is unreactive” is wrong; it is resistant to addition.</p>
+                        </div>
+                    </div>
+
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between card-hover">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-amber-400 uppercase font-bold px-2 py-0.5 bg-amber-950 rounded border border-amber-800">Spec 18.4</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Reactions of benzene</span>
+                            </div>
+                            <h3 class="font-display text-sm font-bold text-white mb-3">The five reactions of benzene</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>i. <b>Combustion</b> in air: very smoky yellow flame (high C:H ratio).</li>
+                                    <li>ii. <b>Bromine</b> with FeBr₃ catalyst → bromobenzene + HBr.</li>
+                                    <li>iii. <b>Conc. HNO₃ + conc. H₂SO₄</b> (50–60 °C) → nitrobenzene.</li>
+                                    <li>iv. <b>Fuming H₂SO₄</b> → benzenesulfonic acid.</li>
+                                    <li>v. <b>Friedel–Crafts</b>: halogenoalkane or acyl chloride with anhydrous AlCl₃ → alkylbenzene / aromatic ketone.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Conditions are mark points: the catalyst (FeBr₃ / AlCl₃), the nitrating mixture, and the 50–60 °C temperature all score. See the full table in Tab 4.</p>
+                        </div>
+                    </div>
+
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between card-hover">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-rose-400 uppercase font-bold px-2 py-0.5 bg-rose-950 rounded border border-rose-800">Spec 18.5</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Mechanism</span>
+                            </div>
+                            <h3 class="font-display text-sm font-bold text-white mb-3">Electrophilic substitution mechanism</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Step 1 — <b>generate the electrophile</b>: Br⁺ (from Br₂/FeBr₃), NO₂⁺ (from HNO₃/H₂SO₄), R⁺ or RCO⁺ (from RCl/RCOCl + AlCl₃).</li>
+                                    <li>Step 2 — electrophile attacks the π system → <b>carbocation (arenium) intermediate</b>; the ring temporarily loses aromaticity.</li>
+                                    <li>Step 3 — loss of H⁺ (taken by FeBr₄⁻ / HSO₄⁻ / AlCl₄⁻) → aromatic ring restored; <b>catalyst regenerated</b>.</li>
+                                    <li>Draw the mechanism for halogenation, nitration and Friedel–Crafts (Tab 3 player).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Examiners want the <b>electrophile generation</b> equation AND the <b>catalyst regeneration</b> step (2023/2024 papers). Forgetting to regenerate the catalyst is the classic lost mark.</p>
+                        </div>
+                    </div>
+
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between card-hover">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-cyan-400 uppercase font-bold px-2 py-0.5 bg-cyan-950 rounded border border-cyan-800">Spec 18.6</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Phenol</span>
+                            </div>
+                            <h3 class="font-display text-sm font-bold text-white mb-3">Phenol + bromine water — and why it is so easy</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Phenol reacts with <b>bromine water at room temperature, no catalyst</b> → 2,4,6-tribromophenol (white precipitate) + decolourisation.</li>
+                                    <li>Explain the ease: the oxygen lone pair <b>delocalises into the ring</b>, raising electron density (activating the ring).</li>
+                                    <li>Substitution occurs at the <b>2, 4 and 6</b> positions (ortho/para directing).</li>
+                                    <li>Contrast with benzene, which needs FeBr₃ and gives only monosubstitution.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Two observations score: <b>decolourisation AND white precipitate</b>. The explanation must mention the oxygen lone pair delocalising into the ring — “phenol is more reactive” alone is not enough.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-6 p-4 bg-rose-950/20 border border-rose-900/40 rounded-xl text-xs text-slate-300">
+                    <b class="text-rose-300">Also expected:</b> common uses of the compounds mentioned (e.g. nitrobenzene → dyes/phenylamine; sulfonic acids → detergents; phenol → resins/disinfectants; toluene → TNT). <b>Out of scope here:</b> orientation rules for substituted benzenes beyond 2,4,6-activation by –OH, and full arene synthesis pathways (covered in later organic topics).
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 2. STRUCTURE & STABILITY ============ -->
+        <section id="tab-structure" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Spec 18.1 – 18.3</span>
+                    <h2 class="font-display text-xl font-bold text-white mt-1">Evidence for the Structure &amp; Stability of Benzene</h2>
+                    <p class="text-xs text-slate-400 mt-1">Three independent lines of evidence disprove the Kekulé model, plus the thermochemical proof of delocalisation stabilisation.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 card-hover">
+                        <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-bold text-[10px]">🔥 Thermochemical</span>
+                        <p class="text-slate-300 leading-relaxed">Hydrogenation of benzene releases <b>−208 kJ mol⁻¹</b>, not the <b>−360 kJ mol⁻¹</b> expected for three isolated C=C (3 × cyclohexene = 3 × −120). Benzene is <b>152 kJ mol⁻¹ more stable</b> than Kekulé predicted.</p>
+                    </div>
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 card-hover">
+                        <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold text-[10px]">📐 X-ray Diffraction</span>
+                        <p class="text-slate-300 leading-relaxed">All six C–C bonds are the <b>same length (0.139 nm)</b> — intermediate between C–C (0.154 nm) and C=C (0.134 nm). Kekulé would require alternating long/short bonds.</p>
+                    </div>
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 card-hover">
+                        <span class="px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold text-[10px]">〰️ Infrared</span>
+                        <p class="text-slate-300 leading-relaxed">No absorption corresponding to a <b>localised C=C stretch</b> — consistent with delocalised π bonding rather than three discrete double bonds.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                    <h3 class="text-xs font-bold text-sky-300 uppercase tracking-wider">Hydrogenation Enthalpy Comparison — the 152 kJ mol⁻¹ proof</h3>
+                    <canvas id="hydro-canvas" class="w-full rounded-lg border border-slate-800" style="height:260px;min-height:260px"></canvas>
+                    <p class="text-[11px] text-slate-400">The real benzene curve sits 152 kJ mol⁻¹ above the hypothetical cyclohexatriene value — that gap is the <b class="text-teal-300">delocalisation (resonance) stabilisation energy</b>.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                        <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider">The delocalised model (18.2)</h3>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                            <li>Each C is <b>sp²</b>: three σ bonds in a plane, 120°.</li>
+                            <li>One electron per C in a <b>p-orbital ⊥ to the plane</b>.</li>
+                            <li>Six p-orbitals overlap sideways above &amp; below the plane → one <b>delocalised π cloud</b> holding 6 electrons.</li>
+                            <li>Drawn as a hexagon with an internal circle.</li>
+                        </ul>
+                    </div>
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                        <h3 class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Benzene vs cyclohexene + bromine (18.3)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-[11px] text-slate-300 min-w-[420px]">
+                                <thead class="text-emerald-300 border-b border-slate-800"><tr><th class="p-2 text-left"></th><th class="p-2 text-left">Cyclohexene</th><th class="p-2 text-left">Benzene</th></tr></thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    <tr><td class="p-2">π electrons</td><td class="p-2">localised (high density)</td><td class="p-2">delocalised (spread out)</td></tr>
+                                    <tr><td class="p-2">Reagent</td><td class="p-2">Br₂, no catalyst, r.t.</td><td class="p-2">Br₂ + FeBr₃ catalyst</td></tr>
+                                    <tr><td class="p-2">Reaction type</td><td class="p-2">electrophilic addition</td><td class="p-2">electrophilic substitution</td></tr>
+                                    <tr><td class="p-2">Ring preserved?</td><td class="p-2">n/a (no aromatic ring)</td><td class="p-2 text-teal-300">yes — substitution restores it</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Addition would destroy the delocalised system (costs the 152 kJ mol⁻¹) — so benzene substitutes instead.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 3. MECHANISM PLAYER ============ -->
+        <section id="tab-mechanism" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Spec 18.5</span>
+                    <h2 class="font-display text-xl font-bold text-white mt-1">Electrophilic Substitution — Step-by-Step Mechanism Player</h2>
+                    <p class="text-xs text-slate-400 mt-1">Choose a reaction, then walk the three stages: electrophile generation → arenium intermediate → aromaticity restored &amp; catalyst regenerated.</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="setMech('bromination')" class="press-btn px-3 py-1.5 bg-sky-800 hover:bg-sky-700 text-white font-bold text-xs rounded-lg">Bromination (Br⁺)</button>
+                    <button onclick="setMech('nitration')" class="press-btn px-3 py-1.5 bg-rose-800 hover:bg-rose-700 text-white font-bold text-xs rounded-lg">Nitration (NO₂⁺)</button>
+                    <button onclick="setMech('alkylation')" class="press-btn px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg">FC Alkylation (R⁺)</button>
+                    <button onclick="setMech('acylation')" class="press-btn px-3 py-1.5 bg-cyan-800 hover:bg-cyan-700 text-white font-bold text-xs rounded-lg">FC Acylation (RCO⁺)</button>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span id="mech-electrophile" class="text-xs text-orange-300 font-bold">Electrophile: $\text{Br}^+$</span>
+                        <span id="mech-counter" class="text-[11px] font-mono text-slate-400">1 / 3</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="setMechStep(0)" id="mech-btn-0" class="press-btn flex-1 py-2 rounded-lg text-xs font-bold bg-orange-600 text-white shadow">1 · Generate E⁺</button>
+                        <button onclick="setMechStep(1)" id="mech-btn-1" class="press-btn flex-1 py-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300">2 · Attack (arenium)</button>
+                        <button onclick="setMechStep(2)" id="mech-btn-2" class="press-btn flex-1 py-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300">3 · Restore ring</button>
+                    </div>
+                    <div class="mech-step p-4 bg-slate-900 rounded-lg border border-slate-800 space-y-3">
+                        <h4 id="mech-step-title" class="text-sm font-bold text-orange-300">Step 1 — Generation of the electrophile</h4>
+                        <div id="mech-eq" class="text-emerald-300 text-sm overflow-x-auto"></div>
+                        <p id="mech-note" class="text-xs text-slate-300 leading-relaxed"></p>
+                    </div>
+                    <div class="flex justify-between">
+                        <button onclick="mechNav(-1)" class="press-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-lg">← Previous</button>
+                        <button onclick="mechNav(1)" class="press-btn px-4 py-2 bg-orange-700 hover:bg-orange-600 text-white font-bold text-xs rounded-lg">Next →</button>
+                    </div>
+                </div>
+
+                <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs text-slate-300 leading-relaxed">
+                    <b class="text-amber-300">Why substitution, not addition?</b> The electrophile takes electrons from the delocalised π cloud, forming a carbocation intermediate that has lost aromaticity. Losing H⁺ (rather than adding a nucleophile) <b>restores the stable 6-electron delocalised ring</b> — that energetic payoff is why substitution wins.
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 4. 10-REACTION MASTER SUMMARY (verbatim from user's source) ============ -->
+        <section id="tab-summary" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Master Revision Summary</span>
+                    <h2 class="text-xl font-bold text-white mt-1">10-Reaction Master Summary with Edexcel Examiner Secrets</h2>
+                    <p class="text-xs text-slate-400 mt-1">All 10 core IAL organic transformations enriched with mark scheme secrets, conditions, observations, and common candidate traps.</p>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-950 text-sky-400 font-mono text-[11px] border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">#</th>
+                                <th class="p-3">Reaction Name</th>
+                                <th class="p-3">Reagents & Conditions</th>
+                                <th class="p-3">Balanced Chemical Equation</th>
+                                <th class="p-3">Classification & Examiner Secrets / Traps 💡</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80 font-mono text-[11px] bg-slate-900/60">
+                            <tr>
+                                <td class="p-3 text-slate-400">1</td>
+                                <td class="p-3 text-amber-300 font-bold font-sans">Combustion of Benzene</td>
+                                <td class="p-3 font-sans">$\text{O}_2(\text{g})$, ignition</td>
+                                <td class="p-3">$2\text{C}_6\text{H}_6 + 15\text{O}_2 \rightarrow 12\text{CO}_2 + 6\text{H}_2\text{O}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-bold font-mono">Combustion</span>
+                                    <p class="text-[11px] text-amber-200 mt-1"><b>Observation:</b> Burns with a <b>very smoky yellow flame</b> due to high carbon-to-hydrogen ratio ($\text{C}:\text{H} = 1:1$) causing incomplete combustion and soot formation.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">2</td>
+                                <td class="p-3 text-sky-300 font-bold font-sans">Halogenation (Bromination)</td>
+                                <td class="p-3 font-sans">$\text{Br}_2(\text{l})$, $\text{FeBr}_3$ (or $\text{Fe}$ / $\text{AlCl}_3$) catalyst, room temp</td>
+                                <td class="p-3">$\text{C}_6\text{H}_6 + \text{Br}_2 \rightarrow \text{C}_6\text{H}_5\text{Br} + \text{HBr}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-bold font-mono">Electrophilic Substitution</span>
+                                    <p class="text-[11px] text-sky-200 mt-1"><b>Examiner Secret:</b> Requires halogen carrier catalyst ($\text{FeBr}_3$) to polarize $\text{Br}_2$ and form $\text{Br}^+$. Observation: Steamy acidic fumes of $\text{HBr}$ released, liquid decolourises.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">3</td>
+                                <td class="p-3 text-rose-300 font-bold font-sans">Nitration of Benzene</td>
+                                <td class="p-3 font-sans">Conc. $\text{HNO}_3 + \text{H}_2\text{SO}_4$, strictly $50^\circ\text{C}-60^\circ\text{C}$</td>
+                                <td class="p-3">$\text{C}_6\text{H}_6 + \text{HNO}_3 \rightarrow \text{C}_6\text{H}_5\text{NO}_2 + \text{H}_2\text{O}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold font-mono">Electrophilic Substitution</span>
+                                    <p class="text-[11px] text-rose-200 mt-1"><b>Candidate Trap:</b> Temperature must be kept at $50-60^\circ\text{C}$. Above $60^\circ\text{C}$, multiple nitration occurs (dinitration to 1,3-dinitrobenzene). Electrophile is $\text{NO}_2^+$.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">4</td>
+                                <td class="p-3 text-purple-300 font-bold font-sans">Sulfonation of Benzene</td>
+                                <td class="p-3 font-sans">Fuming $\text{H}_2\text{SO}_4$ ($\text{SO}_3$ in $\text{H}_2\text{SO}_4$), warm $40^\circ\text{C}$</td>
+                                <td class="p-3">$\text{C}_6\text{H}_6 + \text{H}_2\text{SO}_4 \rightarrow \text{C}_6\text{H}_5\text{SO}_3\text{H} + \text{H}_2\text{O}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-bold font-mono">Electrophilic Substitution</span>
+                                    <p class="text-[11px] text-purple-200 mt-1"><b>Examiner Secret:</b> Electrophile is neutral sulfur trioxide ($\text{SO}_3$) or $^+\text{SO}_3\text{H}$. Produces benzenesulfonic acid.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">5</td>
+                                <td class="p-3 text-emerald-300 font-bold font-sans">Friedel-Crafts Alkylation</td>
+                                <td class="p-3 font-sans">Haloalkane ($\text{RCl}$), <b>anhydrous</b> $\text{AlCl}_3$ catalyst, warm</td>
+                                <td class="p-3">$\text{C}_6\text{H}_6 + \text{RCl} \rightarrow \text{C}_6\text{H}_5\text{R} + \text{HCl}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold font-mono">Electrophilic Substitution</span>
+                                    <p class="text-[11px] text-emerald-200 mt-1"><b>Candidate Trap:</b> Must use <b>anhydrous</b> $\text{AlCl}_3$ because water reacts violently with $\text{AlCl}_3$. Attached R group in final product carries NO positive charge!</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">6</td>
+                                <td class="p-3 text-cyan-300 font-bold font-sans">Friedel-Crafts Acylation</td>
+                                <td class="p-3 font-sans">Acyl chloride ($\text{RCOCl}$), anhydrous $\text{AlCl}_3$, reflux</td>
+                                <td class="p-3">$\text{C}_6\text{H}_6 + \text{RCOCl} \rightarrow \text{C}_6\text{H}_5\text{COR} + \text{HCl}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold font-mono">Electrophilic Substitution</span>
+                                    <p class="text-[11px] text-cyan-200 mt-1"><b>Examiner Secret:</b> Forms an aromatic ketone (e.g. phenylethanone). Bond forms directly between ring carbon and carbonyl carbon ($-\text{C=O}$). Electrophile: $\text{RCO}^+$.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">7</td>
+                                <td class="p-3 text-teal-300 font-bold font-sans">Hydrogenation of Benzene</td>
+                                <td class="p-3 font-sans">$\text{H}_2(\text{g})$, $\text{Ni}$ catalyst, $150-200^\circ\text{C}$</td>
+                                <td class="p-3">$\text{C}_6\text{H}_6 + 3\text{H}_2 \rightarrow \text{C}_6\text{H}_{12}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-teal-950 text-teal-300 border border-teal-800 font-bold font-mono">Electrophilic Addition</span>
+                                    <p class="text-[11px] text-teal-200 mt-1"><b>Examiner Secret:</b> Converts benzene into cyclohexane. Destroys the $152\text{ kJ mol}^{-1}$ stable delocalised ring, hence requires high temp/pressure compared to alkenes.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">8</td>
+                                <td class="p-3 text-indigo-300 font-bold font-sans">Benzene + Halogen (UV)</td>
+                                <td class="p-3 font-sans">$\text{Cl}_2(\text{g})$, UV light (NO catalyst)</td>
+                                <td class="p-3">$\text{C}_6\text{H}_6 + 3\text{Cl}_2 \rightarrow \text{C}_6\text{H}_6\text{Cl}_6$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 font-bold font-mono">Free-Radical Addition</span>
+                                    <p class="text-[11px] text-indigo-200 mt-1"><b>Examiner Secret:</b> Produces 1,2,3,4,5,6-hexachlorocyclohexane. No internal circle in product!</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">9a</td>
+                                <td class="p-3 text-emerald-400 font-bold font-sans">Phenol + Sodium Metal</td>
+                                <td class="p-3 font-sans">Sodium metal ($\text{Na}$), room temp</td>
+                                <td class="p-3">$2\text{C}_6\text{H}_5\text{OH} + 2\text{Na} \rightarrow 2\text{C}_6\text{H}_5\text{O}^-\text{Na}^+ + \text{H}_2$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold font-mono">Acid-Base / Redox</span>
+                                    <p class="text-[11px] text-emerald-200 mt-1"><b>Observation:</b> Sodium dissolves/fizzes with <b>effervescence ($\text{H}_2$ gas)</b>, forming clear sodium phenoxide solution.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">9b</td>
+                                <td class="p-3 text-cyan-400 font-bold font-sans">Phenol + Sodium Hydroxide</td>
+                                <td class="p-3 font-sans">$\text{NaOH}(\text{aq})$, room temp</td>
+                                <td class="p-3">$\text{C}_6\text{H}_5\text{OH} + \text{NaOH} \rightarrow \text{C}_6\text{H}_5\text{O}^-\text{Na}^+ + \text{H}_2\text{O}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-bold font-mono">Acid-Base Neutralization</span>
+                                    <p class="text-[11px] text-cyan-200 mt-1"><b>Examiner Secret:</b> Neutralization reaction! Phenol dissolves in $\text{NaOH}$ to form sodium phenoxide. Ethanol/aliphatic alcohols DO NOT react with $\text{NaOH}$!</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 text-slate-400">10</td>
+                                <td class="p-3 text-amber-400 font-bold font-sans">Bromination of Phenol</td>
+                                <td class="p-3 font-sans">Bromine water $\text{Br}_2(\text{aq})$, room temp (NO catalyst)</td>
+                                <td class="p-3">$\text{C}_6\text{H}_5\text{OH} + 3\text{Br}_2 \rightarrow 2,4,6\text{-tribromophenol} + 3\text{HBr}$</td>
+                                <td class="p-3 font-sans text-slate-300">
+                                    <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-bold font-mono">Electrophilic Substitution</span>
+                                    <p class="text-[11px] text-amber-200 mt-1"><b>Observation:</b> Orange bromine water <b>decolourises</b> AND a <b>white precipitate</b> forms. Oxygen lone pair delocalises into ring, activating positions 2, 4, 6.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 5. PHENOL ============ -->
+        <section id="tab-phenol" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-teal-400 uppercase tracking-widest">Spec 18.6 + acidity</span>
+                    <h2 class="font-display text-xl font-bold text-white mt-1">Phenol — Activated Ring &amp; Acidic OH</h2>
+                    <p class="text-xs text-slate-400 mt-1">The –OH group both activates the ring toward electrophilic substitution and makes the O–H bond acidic.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                        <h3 class="text-xs font-bold text-teal-300 uppercase tracking-wider">Why the ring is activated (2,4,6-directing)</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">A lone pair on the oxygen <b>delocalises into the benzene ring</b>, increasing the π electron density — especially at the <b>2, 4 and 6</b> positions. The ring is far more attractive to electrophiles than benzene itself.</p>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-xs text-slate-300 space-y-1.5">
+                            <p><b class="text-amber-300">Bromination:</b> bromine water, room temperature, <b>no catalyst</b> → immediate decolourisation + white precipitate of 2,4,6-tribromophenol.</p>
+                            <div class="text-emerald-300 overflow-x-auto">$\text{C}_6\text{H}_5\text{OH} + 3\text{Br}_2 \rightarrow 2,4,6\text{-C}_6\text{H}_2\text{Br}_3\text{OH} + 3\text{HBr}$</div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-[11px] text-slate-300 min-w-[400px]">
+                                <thead class="text-teal-300 border-b border-slate-800"><tr><th class="p-2 text-left"></th><th class="p-2 text-left">Benzene</th><th class="p-2 text-left">Phenol</th></tr></thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    <tr><td class="p-2">Bromine conditions</td><td class="p-2">Br₂ + FeBr₃ catalyst</td><td class="p-2 text-teal-300">bromine water, r.t., no catalyst</td></tr>
+                                    <tr><td class="p-2">Substitution</td><td class="p-2">mono</td><td class="p-2 text-teal-300">tri (2,4,6)</td></tr>
+                                    <tr><td class="p-2">Observation</td><td class="p-2">HBr fumes</td><td class="p-2 text-teal-300">decolourises + white ppt</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="reveal bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                        <h3 class="text-xs font-bold text-rose-300 uppercase tracking-wider">Why the OH is acidic (phenol vs ethanol)</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">When phenol loses H⁺, the resulting <b>phenoxide ion is stabilised</b> — the negative charge delocalises into the ring. Ethanol’s ethoxide ion has no such stabilisation, so ethanol does not donate H⁺ to NaOH.</p>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-xs text-slate-300 space-y-1.5">
+                            <div class="text-emerald-300 overflow-x-auto">$2\text{C}_6\text{H}_5\text{OH} + 2\text{Na} \rightarrow 2\text{C}_6\text{H}_5\text{O}^-\text{Na}^+ + \text{H}_2$ (effervescence)</div>
+                            <div class="text-emerald-300 overflow-x-auto">$\text{C}_6\text{H}_5\text{OH} + \text{NaOH} \rightarrow \text{C}_6\text{H}_5\text{O}^-\text{Na}^+ + \text{H}_2\text{O}$ (dissolves)</div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-[11px] text-slate-300 min-w-[400px]">
+                                <thead class="text-rose-300 border-b border-slate-800"><tr><th class="p-2 text-left">Reagent</th><th class="p-2 text-left">Phenol</th><th class="p-2 text-left">Ethanol</th></tr></thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    <tr><td class="p-2">Na metal</td><td class="p-2 text-teal-300">reacts (H₂)</td><td class="p-2 text-teal-300">reacts (H₂)</td></tr>
+                                    <tr><td class="p-2">NaOH(aq)</td><td class="p-2 text-teal-300">reacts (dissolves)</td><td class="p-2 text-rose-300">no reaction</td></tr>
+                                    <tr><td class="p-2">Na₂CO₃(aq)</td><td class="p-2 text-rose-300">no reaction (too weak)</td><td class="p-2 text-rose-300">no reaction</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Phenol is a stronger acid than alcohols but weaker than carboxylic acids — it does <b>not</b> react with Na₂CO₃.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 6. REACTION PATHFINDER ============ -->
+        <section id="tab-pathfinder" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Interactive toolkit</span>
+                    <h2 class="font-display text-xl font-bold text-white mt-1">Reaction Pathfinder — predict the transformation</h2>
+                    <p class="text-xs text-slate-400 mt-1">Pick a starting material and a reagent set; the pathfinder returns the reaction name, type, equation, observation and the examiner trap.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-3 items-end">
+                    <label class="space-y-1 text-xs"><span class="text-slate-400 block">Starting material</span>
+                        <select id="pf-start" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-orange-300">
+                            <option value="benzene">Benzene (C₆H₆)</option>
+                            <option value="phenol">Phenol (C₆H₅OH)</option>
+                        </select>
+                    </label>
+                    <label class="space-y-1 text-xs"><span class="text-slate-400 block">Reagents &amp; conditions</span>
+                        <select id="pf-reagent" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-orange-300">
+                            <option value="o2">O₂, ignition</option>
+                            <option value="br2_cat">Br₂ + FeBr₃ (r.t.)</option>
+                            <option value="hno3">conc. HNO₃ + conc. H₂SO₄ (50–60 °C)</option>
+                            <option value="fuming_h2so4">fuming H₂SO₄ (warm)</option>
+                            <option value="rcl">RCl + anhydrous AlCl₃</option>
+                            <option value="rcocl">RCOCl + anhydrous AlCl₃</option>
+                            <option value="h2_ni">H₂ + Ni (150–200 °C)</option>
+                            <option value="cl2_uv">Cl₂ + UV light</option>
+                            <option value="br2_water">bromine water (r.t.)</option>
+                            <option value="na">sodium metal</option>
+                            <option value="naoh">NaOH(aq)</option>
+                        </select>
+                    </label>
+                    <button onclick="runPathfinder()" class="press-btn px-4 py-2.5 bg-orange-700 hover:bg-orange-600 text-white font-bold text-xs rounded-lg shadow">🧭 Predict reaction</button>
+                </div>
+                <div id="pf-out" class="text-xs text-slate-400">Choose a combination to see the full transformation.</div>
+            </div>
+        </section>
+
+        <!-- ============ 7. FINAL REVIEW ============ -->
+        <section id="tab-review" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
+                <div class="border-b border-slate-800 pb-4 space-y-2">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Master Final Review</span>
+                    <h2 class="font-display text-xl font-bold text-white">Topic 18 Arenes · Full recap &amp; trap checklist</h2>
+                    <div class="flex flex-wrap gap-2 text-[11px]">
+                        <a href="#rev-evidence" class="px-2.5 py-1 rounded-lg bg-sky-950/60 text-sky-300 border border-sky-800">Structure evidence</a>
+                        <a href="#rev-mech" class="px-2.5 py-1 rounded-lg bg-orange-950/60 text-orange-300 border border-orange-800">Mechanism template</a>
+                        <a href="#rev-reactions" class="px-2.5 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800">Reaction inventory</a>
+                        <a href="#rev-phenol" class="px-2.5 py-1 rounded-lg bg-teal-950/60 text-teal-300 border border-teal-800">Phenol</a>
+                        <a href="#rev-traps" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800">Trap checklist</a>
+                    </div>
+                </div>
+
+                <details id="rev-evidence" open class="reveal bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-sky-300"><span class="chev">▸</span> 🛡️ Evidence for benzene’s structure (18.1–18.3)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>Hydrogenation: −208 vs hypothetical −360 kJ mol⁻¹ → <b>152 kJ mol⁻¹</b> delocalisation stabilisation.</li>
+                            <li>X-ray: six <b>equal</b> C–C bonds at 0.139 nm (between C–C and C=C).</li>
+                            <li>IR: no localised C=C stretch.</li>
+                            <li>Model: sp² carbons, 120°, p-orbitals overlap sideways above/below the plane → delocalised 6-electron π cloud.</li>
+                            <li>Benzene substitutes (preserves ring); alkenes add. Benzene needs FeBr₃; alkenes react with Br₂ alone.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details id="rev-mech" open class="reveal bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-orange-300"><span class="chev">▸</span> ⚡ Electrophilic substitution writing template (18.5)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <p><b>Step 1 — generate E⁺:</b> Br₂+FeBr₃→Br⁺+FeBr₄⁻ · HNO₃+2H₂SO₄→NO₂⁺+H₃O⁺+2HSO₄⁻ · RCl+AlCl₃→R⁺+AlCl₄⁻ · RCOCl+AlCl₃→RCO⁺+AlCl₄⁻.</p>
+                        <p><b>Step 2 — attack:</b> E⁺ takes π electrons → carbocation (arenium) intermediate; aromaticity temporarily lost.</p>
+                        <p><b>Step 3 — restore:</b> base (FeBr₄⁻/HSO₄⁻/AlCl₄⁻) removes H⁺ → aromatic ring restored + <b>catalyst regenerated</b>.</p>
+                        <p class="text-amber-200">Examiners award marks for the electrophile generation AND catalyst regeneration — write all three stages.</p>
+                    </div>
+                </details>
+
+                <details id="rev-reactions" open class="reveal bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-emerald-300"><span class="chev">▸</span> 🧪 Reaction inventory (18.4)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <p>Combustion (smoky flame) · Bromination (FeBr₃, HBr fumes) · Nitration (HNO₃/H₂SO₄, 50–60 °C, NO₂⁺) · Sulfonation (fuming H₂SO₄, SO₃) · FC alkylation (RCl/AlCl₃, anhydrous) · FC acylation (RCOCl/AlCl₃ → aromatic ketone) · Hydrogenation (H₂/Ni, 150–200 °C → cyclohexane) · UV + Cl₂ → free-radical addition to C₆H₆Cl₆.</p>
+                        <p class="text-slate-400">Full equations, observations and examiner secrets: Tab 4 (10-Reaction Master Summary).</p>
+                    </div>
+                </details>
+
+                <details id="rev-phenol" open class="reveal bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-teal-300"><span class="chev">▸</span> 🌸 Phenol essentials (18.6)</summary>
+                    <div class="px-4 pb-4 text-[11px] text-slate-300 space-y-2">
+                        <ul class="list-disc ml-5 space-y-1">
+                            <li>O lone pair delocalises into ring → activates 2,4,6 → bromine water, r.t., no catalyst → white ppt + decolourises.</li>
+                            <li>Acidic OH: phenoxide stabilised by delocalisation → reacts with Na and NaOH (ethanol only with Na).</li>
+                            <li>Too weak for Na₂CO₃.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details id="rev-traps" open class="reveal bg-slate-950/60 border border-slate-800 rounded-xl">
+                    <summary class="cursor-pointer px-4 py-3 font-bold text-rose-300"><span class="chev">▸</span> ⚠️ Master trap checklist (last-minute)</summary>
+                    <ul class="px-4 pb-4 list-disc ml-5 text-[11px] text-slate-300 space-y-1">
+                        <li>Benzene does <b>not</b> decolourise bromine water without a catalyst — alkenes do.</li>
+                        <li>Hydrogenation gap is <b>152 kJ mol⁻¹</b> (−208 vs 3 × −120 = −360).</li>
+                        <li>Bond lengths are <b>equal</b> (0.139 nm) — not alternating.</li>
+                        <li>Nitration at <b>50–60 °C</b>; hotter → dinitration.</li>
+                        <li>FC reactions need <b>anhydrous</b> AlCl₃.</li>
+                        <li>Write the <b>catalyst regeneration</b> step in every mechanism.</li>
+                        <li>UV + Cl₂ is <b>free-radical addition</b> (destroys the ring), NOT substitution.</li>
+                        <li>Phenol + bromine water: <b>two</b> observations (decolourise + white ppt), no catalyst.</li>
+                        <li>Phenol reacts with NaOH; ethanol does not.</li>
+                        <li>Substitution preserves the delocalised ring — that’s why it wins over addition.</li>
+                    </ul>
+                </details>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 py-4 text-center text-[10px] text-slate-500">
+        IAL Topic 18: Organic Chemistry — Arenes Master Studio · WCH15 · Unit 5 · Spec 18.1–18.6 · Single-file Master Studio standard
+    </footer>
+</body>
+</html>

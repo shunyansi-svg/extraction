@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAL Chemistry Topic 20: Organic Synthesis — Master Studio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="safeInitKaTeX()"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        .blur-answer { filter: blur(6px); transition: filter .25s ease, background-color .25s ease; user-select: none; cursor: pointer; }
+        .blur-answer:hover, .blur-answer.revealed { filter: blur(0); user-select: auto; background-color: rgba(251,146,60,.2) !important; }
+        .ambient-bg {
+            background:
+                radial-gradient(1100px 480px at 85% -8%, rgba(251,146,60,.12), transparent 60%),
+                radial-gradient(900px 420px at 5% 108%, rgba(56,189,248,.09), transparent 60%),
+                radial-gradient(700px 380px at 50% 40%, rgba(52,211,153,.05), transparent 60%),
+                #020617;
+        }
+        details > summary::-webkit-details-marker { display: none; }
+        .cycle-chip { transition: transform .15s ease, box-shadow .15s ease; }
+        .cycle-chip:hover { transform: translateY(-2px); }
+        .step-hidden { display: none; }
+        .step-reveal { animation: stepIn .4s ease; }
+        @keyframes stepIn { from { opacity:0; transform: translateY(8px);} to { opacity:1; transform: translateY(0);} }
+    </style>
+</head>
+<body class="ambient-bg text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-orange-500/20 p-2 rounded-lg border border-orange-500/30">
+                    <span class="text-2xl">🧪</span>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight text-orange-300">IAL Chemistry Topic 20: Organic Synthesis — Master Studio</h1>
+                    <p class="text-xs text-slate-400">WCH15 · The 4-Cycle Reaction Map, Special Techniques, Grignard &amp; Exam Synthesis Strategy (Spec 20.1 – 20.5)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-orange-950 text-orange-300 border border-orange-800">Edexcel Spec 20.1 – 20.5</span>
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-sky-950 text-sky-300 border border-sky-800">Unit 5 Capstone</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar (flex-wrap, short labels) -->
+    <nav class="bg-slate-900/90 border-b border-slate-800 sticky top-[57px] z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-2 flex flex-wrap">
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-orange-300 font-bold border-b-2 border-orange-400 bg-orange-950/40 transition">1. Syllabus</button>
+            <button onclick="switchTab('cycle1')" id="btn-cycle1" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">2. Cycle 1</button>
+            <button onclick="switchTab('cycle2')" id="btn-cycle2" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">3. Cycle 2</button>
+            <button onclick="switchTab('cycle3')" id="btn-cycle3" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">4. Cycle 3</button>
+            <button onclick="switchTab('cycle4')" id="btn-cycle4" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">5. Cycle 4</button>
+            <button onclick="switchTab('special')" id="btn-special" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">6. Special + Grignard</button>
+            <button onclick="switchTab('walkthroughs')" id="btn-walkthroughs" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">7. Exam Walkthroughs ★</button>
+            <button onclick="switchTab('practice')" id="btn-practice" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">8. Graded Practice ★</button>
+            <button onclick="switchTab('solver')" id="btn-solver" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">9. Route Solver</button>
+            <button onclick="switchTab('review')" id="btn-review" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">10. Final Review</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- ==================== TAB 1: SYLLABUS MASTER OVERVIEW ==================== -->
+        <section id="tab-syllabus" class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+                <div class="border-b border-slate-800 pb-4 mb-6">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Topic 20 Learning Points &amp; Mark Scheme Secrets (Spec 20.1 – 20.5)</h2>
+                    <p class="text-xs text-slate-400 mt-1">The capstone topic: deduce structures from spectra, extend carbon chains, and plan multi-step syntheses using the 4-cycle reaction map.</p>
+                </div>
+
+                <!-- The cycle map at a glance -->
+                <div class="mb-6 p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
+                    <span class="text-[11px] font-bold text-orange-300 uppercase tracking-wider block">🗺️ The 4-Cycle Reaction Map — your synthesis toolkit</span>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="cycle-chip p-3 rounded-lg border border-sky-800 bg-sky-950/30">
+                            <span class="text-sky-300 font-bold text-xs block">Cycle 1</span>
+                            <span class="text-[10px] text-slate-400">Hydrocarbons &amp; aliphatic — 13 rxns. Hubs: alkene, haloalkane.</span>
+                        </div>
+                        <div class="cycle-chip p-3 rounded-lg border border-emerald-800 bg-emerald-950/30">
+                            <span class="text-emerald-300 font-bold text-xs block">Cycle 2</span>
+                            <span class="text-[10px] text-slate-400">Redox &amp; carbonyls — 6 rxns. Alcohol ⇄ aldehyde/ketone ⇄ acid.</span>
+                        </div>
+                        <div class="cycle-chip p-3 rounded-lg border border-amber-800 bg-amber-950/30">
+                            <span class="text-amber-300 font-bold text-xs block">Cycle 3</span>
+                            <span class="text-[10px] text-slate-400">Acids, derivatives, nitriles, hydrolysis — 18 rxns. Hub: acid/acyl chloride.</span>
+                        </div>
+                        <div class="cycle-chip p-3 rounded-lg border border-violet-800 bg-violet-950/30">
+                            <span class="text-violet-300 font-bold text-xs block">Cycle 4</span>
+                            <span class="text-[10px] text-slate-400">Aromatic &amp; azo dyes — benzene → nitro → amine → diazonium → dye.</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="cycle-chip p-3 rounded-lg border border-rose-800 bg-rose-950/30">
+                            <span class="text-rose-300 font-bold text-xs block">Special Techniques — change the carbon count</span>
+                            <span class="text-[10px] text-slate-400">+1C (KCN, HCN) · +many C (Friedel–Crafts alkylation/acylation) · −1C (iodoform cleavage)</span>
+                        </div>
+                        <div class="cycle-chip p-3 rounded-lg border border-cyan-800 bg-cyan-950/30">
+                            <span class="text-cyan-300 font-bold text-xs block">Grignard Workbench (RMgX)</span>
+                            <span class="text-[10px] text-slate-400">+ CO₂ → acid (+1C) · + methanal → 1°alc · + aldehyde → 2°alc · + ketone → 3°alc</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Card 1: 20.1a -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 20.1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Formulae from data</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">1. Empirical &amp; Molecular Formulae</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>From combustion analysis / % composition: convert % → moles → simplest ratio → empirical formula.</li>
+                                    <li>Use the mass-spec molecular ion peak ($M^+$) to get the molar mass.</li>
+                                    <li>Molecular formula = (empirical formula)$_n$ where $n = M / M_{empirical}$.</li>
+                                    <li>Recognise common fragments: $M-15$ ($\text{CH}_3^+$), $M-29$ ($\text{C}_2\text{H}_5^+$ or $\text{CHO}^+$), $M-45$ ($\text{COOH}^+$).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Show the mole-ratio working. A fragment at $M-45$ strongly suggests a carboxylic acid ($-\text{COOH}$).</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: 20.1b IR -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 20.1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">IR spectroscopy</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">2. Infrared — Identify the Functional Group</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>$\text{C=O}$ strong sharp ~1680–1750 cm⁻¹ (aldehyde/ketone/acid/ester/amide).</li>
+                                    <li>$\text{O–H}$: alcohol ~3200–3600 (broad); carboxylic acid ~2500–3300 (very broad, overlaps C–H).</li>
+                                    <li>$\text{N–H}$ ~3300–3500; $\text{C}\equiv\text{N}$ ~2200–2250; $\text{C=C}$ ~1620–1680.</li>
+                                    <li>Combine the C=O presence/absence with O–H/N–H to pin down the family.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">A broad O–H <b>plus</b> a C=O = carboxylic acid. A C=O with <b>no</b> O–H = aldehyde or ketone (distinguish by the aldehyde C–H ~2700–2850 or by Tollens').</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: 20.1c NMR -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold px-2 py-0.5 bg-emerald-950 rounded border border-emerald-800">Spec 20.1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">NMR deduction</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">3. $^{13}\text{C}$ &amp; $^1\text{H}$ NMR — Build the Structure</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>$^{13}\text{C}$ NMR: number of peaks = number of carbon environments.</li>
+                                    <li>$^1\text{H}$ NMR: number of peaks = proton environments; integration = relative H count.</li>
+                                    <li>Splitting ($n+1$ rule): neighbours on the <b>adjacent</b> carbon.</li>
+                                    <li>Chemical shift tables: e.g. $\text{R–CH}_3$ ~0.9, $\text{R–CH}_2$ ~1.3, $\text{CH}_3\text{CO}$ ~2.1, $\text{O–CH}$ ~3.5–4.5, aldehyde H ~9.5–10, acid H ~10–12.</li>
+                                    <li>Assemble fragments (from shifts + splitting + integration) into a structure consistent with the molecular formula.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">An exchangeable proton (O–H, N–H) appears as a singlet and disappears on D₂O shake. Check your structure against <b>all</b> the data, not just one peak.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: 20.2 Grignard -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-amber-400 uppercase font-bold px-2 py-0.5 bg-amber-950 rounded border border-amber-800">Spec 20.2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Chain extension</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">4. Grignard Reagents — Extend the Chain</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Form RMgX from haloalkane + Mg in <b>anhydrous dry ether</b>, reflux.</li>
+                                    <li>+ CO₂ (dry ice) then dil HCl → carboxylic acid (+1C).</li>
+                                    <li>+ methanal then dil HCl → 1° alcohol (+1C).</li>
+                                    <li>+ aldehyde then dil HCl → 2° alcohol; + ketone then dil HCl → 3° alcohol.</li>
+                                    <li>Know why the ether must be dry (water destroys RMgX).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">A 3° alcohol can <b>only</b> come from Grignard + ketone (Cycle 2 can't make it). This is a classic "which route?" exam answer.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: 20.3 i-ii -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-rose-400 uppercase font-bold px-2 py-0.5 bg-rose-950 rounded border border-rose-800">Spec 20.3 i – ii</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Prediction &amp; route design</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">5. Predicting Properties &amp; Planning up to 4 Steps</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Predict properties of unfamiliar compounds from their functional groups (solubility, b.p., reactivity).</li>
+                                    <li>Plan a route of up to 4 steps, recalling familiar reactions and using unfamiliar ones given data.</li>
+                                    <li>Count carbons first — decide whether you need a chain-extension/shortening step.</li>
+                                    <li>Map functional groups step-by-step using the cycle map.</li>
+                                    <li>Remember overall yield = $y_1 \times y_2 \times y_3$ — fewer steps = higher yield.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Write <b>reagents AND conditions</b> for every step — marks are split between them. See the Exam Walkthroughs tab for the full method.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: 20.3 iii-iv -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-cyan-400 uppercase font-bold px-2 py-0.5 bg-cyan-950 rounded border border-cyan-800">Spec 20.3 iii – iv</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Practical &amp; safety</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">6. Practical Procedures &amp; Risk Control</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Choose the right setup: reflux (to heat without losing volatile reagents), distillation (to collect a volatile product).</li>
+                                    <li>Purify by washing (water / Na₂CO₃ to remove acid), solvent extraction, drying (anhydrous salt), then distillation.</li>
+                                    <li>Check purity by melting/boiling point (sharp = pure).</li>
+                                    <li>Identify control measures from hazard data (fume cupboard for toxic/volatile, no flames for flammable, gloves for corrosive).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">"Why reflux?" = to prevent loss of volatile reactants/products while heating. "Why Na₂CO₃ wash?" = to neutralise/remove excess acid.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 7: 20.4 aspirin -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 20.4</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Core Practical 16</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">7. Core Practical 16 — Preparation of Aspirin</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>2-hydroxybenzoic acid (salicylic acid) + ethanoic anhydride → aspirin (2-ethanoyloxybenzoic acid) + ethanoic acid.</li>
+                                    <li>Conditions: warm (~60 °C), acid catalyst; ethanoic anhydride is preferred over ethanoyl chloride (less violent, no HCl).</li>
+                                    <li>Purify by recrystallisation; check purity by melting point (pure aspirin ~135 °C).</li>
+                                    <li>Calculate the percentage yield from the limiting reagent.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">This is an <b>esterification of a phenol</b> — the –OH is on the benzene ring. Know why anhydride is used instead of the acyl chloride.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: 20.5 purification -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 20.5</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Purification techniques</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">8. Preparation &amp; Purification Techniques</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Reflux vs distillation vs steam distillation — know when each is used.</li>
+                                    <li>Washing with water / Na₂CO₃ in a separating funnel; solvent extraction.</li>
+                                    <li>Drying with an anhydrous salt (e.g. MgSO₄) then filtering.</li>
+                                    <li>Recrystallisation for solids (choose a solvent, hot filter, cool, collect).</li>
+                                    <li>Melting point (solid) and boiling point (liquid) as purity checks.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Steam distillation isolates heat-sensitive, immiscible-with-water organics (e.g. plant oils) below their normal boiling point.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Out of scope -->
+                <div class="mt-6 p-4 bg-rose-950/20 border border-rose-900/40 rounded-xl text-xs text-slate-300">
+                    <b class="text-rose-300">How this hub is organised:</b> the individual reactions live in Cycles 1–4 and the Special/Grignard tabs (revision). The <b>Exam Walkthroughs</b> and <b>Graded Practice</b> tabs are the heart — they show you how to combine the cycles to solve real past-paper synthesis problems. The <b>Route Solver</b> lets you plan your own routes interactively.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: CYCLE 1 ==================== -->
+        <section id="tab-cycle1" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Revision · 13 reactions</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Cycle 1 — Hydrocarbons &amp; Aliphatic Interconversions</h2>
+                    <p class="text-xs text-slate-400 mt-1">The hydrocarbon hub. Alkene and haloalkane are the crossroads — most routes pass through them. Equations, conditions, observations and examiner traps for all 13.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div id="c1-list" class="lg:col-span-5 space-y-1.5 text-xs max-h-[640px] overflow-y-auto custom-scrollbar pr-1"></div>
+                    <div id="c1-cards" class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4 min-h-[300px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: CYCLE 2 ==================== -->
+        <section id="tab-cycle2" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Revision · 6 reactions</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Cycle 2 — Oxidation, Reduction &amp; Carbonyl Systems</h2>
+                    <p class="text-xs text-slate-400 mt-1">The redox ladder at constant carbon count: 1° alcohol ⇄ aldehyde ⇄ acid, and 2° alcohol ⇄ ketone. Know distil vs reflux, and which reducing agent does what.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div id="c2-list" class="lg:col-span-5 space-y-1.5 text-xs max-h-[640px] overflow-y-auto custom-scrollbar pr-1"></div>
+                    <div id="c2-cards" class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4 min-h-[300px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: CYCLE 3 ==================== -->
+        <section id="tab-cycle3" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Revision · 18 reactions</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Cycle 3 — Carboxylic Acids, Derivatives, Nitriles &amp; Hydrolysis</h2>
+                    <p class="text-xs text-slate-400 mt-1">The acid hub. Carboxylic acid ⇄ acyl chloride, and the web of ester / amide / nitrile / salt interconversions via hydrolysis and nucleophilic addition–elimination.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div id="c3-list" class="lg:col-span-5 space-y-1.5 text-xs max-h-[640px] overflow-y-auto custom-scrollbar pr-1"></div>
+                    <div id="c3-cards" class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4 min-h-[300px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: CYCLE 4 ==================== -->
+        <section id="tab-cycle4" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-violet-400 uppercase tracking-widest">Revision · 4 reactions</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Cycle 4 — Aromatic Chemistry &amp; Azo Dyes</h2>
+                    <p class="text-xs text-slate-400 mt-1">The benzene line: nitration → reduction → diazotisation → coupling. Temperature control is the recurring theme.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div id="c4-list" class="lg:col-span-5 space-y-1.5 text-xs max-h-[640px] overflow-y-auto custom-scrollbar pr-1"></div>
+                    <div id="c4-cards" class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4 min-h-[300px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 6: SPECIAL + GRIGNARD ==================== -->
+        <section id="tab-special" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Carbon-Chain Engineering · Spec 20.2</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Special Techniques &amp; the Grignard Workbench</h2>
+                    <p class="text-xs text-slate-400 mt-1">The only reactions that change the number of carbons. If your target has more (or fewer) carbons than your starting material, you MUST use one of these.</p>
+                </div>
+
+                <!-- Special techniques -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-2 text-xs">
+                        <button onclick="window.pickSpecial('nitrile')" id="spec-btn-nitrile" class="w-full text-left p-3 rounded-lg border transition flex justify-between items-center" style="border-color:#f43f5e;background:#f43f5e1f;color:#fb7185;font-weight:700">
+                            <span>a. Haloalkane + Cyanide (SN2)</span><span class="px-2 py-0.5 bg-rose-900 text-rose-200 text-[10px] rounded font-mono">+1 C</span>
+                        </button>
+                        <button onclick="window.pickSpecial('hcn')" id="spec-btn-hcn" class="w-full text-left p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 transition flex justify-between items-center">
+                            <span>b. Carbonyl + HCN (hydroxynitrile)</span><span class="px-2 py-0.5 bg-emerald-900 text-emerald-200 text-[10px] rounded font-mono">+1 C</span>
+                        </button>
+                        <button onclick="window.pickSpecial('alkylation')" id="spec-btn-alkylation" class="w-full text-left p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 transition flex justify-between items-center">
+                            <span>c. Friedel–Crafts Alkylation</span><span class="px-2 py-0.5 bg-purple-900 text-purple-200 text-[10px] rounded font-mono">+many C</span>
+                        </button>
+                        <button onclick="window.pickSpecial('acylation')" id="spec-btn-acylation" class="w-full text-left p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 transition flex justify-between items-center">
+                            <span>d. Friedel–Crafts Acylation</span><span class="px-2 py-0.5 bg-amber-900 text-amber-200 text-[10px] rounded font-mono">+many C</span>
+                        </button>
+                        <button onclick="window.pickSpecial('iodoform')" id="spec-btn-iodoform" class="w-full text-left p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 transition flex justify-between items-center">
+                            <span>e. Iodoform Cleavage (I₂/NaOH)</span><span class="px-2 py-0.5 bg-sky-900 text-sky-200 text-[10px] rounded font-mono">−1 C</span>
+                        </button>
+                    </div>
+                    <div id="special-panel" class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3 text-xs"></div>
+                </div>
+
+                <!-- Grignard workbench -->
+                <div class="p-5 bg-slate-950 border border-cyan-800/50 rounded-xl space-y-4">
+                    <span class="text-cyan-300 font-bold text-xs uppercase tracking-wider block">🧪 Grignard Workbench — RMgX (the ultimate chain extender)</span>
+                    <div class="p-3 bg-slate-900 rounded font-mono text-cyan-300 border border-slate-800 text-[11px]">
+                        Formation: $\text{R-X} + \text{Mg} \xrightarrow{\text{anhydrous dry ether, reflux}} \text{RMgX}$ &nbsp;&nbsp;⚠️ ether must be perfectly dry — water destroys RMgX.
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                        <button onclick="window.pickGrignard('co2')" id="grig-btn-co2" class="grig-btn p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-left text-slate-300 hover:border-cyan-500 transition"><b class="text-cyan-300 block">+ CO₂ (dry ice), then dil HCl</b><span class="text-[11px] text-slate-400">→ carboxylic acid (+1 C)</span></button>
+                        <button onclick="window.pickGrignard('methanal')" id="grig-btn-methanal" class="grig-btn p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-left text-slate-300 hover:border-cyan-500 transition"><b class="text-cyan-300 block">+ Methanal (HCHO), then dil HCl</b><span class="text-[11px] text-slate-400">→ 1° alcohol (+1 C)</span></button>
+                        <button onclick="window.pickGrignard('aldehyde')" id="grig-btn-aldehyde" class="grig-btn p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-left text-slate-300 hover:border-cyan-500 transition"><b class="text-cyan-300 block">+ Aldehyde (R'CHO), then dil HCl</b><span class="text-[11px] text-slate-400">→ 2° alcohol</span></button>
+                        <button onclick="window.pickGrignard('ketone')" id="grig-btn-ketone" class="grig-btn p-3 rounded-lg border border-slate-800 bg-slate-900/80 text-left text-slate-300 hover:border-cyan-500 transition"><b class="text-cyan-300 block">+ Ketone (R'COR''), then dil HCl</b><span class="text-[11px] text-slate-400">→ 3° alcohol (the ONLY way!)</span></button>
+                    </div>
+                    <div id="grignard-panel" class="p-3 bg-slate-900 rounded-lg border border-slate-800 text-[11px] text-slate-300 leading-relaxed">
+                        Select a Grignard reaction above to see the equation and the exam trap.
+                    </div>
+                    <div class="p-3 bg-amber-950/30 border border-amber-800/60 rounded-lg text-[11px] text-amber-200 leading-relaxed">
+                        <b>⚠️ Racemic trap:</b> every Grignard addition to a carbonyl creates a new chiral centre via attack on the planar C=O from either face → the product is a <b>racemic mixture</b> (optically inactive). State this whenever the product is chiral.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 7: EXAM WALKTHROUGHS ==================== -->
+        <section id="tab-walkthroughs" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">★ The Heart of the Hub · Real Past-Paper Syntheses</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Exam Walkthroughs — How to Use the 4 Cycles to Crack Synthesis Questions</h2>
+                    <p class="text-xs text-slate-400 mt-1">Each walkthrough starts with a real exam question, shows you the <b>thinking strategy</b> (count carbons → map functional groups → pick the cycle), then reveals the solution one step at a time. Read the strategy, try to plan the route yourself, then reveal each step.</p>
+                </div>
+
+                <!-- The universal method -->
+                <div class="p-4 bg-orange-950/20 border border-orange-800/50 rounded-xl space-y-2">
+                    <span class="text-orange-300 font-bold text-xs uppercase tracking-wider block">🎯 The universal 4-step method for ANY synthesis question</span>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-[11px]">
+                        <div class="p-3 bg-slate-950 rounded-lg border border-slate-800"><b class="text-orange-300 block">1 · Count carbons</b><span class="text-slate-400">Start vs target. More? → chain extension (KCN/HCN/Grignard/Friedel–Crafts). Fewer? → iodoform (−1C). Same? → cycles only.</span></div>
+                        <div class="p-3 bg-slate-950 rounded-lg border border-slate-800"><b class="text-orange-300 block">2 · Map functional groups</b><span class="text-slate-400">Write the FG of the start and target. What must change, and in what order?</span></div>
+                        <div class="p-3 bg-slate-950 rounded-lg border border-slate-800"><b class="text-orange-300 block">3 · Pick the cycle per step</b><span class="text-slate-400">Each step = one cycle reaction. C1 hydrocarbons, C2 redox, C3 acid/derivatives, C4 aromatic.</span></div>
+                        <div class="p-3 bg-slate-950 rounded-lg border border-slate-800"><b class="text-orange-300 block">4 · Reagents + conditions</b><span class="text-slate-400">Marks are split between reagents and conditions. Write both, every step. Check for racemic/chirality notes.</span></div>
+                    </div>
+                </div>
+
+                <!-- Walkthroughs rendered by JS -->
+                <div id="walkthrough-container" class="space-y-6"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 8: GRADED PRACTICE ==================== -->
+        <section id="tab-practice" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">★ Practice · Exam-Style Synthesis Problems</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Graded Practice — Test Yourself, Then Check the Model Answer</h2>
+                    <p class="text-xs text-slate-400 mt-1">Work each problem on paper first, then reveal the mark-scheme-style model answer and grade yourself honestly. The skills mirror real WCH15 exam questions: deducing structures, choosing reagents/conditions, and planning pathways.</p>
+                </div>
+                <div id="practice-container" class="grid grid-cols-1 lg:grid-cols-2 gap-5"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 9: ROUTE SOLVER ==================== -->
+        <section id="tab-solver" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Interactive Planner · BFS over the 4 cycles</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Synthesis Route Solver</h2>
+                    <p class="text-xs text-slate-400 mt-1">Pick a starting functional group and a target. The solver finds the shortest route through the cycle map and shows the reagents &amp; conditions for every step. Use it to check your own route plans.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-xs font-bold">Starting functional group</label>
+                        <select id="solver-start" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 text-xs font-mono"></select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1 text-xs font-bold">Target functional group</label>
+                        <select id="solver-target" class="w-full bg-slate-900 border border-slate-700 text-emerald-300 rounded p-2 text-xs font-mono"></select>
+                    </div>
+                    <button onclick="window.solveRoute()" class="py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition">✨ Find shortest route</button>
+                </div>
+                <div id="solver-result" class="space-y-3"></div>
+                <div class="p-3 bg-amber-950/30 border border-amber-800/60 rounded-lg text-[11px] text-amber-200 leading-relaxed">
+                    <b>⚠️ Carbon-count reminder:</b> this solver maps functional-group interconversions at (mostly) constant carbon count. If your target has a <b>different number of carbons</b>, you must insert a chain-extension step (KCN / HCN / Grignard / Friedel–Crafts) or a chain-shortening step (iodoform) — see the Special + Grignard tab.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 10: FINAL REVIEW ==================== -->
+        <section id="tab-review" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-4">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Final Review</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Complete Reaction Inventory &amp; Master Trap Checklist</h2>
+                </div>
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <a href="#rev-c1" class="px-2.5 py-1 rounded-lg bg-sky-950/60 text-sky-300 border border-sky-800 hover:bg-sky-900/50">Cycle 1 (13)</a>
+                    <a href="#rev-c2" class="px-2.5 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800 hover:bg-emerald-900/50">Cycle 2 (6)</a>
+                    <a href="#rev-c3" class="px-2.5 py-1 rounded-lg bg-amber-950/60 text-amber-300 border border-amber-800 hover:bg-amber-900/50">Cycle 3 (18)</a>
+                    <a href="#rev-c4" class="px-2.5 py-1 rounded-lg bg-violet-950/60 text-violet-300 border border-violet-800 hover:bg-violet-900/50">Cycle 4 (4)</a>
+                    <a href="#rev-special" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/50">Special + Grignard</a>
+                    <a href="#rev-traps" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/50">Master Traps</a>
+                </div>
+                <div id="review-tables" class="space-y-4"></div>
+                <details id="rev-traps" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-rose-300">⚠️ Master Trap Checklist</span> <span class="text-slate-500 font-mono text-xs ml-2">the marks you must not drop</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-4 pb-4 pt-2 border-t border-slate-800/80">
+                        <ul class="text-[11px] text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed columns-1 md:columns-2 gap-6">
+                            <li><b>Ethanolic KOH = elimination; aqueous KOH = substitution.</b> The solvent decides.</li>
+                            <li><b>Distil</b> to stop at the aldehyde; <b>reflux</b> to reach the carboxylic acid.</li>
+                            <li><b>KCN needs ethanol</b> (not water) — water gives the alcohol instead.</li>
+                            <li><b>LiAlH₄ reduces acids; NaBH₄ does not.</b></li>
+                            <li><b>3° amines can't form amides</b> (no N–H to eliminate).</li>
+                            <li><b>2 mol of amine/NH₃ per acyl chloride</b> — one neutralises the HCl.</li>
+                            <li><b>Diazonium: 0–10 °C</b> or it decomposes to phenol + N₂.</li>
+                            <li><b>Nitration: 55 °C</b> — hotter gives dinitration.</li>
+                            <li><b>Grignard: anhydrous dry ether</b> — water destroys RMgX.</li>
+                            <li><b>Alkaline ester hydrolysis gives the SALT</b>, not the acid; acidify to liberate the acid.</li>
+                            <li><b>Count carbons first</b> in every synthesis — it tells you whether you need a Special/Grignard step.</li>
+                            <li><b>Planar C=O / carbocation → racemic mixture</b> whenever a new chiral centre forms.</li>
+                            <li><b>A 3° alcohol needs Grignard + ketone</b> — reduction can't do it.</li>
+                            <li><b>Overall yield = y₁ × y₂ × y₃…</b> — fewer steps = higher yield.</li>
+                            <li><b>Iodoform is both a −1C tool and a test</b> for CH₃CO– / CH₃CH(OH)–.</li>
+                            <li><b>Write reagents AND conditions</b> for every step — marks are split between them.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- INSERT_POINT -->
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            IAL Chemistry Topic 20: Organic Synthesis — Master Studio · WCH15 · Edexcel Spec 20.1–20.5 · 4-Cycle Reaction Map + Exam Synthesis Strategy
+        </div>
+    </footer>
+
+    <script>
+        // ---------- KaTeX safe init ----------
+        function safeInitKaTeX() {
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) { console.warn('KaTeX render:', e); }
+            }
+        }
+        window.safeInitKaTeX = safeInitKaTeX;
+
+        // ---------- Main tab switcher ----------
+        function switchTab(tabId) {
+            var tabs = ['syllabus','cycle1','cycle2','cycle3','cycle4','special','walkthroughs','practice','solver','review'];
+            tabs.forEach(function(t) {
+                var sec = document.getElementById('tab-' + t);
+                var btn = document.getElementById('btn-' + t);
+                if (sec) { if (t === tabId) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+                if (btn) {
+                    if (t === tabId) {
+                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-orange-300 font-bold border-b-2 border-orange-400 bg-orange-950/40 transition';
+                    } else {
+                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition';
+                    }
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(safeInitKaTeX, 60);
+        }
+        window.switchTab = switchTab;
+
+        // ---------- Blur quiz helpers ----------
+        window.toggleSingleBlur = function(el) { if (el) el.classList.toggle('revealed'); };
+
+        // ==================== CYCLE REACTION DATA ====================
+        const CYCLE_DATA = {
+            cycle1: { color:'sky', list:'c1-list', cards:'c1-cards', reactions: [
+                { n:'Alkane → Monohaloalkane', eq:'\\text{CH}_4 + \\text{Cl}_2 \\xrightarrow{\\text{UV}} \\text{CH}_3\\text{Cl} + \\text{HCl}', cond:'Cl₂ or Br₂, UV light / sunlight, r.t.', mech:'Free-radical substitution', obs:'Green-yellow Cl₂ decolourises; steamy acidic HCl fumes in moist air.', tips:['Excess alkane limits polysubstitution (CH₂Cl₂, CHCl₃, CCl₄).','Must state UV / sunlight.'] },
+                { n:'Alkene → Alkane', eq:'\\text{CH}_2\\text{=CH}_2 + \\text{H}_2 \\xrightarrow{\\text{Ni},\\,150^\\circ\\text{C}} \\text{CH}_3\\text{CH}_3', cond:'H₂(g), Ni catalyst 150 °C (or Pt/Pd r.t.)', mech:'Heterogeneous catalytic addition (hydrogenation)', obs:'—', tips:['Name the catalyst — H₂ alone is incomplete.'] },
+                { n:'Alkene → Monohaloalkane', eq:'\\text{CH}_3\\text{CH=CH}_2 + \\text{HBr} \\rightarrow \\text{CH}_3\\text{CHBrCH}_3\\ (\\text{major})', cond:'HX(g), room temperature', mech:'Electrophilic addition', obs:'—', tips:['Markovnikov: H adds to the C with more H; major product via the more stable carbocation.'] },
+                { n:'Haloalkane → Alkene', eq:'\\text{CH}_3\\text{CH}_2\\text{Br} + \\text{KOH} \\xrightarrow{\\text{ethanolic, reflux}} \\text{CH}_2\\text{=CH}_2 + \\text{KBr} + \\text{H}_2\\text{O}', cond:'Ethanolic KOH (or NaOH), heat under reflux', mech:'Elimination (E2)', obs:'—', tips:['THE classic trap: aqueous KOH gives substitution (alcohol), ethanolic KOH gives elimination (alkene). The solvent decides.'] },
+                { n:'Alkene → Alkanol (hydration)', eq:'\\text{CH}_2\\text{=CH}_2 + \\text{H}_2\\text{O} \\xrightarrow{\\text{conc. H}_3\\text{PO}_4,\\,300^\\circ\\text{C},\\,60\\,\\text{atm}} \\text{CH}_3\\text{CH}_2\\text{OH}', cond:'Steam H₂O(g), conc H₃PO₄ on silica, 300 °C, 60 atm', mech:'Electrophilic addition', obs:'—', tips:['Industrial ethanol route. Not the same as cold alkaline KMnO₄ (which gives a diol).'] },
+                { n:'Alkanol → Alkene (dehydration)', eq:'\\text{CH}_3\\text{CH}_2\\text{OH} \\xrightarrow{\\text{conc. H}_3\\text{PO}_4,\\,170^\\circ\\text{C}} \\text{CH}_2\\text{=CH}_2 + \\text{H}_2\\text{O}', cond:'Conc H₃PO₄ or conc H₂SO₄, ~170 °C', mech:'Acid-catalysed elimination', obs:'—', tips:['Reverse of hydration. State concentrated acid + heat.'] },
+                { n:'Alkene → Diol', eq:'\\text{CH}_2\\text{=CH}_2 + [\\text{O}] + \\text{H}_2\\text{O} \\xrightarrow{\\text{cold dil. alk. KMnO}_4} \\text{CH}_2(\\text{OH})\\text{CH}_2\\text{OH}', cond:'Cold, dilute, alkaline KMnO₄', mech:'Oxidation / addition', obs:'Purple KMnO₄ decolourises (test for unsaturation).', tips:['Hot/acidified KMnO₄ cleaves the C=C instead — not the diol route.'] },
+                { n:'Alkene → Dihaloalkane', eq:'\\text{CH}_2\\text{=CH}_2 + \\text{Br}_2 \\rightarrow \\text{CH}_2\\text{BrCH}_2\\text{Br}', cond:'Br₂ (organic solvent or bromine water), r.t.', mech:'Electrophilic addition', obs:'Orange-brown bromine decolourises (unsaturation test).', tips:['With water present, some bromohydrin can form.'] },
+                { n:'Dihaloalkane → Alkyne', eq:'\\text{CH}_2\\text{BrCH}_2\\text{Br} + 2\\text{KOH} \\xrightarrow{\\text{ethanolic, reflux}} \\text{HC}\\equiv\\text{CH} + 2\\text{KBr} + 2\\text{H}_2\\text{O}', cond:'Excess ethanolic KOH, reflux', mech:'Double elimination (2 mol HX removed)', obs:'—', tips:['Ethanolic (not aqueous) base required.'] },
+                { n:'Haloalkane → Alkanol', eq:'\\text{CH}_3\\text{CH}_2\\text{Br} + \\text{KOH(aq)} \\xrightarrow{\\text{reflux}} \\text{CH}_3\\text{CH}_2\\text{OH} + \\text{KBr}', cond:'Aqueous KOH (or NaOH), reflux', mech:'Nucleophilic substitution (SN2 for 1°, SN1 for 3°)', obs:'—', tips:['Contrast with reaction 4 — aqueous = substitution.'] },
+                { n:'Alkanol → Chloroalkane', eq:'\\text{ROH} + \\text{PCl}_5 \\rightarrow \\text{RCl} + \\text{POCl}_3 + \\text{HCl}', cond:'PCl₅, room temperature', mech:'Substitution', obs:'Steamy HCl fumes (a test for –OH).', tips:['SOCl₂ or conc HCl/ZnCl₂ also acceptable.'] },
+                { n:'Alkanol → Bromoalkane', eq:'\\text{ROH} + \\text{HBr} \\rightarrow \\text{RBr} + \\text{H}_2\\text{O}', cond:'KBr + 50% H₂SO₄, heat (generates HBr in situ)', mech:'Substitution', obs:'—', tips:['HBr is generated in situ from KBr + H₂SO₄.'] },
+                { n:'Alkanol → Iodoalkane', eq:'3\\text{ROH} + \\text{PI}_3 \\rightarrow 3\\text{RI} + \\text{H}_3\\text{PO}_3', cond:'Red phosphorus + I₂, heat (generates PI₃ in situ)', mech:'Substitution', obs:'—', tips:['PI₃ is made in situ — it is too unstable to store.'] }
+            ]},
+            cycle2: { color:'emerald', list:'c2-list', cards:'c2-cards', reactions: [
+                { n:'1° Alcohol → Aldehyde', eq:'\\text{RCH}_2\\text{OH} + [\\text{O}] \\xrightarrow{\\text{distil}} \\text{RCHO} + \\text{H}_2\\text{O}', cond:'Acidified K₂Cr₂O₇, DISTIL the aldehyde out immediately', mech:'Oxidation', obs:'Orange → green (dichromate reduced).', tips:['Distil (not reflux) so the aldehyde escapes before it is further oxidised to the acid.'] },
+                { n:'Aldehyde → 1° Alcohol', eq:'\\text{RCHO} + 2[\\text{H}] \\rightarrow \\text{RCH}_2\\text{OH}', cond:'NaBH₄ in water/methanol, or LiAlH₄ in dry ether then dilute acid', mech:'Reduction', obs:'—', tips:['Catalytic hydrogenation (H₂/Ni) also works.'] },
+                { n:'Aldehyde → Alkanoic acid', eq:'\\text{RCHO} + [\\text{O}] \\xrightarrow{\\text{reflux}} \\text{RCOOH}', cond:'Acidified K₂Cr₂O₇ (or KMnO₄), heat under REFLUX', mech:'Oxidation', obs:'Orange → green.', tips:['Reflux (not distillation) ensures full oxidation to the acid.'] },
+                { n:'Alkanoic acid → 1° Alcohol', eq:'\\text{RCOOH} + 4[\\text{H}] \\rightarrow \\text{RCH}_2\\text{OH} + \\text{H}_2\\text{O}', cond:'LiAlH₄ in dry ether, then dilute acid', mech:'Reduction', obs:'—', tips:['NaBH₄ does NOT reduce carboxylic acids — LiAlH₄ is required.'] },
+                { n:'2° Alcohol → Ketone', eq:'\\text{RCH(OH)R\'} + [\\text{O}] \\xrightarrow{\\text{reflux}} \\text{RCOR\'} + \\text{H}_2\\text{O}', cond:'Acidified K₂Cr₂O₇, heat under reflux', mech:'Oxidation', obs:'Orange → green.', tips:['Ketones resist further oxidation (no C–H on the carbonyl carbon).'] },
+                { n:'Ketone → 2° Alcohol', eq:'\\text{RCOR\'} + 2[\\text{H}] \\rightarrow \\text{RCH(OH)R\'}', cond:'NaBH₄ or LiAlH₄ then dilute acid', mech:'Reduction', obs:'—', tips:['A 3° alcohol CANNOT be made here — use Grignard + ketone instead.'] }
+            ]},
+            cycle3: { color:'amber', list:'c3-list', cards:'c3-cards', reactions: [
+                { n:'1° Alcohol → Alkanoic acid', eq:'\\text{RCH}_2\\text{OH} + 2[\\text{O}] \\xrightarrow{\\text{reflux}} \\text{RCOOH} + \\text{H}_2\\text{O}', cond:'Acidified K₂Cr₂O₇, reflux', mech:'Oxidation', obs:'Orange → green.', tips:['Same as Cycle 2 reaction 3 — the alcohol-to-acid oxidation.'] },
+                { n:'Alkanoic acid → 1° Alcohol', eq:'\\text{RCOOH} + 4[\\text{H}] \\rightarrow \\text{RCH}_2\\text{OH} + \\text{H}_2\\text{O}', cond:'LiAlH₄ in dry ether, then dilute acid', mech:'Reduction', obs:'—', tips:['LiAlH₄ required (NaBH₄ too weak).'] },
+                { n:'Alkanoic acid → Acyl chloride', eq:'\\text{RCOOH} + \\text{PCl}_5 \\rightarrow \\text{RCOCl} + \\text{POCl}_3 + \\text{HCl}', cond:'PCl₅ (or SOCl₂, or PCl₃), r.t.', mech:'Substitution', obs:'Steamy HCl fumes.', tips:['The gateway to all acid derivatives.'] },
+                { n:'Acyl chloride → Alkanoic acid', eq:'\\text{RCOCl} + \\text{H}_2\\text{O} \\rightarrow \\text{RCOOH} + \\text{HCl}', cond:'Water (vigorous, cold)', mech:'Hydrolysis (nucleophilic addition–elimination)', obs:'Steamy HCl fumes.', tips:['Acyl chlorides hydrolyse in moist air — keep them dry.'] },
+                { n:'Nitrile → Alkanoic acid (acid hydrolysis)', eq:'\\text{RCN} + 2\\text{H}_2\\text{O} + \\text{H}^+ \\rightarrow \\text{RCOOH} + \\text{NH}_4^+', cond:'Dilute HCl (or H₂SO₄), heat under reflux', mech:'Acid hydrolysis', obs:'—', tips:['Nitrogen ends as NH₄⁺ (ammonium salt) in acid, not free NH₃.'] },
+                { n:'Acid + Alcohol → Ester (esterification)', eq:'\\text{RCOOH} + \\text{R\'OH} \\underset{\\text{reflux}}{\\overset{\\text{conc. H}_2\\text{SO}_4}{\\rightleftharpoons}} \\text{RCOOR\'} + \\text{H}_2\\text{O}', cond:'Conc H₂SO₄ catalyst, heat under reflux', mech:'Esterification (reversible)', obs:'Sweet/fruity smell.', tips:['Reversible — remove water or use excess reagent to improve yield.'] },
+                { n:'Acyl chloride + Alcohol → Ester', eq:'\\text{RCOCl} + \\text{R\'OH} \\rightarrow \\text{RCOOR\'} + \\text{HCl}', cond:'Room temperature, no catalyst, goes to completion', mech:'Nucleophilic addition–elimination', obs:'Steamy HCl fumes.', tips:['Faster and higher-yielding than esterification — but more violent.'] },
+                { n:'Acyl chloride + NH₃ → 1° Amide', eq:'\\text{RCOCl} + 2\\text{NH}_3 \\rightarrow \\text{RCONH}_2 + \\text{NH}_4\\text{Cl}', cond:'Conc NH₃ (excess), r.t.', mech:'Nucleophilic addition–elimination', obs:'Vigorous; white smoke of NH₄Cl.', tips:['2 mol NH₃ needed — one neutralises the HCl.'] },
+                { n:'Acyl chloride + 1° Amine → 2° Amide', eq:'\\text{RCOCl} + 2\\text{R\'NH}_2 \\rightarrow \\text{RCONHR\'} + \\text{R\'NH}_3^+\\text{Cl}^-', cond:'Room temperature', mech:'Nucleophilic addition–elimination', obs:'White solid N-substituted amide.', tips:['3° amines CANNOT react — no N–H to eliminate.'] },
+                { n:'Ester acid hydrolysis', eq:'\\text{RCOOR\'} + \\text{H}_2\\text{O} \\underset{\\text{reflux}}{\\overset{\\text{dil. H}^+}{\\rightleftharpoons}} \\text{RCOOH} + \\text{R\'OH}', cond:'Dilute HCl (or H₂SO₄), heat under reflux', mech:'Acid hydrolysis (reversible)', obs:'—', tips:['Gives the carboxylic ACID + alcohol.'] },
+                { n:'Ester alkaline hydrolysis (saponification)', eq:'\\text{RCOOR\'} + \\text{NaOH} \\xrightarrow{\\text{reflux}} \\text{RCOO}^-\\text{Na}^+ + \\text{R\'OH}', cond:'Aqueous NaOH, heat under reflux', mech:'Alkaline hydrolysis (irreversible)', obs:'—', tips:['Gives the carboxylate SALT + alcohol. Add acid afterwards to liberate the acid.'] },
+                { n:'1° Amide acid hydrolysis', eq:'\\text{RCONH}_2 + \\text{H}_2\\text{O} + \\text{H}^+ \\xrightarrow{\\text{reflux}} \\text{RCOOH} + \\text{NH}_4^+', cond:'Dilute HCl, reflux', mech:'Acid hydrolysis', obs:'—', tips:['Nitrogen ends as NH₄⁺ in acid.'] },
+                { n:'1° Amide alkaline hydrolysis', eq:'\\text{RCONH}_2 + \\text{NaOH} \\xrightarrow{\\text{reflux}} \\text{RCOO}^-\\text{Na}^+ + \\text{NH}_3', cond:'Aqueous NaOH, reflux', mech:'Alkaline hydrolysis', obs:'NH₃ gas turns damp red litmus blue.', tips:['Nitrogen ends as ammonia in alkali.'] },
+                { n:'2° Amide acid hydrolysis', eq:'\\text{RCONHR\'} + \\text{H}_2\\text{O} + \\text{H}^+ \\xrightarrow{\\text{reflux}} \\text{RCOOH} + \\text{R\'NH}_3^+', cond:'Dilute HCl, reflux', mech:'Acid hydrolysis', obs:'—', tips:['Gives carboxylic acid + alkylammonium salt.'] },
+                { n:'2° Amide alkaline hydrolysis', eq:'\\text{RCONHR\'} + \\text{NaOH} \\xrightarrow{\\text{reflux}} \\text{RCOO}^-\\text{Na}^+ + \\text{R\'NH}_2', cond:'Aqueous NaOH, reflux', mech:'Alkaline hydrolysis', obs:'—', tips:['Gives carboxylate salt + primary amine.'] },
+                { n:'Nitrile alkaline hydrolysis', eq:'\\text{RCN} + \\text{H}_2\\text{O} + \\text{OH}^- \\xrightarrow{\\text{reflux}} \\text{RCOO}^- + \\text{NH}_3', cond:'Aqueous NaOH, reflux', mech:'Alkaline hydrolysis', obs:'NH₃ evolved.', tips:['Gives carboxylate salt + ammonia.'] },
+                { n:'Carboxylate salt → Alkanoic acid', eq:'\\text{RCOO}^-\\text{Na}^+ + \\text{HCl} \\rightarrow \\text{RCOOH} + \\text{NaCl}', cond:'Add a strong acid (dilute HCl)', mech:'Acid-base', obs:'—', tips:['Used to liberate the acid after alkaline hydrolysis.'] },
+                { n:'Alkanoic acid → Carboxylate salt', eq:'\\text{RCOOH} + \\text{NaOH} \\rightarrow \\text{RCOO}^-\\text{Na}^+ + \\text{H}_2\\text{O}', cond:'NaOH, or Na₂CO₃/NaHCO₃', mech:'Acid-base', obs:'Effervescence of CO₂ with carbonates (test for –COOH).', tips:['The CO₂ effervescence identifies the carboxylic acid group.'] }
+            ]},
+            cycle4: { color:'violet', list:'c4-list', cards:'c4-cards', reactions: [
+                { n:'Benzene → Nitrobenzene (nitration)', eq:'\\text{C}_6\\text{H}_6 + \\text{HNO}_3 \\xrightarrow{\\text{conc. H}_2\\text{SO}_4,\\,55^\\circ\\text{C}} \\text{C}_6\\text{H}_5\\text{NO}_2 + \\text{H}_2\\text{O}', cond:'Conc HNO₃ + conc H₂SO₄ (nitrating mixture), 55 °C', mech:'Electrophilic substitution (electrophile NO₂⁺)', obs:'Yellow oily nitrobenzene (almond smell).', tips:['Control 55 °C — higher gives dinitration. NO₂⁺ is generated by H₂SO₄ protonating HNO₃.'] },
+                { n:'Nitrobenzene → Phenylamine (reduction)', eq:'\\text{C}_6\\text{H}_5\\text{NO}_2 + 6[\\text{H}] \\xrightarrow{\\text{Sn / conc. HCl, reflux}} \\text{C}_6\\text{H}_5\\text{NH}_2 + 2\\text{H}_2\\text{O}', cond:'Tin + conc HCl, reflux, THEN conc NaOH', mech:'Reduction', obs:'—', tips:['The NaOH step liberates the free amine from its salt — without it you have phenylammonium chloride.'] },
+                { n:'Phenylamine → Benzenediazonium (diazotisation)', eq:'\\text{C}_6\\text{H}_5\\text{NH}_2 + \\text{HNO}_2 + \\text{HCl} \\xrightarrow{0-10^\\circ\\text{C}} [\\text{C}_6\\text{H}_5\\text{N}_2]^+\\text{Cl}^- + 2\\text{H}_2\\text{O}', cond:'NaNO₂ + HCl, strictly 0–10 °C (ice bath); HNO₂ in situ', mech:'Diazotisation', obs:'Clear diazonium solution.', tips:['Above 10 °C the diazonium decomposes to phenol + N₂ gas.'] },
+                { n:'Diazonium + Phenol → Azo dye (coupling)', eq:'[\\text{C}_6\\text{H}_5\\text{N}_2]^+ + \\text{C}_6\\text{H}_5\\text{O}^- \\rightarrow \\text{C}_6\\text{H}_5\\text{-N=N-C}_6\\text{H}_4\\text{OH} + \\text{H}^+', cond:'Cold alkaline solution (phenol in NaOH → phenoxide)', mech:'Electrophilic substitution (coupling)', obs:'Bright orange/red azo dye precipitate.', tips:['Phenol must be in NaOH to form the more reactive phenoxide. The –N=N– link + extended conjugation = colour.'] }
+            ]}
+        };
+
+        const CYCLE_HEX = { sky:'#38bdf8', emerald:'#34d399', amber:'#fbbf24', violet:'#a78bfa' };
+        function styleCycleBtn(btn, hex, active) {
+            btn.className = 'p-2.5 rounded-lg border text-left transition text-xs w-full flex justify-between items-center';
+            if (active) {
+                btn.style.borderColor = hex;
+                btn.style.background = hex + '1f';
+                btn.style.color = hex;
+                btn.style.fontWeight = '700';
+            } else {
+                btn.style.borderColor = '#1e293b';
+                btn.style.background = 'rgba(15,23,42,0.8)';
+                btn.style.color = '#94a3b8';
+                btn.style.fontWeight = '400';
+            }
+        }
+        function renderCycle(key) {
+            const d = CYCLE_DATA[key];
+            const hex = CYCLE_HEX[d.color];
+            const list = document.getElementById(d.list);
+            const cards = document.getElementById(d.cards);
+            if (!list || !cards) return;
+            list.innerHTML = '';
+            cards.innerHTML = '';
+            d.reactions.forEach(function(r, i) {
+                const btn = document.createElement('button');
+                styleCycleBtn(btn, hex, i === 0);
+                btn.innerHTML = '<span>' + (i+1) + '. ' + r.n + '</span>';
+                btn.onclick = function() {
+                    Array.from(list.children).forEach(function(b){ styleCycleBtn(b, hex, false); });
+                    styleCycleBtn(btn, hex, true);
+                    Array.from(cards.children).forEach(function(c){ c.classList.add('hidden'); });
+                    document.getElementById(key + '-card-' + i).classList.remove('hidden');
+                    safeInitKaTeX();
+                };
+                list.appendChild(btn);
+
+                const card = document.createElement('div');
+                card.id = key + '-card-' + i;
+                card.className = 'space-y-3' + (i === 0 ? '' : ' hidden');
+                card.innerHTML =
+                    '<span class="font-bold block font-mono text-sm border-b border-slate-800 pb-2" style="color:' + hex + '">' + (i+1) + '. ' + r.n + '</span>' +
+                    '<div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$' + r.eq + '$</div>' +
+                    '<p class="text-slate-300 text-[11px]"><b>Conditions:</b> ' + r.cond + ' &nbsp; <b>Mechanism:</b> ' + r.mech + '</p>' +
+                    (r.obs && r.obs !== '—' ? '<p class="text-slate-300 text-[11px]"><b>Observation:</b> ' + r.obs + '</p>' : '') +
+                    '<div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5">' +
+                    r.tips.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+                cards.appendChild(card);
+            });
+            safeInitKaTeX();
+        }
+
+        // ==================== SPECIAL TECHNIQUES ====================
+        const SPECIAL_DATA = {
+            nitrile: { title:'a. Haloalkane + Cyanide Ion — SN2 (+1 C)', color:'#fb7185',
+                eq:'\\text{CH}_3\\text{CH}_2\\text{Cl} + \\text{KCN} \\xrightarrow{\\text{ethanol, reflux}} \\text{CH}_3\\text{CH}_2\\text{CN} + \\text{KCl}',
+                mech:'SN2 nucleophilic substitution by the cyanide ion (:C≡N⁻).',
+                trap:'The solvent must be <b>ethanol</b>, not water — water lets hydroxide compete to form an alcohol. The nitrile can then be hydrolysed to a carboxylic acid (Cycle 3) or reduced to a primary amine. This is the standard +1C extension.',
+                follow:'RCN → (hydrolysis) RCOOH &nbsp;or&nbsp; RCN → (LiAlH₄) RCH₂NH₂' },
+            hcn: { title:'b. Carbonyl + HCN — Hydroxynitrile (+1 C)', color:'#34d399',
+                eq:'\\text{CH}_3\\text{CHO} + \\text{HCN} \\xrightarrow{\\text{KCN, pH }8} \\text{CH}_3\\text{CH(OH)CN}',
+                mech:'Nucleophilic addition of :CN⁻ to the planar carbonyl carbon, then protonation.',
+                trap:'Attack on the planar C=O from either face is equally likely → the product is a <b>racemic mixture</b> (optically inactive). A favourite exam explanation.',
+                follow:'The –CN can be hydrolysed to –COOH, extending the chain and adding a functional group.' },
+            alkylation: { title:'c. Friedel–Crafts Alkylation (+many C)', color:'#a78bfa',
+                eq:'\\text{C}_6\\text{H}_6 + \\text{R-Cl} \\xrightarrow{\\text{anhydrous AlCl}_3,\\ \\text{warm}} \\text{C}_6\\text{H}_5\\text{R} + \\text{HCl}',
+                mech:'Electrophilic substitution — AlCl₃ generates the carbocation electrophile R⁺.',
+                trap:'Needs <b>anhydrous AlCl₃</b> (a Lewis acid). Attaches an alkyl group to the benzene ring. Can over-alkylate (polyalkylation).',
+                follow:'—' },
+            acylation: { title:'d. Friedel–Crafts Acylation (+many C)', color:'#fbbf24',
+                eq:'\\text{C}_6\\text{H}_6 + \\text{R-COCl} \\xrightarrow{\\text{anhydrous AlCl}_3,\\ \\text{warm}} \\text{C}_6\\text{H}_5\\text{COR} + \\text{HCl}',
+                mech:'Electrophilic substitution — AlCl₃ generates the acylium ion electrophile R–C≡O⁺.',
+                trap:'Gives an aromatic ketone. Unlike alkylation it does NOT over-acylate (the product is deactivating). The ketone can be reduced to an alkylbenzene if needed.',
+                follow:'C₆H₅COR → (reduction) C₆H₅CH₂R' },
+            iodoform: { title:'e. Iodoform Cleavage — I₂/NaOH (−1 C)', color:'#38bdf8',
+                eq:'\\text{RCOCH}_3 + 3\\text{I}_2 + 4\\text{NaOH} \\xrightarrow{\\Delta} \\text{RCOO}^-\\text{Na}^+ + \\text{CHI}_3\\downarrow + 3\\text{NaI} + 3\\text{H}_2\\text{O}',
+                mech:'Tri-iodination of the methyl group, then cleavage by hydroxide.',
+                trap:'Removes the methyl carbon (−1C). Works on CH₃CO– (methyl ketone) and CH₃CH(OH)– (oxidised in situ). Also a <b>diagnostic test</b>: pale-yellow CHI₃ precipitate with an antiseptic smell.',
+                follow:'Ethanal is the only aldehyde that gives a positive iodoform test.' }
+        };
+        window.pickSpecial = function(key) {
+            const d = SPECIAL_DATA[key];
+            ['nitrile','hcn','alkylation','acylation','iodoform'].forEach(function(k){
+                const b = document.getElementById('spec-btn-' + k);
+                if (k === key) { b.style.borderColor = d.color; b.style.background = d.color + '1f'; b.style.color = d.color; b.style.fontWeight='700'; }
+                else { b.style.borderColor = '#1e293b'; b.style.background = 'rgba(15,23,42,0.8)'; b.style.color = '#94a3b8'; b.style.fontWeight='400'; }
+            });
+            document.getElementById('special-panel').innerHTML =
+                '<span class="font-bold block font-mono text-sm border-b border-slate-800 pb-2" style="color:' + d.color + '">' + d.title + '</span>' +
+                '<div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$' + d.eq + '$</div>' +
+                '<p class="text-slate-300 text-[11px]"><b>Mechanism:</b> ' + d.mech + '</p>' +
+                '<div class="p-2.5 bg-amber-950/30 border border-amber-900/40 rounded-lg text-[11px] text-amber-200 leading-relaxed"><b>⚠️ Examiner trap:</b> ' + d.trap + '</div>' +
+                (d.follow && d.follow !== '—' ? '<p class="text-slate-400 text-[11px]"><b>Follow-up:</b> ' + d.follow + '</p>' : '');
+            safeInitKaTeX();
+        };
+
+        const GRIGNARD_DATA = {
+            co2: { eq:'\\text{RMgX} + \\text{CO}_2 \\xrightarrow{\\text{dry ether}} \\text{RCOOMgX} \\xrightarrow{\\text{dil. HCl}} \\text{RCOOH}',
+                   note:'Adds ONE carbon as a carboxylic acid. The classic way to extend a chain by exactly one carbon and land on –COOH.' },
+            methanal: { eq:'\\text{RMgX} + \\text{HCHO} \\xrightarrow{\\text{dry ether}} \\text{RCH}_2\\text{OMgX} \\xrightarrow{\\text{dil. HCl}} \\text{RCH}_2\\text{OH}',
+                   note:'Adds ONE carbon as a PRIMARY alcohol (the new –CH₂OH comes from methanal).' },
+            aldehyde: { eq:'\\text{RMgX} + \\text{R\'CHO} \\xrightarrow{\\text{dry ether}} \\text{RR\'CHOMgX} \\xrightarrow{\\text{dil. HCl}} \\text{RR\'CHOH}',
+                   note:'Gives a SECONDARY alcohol. The two R groups (R from RMgX, R\' from the aldehyde) flank the new CHOH.' },
+            ketone: { eq:'\\text{RMgX} + \\text{R\'COR\'\'} \\xrightarrow{\\text{dry ether}} \\text{RR\'R\'\'COMgX} \\xrightarrow{\\text{dil. HCl}} \\text{RR\'R\'\'COH}',
+                   note:'Gives a TERTIARY alcohol — the ONLY way to make one in this syllabus (Cycle 2 reduction cannot). Three R groups on the new carbon.' }
+        };
+        window.pickGrignard = function(key) {
+            const d = GRIGNARD_DATA[key];
+            document.querySelectorAll('.grig-btn').forEach(function(b){ b.style.borderColor='#1e293b'; });
+            document.getElementById('grig-btn-' + key).style.borderColor = '#06b6d4';
+            document.getElementById('grignard-panel').innerHTML =
+                '<div class="p-3 bg-slate-950 rounded font-mono text-cyan-300 border border-slate-800">$' + d.eq + '$</div>' +
+                '<p class="mt-2 text-slate-300">' + d.note + '</p>';
+            safeInitKaTeX();
+        };
+
+        // ==================== EXAM WALKTHROUGHS ====================
+        const WALKTHROUGHS = [
+            {
+                cite:'WCH15 · Jan 2024 · Q14',
+                title:'Synthesis of N-phenylethanamide (a painkiller) from benzene',
+                question:'N-phenylethanamide can be synthesised from benzene as shown: benzene → nitrobenzene → phenylamine → N-phenylethanamide. (a) For each step, give the reagents and conditions. (b) The overall yield for the synthesis was found to be 35.2%. Calculate the minimum volume of benzene (density 0.879 g cm⁻³) required to make 10.0 g of N-phenylethanamide.',
+                strategy:{
+                    carbons:'6 carbons throughout — the ring is preserved and the carbon count never changes. So NO Special technique or Grignard is needed; the cycles alone do the job.',
+                    fg:'benzene → nitro (–NO₂) → amine (–NH₂) → amide (–NHCOCH₃). We are modifying the substituent on an intact ring.',
+                    cycles:'Cycle 4 (nitration, then reduction to the amine) + Cycle 3 (acylation of the amine to the amide).'
+                },
+                steps:[
+                    { cycle:'Cycle 4', color:'#a78bfa', title:'Step 1 · Benzene → Nitrobenzene (nitration)',
+                      reagents:'Concentrated HNO₃ + concentrated H₂SO₄ (the nitrating mixture)', conditions:'Warm to 55 °C (water bath)',
+                      equation:'\\text{C}_6\\text{H}_6 + \\text{HNO}_3 \\xrightarrow{\\text{conc. H}_2\\text{SO}_4,\\,55^\\circ\\text{C}} \\text{C}_6\\text{H}_5\\text{NO}_2 + \\text{H}_2\\text{O}',
+                      note:'Electrophilic substitution; the electrophile is NO₂⁺ (generated by H₂SO₄ protonating HNO₃). Keep it at 55 °C — hotter gives dinitrobenzene.' },
+                    { cycle:'Cycle 4', color:'#a78bfa', title:'Step 2 · Nitrobenzene → Phenylamine (reduction)',
+                      reagents:'Tin (Sn) + concentrated HCl, heat under reflux, THEN add concentrated NaOH', conditions:'Reflux, then NaOH to liberate the amine',
+                      equation:'\\text{C}_6\\text{H}_5\\text{NO}_2 + 6[\\text{H}] \\xrightarrow{\\text{Sn/conc. HCl}} \\text{C}_6\\text{H}_5\\text{NH}_2 + 2\\text{H}_2\\text{O}',
+                      note:'The reduction first gives phenylammonium chloride; the NaOH step frees the phenylamine. Forgetting the NaOH is a classic lost mark.' },
+                    { cycle:'Cycle 3', color:'#fbbf24', title:'Step 3 · Phenylamine → N-phenylethanamide (acylation)',
+                      reagents:'Ethanoyl chloride (CH₃COCl) — ethanoic anhydride also accepted', conditions:'Room temperature',
+                      equation:'\\text{C}_6\\text{H}_5\\text{NH}_2 + \\text{CH}_3\\text{COCl} \\rightarrow \\text{C}_6\\text{H}_5\\text{NHCOCH}_3 + \\text{HCl}',
+                      note:'Nucleophilic addition–elimination: the amine nitrogen attacks the acyl carbon (Cycle 3, reaction 9). This is how paracetamol is made too (from 4-aminophenol).' }
+                ],
+                markscheme:[
+                    'Each step: 1 mark for correct reagents + 1 mark for conditions.',
+                    'Step 3: ethanoic anhydride is accepted (and is preferred industrially — less violent, no HCl).',
+                    'Yield calculation: M(N-phenylethanamide) = 135 g mol⁻¹ → 10.0 g = 0.0741 mol. Benzene : product is 1:1, so 0.0741 mol benzene at 100% yield. At 35.2% yield, benzene needed = 0.0741 / 0.352 = 0.2105 mol. Mass = 0.2105 × 78 = 16.4 g. Volume = 16.4 / 0.879 = 18.7 cm³.',
+                    'The yield multiplies across steps — this is why the question asks for the MINIMUM volume.'
+                ]
+            },
+            {
+                cite:'Representative · +1C chain extension',
+                title:'Propanoic acid from bromoethane — two routes (KCN vs Grignard)',
+                question:'Bromoethane (2 C) is converted to propanoic acid (3 C). Plan a synthesis. This is the classic "+1 carbon" problem — and there are TWO valid routes. Know both.',
+                strategy:{
+                    carbons:'Start = 2 C, target = 3 C. The chain grows by +1C, so you MUST use a chain-extension step: either KCN (Special A) or Grignard + CO₂.',
+                    fg:'haloalkane → carboxylic acid. Both routes go through a 3-carbon intermediate (a nitrile, or the Grignard–CO₂ adduct).',
+                    cycles:'Route 1: Special A (KCN) then Cycle 3 (nitrile hydrolysis). Route 2: Grignard formation then + CO₂.'
+                },
+                steps:[
+                    { cycle:'Special A', color:'#fb7185', title:'Route 1, Step 1 · Bromoethane → Propanenitrile (KCN)',
+                      reagents:'KCN (or NaCN) in ETHANOL', conditions:'Heat under reflux',
+                      equation:'\\text{CH}_3\\text{CH}_2\\text{Br} + \\text{KCN} \\xrightarrow{\\text{ethanol, reflux}} \\text{CH}_3\\text{CH}_2\\text{CN} + \\text{KBr}',
+                      note:'SN2 by :CN⁻ adds one carbon. The solvent MUST be ethanol — water gives ethanol (substitution by OH⁻) instead.' },
+                    { cycle:'Cycle 3', color:'#fbbf24', title:'Route 1, Step 2 · Propanenitrile → Propanoic acid (hydrolysis)',
+                      reagents:'Dilute HCl (or aqueous NaOH then acidify)', conditions:'Heat under reflux',
+                      equation:'\\text{CH}_3\\text{CH}_2\\text{CN} + 2\\text{H}_2\\text{O} + \\text{H}^+ \\xrightarrow{\\text{reflux}} \\text{CH}_3\\text{CH}_2\\text{COOH} + \\text{NH}_4^+',
+                      note:'Acid hydrolysis of the nitrile (Cycle 3, reaction 5). Nitrogen leaves as NH₄⁺.' },
+                    { cycle:'Grignard', color:'#06b6d4', title:'Route 2 (alternative) · Bromoethane → Grignard → + CO₂ → Propanoic acid',
+                      reagents:'(i) Mg in anhydrous dry ether, reflux; (ii) pour onto solid CO₂ (dry ice); (iii) dilute HCl', conditions:'Anhydrous conditions throughout',
+                      equation:'\\text{CH}_3\\text{CH}_2\\text{Br} \\xrightarrow{\\text{Mg/dry ether}} \\text{CH}_3\\text{CH}_2\\text{MgBr} \\xrightarrow{\\text{CO}_2,\\ \\text{then dil. HCl}} \\text{CH}_3\\text{CH}_2\\text{COOH}',
+                      note:'The Grignard route also adds exactly one carbon (as CO₂). The ether must be perfectly dry — water destroys RMgX.' }
+                ],
+                markscheme:[
+                    'Either route earns full marks — but you must give reagents AND conditions for every step.',
+                    'The KCN route: the ethanol-solvent point is a dedicated mark (water = wrong product).',
+                    'The Grignard route: "anhydrous dry ether" is a dedicated mark.',
+                    'Examiners love asking you to compare the two routes — know that both are +1C.'
+                ]
+            },
+            {
+                cite:'Representative · 3° alcohol (Grignard + ketone)',
+                title:'2-methylpropan-2-ol (a tertiary alcohol) from propanone',
+                question:'Plan a synthesis of 2-methylpropan-2-ol, (CH₃)₃COH, from propanone, CH₃COCH₃. Why can this NOT be done by a Cycle 2 reduction?',
+                strategy:{
+                    carbons:'Start = 3 C (propanone), target = 4 C. The chain grows by +1C → you need a Grignard step (adds a CH₃ group).',
+                    fg:'ketone → tertiary alcohol. A 3° alcohol has THREE alkyl groups on the C–OH carbon.',
+                    cycles:'Grignard (CH₃MgBr) + the ketone. Cycle 2 reduction of a ketone only gives a 2° alcohol — it can NOT give a 3° alcohol.'
+                },
+                steps:[
+                    { cycle:'Grignard', color:'#06b6d4', title:'Step 1 · Make the Grignard reagent (CH₃MgBr)',
+                      reagents:'Bromomethane (CH₃Br) + magnesium turnings', conditions:'Anhydrous dry ether (ethoxyethane), heat under reflux',
+                      equation:'\\text{CH}_3\\text{Br} + \\text{Mg} \\xrightarrow{\\text{dry ether, reflux}} \\text{CH}_3\\text{MgBr}',
+                      note:'The ether must be perfectly dry — any water destroys the Grignard reagent.' },
+                    { cycle:'Grignard', color:'#06b6d4', title:'Step 2 · CH₃MgBr + propanone, then dilute acid',
+                      reagents:'Add propanone (CH₃COCH₃) in dry ether, then dilute HCl work-up', conditions:'Dry ether, then dilute HCl',
+                      equation:'\\text{CH}_3\\text{MgBr} + \\text{CH}_3\\text{COCH}_3 \\xrightarrow{\\text{dry ether}} (\\text{CH}_3)_3\\text{COMgBr} \\xrightarrow{\\text{dil. HCl}} (\\text{CH}_3)_3\\text{COH}',
+                      note:'The CH₃⁻ (from the Grignard) attacks the planar C=O carbon. After acid work-up you get the 3° alcohol. Because the C=O is planar, attack from either face gives a racemic mixture — but (CH₃)₃COH has no chiral centre, so that is not an issue here.' }
+                ],
+                markscheme:[
+                    'The key mark: recognising that a 3° alcohol REQUIRES Grignard + ketone (Cycle 2 cannot do it).',
+                    '"Anhydrous dry ether" is a dedicated mark for the Grignard formation.',
+                    'If the product HAD been chiral, you would need to state it forms as a racemic mixture.',
+                    'The dilute-acid work-up step must be mentioned (it protonates the alkoxide).'
+                ]
+            },
+            {
+                cite:'WCH15 · Jan 2024 · Q15(b)',
+                title:'Zingerone from coniferyl alcohol — a 4-step structural synthesis',
+                question:'Zingerone (the flavour of cooked ginger) is made in a four-step synthesis from coniferyl alcohol. Step 2 involves a Grignard reagent; steps 1, 3 and 4 are redox reactions. You are asked to complete the structures of the intermediates and give reagents and conditions for each step. (7 marks)',
+                strategy:{
+                    carbons:'This is a STRUCTURAL question — the carbon skeletons are drawn. First count carbons in the start and target to find the +1C step (it is the Grignard step, step 2).',
+                    fg:'The question tells you the reaction TYPES (step 2 = Grignard; 1, 3, 4 = redox). Use that to assign what each step does to the functional groups.',
+                    cycles:'Grignard (chain extension, +1C) + Cycle 2 (the redox steps moving between alcohol/aldehyde/alkene oxidation levels).'
+                },
+                steps:[
+                    { cycle:'Strategy', color:'#fb923c', title:'How to attack a structural synthesis question',
+                      reagents:'—', conditions:'—',
+                      equation:'\\text{count C} \\;\\rightarrow\\; \\text{find the }+1\\text{C step} \\;\\rightarrow\\; \\text{assign the redox steps}',
+                      note:'(1) Count the carbons in coniferyl alcohol and in zingerone — zingerone has one MORE carbon, so the Grignard step (step 2) is the chain-extension. (2) The Grignard must add a 1-carbon unit (from a CH₃ or –CH₂– partner). (3) Steps 1, 3, 4 are redox — use Cycle 2 to move between alcohol/aldehyde oxidation levels around the ring.' },
+                    { cycle:'Grignard', color:'#06b6d4', title:'Step 2 · The Grignard chain-extension (+1C)',
+                      reagents:'Convert the intermediate to a halide, form RMgX (Mg / dry ether), add the carbonyl partner, then dilute HCl', conditions:'Anhydrous dry ether, then dilute HCl',
+                      equation:'\\text{R-X} \\xrightarrow{\\text{Mg/dry ether}} \\text{RMgX} \\xrightarrow{\\text{carbonyl, then dil. HCl}} \\text{alcohol}',
+                      note:'This is where the extra carbon enters. Grignard additions to carbonyls give alcohols — and create a new chiral centre (racemic).' },
+                    { cycle:'Cycle 2', color:'#34d399', title:'Steps 1, 3, 4 · The redox adjustments',
+                      reagents:'Oxidation: acidified K₂Cr₂O₇ (distil for aldehyde, reflux for acid). Reduction: NaBH₄ / LiAlH₄.', conditions:'As required by each oxidation-level change',
+                      equation:'1^\\circ\\text{ alcohol} \\rightleftharpoons \\text{aldehyde} \\rightleftharpoons \\text{acid} \\qquad 2^\\circ\\text{ alcohol} \\rightleftharpoons \\text{ketone}',
+                      note:'Match each step to the oxidation-level change you see in the drawn structures. Distil vs reflux decides whether you stop at the aldehyde or reach the acid.' }
+                ],
+                markscheme:[
+                    '7 marks: structures of the intermediates + reagents/conditions for the steps.',
+                    'The single most important insight: the Grignard step is the +1C chain-extension — identify it first.',
+                    'Grignard = anhydrous dry ether (dedicated mark).',
+                    'Redox steps: get the oxidation level right (alcohol vs aldehyde vs acid) and choose distil/reflux accordingly.',
+                    'If a new chiral centre forms, note the racemic outcome.'
+                ]
+            }
+        ];
+
+        function renderWalkthroughs() {
+            const wrap = document.getElementById('walkthrough-container');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            WALKTHROUGHS.forEach(function(w, wi) {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4';
+                let stepsHtml = '';
+                w.steps.forEach(function(s, si) {
+                    stepsHtml +=
+                        '<div id="wt-' + wi + '-step-' + si + '" class="step-hidden p-4 rounded-lg border border-slate-800 bg-slate-900 space-y-2">' +
+                        '<div class="flex items-center gap-2 flex-wrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:' + s.color + '22;color:' + s.color + ';border:1px solid ' + s.color + '55">' + s.cycle + '</span><b class="text-slate-100 text-xs">' + s.title + '</b></div>' +
+                        '<div class="p-2.5 bg-slate-950 rounded font-mono text-emerald-300 border border-slate-800 text-[11px]">$' + s.equation + '$</div>' +
+                        '<p class="text-[11px] text-slate-300"><b class="text-slate-200">Reagents:</b> ' + s.reagents + ' &nbsp; <b class="text-slate-200">Conditions:</b> ' + s.conditions + '</p>' +
+                        '<p class="text-[11px] text-slate-400 leading-relaxed">' + s.note + '</p>' +
+                        '</div>';
+                });
+                card.innerHTML =
+                    '<div class="flex items-center gap-2 flex-wrap"><span class="px-2.5 py-1 rounded-full bg-orange-950 text-orange-300 border border-orange-800 text-[10px] font-bold font-mono">' + w.cite + '</span><h3 class="text-sm font-bold text-white">' + w.title + '</h3></div>' +
+                    '<div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-[11px] text-slate-300 leading-relaxed">' + w.question + '</div>' +
+                    '<div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">' +
+                    '<div class="p-2.5 bg-sky-950/30 border border-sky-800/50 rounded-lg"><b class="text-sky-300 block">① Carbon count</b><span class="text-slate-400">' + w.strategy.carbons + '</span></div>' +
+                    '<div class="p-2.5 bg-emerald-950/30 border border-emerald-800/50 rounded-lg"><b class="text-emerald-300 block">② Functional groups</b><span class="text-slate-400">' + w.strategy.fg + '</span></div>' +
+                    '<div class="p-2.5 bg-amber-950/30 border border-amber-800/50 rounded-lg"><b class="text-amber-300 block">③ Cycles used</b><span class="text-slate-400">' + w.strategy.cycles + '</span></div>' +
+                    '</div>' +
+                    '<button id="wt-' + wi + '-btn" class="w-full py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition">🔍 Reveal Step 1 of ' + w.steps.length + '</button>' +
+                    '<div class="space-y-3">' + stepsHtml + '</div>' +
+                    '<div id="wt-' + wi + '-ms" class="step-hidden p-3 bg-emerald-950/30 border border-emerald-800/50 rounded-lg space-y-1.5">' +
+                    '<b class="text-emerald-300 text-[11px] uppercase tracking-wider block">✅ Mark-scheme key points</b>' +
+                    w.markscheme.map(function(m){ return '<p class="text-[11px] text-slate-300 leading-relaxed">• ' + m + '</p>'; }).join('') +
+                    '</div>';
+                wrap.appendChild(card);
+
+                // step reveal logic
+                let revealed = 0;
+                const btn = document.getElementById('wt-' + wi + '-btn');
+                btn.onclick = function() {
+                    if (revealed < w.steps.length) {
+                        const el = document.getElementById('wt-' + wi + '-step-' + revealed);
+                        el.classList.remove('step-hidden');
+                        el.classList.add('step-reveal');
+                        revealed++;
+                        if (revealed < w.steps.length) btn.textContent = '🔍 Reveal Step ' + (revealed + 1) + ' of ' + w.steps.length;
+                        else { btn.textContent = '✅ Show mark-scheme key points'; }
+                        safeInitKaTeX();
+                    } else {
+                        document.getElementById('wt-' + wi + '-ms').classList.remove('step-hidden');
+                        btn.style.display = 'none';
+                    }
+                };
+            });
+            safeInitKaTeX();
+        }
+
+        // ==================== GRADED PRACTICE ====================
+        const PRACTICE = [
+            { type:'Deduce the compound', color:'#38bdf8',
+              q:'Compound A has the molecular formula C₂H₄O. It gives a silver mirror with Tollens\' reagent and shows a strong IR absorption at ~1720 cm⁻¹ but no broad O–H band. Deduce the structure of A.',
+              answer:'A is <b>ethanal, CH₃CHO</b>. The IR shows C=O (1720 cm⁻¹) with no O–H, so it is an aldehyde or ketone. The positive Tollens\' test (silver mirror) identifies an <b>aldehyde</b> — ketones do not react. With 2 carbons, the only aldehyde is ethanal.' },
+            { type:'Reagents & conditions', color:'#34d399',
+              q:'Give the reagent and conditions to convert propan-2-ol into propanone. Name the type of reaction.',
+              answer:'Reagent: <b>acidified potassium dichromate(VI)</b> (K₂Cr₂O₇ / H₂SO₄). Conditions: <b>heat under reflux</b>. Type: <b>oxidation</b> (2° alcohol → ketone). Observation: orange → green. (A ketone cannot be oxidised further, so reflux is safe here.)' },
+            { type:'Plan a pathway', color:'#fbbf24',
+              q:'Plan a two-step synthesis of ethyl ethanoate (an ester) starting from ethanol. Give reagents and conditions for each step.',
+              answer:'<b>Step 1:</b> oxidise some of the ethanol to ethanoic acid — acidified K₂Cr₂O₇, <b>reflux</b> (CH₃CH₂OH → CH₃COOH).<br><b>Step 2:</b> esterify the ethanoic acid with the remaining ethanol — <b>conc H₂SO₄ catalyst, heat under reflux</b> (CH₃COOH + CH₃CH₂OH ⇌ CH₃COOCH₂CH₃ + H₂O).<br>Key idea: split the ethanol — half becomes the acid, half becomes the alcohol part of the ester.' },
+            { type:'Deduce the product', color:'#a78bfa',
+              q:'Propanone is treated with HCN in the presence of a trace of KCN at pH ~8. Draw the product and state its stereochemistry.',
+              answer:'Product: <b>2-hydroxy-2-methylpropanenitrile</b>, (CH₃)₂C(OH)CN. Mechanism: nucleophilic addition of :CN⁻ to the planar C=O. Stereochemistry: the C=O is planar, so CN⁻ attacks from either face with equal probability → but the product carbon has two identical CH₃ groups, so it is <b>NOT chiral</b> (no enantiomers). If the ketone were unsymmetrical (e.g. butanone), the product WOULD be a racemic mixture.' },
+            { type:'Chain extension (+1C)', color:'#fb7185',
+              q:'Convert bromomethane (1 C) into ethanoic acid (2 C). Give two different routes, with reagents and conditions.',
+              answer:'<b>Route 1:</b> (i) KCN in <b>ethanol</b>, reflux → CH₃CN (ethanenitrile, +1C); (ii) <b>dilute HCl, reflux</b> → CH₃COOH (acid hydrolysis of the nitrile).<br><b>Route 2:</b> (i) <b>Mg / anhydrous dry ether</b>, reflux → CH₃MgBr; (ii) pour onto <b>solid CO₂</b>, then <b>dilute HCl</b> → CH₃COOH.<br>Both add exactly one carbon. Marks: ethanol solvent (Route 1) and anhydrous ether (Route 2) are each dedicated marks.' },
+            { type:'Structure from spectra', color:'#06b6d4',
+              q:'Compound B (C₃H₆O) shows: IR strong band at ~1715 cm⁻¹, no O–H. ¹H NMR: a singlet at δ 2.1 (3H). Deduce B.',
+              answer:'B is <b>propanone, CH₃COCH₃</b>. IR: C=O at 1715 cm⁻¹, no O–H → aldehyde or ketone. The ¹H NMR has only ONE signal (a singlet, 3H) → all protons are in a single environment with no neighbours. Propanal (CH₃CH₂CHO) would show three signals with splitting. Only propanone has one type of proton (two equivalent CH₃ groups, no adjacent H to split them). The singlet at δ 2.1 is the CH₃–C=O shift.' },
+            { type:'3° alcohol synthesis', color:'#fb923c',
+              q:'Explain why 2-methylpropan-2-ol, (CH₃)₃COH, cannot be made by reducing a carbonyl compound, and give a working synthesis from propanone.',
+              answer:'A 3° alcohol has three alkyl groups on the C–OH carbon. Reducing an aldehyde gives a 1° alcohol and reducing a ketone gives a 2° alcohol — <b>reduction can never give a 3° alcohol</b>. Working synthesis: propanone + <b>CH₃MgBr</b> (from CH₃Br + Mg / <b>anhydrous dry ether</b>), then <b>dilute HCl</b> work-up → (CH₃)₃COH. The Grignard adds the third CH₃ group.' },
+            { type:'Multi-step (aromatic)', color:'#f43f5e',
+              q:'Starting from benzene, plan a synthesis of phenylamine in two steps. Then state how you would convert the phenylamine into an orange azo dye.',
+              answer:'<b>Step 1:</b> nitration — <b>conc HNO₃ + conc H₂SO₄, 55 °C</b> → nitrobenzene.<br><b>Step 2:</b> reduction — <b>Sn + conc HCl, reflux, then conc NaOH</b> → phenylamine.<br><b>Azo dye:</b> (i) diazotise the phenylamine — <b>NaNO₂ + HCl, 0–10 °C</b> → benzenediazonium chloride; (ii) couple with <b>phenol in cold NaOH</b> → orange azo dye (4-phenylazophenol). Temperature control (0–10 °C) in the diazotisation is a dedicated mark.' }
+        ];
+
+        function renderPractice() {
+            const wrap = document.getElementById('practice-container');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            PRACTICE.forEach(function(p, i) {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3 flex flex-col';
+                card.innerHTML =
+                    '<div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:' + p.color + '22;color:' + p.color + ';border:1px solid ' + p.color + '55">' + p.type + '</span><span class="text-[10px] text-slate-500 font-mono">Q' + (i+1) + '</span></div>' +
+                    '<p class="text-xs text-slate-200 leading-relaxed">' + p.q + '</p>' +
+                    '<textarea rows="2" placeholder="Work it out on paper, then jot your answer here…" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-[11px] text-slate-200 outline-none focus:border-orange-500 resize-y"></textarea>' +
+                    '<button data-i="' + i + '" class="pp-btn w-full py-2 rounded-lg bg-slate-800 border border-slate-700 text-orange-300 text-xs font-bold hover:border-orange-500 transition">🔑 Reveal model answer</button>' +
+                    '<div id="pp-ans-' + i + '" class="step-hidden p-3 bg-emerald-950/30 border border-emerald-800/50 rounded-lg text-[11px] text-slate-300 leading-relaxed">' + p.answer + '</div>';
+                wrap.appendChild(card);
+            });
+            wrap.querySelectorAll('.pp-btn').forEach(function(btn) {
+                btn.onclick = function() {
+                    const ans = document.getElementById('pp-ans-' + btn.getAttribute('data-i'));
+                    ans.classList.toggle('step-hidden');
+                    btn.textContent = ans.classList.contains('step-hidden') ? '🔑 Reveal model answer' : '🙈 Hide model answer';
+                    safeInitKaTeX();
+                };
+            });
+            safeInitKaTeX();
+        }
+
+        // ==================== ROUTE SOLVER (BFS) ====================
+        const SOLVER_NODES = {
+            alkane:'Alkane', alkene:'Alkene', alkyne:'Alkyne', haloalkane:'Haloalkane', dihaloalkane:'Dihaloalkane',
+            diol:'Diol', alcohol:'Alcohol', aldehyde:'Aldehyde', ketone:'Ketone', acid:'Carboxylic acid',
+            acylchloride:'Acyl chloride', ester:'Ester', amide:'Amide', nitrile:'Nitrile', salt:'Carboxylate salt',
+            benzene:'Benzene', nitro:'Nitrobenzene', amine:'Phenylamine', diazonium:'Benzenediazonium', azo:'Azo dye'
+        };
+        const CYCLE_COLOR = { 'C1':'#38bdf8', 'C2':'#34d399', 'C3':'#fbbf24', 'C4':'#a78bfa', 'Special':'#fb7185' };
+        const SOLVER_EDGES = [
+            { from:'alkane', to:'haloalkane', rxn:'X₂ / UV light', cycle:'C1' },
+            { from:'alkene', to:'alkane', rxn:'H₂ / Ni, 150 °C', cycle:'C1' },
+            { from:'alkene', to:'haloalkane', rxn:'HX(g), r.t. (Markovnikov)', cycle:'C1' },
+            { from:'haloalkane', to:'alkene', rxn:'ethanolic KOH, reflux', cycle:'C1' },
+            { from:'alkene', to:'alcohol', rxn:'steam, conc H₃PO₄, 300 °C / 60 atm', cycle:'C1' },
+            { from:'alcohol', to:'alkene', rxn:'conc H₃PO₄, 170 °C', cycle:'C1' },
+            { from:'alkene', to:'diol', rxn:'cold dil. alkaline KMnO₄', cycle:'C1' },
+            { from:'alkene', to:'dihaloalkane', rxn:'Br₂, r.t.', cycle:'C1' },
+            { from:'dihaloalkane', to:'alkyne', rxn:'excess ethanolic KOH, reflux', cycle:'C1' },
+            { from:'haloalkane', to:'alcohol', rxn:'aq KOH, reflux', cycle:'C1' },
+            { from:'alcohol', to:'haloalkane', rxn:'PCl₅ (or KBr/H₂SO₄; red P/I₂)', cycle:'C1' },
+            { from:'alcohol', to:'aldehyde', rxn:'acidified K₂Cr₂O₇, DISTIL (1° alc)', cycle:'C2' },
+            { from:'aldehyde', to:'alcohol', rxn:'NaBH₄ (or LiAlH₄)', cycle:'C2' },
+            { from:'aldehyde', to:'acid', rxn:'acidified K₂Cr₂O₇, REFLUX', cycle:'C2' },
+            { from:'acid', to:'alcohol', rxn:'LiAlH₄, dry ether, then dil. acid', cycle:'C2' },
+            { from:'alcohol', to:'ketone', rxn:'acidified K₂Cr₂O₇, reflux (2° alc)', cycle:'C2' },
+            { from:'ketone', to:'alcohol', rxn:'NaBH₄ (or LiAlH₄)', cycle:'C2' },
+            { from:'acid', to:'acylchloride', rxn:'PCl₅ (or SOCl₂)', cycle:'C3' },
+            { from:'acylchloride', to:'acid', rxn:'H₂O (vigorous)', cycle:'C3' },
+            { from:'nitrile', to:'acid', rxn:'dil. HCl, reflux', cycle:'C3' },
+            { from:'acid', to:'ester', rxn:'alcohol, conc H₂SO₄, reflux', cycle:'C3' },
+            { from:'acylchloride', to:'ester', rxn:'alcohol, r.t.', cycle:'C3' },
+            { from:'acylchloride', to:'amide', rxn:'conc NH₃ (excess), r.t.', cycle:'C3' },
+            { from:'ester', to:'acid', rxn:'dil. HCl, reflux', cycle:'C3' },
+            { from:'ester', to:'salt', rxn:'aq NaOH, reflux (saponification)', cycle:'C3' },
+            { from:'amide', to:'acid', rxn:'dil. HCl, reflux', cycle:'C3' },
+            { from:'salt', to:'acid', rxn:'dil. HCl', cycle:'C3' },
+            { from:'acid', to:'salt', rxn:'NaOH / Na₂CO₃ / NaHCO₃', cycle:'C3' },
+            { from:'benzene', to:'nitro', rxn:'conc HNO₃ + conc H₂SO₄, 55 °C', cycle:'C4' },
+            { from:'nitro', to:'amine', rxn:'Sn + conc HCl, reflux, then conc NaOH', cycle:'C4' },
+            { from:'amine', to:'diazonium', rxn:'NaNO₂ + HCl, 0–10 °C', cycle:'C4' },
+            { from:'diazonium', to:'azo', rxn:'phenol in NaOH, cold', cycle:'C4' },
+            { from:'haloalkane', to:'nitrile', rxn:'KCN in ethanol, reflux (+1 C)', cycle:'Special' },
+            { from:'aldehyde', to:'nitrile', rxn:'HCN/KCN, pH 8 (+1 C, hydroxynitrile)', cycle:'Special' },
+            { from:'ketone', to:'nitrile', rxn:'HCN/KCN, pH 8 (+1 C, hydroxynitrile)', cycle:'Special' }
+        ];
+        function bfsRoute(start, target) {
+            if (start === target) return [];
+            const adj = {};
+            SOLVER_EDGES.forEach(function(e){ (adj[e.from] = adj[e.from] || []).push(e); });
+            const prev = {}; const seen = {}; const q = [start]; seen[start] = true;
+            while (q.length) {
+                const cur = q.shift();
+                (adj[cur] || []).forEach(function(e){
+                    if (!seen[e.to]) { seen[e.to] = true; prev[e.to] = { node: cur, edge: e }; q.push(e.to); }
+                });
+            }
+            if (!seen[target]) return null;
+            const path = []; let n = target;
+            while (n !== start) { path.unshift(prev[n].edge); n = prev[n].node; }
+            return path;
+        }
+        function populateSolver() {
+            const s = document.getElementById('solver-start');
+            const t = document.getElementById('solver-target');
+            if (!s || !t) return;
+            Object.keys(SOLVER_NODES).forEach(function(k){
+                s.innerHTML += '<option value="'+k+'">'+SOLVER_NODES[k]+'</option>';
+                t.innerHTML += '<option value="'+k+'">'+SOLVER_NODES[k]+'</option>';
+            });
+            s.value = 'alkene'; t.value = 'acid';
+        }
+        window.solveRoute = function() {
+            const start = document.getElementById('solver-start').value;
+            const target = document.getElementById('solver-target').value;
+            const out = document.getElementById('solver-result');
+            if (start === target) { out.innerHTML = '<div class="p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-300 text-xs">Start and target are the same — no reaction needed!</div>'; return; }
+            const path = bfsRoute(start, target);
+            if (!path) {
+                out.innerHTML = '<div class="p-3 bg-rose-950/50 border border-rose-800 rounded-lg text-rose-200 text-xs leading-relaxed"><b>No route found</b> from ' + SOLVER_NODES[start] + ' to ' + SOLVER_NODES[target] + ' within the cycle map. Check whether you need a chain-extension step (Special/Grignard) or whether the target is reachable via a different intermediate.</div>';
+                return;
+            }
+            let html = '<div class="p-3 bg-emerald-950/40 border border-emerald-800/60 rounded-lg text-emerald-200 text-xs"><b>✓ Route found — ' + path.length + ' step' + (path.length>1?'s':'') + ':</b> ' + SOLVER_NODES[start] + ' → ' + SOLVER_NODES[target] + '</div>';
+            html += '<div class="space-y-2">';
+            path.forEach(function(e, i) {
+                const c = CYCLE_COLOR[e.cycle];
+                html += '<div class="p-3 rounded-lg border border-slate-800 bg-slate-900 flex items-center gap-3 flex-wrap">' +
+                    '<span class="text-slate-500 font-mono text-xs font-bold">' + (i+1) + '</span>' +
+                    '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:'+c+'22;color:'+c+';border:1px solid '+c+'55">' + e.cycle + '</span>' +
+                    '<span class="text-xs text-slate-200 font-bold">' + SOLVER_NODES[e.from] + ' → ' + SOLVER_NODES[e.to] + '</span>' +
+                    '<span class="text-[11px] text-slate-400 font-mono">' + e.rxn + '</span>' +
+                    '</div>';
+            });
+            html += '</div>';
+            out.innerHTML = html;
+        };
+
+        // ==================== FINAL REVIEW TABLES ====================
+        function renderReviewTables() {
+            const wrap = document.getElementById('review-tables');
+            if (!wrap) return;
+            const groups = [
+                { id:'rev-c1', title:'Cycle 1 — Hydrocarbons & Aliphatic', color:'#38bdf8', data:CYCLE_DATA.cycle1.reactions },
+                { id:'rev-c2', title:'Cycle 2 — Oxidation, Reduction & Carbonyls', color:'#34d399', data:CYCLE_DATA.cycle2.reactions },
+                { id:'rev-c3', title:'Cycle 3 — Acids, Derivatives, Nitriles & Hydrolysis', color:'#fbbf24', data:CYCLE_DATA.cycle3.reactions },
+                { id:'rev-c4', title:'Cycle 4 — Aromatic & Azo Dyes', color:'#a78bfa', data:CYCLE_DATA.cycle4.reactions }
+            ];
+            let html = '';
+            groups.forEach(function(g) {
+                html += '<details id="' + g.id + '" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>' +
+                    '<summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">' +
+                    '<span class="font-bold text-sm" style="color:' + g.color + '">' + g.title + ' <span class="text-slate-500 font-mono text-xs ml-2">' + g.data.length + ' equations</span></span>' +
+                    '<span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span></summary>' +
+                    '<div class="px-3 pb-4 pt-1 border-t border-slate-800/80 overflow-x-auto custom-scrollbar">' +
+                    '<table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]"><thead class="bg-slate-900 font-mono text-[10px] border-b border-slate-800" style="color:' + g.color + '"><tr><th class="p-2">#</th><th class="p-2">Reaction</th><th class="p-2">Equation</th><th class="p-2">Conditions</th></tr></thead><tbody class="divide-y divide-slate-800/80">';
+                g.data.forEach(function(r, i) {
+                    html += '<tr class="align-top"><td class="p-2 font-mono" style="color:' + g.color + '">' + (i+1) + '</td><td class="p-2 font-bold text-slate-200">' + r.n + '</td><td class="p-2 font-mono text-emerald-300">$' + r.eq + '$</td><td class="p-2">' + r.cond + '</td></tr>';
+                });
+                html += '</tbody></table></div></details>';
+            });
+            // special + grignard
+            html += '<details id="rev-special" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>' +
+                '<summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">' +
+                '<span class="font-bold text-sm text-rose-300">Special Techniques & Grignard — change the carbon count <span class="text-slate-500 font-mono text-xs ml-2">6 transformations</span></span>' +
+                '<span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span></summary>' +
+                '<div class="px-4 pb-4 pt-2 border-t border-slate-800/80">' +
+                '<ul class="text-[11px] text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">' +
+                '<li><b class="text-rose-300">+1C:</b> haloalkane + KCN (ethanol, reflux) → nitrile; then hydrolyse to acid or reduce to amine.</li>' +
+                '<li><b class="text-rose-300">+1C:</b> carbonyl + HCN/KCN (pH 8) → hydroxynitrile (racemic).</li>' +
+                '<li><b class="text-rose-300">+many C:</b> Friedel–Crafts alkylation — benzene + R-Cl / anhydrous AlCl₃, warm.</li>' +
+                '<li><b class="text-rose-300">+many C:</b> Friedel–Crafts acylation — benzene + RCOCl / anhydrous AlCl₃, warm → aromatic ketone.</li>' +
+                '<li><b class="text-rose-300">−1C:</b> iodoform cleavage — CH₃CO– + I₂/NaOH → carboxylate + CHI₃ (pale yellow).</li>' +
+                '<li><b class="text-cyan-300">Grignard:</b> RMgX (from RX + Mg / dry ether); + CO₂ → acid (+1C); + methanal → 1°alc; + aldehyde → 2°alc; + ketone → 3°alc.</li>' +
+                '</ul></div></details>';
+            wrap.innerHTML = html;
+            safeInitKaTeX();
+        }
+
+        // ---------- Init ----------
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab('syllabus');
+            renderCycle('cycle1');
+            renderCycle('cycle2');
+            renderCycle('cycle3');
+            renderCycle('cycle4');
+            renderWalkthroughs();
+            renderPractice();
+            populateSolver();
+            renderReviewTables();
+            setTimeout(safeInitKaTeX, 120);
+        });
+    </script>
+</body>
+</html>

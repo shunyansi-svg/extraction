@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAL Chemistry Topic 13: Chemical Equilibria Master Studio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="safeInitKaTeX()"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        .blur-answer {
+            filter: blur(6px);
+            transition: filter 0.25s ease, background-color 0.25s ease;
+            user-select: none;
+            cursor: pointer;
+        }
+        .blur-answer:hover, .blur-answer.revealed {
+            filter: blur(0px);
+            user-select: auto;
+            background-color: rgba(245, 158, 11, 0.2) !important;
+        }
+        .ambient-bg {
+            background:
+                radial-gradient(1200px 500px at 82% -10%, rgba(245,158,11,0.10), transparent 60%),
+                radial-gradient(900px 420px at 6% 108%, rgba(56,189,248,0.08), transparent 60%),
+                #020617;
+        }
+        details > summary::-webkit-details-marker { display: none; }
+        .graph-canvas {
+            background-color: #020617;
+            border-radius: 0.75rem;
+            border: 1px solid #1e293b;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="ambient-bg text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-500/20 p-2 rounded-lg border border-amber-500/30">
+                    <span class="text-2xl">⚖️</span>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight text-amber-400">IAL Chemistry Topic 13: Chemical Equilibria — Master Studio</h1>
+                    <p class="text-xs text-slate-400">WCH14 · $K_c$, $K_p$, Le Chatelier, $\Delta S_{total}=R\ln K$ &amp; the Haber process graph studio (Spec 13.1 – 13.9)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-950 text-amber-300 border border-amber-800">Edexcel Spec 13.1 – 13.9</span>
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-sky-950 text-sky-300 border border-sky-800">Unit 4 · Paper 4</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar (flex-wrap, short labels) -->
+    <nav class="bg-slate-900/90 border-b border-slate-800 sticky top-[57px] z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-2 flex flex-wrap">
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-amber-400 font-bold border-b-2 border-amber-400 bg-amber-950/40 transition">1. Syllabus</button>
+            <button onclick="switchTab('kc')" id="btn-kc" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition">2. Kc Engine</button>
+            <button onclick="switchTab('kp')" id="btn-kp" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition">3. Kp Engine</button>
+            <button onclick="switchTab('lcp')" id="btn-lcp" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition">4. Le Chatelier</button>
+            <button onclick="switchTab('graphstudio')" id="btn-graphstudio" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition">5. Graph Studio</button>
+            <button onclick="switchTab('method')" id="btn-method" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition">6. Kc/Kp Method</button>
+            <button onclick="switchTab('mistakes')" id="btn-mistakes" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition">7. Common Mistakes</button>
+            <button onclick="switchTab('review')" id="btn-review" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition">8. Final Review</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- ==================== TAB 1: SYLLABUS MASTER OVERVIEW ==================== -->
+        <section id="tab-syllabus" class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+                <div class="border-b border-slate-800 pb-4 mb-6">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Topic 13 Learning Points &amp; Mark Scheme Secrets (Spec 13.1 – 13.9)</h2>
+                    <p class="text-xs text-slate-400 mt-1">Essential learning goals and examiner watch-outs across Chemical Equilibria. Builds on Topic 9B (Unit 2): dynamic equilibrium and Le Chatelier's principle are assumed.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Card 1: 13.1 Kc expressions -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 13.1</span>
+                                <span class="text-[10px] text-slate-400 font-mono">$K_c$ expressions</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">1. Writing $K_c$ Expressions — Homogeneous &amp; Heterogeneous</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>For $aA + bB \rightleftharpoons cC + dD$, write $K_c = \dfrac{[C]^c[D]^d}{[A]^a[B]^b}$ — <b>products over reactants</b>.</li>
+                                    <li>Use <b>equilibrium</b> concentrations in $\text{mol dm}^{-3}$, each raised to its balancing number.</li>
+                                    <li>Homogeneous (all aq or all g): include every species.</li>
+                                    <li>Heterogeneous: <b>omit pure solids and pure liquids</b> (their concentrations are constant).</li>
+                                    <li>Use square brackets $[\,]$ for concentration — never round brackets.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Round brackets or partial pressures in a $K_c$ expression are <b>not awarded</b>. For $\text{CaCO}_3(s) \rightleftharpoons \text{CaO}(s) + \text{CO}_2(g)$, $K_c = [\text{CO}_2]$ only — both solids are omitted.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: 13.2 Kp expressions -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 13.2</span>
+                                <span class="text-[10px] text-slate-400 font-mono">$K_p$ expressions</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">2. Writing $K_p$ Expressions — Partial Pressures in atm</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>$K_p$ applies to <b>gaseous</b> equilibria: $K_p = \dfrac{(p_C)^c(p_D)^d}{(p_A)^a(p_B)^b}$.</li>
+                                    <li>Partial pressures are in <b>atm</b>; write $p_{\text{X}}$ (or $p(\text{X})$) for each gas.</li>
+                                    <li>Compute partial pressure as $p_{\text{X}} = x_{\text{X}} \times P_{total}$.</li>
+                                    <li>Mole fraction $x_{\text{X}} = \dfrac{\text{moles of X}}{\text{total moles of gas}}$.</li>
+                                    <li>In heterogeneous equilibria include <b>gases only</b> — omit solids and liquids.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Don't use concentrations in $K_p$ — only partial pressures. For $\text{NH}_4\text{Cl}(s) \rightleftharpoons \text{NH}_3(g) + \text{HCl}(g)$, $K_p = p_{\text{NH}_3} \times p_{\text{HCl}}$ (the solid is omitted).</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: 13.3 calculating K -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-emerald-400 uppercase font-bold px-2 py-0.5 bg-emerald-950 rounded border border-emerald-800">Spec 13.3</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Calculating $K_c$ &amp; $K_p$</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">3. Calculating $K_c$ &amp; $K_p$ from Experimental Data</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Use an <b>ICE table</b> (Initial, Change, Equilibrium) to find equilibrium moles.</li>
+                                    <li>For $K_c$: divide equilibrium moles by the vessel volume ($\text{dm}^3$) to get concentrations.</li>
+                                    <li>Substitute into the expression and evaluate the number.</li>
+                                    <li>For $K_p$: find total moles → mole fractions → partial pressures ($x \times P$).</li>
+                                    <li>Work out and state the <b>units</b> (they change with the expression).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">The full step-by-step method is on the <b>Kc/Kp Method</b> tab. The two most lost marks are using <b>moles instead of concentration</b> and <b>wrong/missing units</b>.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: 13.4 factors -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-amber-400 uppercase font-bold px-2 py-0.5 bg-amber-950 rounded border border-amber-800">Spec 13.4</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Le Chatelier factors</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">4. Effect of Temperature, Pressure &amp; Catalyst on Composition</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>State Le Chatelier's principle: the system shifts to <b>oppose</b> the change.</li>
+                                    <li>Concentration: adding a reactant shifts the position to the product side.</li>
+                                    <li>Pressure (gases): increasing $P$ shifts to the side with <b>fewer moles of gas</b>.</li>
+                                    <li>Catalyst: no shift — speeds forward and reverse equally, reaching equilibrium faster.</li>
+                                    <li>Apply to both homogeneous and heterogeneous systems.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Pressure only matters when the number of gas moles differs between sides, and only for <b>gases</b>. In the Haber process ($4 \to 2$ mol gas) high pressure favours $\text{NH}_3$.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: 13.5 K unchanged -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-rose-400 uppercase font-bold px-2 py-0.5 bg-rose-950 rounded border border-rose-800">Spec 13.5</span>
+                                <span class="text-[10px] text-slate-400 font-mono">What does NOT change $K$</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">5. $K$ Is Unchanged by Concentration, Pressure &amp; Catalyst</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>The equilibrium constant changes with <b>temperature only</b>.</li>
+                                    <li>Changing concentration or pressure shifts the <b>position</b>, but $K$ stays the same.</li>
+                                    <li>A catalyst has <b>no effect</b> on $K$ or on the position.</li>
+                                    <li>Distinguish clearly between "position of equilibrium" and "value of $K$".</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">"The catalyst increases the yield / increases $K$" is always wrong. After a concentration or pressure change, the system moves until the <b>same</b> $K$ is restored.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: 13.6 + 13.7 temperature & K -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-cyan-400 uppercase font-bold px-2 py-0.5 bg-cyan-950 rounded border border-cyan-800">Spec 13.6 – 13.7</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Temperature &amp; $K$</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">6. Temperature Changes the Value of $K$</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Exothermic forward reaction: raising $T$ <b>decreases</b> $K$ (shifts left).</li>
+                                    <li>Endothermic forward reaction: raising $T$ <b>increases</b> $K$ (shifts right).</li>
+                                    <li>Lowering $T$ does the opposite in each case.</li>
+                                    <li>Explain the temperature effect on <b>position</b> by stating that $K$ itself changes.</li>
+                                    <li>Apply to both $K_c$ and $K_p$.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">For full marks say: "temperature changes the <b>value of $K$</b>, so the position shifts" — not just "the position shifts". Haber is exothermic ($\Delta H = -92\ \text{kJ mol}^{-1}$), so high $T$ lowers $K$.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 7: 13.8 dStotal = R lnK -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-sky-400 uppercase font-bold px-2 py-0.5 bg-sky-950 rounded border border-sky-800">Spec 13.8</span>
+                                <span class="text-[10px] text-slate-400 font-mono">$\Delta S_{total} = R\ln K$</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">7. Linking Entropy and the Equilibrium Constant</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Know the relationship $\Delta S_{total} = R \ln K$.</li>
+                                    <li>Explain that temperature changes $\Delta S_{surroundings} = -\Delta H/T$, hence $\Delta S_{total}$, hence $K$.</li>
+                                    <li>For an exothermic reaction, raising $T$ makes $\Delta S_{total}$ less positive, so $K$ falls.</li>
+                                    <li>Relate a larger $K$ to a more positive $\Delta S_{total}$.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">This is the <b>why</b> behind the temperature effect. Use $T$ in kelvin. This links Topic 12 (entropy) to Topic 13 — a favourite cross-topic exam angle.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: 13.9 extent -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2 gap-2">
+                                <span class="text-[10px] font-mono text-purple-400 uppercase font-bold px-2 py-0.5 bg-purple-950 rounded border border-purple-800">Spec 13.9</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Extent of reaction</span>
+                            </div>
+                            <h3 class="text-sm font-bold text-white mb-3">8. Using $K$ to Predict How Far a Reaction Goes</h3>
+                            <div class="space-y-2">
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 4 Key Learning Goals:</span>
+                                <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
+                                    <li>Large $K$ ($\gg 1$): equilibrium lies to the right — products dominate, reaction nearly complete.</li>
+                                    <li>Small $K$ ($\ll 1$): equilibrium lies to the left — reactants dominate, little reaction.</li>
+                                    <li>$K \approx 1$: significant amounts of both sides present.</li>
+                                    <li>Compare $K$ values to judge relative extents of different reactions.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">$K$ tells you the <b>extent</b>, not the speed. A large $K$ does not mean the reaction is fast — kinetics (Topic 11) controls the rate.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Out of scope -->
+                <div class="mt-6 p-4 bg-rose-950/20 border border-rose-900/40 rounded-xl text-xs text-slate-300">
+                    <b class="text-rose-300">Assumed prior knowledge (Topic 9B, Unit 2):</b> dynamic equilibrium, closed systems, and the qualitative Le Chatelier principle. <b>Not covered here:</b> acid–base equilibria, pH, buffers and titration curves (see the Unit 14 acid–base studio), and the Haber-process industrial conditions discussion (Unit 5 / Topic 9B context).
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: ENGINE 1 — Kc ==================== -->
+        <section id="tab-kc" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row justify-between md:items-center gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Engine 1 · Learning Suite</span>
+                        <h2 class="text-xl font-bold text-white mt-1">$K_c$ — Expressions &amp; Concepts (Spec 13.1, 13.3)</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-sky-950 text-sky-300 rounded-lg border border-sky-800 text-xs font-mono">6 concepts mapped</span>
+                </div>
+
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="window.switchE1Mode('explorer')" id="e1-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs transition shadow">📚 Module 1: Concept Inspector</button>
+                    <button onclick="window.switchE1Mode('map')" id="e1-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-sky-300 text-xs transition">🗺️ Module 2: Expression Builder</button>
+                    <button onclick="window.switchE1Mode('quiz')" id="e1-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-sky-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE1Mode('traps')" id="e1-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-sky-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                </div>
+
+                <!-- MODULE 1: INSPECTOR -->
+                <div id="e1-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5 text-xs max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
+                        <button onclick="window.selectE1(1)" id="e1-btn-1" class="p-2.5 rounded-lg border border-sky-500 bg-sky-950/70 text-sky-300 font-bold text-left transition text-xs w-full flex justify-between items-center"><span>1. What is $K_c$?</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">Core</span></button>
+                        <button onclick="window.selectE1(2)" id="e1-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>2. Homogeneous $K_c$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.1</span></button>
+                        <button onclick="window.selectE1(3)" id="e1-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>3. Heterogeneous $K_c$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.1</span></button>
+                        <button onclick="window.selectE1(4)" id="e1-btn-4" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>4. Units of $K_c$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.3</span></button>
+                        <button onclick="window.selectE1(5)" id="e1-btn-5" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>5. Substituting concentrations</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.3</span></button>
+                        <button onclick="window.selectE1(6)" id="e1-btn-6" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>6. Size of $K_c$ → position</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.9</span></button>
+                    </div>
+
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4">
+                        <div id="e1-card-1" class="space-y-3">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. What is $K_c$?</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$aA + bB \rightleftharpoons cC + dD \qquad K_c = \dfrac{[C]^c[D]^d}{[A]^a[B]^b}$</div>
+                            <p class="text-slate-300 text-[11px]">The equilibrium constant in terms of concentration. <b>Products over reactants</b>, each raised to its balancing number, using <b>equilibrium</b> concentrations in $\text{mol dm}^{-3}$. At a given temperature $K_c$ is constant.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Write the general $K_c$ expression from any balanced equation.</li><li>State that concentrations are equilibrium values.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Products on top — inverting the fraction loses all the marks.</li><li>Use square brackets, not round.</li></ul></div>
+                        </div>
+                        <div id="e1-card-2" class="hidden space-y-3">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Homogeneous $K_c$ (all one phase)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{N}_2 + 3\text{H}_2 \rightleftharpoons 2\text{NH}_3 \qquad K_c = \dfrac{[\text{NH}_3]^2}{[\text{N}_2][\text{H}_2]^3}$</div>
+                            <p class="text-slate-300 text-[11px]">When all species are in the same phase (all gas, or all aqueous), <b>every</b> species appears in the expression. Another example: $\text{Fe}^{3+}(aq) + \text{SCN}^-(aq) \rightleftharpoons \text{FeSCN}^{2+}(aq)$ gives $K_c = \dfrac{[\text{FeSCN}^{2+}]}{[\text{Fe}^{3+}][\text{SCN}^-]}$.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Include all gaseous or aqueous species.</li><li>Raise each to its coefficient.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>The Haber expression is examined repeatedly — memorise it.</li></ul></div>
+                        </div>
+                        <div id="e1-card-3" class="hidden space-y-3">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. Heterogeneous $K_c$ (omit solids &amp; liquids)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{CaCO}_3(s) \rightleftharpoons \text{CaO}(s) + \text{CO}_2(g) \qquad K_c = [\text{CO}_2]$</div>
+                            <p class="text-slate-300 text-[11px]">Pure solids and pure liquids have constant concentrations, so they are <b>left out</b>. Only gases and aqueous species appear. For $\text{NH}_4\text{Cl}(s) \rightleftharpoons \text{NH}_3(g) + \text{HCl}(g)$, $K_c = [\text{NH}_3][\text{HCl}]$.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Identify and omit pure solids/liquids.</li><li>Write the reduced expression correctly.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Including $[\text{CaCO}_3]$ or $[\text{CaO}]$ is a standard lost mark.</li></ul></div>
+                        </div>
+                        <div id="e1-card-4" class="hidden space-y-3">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. Units of $K_c$</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{Haber: } \dfrac{(\text{mol dm}^{-3})^2}{(\text{mol dm}^{-3})(\text{mol dm}^{-3})^3} = \text{mol}^{-2}\text{ dm}^{6}$</div>
+                            <p class="text-slate-300 text-[11px]">Substitute $\text{mol dm}^{-3}$ for every concentration term and simplify. Units differ for each expression. If the powers cancel exactly (e.g. $\text{H}_2 + \text{I}_2 \rightleftharpoons 2\text{HI}$), $K_c$ has <b>no units</b>.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Derive units for any $K_c$ expression.</li><li>Recognise when $K_c$ is dimensionless.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Units are usually worth a mark — never omit them unless they cancel.</li></ul></div>
+                        </div>
+                        <div id="e1-card-5" class="hidden space-y-3">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">5. Substituting equilibrium concentrations</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$K_c = \dfrac{[\text{NH}_3]^2}{[\text{N}_2][\text{H}_2]^3} = \dfrac{(0.40)^2}{(0.20)(0.60)^3} = 3.7\ \text{mol}^{-2}\text{ dm}^{6}$</div>
+                            <p class="text-slate-300 text-[11px]">Insert the <b>equilibrium</b> concentrations (not initial, not moles). Square/cube as the expression demands, then evaluate. The full ICE-table method is on the <b>Kc/Kp Method</b> tab.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Substitute and evaluate with a calculator.</li><li>Keep units throughout.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Apply the power to the whole concentration: $[\text{H}_2]^3$, not $[\text{H}_2 \times 3]$.</li></ul></div>
+                        </div>
+                        <div id="e1-card-6" class="hidden space-y-3">
+                            <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">6. What the size of $K_c$ tells you</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$K_c \gg 1 \rightarrow \text{products favoured}\qquad K_c \ll 1 \rightarrow \text{reactants favoured}$</div>
+                            <p class="text-slate-300 text-[11px]">A large $K_c$ means the equilibrium mixture is mostly products (reaction goes nearly to completion). A small $K_c$ means mostly reactants (little reaction). $K_c \approx 1$ means both sides are significant.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Interpret the magnitude of $K_c$.</li><li>Compare extents of different reactions.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>$K_c$ says nothing about rate — a large $K_c$ can still be a slow reaction.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 2: EXPRESSION BUILDER -->
+                <div id="e1-mode-map" class="hidden space-y-4">
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                        <span class="font-bold text-sky-300 uppercase">🗺️ $K_c$ Expression Builder — pick a reaction, get the expression</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-slate-400 mb-1 font-bold">1. Choose an equilibrium:</label>
+                                <select id="e1-rxn" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 font-mono">
+                                    <option value="haber">N₂(g) + 3H₂(g) ⇌ 2NH₃(g)</option>
+                                    <option value="contact">2SO₂(g) + O₂(g) ⇌ 2SO₃(g)</option>
+                                    <option value="hi">H₂(g) + I₂(g) ⇌ 2HI(g)</option>
+                                    <option value="feSCN">Fe³⁺(aq) + SCN⁻(aq) ⇌ FeSCN²⁺(aq)</option>
+                                    <option value="caco3">CaCO₃(s) ⇌ CaO(s) + CO₂(g)</option>
+                                    <option value="nh4cl">NH₄Cl(s) ⇌ NH₃(g) + HCl(g)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="window.buildKc()" class="w-full py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded">✨ Build $K_c$ Expression</button>
+                            </div>
+                        </div>
+                        <div id="e1-kc-result" class="pt-2"></div>
+                    </div>
+                </div>
+
+                <!-- MODULE 3: QUIZ -->
+                <div id="e1-mode-quiz" class="hidden space-y-4">
+                    <div id="e1-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-sky-300">🎯 $K_c$ — Fill-in-the-Blanks</span>
+                            <button id="e1-toggle-all-btn" onclick="window.toggleActiveRecall('e1-quiz-container', 'e1-toggle-all-btn')" class="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-800 rounded hover:bg-sky-900 transition">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">1. $K_c$ arrangement</span>
+                                <p>Products go: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">on top (numerator)</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">2. Haber $K_c$</span>
+                                <p>Expression: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$[\text{NH}_3]^2 / ([\text{N}_2][\text{H}_2]^3)$</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">3. $\text{CaCO}_3(s) \rightleftharpoons \text{CaO}(s)+\text{CO}_2(g)$</span>
+                                <p>$K_c$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$[\text{CO}_2]$ only</span></p>
+                                <p>Solids are: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">omitted (constant concentration)</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">4. $\text{H}_2+\text{I}_2 \rightleftharpoons 2\text{HI}$</span>
+                                <p>Units of $K_c$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">none (they cancel)</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">5. Concentrations used</span>
+                                <p>Must be: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">equilibrium values, in mol dm⁻³</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">6. $K_c \gg 1$</span>
+                                <p>Means: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">products favoured / goes nearly to completion</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 4: TRAPS -->
+                <div id="e1-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — $K_c$</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 1: Products/Reactants the right way</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed"><b>Products on top</b>, reactants below. Inverting the fraction is the single most common $K_c$ error.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 2: Powers vs multiplying</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">$[\text{H}_2]^3$ means concentration <b>cubed</b>. It is not $3 \times [\text{H}_2]$. Apply the coefficient as an exponent.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 3: Solids in heterogeneous $K_c$</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">Pure solids and liquids are <b>omitted</b>. Only (g) and (aq) appear. Their "concentration" is constant.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 4: Brackets</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">Use <b>square</b> brackets $[\text{NH}_3]$ for concentration. Round brackets or partial pressures in a $K_c$ answer score zero.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: ENGINE 2 — Kp ==================== -->
+        <section id="tab-kp" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row justify-between md:items-center gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Engine 2 · Learning Suite</span>
+                        <h2 class="text-xl font-bold text-white mt-1">$K_p$ — Partial Pressures &amp; Mole Fractions (Spec 13.2, 13.3)</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-emerald-950 text-emerald-300 rounded-lg border border-emerald-800 text-xs font-mono">6 concepts mapped</span>
+                </div>
+
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="window.switchE2Mode('explorer')" id="e2-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs transition shadow">📚 Module 1: Concept Inspector</button>
+                    <button onclick="window.switchE2Mode('map')" id="e2-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 text-xs transition">🗺️ Module 2: $K_p$ Calculator</button>
+                    <button onclick="window.switchE2Mode('quiz')" id="e2-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE2Mode('traps')" id="e2-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                </div>
+
+                <!-- MODULE 1: INSPECTOR -->
+                <div id="e2-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5 text-xs max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
+                        <button onclick="window.selectE2(1)" id="e2-btn-1" class="p-2.5 rounded-lg border border-emerald-500 bg-emerald-950/70 text-emerald-300 font-bold text-left transition text-xs w-full flex justify-between items-center"><span>1. What is $K_p$?</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">Core</span></button>
+                        <button onclick="window.selectE2(2)" id="e2-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>2. Mole fraction $x$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">Define</span></button>
+                        <button onclick="window.selectE2(3)" id="e2-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>3. Partial pressure $p = xP$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">Calc</span></button>
+                        <button onclick="window.selectE2(4)" id="e2-btn-4" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>4. Heterogeneous $K_p$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.2</span></button>
+                        <button onclick="window.selectE2(5)" id="e2-btn-5" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>5. Units of $K_p$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.3</span></button>
+                        <button onclick="window.selectE2(6)" id="e2-btn-6" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>6. $K_p$ worked outline</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.3</span></button>
+                    </div>
+
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4">
+                        <div id="e2-card-1" class="space-y-3">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. What is $K_p$?</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{N}_2 + 3\text{H}_2 \rightleftharpoons 2\text{NH}_3 \qquad K_p = \dfrac{(p_{\text{NH}_3})^2}{p_{\text{N}_2}\,(p_{\text{H}_2})^3}$</div>
+                            <p class="text-slate-300 text-[11px]">The equilibrium constant in terms of <b>partial pressures</b>, used for gaseous equilibria. Pressures in <b>atm</b>. Products over reactants, each raised to its balancing number, using equilibrium partial pressures.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-emerald-900/50 rounded-lg"><b class="text-emerald-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Write a $K_p$ expression for any gaseous equilibrium.</li><li>State that pressures are in atm.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Never put concentrations in $K_p$ — only partial pressures.</li></ul></div>
+                        </div>
+                        <div id="e2-card-2" class="hidden space-y-3">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Mole fraction, $x$</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$x_{\text{X}} = \dfrac{\text{moles of X at equilibrium}}{\text{total moles of gas at equilibrium}}$</div>
+                            <p class="text-slate-300 text-[11px]">The fraction of all gas molecules that are X. Mole fractions have <b>no units</b> and always sum to 1. You need the <b>equilibrium</b> moles of every gas to find them.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-emerald-900/50 rounded-lg"><b class="text-emerald-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Calculate mole fractions from equilibrium moles.</li><li>Check they sum to 1.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Use total <b>equilibrium</b> moles, not initial moles, in the denominator.</li></ul></div>
+                        </div>
+                        <div id="e2-card-3" class="hidden space-y-3">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. Partial pressure, $p_{\text{X}} = x_{\text{X}} \times P$</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$p_{\text{X}} = x_{\text{X}} \times P_{total}$</div>
+                            <p class="text-slate-300 text-[11px]">Each gas contributes a share of the total pressure proportional to its mole fraction. The partial pressures sum to $P_{total}$. This is the bridge from moles to the $K_p$ expression.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-emerald-900/50 rounded-lg"><b class="text-emerald-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Convert mole fraction + total pressure to partial pressure.</li><li>Verify partial pressures sum to $P_{total}$.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Forgetting to multiply by $P_{total}$ (using mole fractions as pressures) is a classic error.</li></ul></div>
+                        </div>
+                        <div id="e2-card-4" class="hidden space-y-3">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. Heterogeneous $K_p$ — gases only</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{NH}_4\text{Cl}(s) \rightleftharpoons \text{NH}_3(g) + \text{HCl}(g) \qquad K_p = p_{\text{NH}_3} \times p_{\text{HCl}}$</div>
+                            <p class="text-slate-300 text-[11px]">Only <b>gaseous</b> species appear in $K_p$. Solids and liquids are omitted entirely. Here the solid $\text{NH}_4\text{Cl}$ does not appear, and there is no denominator.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-emerald-900/50 rounded-lg"><b class="text-emerald-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Omit solids/liquids from $K_p$.</li><li>Handle expressions with no denominator.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>For $\text{C}(s)+\text{CO}_2(g)\rightleftharpoons 2\text{CO}(g)$, $K_p = (p_{\text{CO}})^2 / p_{\text{CO}_2}$ — carbon is omitted.</li></ul></div>
+                        </div>
+                        <div id="e2-card-5" class="hidden space-y-3">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">5. Units of $K_p$</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{Haber: } \dfrac{\text{atm}^2}{\text{atm}\times\text{atm}^3} = \text{atm}^{-2}$</div>
+                            <p class="text-slate-300 text-[11px]">Substitute atm for every partial-pressure term and simplify. For $\text{H}_2+\text{I}_2\rightleftharpoons 2\text{HI}$ the units cancel → $K_p$ is dimensionless. For $\text{NH}_4\text{Cl}$ decomposition, units are $\text{atm}^2$.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-emerald-900/50 rounded-lg"><b class="text-emerald-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Derive $K_p$ units for any expression.</li><li>Recognise dimensionless cases.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Negative powers of atm (e.g. $\text{atm}^{-2}$) are expected — don't "fix" them.</li></ul></div>
+                        </div>
+                        <div id="e2-card-6" class="hidden space-y-3">
+                            <span class="text-emerald-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">6. $K_p$ calculation — the route</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{moles} \rightarrow \text{total moles} \rightarrow x \rightarrow p = xP \rightarrow K_p$</div>
+                            <p class="text-slate-300 text-[11px]">From an ICE table get equilibrium moles → sum to total moles → divide each by the total for mole fractions → multiply by $P_{total}$ for partial pressures → substitute into $K_p$. Try it live in the <b>$K_p$ Calculator</b> (Module 2).</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-emerald-900/50 rounded-lg"><b class="text-emerald-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Follow the full mole → $K_p$ pipeline.</li><li>Keep track of units (atm).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Show each stage — method marks are awarded for mole fractions and partial pressures even if the final $K_p$ slips.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 2: Kp CALCULATOR -->
+                <div id="e2-mode-map" class="hidden space-y-4">
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                        <span class="font-bold text-emerald-300 uppercase">🗺️ $K_p$ Calculator — Haber process: $\text{N}_2 + 3\text{H}_2 \rightleftharpoons 2\text{NH}_3$</span>
+                        <p class="text-slate-400 text-[11px]">Enter the <b>equilibrium moles</b> of each gas and the total pressure (atm). The calculator walks through mole fractions → partial pressures → $K_p$.</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div><label class="block text-slate-400 mb-1 font-bold">mol N₂</label><input id="kp-n2" type="number" step="any" value="0.50" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 font-mono"></div>
+                            <div><label class="block text-slate-400 mb-1 font-bold">mol H₂</label><input id="kp-h2" type="number" step="any" value="1.50" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 font-mono"></div>
+                            <div><label class="block text-slate-400 mb-1 font-bold">mol NH₃</label><input id="kp-nh3" type="number" step="any" value="1.00" class="w-full bg-slate-900 border border-slate-700 text-emerald-300 rounded p-2 font-mono"></div>
+                            <div><label class="block text-slate-400 mb-1 font-bold">P total (atm)</label><input id="kp-p" type="number" step="any" value="200" class="w-full bg-slate-900 border border-slate-700 text-amber-300 rounded p-2 font-mono"></div>
+                        </div>
+                        <button onclick="window.calcKp()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded">✨ Calculate $K_p$ step-by-step</button>
+                        <div id="e2-kp-result" class="pt-2"></div>
+                    </div>
+                </div>
+
+                <!-- MODULE 3: QUIZ -->
+                <div id="e2-mode-quiz" class="hidden space-y-4">
+                    <div id="e2-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-emerald-300">🎯 $K_p$ — Fill-in-the-Blanks</span>
+                            <button id="e2-toggle-all-btn" onclick="window.toggleActiveRecall('e2-quiz-container', 'e2-toggle-all-btn')" class="px-3 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded hover:bg-emerald-900 transition">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">1. $K_p$ uses</span>
+                                <p>Quantities: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">partial pressures (atm), gases only</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">2. Mole fraction</span>
+                                <p>Formula: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">moles of X ÷ total moles of gas</span></p>
+                                <p>Sum of all $x$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">1</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">3. Partial pressure</span>
+                                <p>Formula: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$p_{\text{X}} = x_{\text{X}} \times P_{total}$</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">4. Haber $K_p$</span>
+                                <p>Expression: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$(p_{\text{NH}_3})^2 / (p_{\text{N}_2})(p_{\text{H}_2})^3$</span></p>
+                                <p>Units: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">atm⁻²</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">5. $\text{NH}_4\text{Cl}(s) \rightleftharpoons \text{NH}_3+\text{HCl}$</span>
+                                <p>$K_p$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$p_{\text{NH}_3} \times p_{\text{HCl}}$</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">6. Solids in $K_p$</span>
+                                <p>They are: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">omitted (gases only)</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 4: TRAPS -->
+                <div id="e2-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — $K_p$</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 1: Mole fraction ≠ partial pressure</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">You must <b>multiply the mole fraction by $P_{total}$</b>. Substituting mole fractions straight into $K_p$ gives a wrong number and wrong units.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 2: Initial vs equilibrium moles</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">Mole fractions use <b>equilibrium</b> moles. Using the starting moles is a very common slip — build the ICE table first.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 3: Concentrations in $K_p$</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">$K_p$ takes <b>partial pressures only</b>. If you're given concentrations for a gas, convert via the ideal-gas route or use $K_c$ instead.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 4: Total moles in the denominator</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">The mole-fraction denominator is the <b>sum of all gaseous moles</b> at equilibrium — forgetting a species (e.g. an inert gas) skews every partial pressure.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: ENGINE 3 — LE CHATELIER ==================== -->
+        <section id="tab-lcp" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row justify-between md:items-center gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Engine 3 · Learning Suite</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Le Chatelier's Principle &amp; What Changes $K$ (Spec 13.4 – 13.8)</h2>
+                    </div>
+                    <span class="px-3 py-1 bg-rose-950 text-rose-300 rounded-lg border border-rose-800 text-xs font-mono">6 concepts mapped</span>
+                </div>
+
+                <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
+                    <button onclick="window.switchE3Mode('explorer')" id="e3-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-rose-600 text-white font-bold text-xs transition shadow">📚 Module 1: Concept Inspector</button>
+                    <button onclick="window.switchE3Mode('map')" id="e3-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-300 text-xs transition">🗺️ Module 2: Shift Predictor</button>
+                    <button onclick="window.switchE3Mode('quiz')" id="e3-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE3Mode('traps')" id="e3-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                </div>
+
+                <!-- MODULE 1: INSPECTOR -->
+                <div id="e3-mode-explorer" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-5 space-y-1.5 text-xs max-h-[600px] overflow-y-auto custom-scrollbar pr-1">
+                        <button onclick="window.selectE3(1)" id="e3-btn-1" class="p-2.5 rounded-lg border border-rose-500 bg-rose-950/70 text-rose-300 font-bold text-left transition text-xs w-full flex justify-between items-center"><span>1. Le Chatelier's principle</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">Core</span></button>
+                        <button onclick="window.selectE3(2)" id="e3-btn-2" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>2. Concentration changes</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.4</span></button>
+                        <button onclick="window.selectE3(3)" id="e3-btn-3" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>3. Pressure changes</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.4</span></button>
+                        <button onclick="window.selectE3(4)" id="e3-btn-4" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>4. Catalyst — no shift</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.4/13.5</span></button>
+                        <button onclick="window.selectE3(5)" id="e3-btn-5" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>5. Temperature changes $K$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.6/13.7</span></button>
+                        <button onclick="window.selectE3(6)" id="e3-btn-6" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>6. $\Delta S_{total} = R\ln K$</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">13.8</span></button>
+                    </div>
+
+                    <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4">
+                        <div id="e3-card-1" class="space-y-3">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">1. Le Chatelier's principle</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{If a system at equilibrium is disturbed, the position shifts to oppose the change.}$</div>
+                            <p class="text-slate-300 text-[11px]">Applies to changes in concentration, pressure and temperature. It predicts the <b>direction</b> of the shift. Remember it governs the <b>position</b>; only temperature changes the constant $K$ itself.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-rose-900/50 rounded-lg"><b class="text-rose-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>State the principle in exam wording.</li><li>Apply it to predict shift direction.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Use the word "oppose" (or "counteract") — it's the key term.</li></ul></div>
+                        </div>
+                        <div id="e3-card-2" class="hidden space-y-3">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Concentration changes</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{add reactant} \rightarrow \text{shifts right}\qquad \text{remove product} \rightarrow \text{shifts right}$</div>
+                            <p class="text-slate-300 text-[11px]">Adding a reactant shifts the position to the product side to use it up; removing a product also shifts right. The system moves until the <b>same $K$</b> is restored — $K$ does not change.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-rose-900/50 rounded-lg"><b class="text-rose-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Predict the shift for adding/removing any species.</li><li>State that $K$ is unchanged.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>In the Haber process, continuously removing $\text{NH}_3$ keeps driving the position right — an industrial yield trick.</li></ul></div>
+                        </div>
+                        <div id="e3-card-3" class="hidden space-y-3">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">3. Pressure changes (gases only)</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\uparrow P \rightarrow \text{shifts to side with fewer gas moles}$</div>
+                            <p class="text-slate-300 text-[11px]">Increasing pressure (reducing volume) shifts the position to the side with <b>fewer moles of gas</b>. For Haber ($4 \to 2$ mol gas) high pressure favours $\text{NH}_3$. If gas moles are equal on both sides, pressure has <b>no effect</b> on position. $K$ is unchanged.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-rose-900/50 rounded-lg"><b class="text-rose-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Count gas moles on each side and predict the shift.</li><li>Recognise the no-effect case ($\Delta n_{gas}=0$).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Only count <b>gaseous</b> moles — ignore solids, liquids and aqueous species.</li></ul></div>
+                        </div>
+                        <div id="e3-card-4" class="hidden space-y-3">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. Catalyst — no shift, no change in $K$</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{catalyst: faster both ways} \rightarrow \text{equilibrium reached sooner, same position}$</div>
+                            <p class="text-slate-300 text-[11px]">A catalyst lowers $E_a$ for the forward <b>and</b> reverse reactions equally. It speeds up attainment of equilibrium but does <b>not</b> shift the position or change $K$. The yield is unchanged.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-rose-900/50 rounded-lg"><b class="text-rose-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>State that a catalyst affects rate only.</li><li>Explain equal forward/reverse acceleration.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>"Catalyst increases yield/$K$" is always wrong — a guaranteed lost mark if written.</li></ul></div>
+                        </div>
+                        <div id="e3-card-5" class="hidden space-y-3">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">5. Temperature is the only thing that changes $K$</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{exothermic: } \uparrow T \Rightarrow K\downarrow\ (\text{shifts left})\qquad \text{endothermic: } \uparrow T \Rightarrow K\uparrow\ (\text{shifts right})$</div>
+                            <p class="text-slate-300 text-[11px]">Raising temperature shifts the position in the <b>endothermic</b> direction and changes the value of $K$. For an exothermic forward reaction, $K$ falls as $T$ rises. The position shift is <b>explained by</b> the change in $K$ (Spec 13.7).</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-rose-900/50 rounded-lg"><b class="text-rose-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Link the sign of $\Delta H$ to how $K$ responds to $T$.</li><li>Explain the position shift via the change in $K$.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Haber is exothermic — high $T$ lowers $K$ and the yield, so industry compromises at ~450 °C for a reasonable rate.</li></ul></div>
+                        </div>
+                        <div id="e3-card-6" class="hidden space-y-3">
+                            <span class="text-rose-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">6. Why temperature changes $K$: $\Delta S_{total} = R\ln K$</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\Delta S_{total} = R \ln K \qquad \Delta S_{surroundings} = -\dfrac{\Delta H}{T}$</div>
+                            <p class="text-slate-300 text-[11px]">Temperature changes $\Delta S_{surroundings}$ (since it is $-\Delta H/T$), which changes $\Delta S_{total}$, which changes $K$ via $\Delta S_{total}=R\ln K$. For an exothermic reaction, raising $T$ makes $\Delta S_{total}$ less positive, so $K$ decreases.</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-rose-900/50 rounded-lg"><b class="text-rose-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>State $\Delta S_{total}=R\ln K$ and use it to justify the $T$ effect.</li><li>Connect Topic 12 (entropy) to Topic 13.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>This is the high-mark "explain" route. Use $T$ in kelvin.</li></ul></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 2: SHIFT PREDICTOR -->
+                <div id="e3-mode-map" class="hidden space-y-4">
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
+                        <span class="font-bold text-rose-300 uppercase">🗺️ Shift Predictor — pick a system and a change</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-slate-400 mb-1 font-bold">1. Equilibrium system:</label>
+                                <select id="e3-system" class="w-full bg-slate-900 border border-slate-700 text-rose-300 rounded p-2 font-mono">
+                                    <option value="haber">N₂ + 3H₂ ⇌ 2NH₃ (ΔH = −92, exothermic)</option>
+                                    <option value="no2">2NO₂ ⇌ N₂O₄ (ΔH = −58, exothermic)</option>
+                                    <option value="hi">H₂ + I₂ ⇌ 2HI (ΔH ≈ 0, equal gas moles)</option>
+                                    <option value="so3">2SO₂ + O₂ ⇌ 2SO₃ (exothermic)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1 font-bold">2. Change applied:</label>
+                                <select id="e3-change" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 font-mono">
+                                    <option value="inc_react">Increase reactant concentration</option>
+                                    <option value="dec_prod">Remove product</option>
+                                    <option value="inc_press">Increase pressure</option>
+                                    <option value="dec_press">Decrease pressure</option>
+                                    <option value="inc_temp">Increase temperature</option>
+                                    <option value="dec_temp">Decrease temperature</option>
+                                    <option value="catalyst">Add a catalyst</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="window.predictShift()" class="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded">✨ Predict Shift &amp; $K$</button>
+                            </div>
+                        </div>
+                        <div id="e3-shift-result" class="pt-2"></div>
+                    </div>
+                </div>
+
+                <!-- MODULE 3: QUIZ -->
+                <div id="e3-mode-quiz" class="hidden space-y-4">
+                    <div id="e3-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                            <span class="font-bold text-rose-300">🎯 Le Chatelier — Fill-in-the-Blanks</span>
+                            <button id="e3-toggle-all-btn" onclick="window.toggleActiveRecall('e3-quiz-container', 'e3-toggle-all-btn')" class="px-3 py-1 bg-rose-950 text-rose-300 border border-rose-800 rounded hover:bg-rose-900 transition">👁️ Reveal All Blanks</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">1. The principle</span>
+                                <p>System shifts to: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">oppose the change</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">2. Only this changes $K$</span>
+                                <p>Factor: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">temperature</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">3. ↑ Pressure (Haber)</span>
+                                <p>Shifts to: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">fewer gas moles (RHS, 2 vs 4)</span></p>
+                                <p>$K$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">unchanged</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">4. ↑ Temperature (exothermic)</span>
+                                <p>Shifts: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">left (endothermic direction)</span></p>
+                                <p>$K$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">decreases</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">5. Catalyst</span>
+                                <p>Effect on position: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">none (reaches equilibrium faster)</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">6. $\text{H}_2+\text{I}_2\rightleftharpoons 2\text{HI}$, ↑ pressure</span>
+                                <p>Shift: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">none (equal gas moles both sides)</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 4: TRAPS -->
+                <div id="e3-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — Le Chatelier</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 1: Position vs $K$</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">Concentration and pressure shift the <b>position</b> but leave $K$ unchanged. Only <b>temperature</b> changes $K$. Keep these two ideas separate in every answer.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 2: Catalyst myths</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">A catalyst never shifts the position, changes $K$, or raises the yield. It only speeds up reaching the <b>same</b> equilibrium.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 3: Temperature direction</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">Exothermic forward: heat up → $K$ <b>falls</b>, shifts left. Students often write the opposite. Anchor it: heat favours the <b>endothermic</b> direction.</p>
+                        </div>
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 4: Pressure with equal moles</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed">If gas moles are equal on both sides (e.g. $\text{H}_2+\text{I}_2\rightleftharpoons 2\text{HI}$), pressure changes the position <b>not at all</b>. Count the gas moles first.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: INTERACTIVE GRAPH STUDIO (from Unit 9B) ==================== -->
+        <section id="tab-graphstudio" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <div>
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Interactive Dynamic Simulation · from Unit 9B Studio</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Concentration–Time &amp; Disturbance Curve Simulation Studio</h2>
+                        <p class="text-xs text-slate-400 mt-1">Haber Process: $N_2(g) + 3H_2(g) \rightleftharpoons 2NH_3(g) \quad (\Delta H = -92\text{ kJ mol}^{-1})$</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.replayAnimation()" class="px-3 py-1.5 rounded-lg bg-sky-950 text-sky-300 border border-sky-800 text-xs font-bold hover:bg-sky-900 transition flex items-center gap-1">
+                            <span>▶️</span><span>Replay Animation</span>
+                        </button>
+                        <button onclick="window.resetGraphToInitial()" class="px-3 py-1.5 rounded-lg bg-amber-950 text-amber-300 border border-amber-800 text-xs font-bold hover:bg-amber-900 transition flex items-center gap-1">
+                            <span>🔄</span><span>Reset to Equil I</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Granular Control Buttons Grid -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
+                    <span class="text-slate-400 font-bold uppercase tracking-wider text-[11px] block">Select System Disturbance Event to Simulate:</span>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-2">
+                            <span class="text-sky-300 font-bold block text-[11px]">1. Reactant / Product Concentrations:</span>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <button onclick="window.setGraphDisturbance('add_n2')" id="dist-btn-add_n2" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>+ Add $N_2$</span></button>
+                                <button onclick="window.setGraphDisturbance('dec_n2')" id="dist-btn-dec_n2" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>- Remove $N_2$</span></button>
+                                <button onclick="window.setGraphDisturbance('add_h2')" id="dist-btn-add_h2" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>+ Add $H_2$</span></button>
+                                <button onclick="window.setGraphDisturbance('dec_h2')" id="dist-btn-dec_h2" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>- Remove $H_2$</span></button>
+                                <button onclick="window.setGraphDisturbance('add_nh3')" id="dist-btn-add_nh3" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>+ Add $NH_3$</span></button>
+                                <button onclick="window.setGraphDisturbance('dec_nh3')" id="dist-btn-dec_nh3" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>- Remove $NH_3$</span></button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-2">
+                            <span class="text-emerald-300 font-bold block text-[11px]">2. Pressure / Volume Changes:</span>
+                            <div class="grid grid-cols-1 gap-1.5">
+                                <button onclick="window.setGraphDisturbance('inc_press')" id="dist-btn-inc_press" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>↑ Compress / ↑ Pressure (↓ Volume)</span></button>
+                                <button onclick="window.setGraphDisturbance('dec_press')" id="dist-btn-dec_press" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>↓ Expand / ↓ Pressure (↑ Volume)</span></button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-2">
+                            <span class="text-rose-300 font-bold block text-[11px]">3. Temperature Changes:</span>
+                            <div class="grid grid-cols-1 gap-1.5">
+                                <button onclick="window.setGraphDisturbance('inc_temp')" id="dist-btn-inc_temp" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>↑ Heat System / ↑ Temp</span></button>
+                                <button onclick="window.setGraphDisturbance('dec_temp')" id="dist-btn-dec_temp" class="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1"><span>↓ Cool System / ↓ Temp</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Display -->
+                <div class="w-full flex justify-center relative">
+                    <canvas id="equil-graph-canvas" class="graph-canvas w-full max-w-4xl"></canvas>
+                </div>
+
+                <!-- Synchronized Explanation Box -->
+                <div id="graph-mode-desc" class="p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs leading-relaxed space-y-2 font-mono">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 6: Kc/Kp CALCULATION METHOD ==================== -->
+        <section id="tab-method" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-violet-400 uppercase tracking-widest">The Method · Spec 13.3</span>
+                    <h2 class="text-xl font-bold text-white mt-1">How to Calculate $K_c$ and $K_p$ — Step by Step</h2>
+                    <p class="text-xs text-slate-400 mt-1">Two reliable routines built on the ICE table (Initial · Change · Equilibrium). Follow the steps in order and you will pick up every method mark.</p>
+                </div>
+
+                <!-- Kc METHOD -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <span class="text-sky-300 font-bold uppercase text-sm block">🧮 Method A — Calculating $K_c$ (concentrations)</span>
+                    <ol class="space-y-2 text-xs text-slate-300 list-decimal list-inside leading-relaxed">
+                        <li><b class="text-slate-100">Write the balanced equation.</b> Everything else depends on the balancing numbers.</li>
+                        <li><b class="text-slate-100">Write the $K_c$ expression</b> — products over reactants, each raised to its coefficient, square brackets. Omit pure solids/liquids.</li>
+                        <li><b class="text-slate-100">Build an ICE table</b> (in <b>moles</b>): Initial, Change, Equilibrium. Use the mole ratios for the Change row.</li>
+                        <li><b class="text-slate-100">Convert equilibrium moles to concentration</b>: $[X] = \dfrac{n_X}{V}$ with $V$ in $\text{dm}^3$.</li>
+                        <li><b class="text-slate-100">Substitute</b> the equilibrium concentrations into the expression and evaluate.</li>
+                        <li><b class="text-slate-100">Work out the units</b> by substituting $\text{mol dm}^{-3}$ for each term and simplifying.</li>
+                    </ol>
+
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                        <span class="text-sky-300 font-bold text-xs block">Worked example ($K_c$)</span>
+                        <p class="text-[11px] text-slate-300">For $\text{N}_2(g) + 3\text{H}_2(g) \rightleftharpoons 2\text{NH}_3(g)$, a $1.0\ \text{dm}^3$ vessel at equilibrium contains $0.20\ \text{mol N}_2$, $0.60\ \text{mol H}_2$ and $0.40\ \text{mol NH}_3$. Find $K_c$.</p>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-[11px] text-slate-300 min-w-[480px] border border-slate-800 rounded">
+                                <thead class="bg-slate-950 text-sky-400 font-mono text-[10px]">
+                                    <tr><th class="p-2 text-left">Species</th><th class="p-2">$\text{N}_2$</th><th class="p-2">$3\text{H}_2$</th><th class="p-2">$2\text{NH}_3$</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800 text-center font-mono">
+                                    <tr><td class="p-2 text-left text-slate-400">Equilibrium moles</td><td class="p-2">0.20</td><td class="p-2">0.60</td><td class="p-2">0.40</td></tr>
+                                    <tr><td class="p-2 text-left text-slate-400">÷ V = 1.0 dm³ → $[\,]$ (mol dm⁻³)</td><td class="p-2">0.20</td><td class="p-2">0.60</td><td class="p-2">0.40</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-3 bg-slate-950 rounded font-mono text-emerald-300 border border-slate-800 text-[11px] leading-relaxed">
+                            $K_c = \dfrac{[\text{NH}_3]^2}{[\text{N}_2][\text{H}_2]^3} = \dfrac{(0.40)^2}{(0.20)(0.60)^3} = \dfrac{0.16}{0.20 \times 0.216} = \dfrac{0.16}{0.0432} = 3.7$<br>
+                            Units: $\dfrac{(\text{mol dm}^{-3})^2}{(\text{mol dm}^{-3})(\text{mol dm}^{-3})^3} = \text{mol}^{-2}\text{ dm}^{6}$<br>
+                            $\therefore\; K_c = \mathbf{3.7\ \text{mol}^{-2}\text{ dm}^{6}}$
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kp METHOD -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <span class="text-emerald-300 font-bold uppercase text-sm block">🧮 Method B — Calculating $K_p$ (partial pressures)</span>
+                    <ol class="space-y-2 text-xs text-slate-300 list-decimal list-inside leading-relaxed">
+                        <li><b class="text-slate-100">Write the balanced equation and the $K_p$ expression</b> (gases only, partial pressures, omit solids/liquids).</li>
+                        <li><b class="text-slate-100">ICE table → equilibrium moles</b> of every gas.</li>
+                        <li><b class="text-slate-100">Total moles of gas</b>: $n_{total} = \sum n_{gas}$.</li>
+                        <li><b class="text-slate-100">Mole fraction</b> of each gas: $x_X = n_X / n_{total}$ (they sum to 1).</li>
+                        <li><b class="text-slate-100">Partial pressure</b>: $p_X = x_X \times P_{total}$ (atm).</li>
+                        <li><b class="text-slate-100">Substitute</b> into $K_p$, evaluate, and give the <b>units</b> in powers of atm.</li>
+                    </ol>
+
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
+                        <span class="text-emerald-300 font-bold text-xs block">Worked example ($K_p$)</span>
+                        <p class="text-[11px] text-slate-300">For $\text{N}_2(g) + 3\text{H}_2(g) \rightleftharpoons 2\text{NH}_3(g)$, the equilibrium mixture contains $0.50\ \text{mol N}_2$, $1.50\ \text{mol H}_2$ and $1.00\ \text{mol NH}_3$ at a total pressure of $200\ \text{atm}$. Find $K_p$.</p>
+                        <div class="p-3 bg-slate-950 rounded font-mono text-emerald-300 border border-slate-800 text-[11px] leading-relaxed">
+                            $n_{total} = 0.50 + 1.50 + 1.00 = 3.00\ \text{mol}$<br>
+                            $x_{\text{N}_2} = 0.50/3.00 = 0.167 \quad x_{\text{H}_2} = 1.50/3.00 = 0.500 \quad x_{\text{NH}_3} = 1.00/3.00 = 0.333$<br>
+                            $p_{\text{N}_2} = 0.167 \times 200 = 33.3\ \text{atm} \quad p_{\text{H}_2} = 0.500 \times 200 = 100\ \text{atm} \quad p_{\text{NH}_3} = 0.333 \times 200 = 66.7\ \text{atm}$<br>
+                            $K_p = \dfrac{(p_{\text{NH}_3})^2}{p_{\text{N}_2}\,(p_{\text{H}_2})^3} = \dfrac{(66.7)^2}{(33.3)(100)^3} = \dfrac{4449}{33.3 \times 10^{6}} = 1.34 \times 10^{-4}$<br>
+                            Units: $\dfrac{\text{atm}^2}{\text{atm}\times\text{atm}^3} = \text{atm}^{-2}$<br>
+                            $\therefore\; K_p = \mathbf{1.34 \times 10^{-4}\ \text{atm}^{-2}}$
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heterogeneous note -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+                    <span class="text-amber-300 font-bold uppercase text-sm block">⚠️ Heterogeneous systems — the short version</span>
+                    <p class="text-xs text-slate-300 leading-relaxed">Omit pure solids and liquids <b>before</b> you substitute. For $\text{NH}_4\text{Cl}(s) \rightleftharpoons \text{NH}_3(g) + \text{HCl}(g)$, $K_p = p_{\text{NH}_3} \times p_{\text{HCl}}$. Because the two gases are produced in a 1:1 ratio, $p_{\text{NH}_3} = p_{\text{HCl}} = P_{total}/2$, so $K_p = (P_{total}/2)^2$. There is no denominator.</p>
+                    <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-[11px]">
+                        If $P_{total} = 0.60\ \text{atm}$: $K_p = (0.30)^2 = 0.09\ \text{atm}^{2}$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 7: COMMON MISTAKES ==================== -->
+        <section id="tab-mistakes" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Examiner's Error Log</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Common Mistakes — and How to Avoid Them</h2>
+                    <p class="text-xs text-slate-400 mt-1">The errors that cost the most marks on $K_c$/$K_p$ and equilibrium questions, each shown as <b class="text-rose-300">wrong</b> → <b class="text-emerald-300">right</b>.</p>
+                </div>
+
+                <!-- Category A: expressions -->
+                <div class="space-y-3">
+                    <span class="text-sky-300 font-bold uppercase text-xs tracking-wider block">A · Writing the expression</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">1. Reactants over products (inverted)</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> $K_c = \dfrac{[\text{N}_2][\text{H}_2]^3}{[\text{NH}_3]^2}$</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> $K_c = \dfrac{[\text{NH}_3]^2}{[\text{N}_2][\text{H}_2]^3}$ — products always on top.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">2. Multiplying instead of raising to a power</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> $[\text{H}_2 \times 3]$ or $3[\text{H}_2]$</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> $[\text{H}_2]^3$ — the coefficient is an exponent.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">3. Including solids / liquids</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> $K_c = \dfrac{[\text{CaO}][\text{CO}_2]}{[\text{CaCO}_3]}$</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> $K_c = [\text{CO}_2]$ — omit pure solids and liquids.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">4. Round brackets or partial pressures in $K_c$</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> $K_c = \dfrac{(\text{NH}_3)^2}{\dots}$ or using $p_{\text{NH}_3}$</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> square brackets $[\text{NH}_3]$ for concentration. Not awarded otherwise.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category B: substitution -->
+                <div class="space-y-3">
+                    <span class="text-emerald-300 font-bold uppercase text-xs tracking-wider block">B · Substituting the numbers</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">5. Using moles instead of concentration ($K_c$)</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> plugging $n = 0.40\ \text{mol}$ straight into $K_c$.</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> divide by the volume first: $[X] = n/V$ in $\text{mol dm}^{-3}$.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">6. Using initial (not equilibrium) values</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> substituting the starting moles/concentrations.</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> only <b>equilibrium</b> values go into $K$ — build the ICE table.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">7. Using mole fractions as partial pressures ($K_p$)</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> $K_p = \dfrac{(0.333)^2}{(0.167)(0.500)^3}$ (mole fractions, no $P$).</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> multiply each by $P_{total}$ first: $p_X = x_X \times P$.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">8. Wrong total moles in the mole fraction</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> using initial total moles, or forgetting a gas.</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> sum <b>all gaseous</b> moles at equilibrium; check $x$ sums to 1.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category C: units -->
+                <div class="space-y-3">
+                    <span class="text-amber-300 font-bold uppercase text-xs tracking-wider block">C · Units</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">9. Missing or wrong units</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> "$K_c = 3.7$" with no units.</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> $K_c = 3.7\ \text{mol}^{-2}\text{ dm}^{6}$ — derive them every time.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">10. "Fixing" negative powers</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> rewriting $\text{atm}^{-2}$ as $\text{atm}^{2}$.</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> negative powers are correct (e.g. $K_p$ for Haber is $\text{atm}^{-2}$).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category D: concepts -->
+                <div class="space-y-3">
+                    <span class="text-rose-300 font-bold uppercase text-xs tracking-wider block">D · Le Chatelier &amp; the constant</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">11. "Catalyst increases the yield / $K$"</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> a catalyst shifts the position or changes $K$.</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> it only speeds up reaching the <b>same</b> equilibrium — no change in yield or $K$.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">12. "Pressure/concentration changes $K$"</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> increasing pressure changes $K$.</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> they shift the <b>position</b> only; $K$ changes with <b>temperature alone</b>.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">13. Temperature direction reversed</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> "exothermic + heat → $K$ increases".</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> exothermic forward: heat up → $K$ <b>decreases</b> (shifts left). Heat favours the endothermic side.</p>
+                        </div>
+                        <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
+                            <span class="font-bold text-slate-100 block">14. Confusing rate with extent</span>
+                            <p class="text-rose-300 text-[11px]"><b>✗ Wrong:</b> "large $K_c$ means the reaction is fast".</p>
+                            <p class="text-emerald-300 text-[11px]"><b>✓ Right:</b> $K$ tells you the <b>extent</b>; kinetics (Topic 11) controls the <b>rate</b>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 8: FINAL REVIEW ==================== -->
+        <section id="tab-review" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-4">
+                <div class="border-b border-slate-800 pb-4">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Final Review</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Complete Topic 13 Inventory &amp; Master Trap Checklist</h2>
+                    <p class="text-xs text-slate-400 mt-1">Every expression, method and key idea from the engines, plus the cross-cutting traps.</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <a href="#rev-kc" class="px-2.5 py-1 rounded-lg bg-sky-950/60 text-sky-300 border border-sky-800 hover:bg-sky-900/50">$K_c$</a>
+                    <a href="#rev-kp" class="px-2.5 py-1 rounded-lg bg-emerald-950/60 text-emerald-300 border border-emerald-800 hover:bg-emerald-900/50">$K_p$</a>
+                    <a href="#rev-lcp" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/50">Le Chatelier</a>
+                    <a href="#rev-method" class="px-2.5 py-1 rounded-lg bg-violet-950/60 text-violet-300 border border-violet-800 hover:bg-violet-900/50">Method</a>
+                    <a href="#rev-traps" class="px-2.5 py-1 rounded-lg bg-rose-950/60 text-rose-300 border border-rose-800 hover:bg-rose-900/50">Master Traps</a>
+                </div>
+
+                <!-- Kc -->
+                <details id="rev-kc" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-sky-300">📐 $K_c$ — Expressions &amp; Ideas</span> <span class="text-slate-500 font-mono text-xs ml-2">5 items</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]">
+                                <thead class="bg-slate-950 text-sky-400 font-mono text-[10px] border-b border-slate-800">
+                                    <tr><th class="p-2.5">#</th><th class="p-2.5">Concept</th><th class="p-2.5">Expression</th><th class="p-2.5">Key point</th><th class="p-2.5">Examiner trap</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 bg-slate-900/50">
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-sky-300">1</td><td class="p-2.5 font-bold text-slate-200">General $K_c$</td><td class="p-2.5 font-mono text-emerald-300/95">$K_c=\frac{[C]^c[D]^d}{[A]^a[B]^b}$</td><td class="p-2.5">Products over reactants, equilibrium concs</td><td class="p-2.5 text-amber-200/90 text-[10px]">Don't invert; use square brackets</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-sky-300">2</td><td class="p-2.5 font-bold text-slate-200">Haber $K_c$</td><td class="p-2.5 font-mono text-emerald-300/95">$\frac{[\text{NH}_3]^2}{[\text{N}_2][\text{H}_2]^3}$</td><td class="p-2.5">Homogeneous (all gas)</td><td class="p-2.5 text-amber-200/90 text-[10px]">Cube $[\text{H}_2]$</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-sky-300">3</td><td class="p-2.5 font-bold text-slate-200">Heterogeneous</td><td class="p-2.5 font-mono text-emerald-300/95">$\text{CaCO}_3 \rightleftharpoons \text{CaO}+\text{CO}_2: K_c=[\text{CO}_2]$</td><td class="p-2.5">Omit solids &amp; liquids</td><td class="p-2.5 text-amber-200/90 text-[10px]">Including a solid loses the mark</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-sky-300">4</td><td class="p-2.5 font-bold text-slate-200">Units of $K_c$</td><td class="p-2.5 font-mono text-emerald-300/95">Haber: $\text{mol}^{-2}\text{ dm}^{6}$</td><td class="p-2.5">Substitute mol dm⁻³ and simplify</td><td class="p-2.5 text-amber-200/90 text-[10px]">May be dimensionless (HI)</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-sky-300">5</td><td class="p-2.5 font-bold text-slate-200">Size of $K_c$</td><td class="p-2.5 font-mono text-emerald-300/95">$\gg1$ products; $\ll1$ reactants</td><td class="p-2.5">Predicts extent, not rate</td><td class="p-2.5 text-amber-200/90 text-[10px]">Large $K_c$ ≠ fast</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Kp -->
+                <details id="rev-kp" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-emerald-300">🌡️ $K_p$ — Partial Pressures</span> <span class="text-slate-500 font-mono text-xs ml-2">5 items</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]">
+                                <thead class="bg-slate-950 text-emerald-400 font-mono text-[10px] border-b border-slate-800">
+                                    <tr><th class="p-2.5">#</th><th class="p-2.5">Concept</th><th class="p-2.5">Expression</th><th class="p-2.5">Key point</th><th class="p-2.5">Examiner trap</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 bg-slate-900/50">
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">1</td><td class="p-2.5 font-bold text-slate-200">Haber $K_p$</td><td class="p-2.5 font-mono text-emerald-300/95">$\frac{(p_{\text{NH}_3})^2}{p_{\text{N}_2}(p_{\text{H}_2})^3}$</td><td class="p-2.5">Gases only, pressures in atm</td><td class="p-2.5 text-amber-200/90 text-[10px]">No concentrations in $K_p$</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">2</td><td class="p-2.5 font-bold text-slate-200">Mole fraction</td><td class="p-2.5 font-mono text-emerald-300/95">$x_X = n_X / n_{total}$</td><td class="p-2.5">Equilibrium moles; sums to 1</td><td class="p-2.5 text-amber-200/90 text-[10px]">Use equilibrium, not initial, moles</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">3</td><td class="p-2.5 font-bold text-slate-200">Partial pressure</td><td class="p-2.5 font-mono text-emerald-300/95">$p_X = x_X \times P_{total}$</td><td class="p-2.5">Bridge from moles to $K_p$</td><td class="p-2.5 text-amber-200/90 text-[10px]">Don't forget to multiply by $P$</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">4</td><td class="p-2.5 font-bold text-slate-200">Heterogeneous $K_p$</td><td class="p-2.5 font-mono text-emerald-300/95">$\text{NH}_4\text{Cl}: K_p = p_{\text{NH}_3}p_{\text{HCl}}$</td><td class="p-2.5">Gases only; may have no denominator</td><td class="p-2.5 text-amber-200/90 text-[10px]">Omit the solid</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-emerald-300">5</td><td class="p-2.5 font-bold text-slate-200">Units of $K_p$</td><td class="p-2.5 font-mono text-emerald-300/95">Haber: $\text{atm}^{-2}$</td><td class="p-2.5">Substitute atm and simplify</td><td class="p-2.5 text-amber-200/90 text-[10px]">Negative powers are fine</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Le Chatelier -->
+                <details id="rev-lcp" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-rose-300">⚖️ Le Chatelier &amp; What Changes $K$</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 min-w-[720px]">
+                                <thead class="bg-slate-950 text-rose-400 font-mono text-[10px] border-b border-slate-800">
+                                    <tr><th class="p-2.5">#</th><th class="p-2.5">Change</th><th class="p-2.5">Position shift</th><th class="p-2.5">Effect on $K$</th><th class="p-2.5">Examiner trap</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 bg-slate-900/50">
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-rose-300">1</td><td class="p-2.5 font-bold text-slate-200">Add reactant</td><td class="p-2.5">Right (to products)</td><td class="p-2.5">None</td><td class="p-2.5 text-amber-200/90 text-[10px]">$K$ unchanged</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-rose-300">2</td><td class="p-2.5 font-bold text-slate-200">Remove product</td><td class="p-2.5">Right</td><td class="p-2.5">None</td><td class="p-2.5 text-amber-200/90 text-[10px]">Industrial $\text{NH}_3$ removal trick</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-rose-300">3</td><td class="p-2.5 font-bold text-slate-200">Increase pressure</td><td class="p-2.5">To fewer gas moles</td><td class="p-2.5">None</td><td class="p-2.5 text-amber-200/90 text-[10px]">No effect if $\Delta n_{gas}=0$</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-rose-300">4</td><td class="p-2.5 font-bold text-slate-200">Add catalyst</td><td class="p-2.5">None</td><td class="p-2.5">None</td><td class="p-2.5 text-amber-200/90 text-[10px]">Never "increases yield"</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-rose-300">5</td><td class="p-2.5 font-bold text-slate-200">Increase $T$ (exothermic)</td><td class="p-2.5">Left (endothermic)</td><td class="p-2.5">$K$ decreases</td><td class="p-2.5 text-amber-200/90 text-[10px]">Explain via the change in $K$</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-rose-300">6</td><td class="p-2.5 font-bold text-slate-200">Increase $T$ (endothermic)</td><td class="p-2.5">Right</td><td class="p-2.5">$K$ increases</td><td class="p-2.5 text-amber-200/90 text-[10px]">Link to $\Delta S_{total}=R\ln K$</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Method summary -->
+                <details id="rev-method" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-violet-300">🧮 Calculation Method Summary</span> <span class="text-slate-500 font-mono text-xs ml-2">2 routines</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-4 pb-4 pt-2 border-t border-slate-800/80 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3 bg-slate-900 rounded-lg border border-sky-800/60 text-[11px] text-slate-300 space-y-1">
+                            <span class="font-bold text-sky-300 block">$K_c$ routine</span>
+                            <p class="font-mono text-[10px] leading-relaxed">balance → $K_c$ expression → ICE (moles) → ÷ V → substitute → units</p>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-emerald-800/60 text-[11px] text-slate-300 space-y-1">
+                            <span class="font-bold text-emerald-300 block">$K_p$ routine</span>
+                            <p class="font-mono text-[10px] leading-relaxed">balance → $K_p$ expression → ICE (moles) → total moles → $x$ → $p=xP$ → substitute → units</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Master traps -->
+                <details id="rev-traps" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
+                    <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
+                        <span class="font-bold text-sm"><span class="text-rose-300">⚠️ Master Trap Checklist</span> <span class="text-slate-500 font-mono text-xs ml-2">cross-cutting</span></span>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="px-4 pb-4 pt-2 border-t border-slate-800/80">
+                        <ul class="text-[11px] text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed columns-1 md:columns-2 gap-6">
+                            <li>Products <b>over</b> reactants — never invert.</li>
+                            <li>Coefficients are <b>exponents</b>, not multipliers.</li>
+                            <li>Omit pure <b>solids and liquids</b> (both $K_c$ and $K_p$).</li>
+                            <li>Square brackets for $K_c$; round brackets score zero.</li>
+                            <li>Use <b>equilibrium</b> values, never initial.</li>
+                            <li>$K_c$: divide moles by volume first.</li>
+                            <li>$K_p$: mole fraction × total pressure — don't skip the ×$P$.</li>
+                            <li>Total moles = all <b>gaseous</b> moles at equilibrium.</li>
+                            <li>Always give units (they can be negative powers or none).</li>
+                            <li>Only <b>temperature</b> changes $K$.</li>
+                            <li>Catalyst: faster, same position, same $K$, same yield.</li>
+                            <li>Pressure shifts position only when gas moles differ.</li>
+                            <li>Exothermic + heat → $K$ falls (shifts left).</li>
+                            <li>Explain the $T$ effect by the change in $K$ (Spec 13.7).</li>
+                            <li>$\Delta S_{total} = R\ln K$; $T$ in kelvin.</li>
+                            <li>$K$ = extent, not rate.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- INSERT_POINT -->
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            IAL Chemistry Topic 13: Chemical Equilibria — Master Studio · WCH14 · Edexcel Spec 13.1–13.9 · Includes the Unit 9B Interactive Graph Studio
+        </div>
+    </footer>
+
+    <script>
+        // ---------- KaTeX safe init ----------
+        function safeInitKaTeX() {
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) { console.warn('KaTeX render:', e); }
+            }
+        }
+        window.safeInitKaTeX = safeInitKaTeX;
+
+        // ---------- Main tab switcher ----------
+        function switchTab(tabId) {
+            var tabs = ['syllabus','kc','kp','lcp','graphstudio','method','mistakes','review'];
+            tabs.forEach(function(t) {
+                var sec = document.getElementById('tab-' + t);
+                var btn = document.getElementById('btn-' + t);
+                if (sec) { if (t === tabId) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
+                if (btn) {
+                    if (t === tabId) {
+                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-amber-400 font-bold border-b-2 border-amber-400 bg-amber-950/40 transition';
+                    } else {
+                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent transition';
+                    }
+                }
+            });
+            if (tabId === 'graphstudio') { setTimeout(initGraphStudio, 60); }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(safeInitKaTeX, 60);
+        }
+        window.switchTab = switchTab;
+
+        // ---------- Blur quiz helpers ----------
+        window.toggleSingleBlur = function(el) { if (el) el.classList.toggle('revealed'); };
+        window.toggleActiveRecall = function(containerId, btnId) {
+            var container = document.getElementById(containerId);
+            if (!container) return;
+            var answers = container.querySelectorAll('.blur-answer');
+            var btn = document.getElementById(btnId);
+            var isRevealed = false;
+            answers.forEach(function(a) { if (a.classList.contains('revealed')) isRevealed = true; });
+            answers.forEach(function(a) { if (isRevealed) a.classList.remove('revealed'); else a.classList.add('revealed'); });
+            if (btn) btn.innerText = isRevealed ? '👁️ Reveal All Blanks' : '🙈 Hide All Blanks';
+        };
+
+        // ---------- Generic engine mode switcher ----------
+        function makeModeSwitcher(prefix, accent) {
+            return function(mode) {
+                var modes = ['explorer','map','quiz','traps'];
+                modes.forEach(function(m) {
+                    var el = document.getElementById(prefix + '-mode-' + m);
+                    var btn = document.getElementById(prefix + '-mode-btn-' + m);
+                    if (el) { if (m === mode) el.classList.remove('hidden'); else el.classList.add('hidden'); }
+                    if (btn) {
+                        if (m === mode) {
+                            btn.className = 'px-3.5 py-1.5 rounded-lg ' + accent + '-600 text-white font-bold text-xs transition shadow';
+                        } else {
+                            btn.className = 'px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-' + accent + '-300 text-xs transition';
+                        }
+                    }
+                });
+                setTimeout(safeInitKaTeX, 60);
+            };
+        }
+        window.switchE1Mode = makeModeSwitcher('e1', 'bg-sky');
+        window.switchE2Mode = makeModeSwitcher('e2', 'bg-emerald');
+        window.switchE3Mode = makeModeSwitcher('e3', 'bg-rose');
+
+        // ---------- Generic card selector ----------
+        function makeCardSelector(prefix, count, onCls, offCls) {
+            return function(n) {
+                for (var i = 1; i <= count; i++) {
+                    var card = document.getElementById(prefix + '-card-' + i);
+                    var btn = document.getElementById(prefix + '-btn-' + i);
+                    if (card) { if (i === n) card.classList.remove('hidden'); else card.classList.add('hidden'); }
+                    if (btn) btn.className = (i === n) ? onCls : offCls;
+                }
+                setTimeout(safeInitKaTeX, 60);
+            };
+        }
+        var OFF = 'p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center';
+        window.selectE1 = makeCardSelector('e1', 6, 'p-2.5 rounded-lg border border-sky-500 bg-sky-950/70 text-sky-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
+        window.selectE2 = makeCardSelector('e2', 6, 'p-2.5 rounded-lg border border-emerald-500 bg-emerald-950/70 text-emerald-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
+        window.selectE3 = makeCardSelector('e3', 6, 'p-2.5 rounded-lg border border-rose-500 bg-rose-950/70 text-rose-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
+
+        // ==================== GRAPH STUDIO (extracted from Unit 9B studio) ====================
+        let currentDisturbance = 'initial';
+        let animProgress = 1.0;
+        let animReqId = null;
+        let isAnimating = false;
+
+        window.setGraphDisturbance = function(type) {
+            currentDisturbance = type;
+            updateControlButtonsUI();
+            startGraphAnimation();
+        };
+
+        window.resetGraphToInitial = function() {
+            currentDisturbance = 'initial';
+            updateControlButtonsUI();
+            startGraphAnimation();
+        };
+
+        window.replayAnimation = function() {
+            startGraphAnimation();
+        };
+
+        function updateControlButtonsUI() {
+            const types = ['initial','add_n2','dec_n2','add_h2','dec_h2','add_nh3','dec_nh3','inc_press','dec_press','inc_temp','dec_temp'];
+            types.forEach(t => {
+                const btn = document.getElementById('dist-btn-' + t);
+                if (btn) {
+                    if (t === currentDisturbance) {
+                        btn.className = "px-2.5 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-extrabold text-xs transition shadow border border-amber-300 flex items-center justify-center gap-1";
+                    } else {
+                        btn.className = "px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-amber-300 hover:border-slate-700 text-xs transition flex items-center justify-center gap-1";
+                    }
+                }
+            });
+        }
+
+        function startGraphAnimation() {
+            if (animReqId) cancelAnimationFrame(animReqId);
+            animProgress = 0.0;
+            isAnimating = true;
+            const startTime = performance.now();
+            const duration = 3200;
+            function step(timestamp) {
+                const elapsed = timestamp - startTime;
+                animProgress = Math.min(1.0, elapsed / duration);
+                let easedProgress = 1 - Math.pow(1 - animProgress, 3);
+                drawEquilibriumGraphAnimated(easedProgress);
+                if (animProgress < 1.0) {
+                    animReqId = requestAnimationFrame(step);
+                } else {
+                    isAnimating = false;
+                    drawEquilibriumGraphAnimated(1.0);
+                }
+            }
+            animReqId = requestAnimationFrame(step);
+            updateExplanationBoxText();
+        }
+
+        function initGraphStudio() {
+            updateControlButtonsUI();
+            startGraphAnimation();
+        }
+        window.initGraphStudio = initGraphStudio;
+
+        function drawEquilibriumGraphAnimated(progress) {
+            const canvas = document.getElementById('equil-graph-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.parentElement.clientWidth || 700;
+            const h = canvas.height = 360;
+            ctx.clearRect(0, 0, w, h);
+
+            const x0 = 55;
+            const xEnd = w - 25;
+            const tEquil1 = x0 + (xEnd - x0) * 0.28;
+            const tDisturb = x0 + (xEnd - x0) * 0.52;
+            const tEquil2 = x0 + (xEnd - x0) * 0.82;
+            const currXMax = x0 + (xEnd - x0) * progress;
+
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(x0, 20);
+            ctx.lineTo(x0, h - 45);
+            ctx.lineTo(xEnd, h - 45);
+            ctx.stroke();
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.fillText('Concentration (mol dm⁻³)', 12, 18);
+            ctx.fillText('Time (t)', xEnd - 30, h - 15);
+
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1.2;
+            if (currXMax >= tEquil1) {
+                ctx.beginPath();
+                ctx.moveTo(tEquil1, 20);
+                ctx.lineTo(tEquil1, h - 45);
+                ctx.stroke();
+                ctx.fillStyle = '#cbd5e1';
+                ctx.fillText('Equilibrium I', tEquil1 - 25, h - 28);
+            }
+
+            if (currentDisturbance !== 'initial' && currXMax >= tDisturb) {
+                ctx.setLineDash([]);
+                ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.moveTo(tDisturb, 20);
+                ctx.lineTo(tDisturb, h - 45);
+                ctx.stroke();
+                ctx.setLineDash([3, 3]);
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(tDisturb, 20);
+                ctx.lineTo(tDisturb, h - 45);
+                ctx.stroke();
+                ctx.fillStyle = '#f59e0b';
+                ctx.font = 'bold 12px sans-serif';
+                ctx.fillText('⚡ DISTURBANCE', tDisturb - 38, 16);
+            }
+
+            if (currentDisturbance !== 'initial' && currXMax >= tEquil2) {
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(tEquil2, 20);
+                ctx.lineTo(tEquil2, h - 45);
+                ctx.stroke();
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.fillText('Equilibrium II', tEquil2 - 25, h - 28);
+            }
+            ctx.setLineDash([]);
+
+            const yH2_eq1 = 150;
+            const yN2_eq1 = 210;
+            const yNH3_eq1 = 250;
+            let yH2_dist = yH2_eq1, yN2_dist = yN2_eq1, yNH3_dist = yNH3_eq1;
+            let yH2_eq2 = yH2_eq1, yN2_eq2 = yN2_eq1, yNH3_eq2 = yNH3_eq1;
+
+            switch (currentDisturbance) {
+                case 'add_n2': yN2_dist = 115; yN2_eq2 = 150; yH2_eq2 = 180; yNH3_eq2 = 210; break;
+                case 'dec_n2': yN2_dist = 270; yN2_eq2 = 235; yH2_eq2 = 125; yNH3_eq2 = 280; break;
+                case 'add_h2': yH2_dist = 75; yH2_eq2 = 115; yN2_eq2 = 230; yNH3_eq2 = 205; break;
+                case 'dec_h2': yH2_dist = 225; yH2_eq2 = 185; yN2_eq2 = 190; yNH3_eq2 = 280; break;
+                case 'add_nh3': yNH3_dist = 145; yNH3_eq2 = 185; yN2_eq2 = 185; yH2_eq2 = 120; break;
+                case 'dec_nh3': yNH3_dist = 290; yNH3_eq2 = 265; yN2_eq2 = 225; yH2_eq2 = 170; break;
+                case 'inc_press': yH2_dist = 90; yN2_dist = 140; yNH3_dist = 190; yH2_eq2 = 125; yN2_eq2 = 160; yNH3_eq2 = 140; break;
+                case 'dec_press': yH2_dist = 210; yN2_dist = 255; yNH3_dist = 280; yH2_eq2 = 180; yN2_eq2 = 230; yNH3_eq2 = 295; break;
+                case 'inc_temp': yH2_eq2 = 120; yN2_eq2 = 185; yNH3_eq2 = 280; break;
+                case 'dec_temp': yH2_eq2 = 180; yN2_eq2 = 230; yNH3_eq2 = 205; break;
+            }
+
+            function drawSpeciesLine(color, initialY, startEquilY, distY, finalEquilY) {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(x0, initialY);
+                let xPhase1End = Math.min(currXMax, tEquil1);
+                for (let x = x0; x <= xPhase1End; x += 2) {
+                    let normT = (x - x0) / (tEquil1 - x0);
+                    let y = initialY + (startEquilY - initialY) * Math.sin(normT * Math.PI / 2);
+                    ctx.lineTo(x, y);
+                }
+                if (currXMax > tEquil1) {
+                    let xPhase2End = Math.min(currXMax, tDisturb);
+                    ctx.lineTo(xPhase2End, startEquilY);
+                }
+                if (currXMax >= tDisturb && currentDisturbance !== 'initial') {
+                    ctx.lineTo(tDisturb, distY);
+                    if (distY !== startEquilY) {
+                        ctx.save();
+                        ctx.fillStyle = color;
+                        ctx.font = 'bold 10px sans-serif';
+                        let isUp = distY < startEquilY;
+                        ctx.fillText(isUp ? '▲ SPIKE' : '▼ DROP', tDisturb + 4, (startEquilY + distY) / 2 + (isUp ? -2 : 10));
+                        ctx.restore();
+                    }
+                    let xPhase4End = Math.min(currXMax, tEquil2);
+                    for (let x = tDisturb; x <= xPhase4End; x += 2) {
+                        let normT = (x - tDisturb) / (tEquil2 - tDisturb);
+                        let y = distY + (finalEquilY - distY) * Math.sin(normT * Math.PI / 2);
+                        ctx.lineTo(x, y);
+                    }
+                    if (currXMax > tEquil2) {
+                        ctx.lineTo(currXMax, finalEquilY);
+                    }
+                }
+                ctx.stroke();
+                if (currXMax < xEnd) {
+                    let tipY = startEquilY;
+                    if (currXMax < tEquil1) {
+                        let normT = (currXMax - x0) / (tEquil1 - x0);
+                        tipY = initialY + (startEquilY - initialY) * Math.sin(normT * Math.PI / 2);
+                    } else if (currXMax < tDisturb || currentDisturbance === 'initial') {
+                        tipY = startEquilY;
+                    } else if (currXMax < tEquil2) {
+                        let normT = (currXMax - tDisturb) / (tEquil2 - tDisturb);
+                        tipY = distY + (finalEquilY - distY) * Math.sin(normT * Math.PI / 2);
+                    } else {
+                        tipY = finalEquilY;
+                    }
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(currXMax, tipY, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            drawSpeciesLine('#c084fc', 60, yH2_eq1, yH2_dist, yH2_eq2);
+            drawSpeciesLine('#38bdf8', 180, yN2_eq1, yN2_dist, yN2_eq2);
+            drawSpeciesLine('#fbbf24', h - 50, yNH3_eq1, yNH3_dist, yNH3_eq2);
+
+            ctx.fillStyle = '#c084fc'; ctx.fillText('— H₂ (Reactant)', 70, 35);
+            ctx.fillStyle = '#38bdf8'; ctx.fillText('— N₂ (Reactant)', 190, 35);
+            ctx.fillStyle = '#fbbf24'; ctx.fillText('— NH₃ (Product)', 310, 35);
+        }
+
+        function updateExplanationBoxText() {
+            const descBox = document.getElementById('graph-mode-desc');
+            if (!descBox) return;
+            let html = "";
+            switch (currentDisturbance) {
+                case 'initial':
+                    html = "<p class='text-amber-300 font-bold text-sm'>1. Initial Approach to Dynamic Equilibrium:</p><p class='text-slate-300 mt-1 leading-relaxed'>Reactants $N_2$ and $H_2$ are mixed in a closed vessel. As they react, $[N_2]$ and $[H_2]$ decrease while product $[NH_3]$ increases. When $r_{\\text{forward}} = r_{\\text{backward}}$, concentrations level off and remain <b>strictly constant</b> at Equilibrium I.</p>";
+                    break;
+                case 'add_n2':
+                    html = "<p class='text-sky-300 font-bold text-sm'>2A. Disturbance: Sudden Addition of $N_2$ Gas (↑ $[N_2]$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> INSTANT VERTICAL SPIKE IN $[N_2]$ LINE ONLY!<br><b>Le Chatelier Response:</b> System opposes change by reacting excess $N_2$ with $H_2$ to form $NH_3$. Equilibrium shifts to <b>RHS (Product side)</b>.<br><b>Final Position:</b> $[NH_3]$ rises; $[H_2]$ falls; $[N_2]$ drops back down but levels off higher than original Equil I.</p>";
+                    break;
+                case 'dec_n2':
+                    html = "<p class='text-sky-300 font-bold text-sm'>2B. Disturbance: Sudden Removal of $N_2$ Gas (↓ $[N_2]$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> INSTANT VERTICAL DROP IN $[N_2]$ LINE ONLY!<br><b>Le Chatelier Response:</b> System opposes loss of $N_2$ by decomposing $NH_3$ to reform $N_2$ and $H_2$. Equilibrium shifts to <b>LHS (Reactant side)</b>.<br><b>Final Position:</b> $[NH_3]$ falls; $[H_2]$ rises; $[N_2]$ recovers partially but stays lower than original Equil I.</p>";
+                    break;
+                case 'add_h2':
+                    html = "<p class='text-purple-300 font-bold text-sm'>2C. Disturbance: Addition of $H_2$ Gas (↑ $[H_2]$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> Instant vertical spike in $[H_2]$ line only.<br><b>Le Chatelier Response:</b> System shifts to <b>RHS</b> to consume added $H_2$. $[NH_3]$ increases while $[N_2]$ decreases.</p>";
+                    break;
+                case 'dec_h2':
+                    html = "<p class='text-purple-300 font-bold text-sm'>2D. Disturbance: Removal of $H_2$ Gas (↓ $[H_2]$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> Instant vertical drop in $[H_2]$ line only.<br><b>Le Chatelier Response:</b> System shifts to <b>LHS</b> to regenerate $H_2$. $[NH_3]$ decreases while $[N_2]$ increases.</p>";
+                    break;
+                case 'add_nh3':
+                    html = "<p class='text-amber-300 font-bold text-sm'>2E. Disturbance: Addition of Product $NH_3$ (↑ $[NH_3]$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> Instant vertical spike in $[NH_3]$ line only.<br><b>Le Chatelier Response:</b> System shifts to <b>LHS</b> to decompose excess $NH_3$. Both $[N_2]$ and $[H_2]$ increase.</p>";
+                    break;
+                case 'dec_nh3':
+                    html = "<p class='text-amber-300 font-bold text-sm'>2F. Disturbance: Continuous Removal of $NH_3$ Product (↓ $[NH_3]$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> Instant vertical drop in $[NH_3]$ line.<br><b>Industrial Significance:</b> In the industrial Haber process, $NH_3$ is liquefied and continuously removed to drive equilibrium position permanently to the <b>RHS</b>, maximizing total industrial yield!</p>";
+                    break;
+                case 'inc_press':
+                    html = "<p class='text-emerald-300 font-bold text-sm'>3A. Disturbance: Compression / Increase Pressure (↑ $P$ / ↓ $V$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> INSTANT VERTICAL SPIKE IN ALL 3 GASEOUS SPECIES SIMULTANEOUSLY due to volume reduction ($[C] = n/V$)!<br><b>Le Chatelier Response:</b> LHS has 4 moles gas ($1 N_2 + 3 H_2$) vs RHS with 2 moles gas ($2 NH_3$). System reduces pressure by shifting to side with <b>fewer gas moles (RHS)</b>.<br><b>Final Curve Behavior:</b> $[NH_3]$ rises even higher, while $[N_2]$ and $[H_2]$ curve down to Equil II.</p>";
+                    break;
+                case 'dec_press':
+                    html = "<p class='text-emerald-300 font-bold text-sm'>3B. Disturbance: Expansion / Decrease Pressure (↓ $P$ / ↑ $V$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> INSTANT VERTICAL DROP IN ALL 3 GASEOUS SPECIES SIMULTANEOUSLY due to volume expansion!<br><b>Le Chatelier Response:</b> System increases pressure by shifting to side with <b>more gas moles (LHS: 4 moles vs 2 moles)</b>.<br><b>Final Curve Behavior:</b> $[N_2]$ and $[H_2]$ curve upwards while $[NH_3]$ drops further down.</p>";
+                    break;
+                case 'inc_temp':
+                    html = "<p class='text-rose-300 font-bold text-sm'>4A. Disturbance: Increase Temperature / Heating (↑ $T$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> NO INSTANT VERTICAL JUMPS AT ALL! Smooth curved transitions only.<br><b>Le Chatelier Response:</b> Forward reaction is exothermic ($\\Delta H = -92\\text{ kJ mol}^{-1}$). System absorbs added heat by shifting in the <b>endothermic direction (LHS)</b>.<br><b>Final Outcome:</b> $[N_2]$ and $[H_2]$ rise smoothly to Equil II; $[NH_3]$ falls smoothly. <b>$K$ decreases.</b></p>";
+                    break;
+                case 'dec_temp':
+                    html = "<p class='text-sky-300 font-bold text-sm'>4B. Disturbance: Decrease Temperature / Cooling (↓ $T$):</p><p class='text-slate-300 mt-1 leading-relaxed'><b>Key Visual Signature:</b> NO INSTANT VERTICAL JUMPS! Smooth curves.<br><b>Le Chatelier Response:</b> System releases heat by shifting in the <b>exothermic direction (RHS)</b>.<br><b>Final Outcome:</b> $[NH_3]$ rises smoothly while $[N_2]$ and $[H_2]$ fall smoothly. <b>$K$ increases.</b></p>";
+                    break;
+            }
+            descBox.innerHTML = html;
+            safeInitKaTeX();
+        }
+
+        // ==================== Engine 1: Kc expression builder ====================
+        window.buildKc = function() {
+            var sel = document.getElementById('e1-rxn').value;
+            var out = document.getElementById('e1-kc-result');
+            if (!out) return;
+            var data = {
+                'haber':  { kc: '$K_c = \\dfrac{[\\text{NH}_3]^2}{[\\text{N}_2][\\text{H}_2]^3}$', units: 'mol⁻² dm⁶', note: 'Homogeneous (all gases) — every species appears. This is the most-examined $K_c$ expression.' },
+                'contact':{ kc: '$K_c = \\dfrac{[\\text{SO}_3]^2}{[\\text{SO}_2]^2[\\text{O}_2]}$', units: 'mol⁻¹ dm³', note: 'Homogeneous (all gases). Square $[\\text{SO}_2]$ and keep $[\\text{O}_2]$ to the first power.' },
+                'hi':     { kc: '$K_c = \\dfrac{[\\text{HI}]^2}{[\\text{H}_2][\\text{I}_2]}$', units: 'none (they cancel)', note: 'Equal powers top and bottom, so the units cancel — $K_c$ is dimensionless.' },
+                'feSCN':  { kc: '$K_c = \\dfrac{[\\text{FeSCN}^{2+}]}{[\\text{Fe}^{3+}][\\text{SCN}^-]}$', units: 'mol⁻¹ dm³', note: 'Homogeneous aqueous equilibrium — include all ions.' },
+                'caco3':  { kc: '$K_c = [\\text{CO}_2]$', units: 'mol dm⁻³', note: 'Heterogeneous: both $\\text{CaCO}_3$ and $\\text{CaO}$ are pure solids, so they are omitted. Only the gas appears.' },
+                'nh4cl':  { kc: '$K_c = [\\text{NH}_3][\\text{HCl}]$', units: 'mol² dm⁻⁶', note: 'Heterogeneous: the solid $\\text{NH}_4\\text{Cl}$ is omitted; the two gases multiply (no denominator).' }
+            };
+            var d = data[sel];
+            out.innerHTML =
+                "<div class='p-3 bg-sky-950/60 border border-sky-800 rounded text-sky-200 space-y-2'>" +
+                "<div class='font-mono text-emerald-300 text-sm'>" + d.kc + "</div>" +
+                "<div class='text-[11px]'><b class='text-sky-300'>Units:</b> " + d.units + "</div>" +
+                "<div class='text-[11px] text-slate-300'>" + d.note + "</div></div>";
+            setTimeout(safeInitKaTeX, 60);
+        };
+
+        // ==================== Engine 2: Kp step-by-step calculator ====================
+        window.calcKp = function() {
+            var n2 = parseFloat(document.getElementById('kp-n2').value);
+            var h2 = parseFloat(document.getElementById('kp-h2').value);
+            var nh3 = parseFloat(document.getElementById('kp-nh3').value);
+            var P = parseFloat(document.getElementById('kp-p').value);
+            var out = document.getElementById('e2-kp-result');
+            if (!out) return;
+            if (!(n2 >= 0) || !(h2 >= 0) || !(nh3 >= 0) || !(P > 0) || (n2 + h2 + nh3) === 0) {
+                out.innerHTML = "<div class='p-3 bg-rose-950/60 border border-rose-800 rounded text-rose-200 text-[11px]'>Enter non-negative moles (at least one > 0) and a positive total pressure.</div>";
+                return;
+            }
+            var total = n2 + h2 + nh3;
+            var xN2 = n2 / total, xH2 = h2 / total, xNH3 = nh3 / total;
+            var pN2 = xN2 * P, pH2 = xH2 * P, pNH3 = xNH3 * P;
+            var Kp = (pNH3 * pNH3) / (pN2 * Math.pow(pH2, 3));
+            out.innerHTML =
+                "<div class='p-3 bg-emerald-950/60 border border-emerald-800 rounded text-emerald-200 space-y-1.5 text-[11px] font-mono'>" +
+                "<div><b class='text-emerald-300'>Step 1 — total moles:</b> " + n2 + " + " + h2 + " + " + nh3 + " = " + total.toFixed(3) + " mol</div>" +
+                "<div><b class='text-emerald-300'>Step 2 — mole fractions:</b> x(N₂) = " + xN2.toFixed(3) + ", x(H₂) = " + xH2.toFixed(3) + ", x(NH₃) = " + xNH3.toFixed(3) + " (sum = " + (xN2 + xH2 + xNH3).toFixed(2) + ")</div>" +
+                "<div><b class='text-emerald-300'>Step 3 — partial pressures (× " + P + " atm):</b> p(N₂) = " + pN2.toFixed(1) + ", p(H₂) = " + pH2.toFixed(1) + ", p(NH₃) = " + pNH3.toFixed(1) + " atm</div>" +
+                "<div><b class='text-emerald-300'>Step 4 — substitute:</b> Kp = (p NH₃)² / (p N₂)(p H₂)³ = (" + pNH3.toFixed(1) + ")² / [(" + pN2.toFixed(1) + ")(" + pH2.toFixed(1) + ")³]</div>" +
+                "<div class='font-bold text-emerald-300 text-sm'>Kp = " + Kp.toExponential(3) + " atm⁻²</div></div>";
+        };
+
+        // ==================== Engine 3: Le Chatelier shift predictor ====================
+        window.predictShift = function() {
+            var sys = document.getElementById('e3-system').value;
+            var chg = document.getElementById('e3-change').value;
+            var out = document.getElementById('e3-shift-result');
+            if (!out) return;
+            var systems = {
+                'haber': { name: 'N₂ + 3H₂ ⇌ 2NH₃', exo: true, neutral: false, left: 4, right: 2 },
+                'no2':   { name: '2NO₂ ⇌ N₂O₄', exo: true, neutral: false, left: 2, right: 1 },
+                'hi':    { name: 'H₂ + I₂ ⇌ 2HI', exo: false, neutral: true, left: 2, right: 2 },
+                'so3':   { name: '2SO₂ + O₂ ⇌ 2SO₃', exo: true, neutral: false, left: 3, right: 2 }
+            };
+            var s = systems[sys];
+            var shift = '', kEffect = 'unchanged', why = '';
+            switch (chg) {
+                case 'inc_react': shift = 'Right (toward products)'; why = 'The system consumes the added reactant to oppose the increase.'; break;
+                case 'dec_prod': shift = 'Right (toward products)'; why = 'The system makes more product to replace what was removed.'; break;
+                case 'inc_press':
+                    if (s.left === s.right) { shift = 'No shift'; why = 'Equal moles of gas on both sides (' + s.left + ' vs ' + s.right + ') — pressure does not move the position.'; }
+                    else if (s.right < s.left) { shift = 'Right (fewer gas moles)'; why = 'Shifts to the side with fewer moles of gas (' + s.right + ' vs ' + s.left + ') to reduce the pressure.'; }
+                    else { shift = 'Left (fewer gas moles)'; why = 'Shifts to the side with fewer moles of gas (' + s.left + ' vs ' + s.right + ') to reduce the pressure.'; }
+                    break;
+                case 'dec_press':
+                    if (s.left === s.right) { shift = 'No shift'; why = 'Equal moles of gas on both sides — pressure does not move the position.'; }
+                    else if (s.left > s.right) { shift = 'Left (more gas moles)'; why = 'Shifts to the side with more moles of gas (' + s.left + ' vs ' + s.right + ') to raise the pressure.'; }
+                    else { shift = 'Right (more gas moles)'; why = 'Shifts to the side with more moles of gas (' + s.right + ' vs ' + s.left + ') to raise the pressure.'; }
+                    break;
+                case 'inc_temp':
+                    if (s.neutral) { shift = 'Negligible'; kEffect = 'K ≈ unchanged'; why = 'ΔH ≈ 0 for this reaction, so temperature has little effect on K or the position.'; }
+                    else if (s.exo) { shift = 'Left (endothermic direction)'; kEffect = 'K decreases'; why = 'Forward is exothermic; heat is absorbed by favouring the reverse (endothermic) reaction.'; }
+                    else { shift = 'Right (endothermic direction)'; kEffect = 'K increases'; why = 'Forward is endothermic; heat is absorbed by favouring the forward reaction.'; }
+                    break;
+                case 'dec_temp':
+                    if (s.neutral) { shift = 'Negligible'; kEffect = 'K ≈ unchanged'; why = 'ΔH ≈ 0 for this reaction, so temperature has little effect.'; }
+                    else if (s.exo) { shift = 'Right (exothermic direction)'; kEffect = 'K increases'; why = 'Cooling favours the exothermic (forward) reaction, which releases heat.'; }
+                    else { shift = 'Left (exothermic direction)'; kEffect = 'K decreases'; why = 'Cooling favours the exothermic (reverse) reaction.'; }
+                    break;
+                case 'catalyst': shift = 'No shift'; why = 'A catalyst speeds up the forward and reverse reactions equally — the same equilibrium is reached faster, with no change in position or K.'; break;
+            }
+            out.innerHTML =
+                "<div class='p-3 bg-rose-950/60 border border-rose-800 rounded text-rose-200 space-y-1.5 text-[11px]'>" +
+                "<div class='font-mono text-slate-300'>" + s.name + "</div>" +
+                "<div><b class='text-rose-300'>Position shift:</b> " + shift + "</div>" +
+                "<div><b class='text-rose-300'>Effect on K:</b> " + kEffect + "</div>" +
+                "<div class='text-slate-300'>" + why + "</div></div>";
+        };
+
+        // ---------- Init ----------
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab('syllabus');
+            window.selectE1(1); window.selectE2(1); window.selectE3(1);
+            setTimeout(safeInitKaTeX, 120);
+        });
+    </script>
+</body>
+</html>
