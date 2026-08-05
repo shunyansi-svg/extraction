@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metal Extraction Quest II — 3D Chemistry Game</title>
+<!-- Fonts loaded NON-blocking: if the hub is offline/restricted the game still renders
+     instantly with system fonts instead of freezing on a blocked @import. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap"></noscript>
+<script>
+/* Global diagnostics: capture errors so a freeze in an embedded hub is explainable,
+   even when devtools can't be opened. */
+(function(){
+  'use strict';
+  window.__bootErrors = [];
+  window.__diag = function(msg){
+    try{
+      window.__bootErrors.push(String(msg));
+      var box = document.getElementById('diagBox');
+      var list = document.getElementById('diagList');
+      if(box && list){
+        var li = document.createElement('div');
+        li.textContent = '\u2022 ' + msg;
+        list.appendChild(li);
+        box.classList.add('show');
+      }
+      if(window.console && console.warn) console.warn('[diag] ' + msg);
+    }catch(e){}
+  };
+  window.addEventListener('error', function(e){
+    window.__diag('JS error: ' + (e.message || 'unknown') + (e.lineno ? ' (line ' + e.lineno + ')' : ''));
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    window.__diag('Promise error: ' + (e.reason && e.reason.message ? e.reason.message : String(e.reason)));
+  });
+})();
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Rajdhani','Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:#070b14;color:#e8eef7}
+#canvas{display:block;width:100vw;height:100vh;background:#8ec8e8}
+.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,rgba(8,15,30,.88),rgba(3,6,14,.96));z-index:100;backdrop-filter:blur(6px)}
+.hidden{display:none!important}
+.overlay.hidden{display:none!important}
+.panel{background:linear-gradient(160deg,rgba(22,32,52,.97),rgba(10,16,28,.98));border:1px solid rgba(56,189,248,.35);border-radius:16px;padding:1.6rem 1.8rem;max-width:600px;width:94%;max-height:90vh;overflow-y:auto;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 25px 60px rgba(0,0,0,.55),0 0 40px rgba(14,165,233,.08)}
+.panel h1{color:#7dd3fc;font-size:1.6rem;margin-bottom:.45rem;font-weight:700;letter-spacing:.03em;text-shadow:0 0 20px rgba(56,189,248,.35)}
+.panel h2{color:#38bdf8;font-size:1rem;margin:.95rem 0 .4rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.panel p,.panel li{color:#b6c4d8;font-size:.92rem;line-height:1.5}
+.panel ul{margin:.45rem 0 .45rem 1.2rem}
+.btn{display:inline-block;background:linear-gradient(180deg,#0ea5e9,#0284c7);color:#fff;border:1px solid rgba(125,211,252,.4);padding:.66rem 1.35rem;border-radius:10px;font-size:.96rem;font-weight:700;cursor:pointer;margin:.3rem .2rem;font-family:inherit;letter-spacing:.03em;box-shadow:0 4px 14px rgba(2,132,199,.35);transition:transform .12s,filter .12s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.sec{background:linear-gradient(180deg,#334155,#1e293b);border-color:#475569;box-shadow:none}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.quiz-opt,.pick-opt{display:block;width:100%;text-align:left;background:rgba(30,41,59,.9);border:1px solid #3d4f66;color:#e2e8f0;padding:.66rem .95rem;border-radius:10px;margin:.33rem 0;cursor:pointer;font-size:.9rem;font-family:inherit;transition:border-color .12s,background .12s}
+.quiz-opt:hover,.pick-opt:hover{background:rgba(14,116,144,.45);border-color:#38bdf8}
+.pick-opt.sel{border-color:#38bdf8;background:rgba(8,47,73,.8);box-shadow:0 0 12px rgba(56,189,248,.2)}
+.msg{padding:.72rem;border-radius:10px;margin:.72rem 0;font-size:.88rem}
+.msg.ok{background:rgba(6,78,59,.55);color:#6ee7b7;border:1px solid #059669}
+.msg.err{background:rgba(69,10,10,.55);color:#fca5a5;border:1px solid #dc2626}
+.msg.info{background:rgba(12,40,70,.65);color:#7dd3fc;border:1px solid #0284c7}
+.hint{font-size:.8rem;color:#64748b;margin-top:.5rem}
+#hud{position:fixed;top:0;left:0;right:0;padding:.6rem 1rem .9rem;background:linear-gradient(180deg,rgba(7,11,20,.92) 0%,rgba(7,11,20,.55) 70%,transparent);z-index:50;pointer-events:none;display:none}
+#hud.show{display:block}
+#hud .obj{color:#7dd3fc;font-weight:600;font-size:.92rem;letter-spacing:.02em;max-width:min(760px,56vw);text-shadow:0 1px 4px #000}
+#hudBtns{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:60;display:none;gap:6px}
+#hudBtns.show{display:flex}
+.chipBtn{background:rgba(15,23,42,.9);border:1px solid rgba(56,189,248,.45);color:#7dd3fc;border-radius:999px;padding:.4rem .9rem;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.03em}
+.chipBtn:hover{background:rgba(8,47,73,.9)}
+#gameTimer{position:fixed;top:12px;right:12px;z-index:60;display:none;pointer-events:none;min-width:148px;padding:.55rem .85rem;background:linear-gradient(145deg,rgba(15,23,42,.94),rgba(8,12,22,.96));border:1px solid rgba(56,189,248,.45);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.06);text-align:center}
+#gameTimer.show{display:block}
+#gameTimer .t-label{font-size:.65rem;color:#64748b;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+#gameTimer .t-val{font-family:'Share Tech Mono',monospace;font-size:1.55rem;color:#f8fafc;font-weight:700;letter-spacing:.06em;text-shadow:0 0 12px rgba(56,189,248,.4)}
+#gameTimer .t-pen{font-size:.68rem;color:#fbbf24;margin-top:2px;min-height:1em}
+#minimapWrap{position:fixed;top:92px;right:12px;width:182px;background:linear-gradient(160deg,rgba(15,23,42,.92),rgba(8,12,22,.95));border:1px solid rgba(56,189,248,.3);border-radius:12px;padding:.5rem;font-size:.7rem;color:#94a3b8;z-index:50;display:none;pointer-events:none;line-height:1.45;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#minimapWrap.show{display:block}
+#minimapCanvas{width:170px;height:170px;border-radius:8px;border:1px solid rgba(56,189,248,.25);display:block;margin-bottom:4px}
+#minimapWrap b{color:#7dd3fc;font-size:.76rem;letter-spacing:.04em}
+#missionPad{position:fixed;top:52px;left:12px;width:224px;background:linear-gradient(160deg,rgba(15,23,42,.94),rgba(8,12,22,.96));border:1px solid rgba(56,189,248,.3);border-radius:12px;padding:.6rem .75rem;font-size:.72rem;color:#94a3b8;z-index:50;display:none;line-height:1.45;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#missionPad.show{display:block}
+#missionPad b{color:#7dd3fc;font-size:.8rem;letter-spacing:.06em}
+#missionPad li{list-style:none;margin:.22rem 0;padding-left:.1rem;font-weight:600}
+#missionPad li.done{color:#6ee7b7}
+#missionPad li.todo{color:#64748b}
+#missionPad li.opt{color:#c4b5fd}
+#prompt{position:fixed;bottom:158px;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.9);border:1px solid rgba(56,189,248,.5);color:#7dd3fc;padding:.5rem 1.1rem;border-radius:999px;font-size:.88rem;font-weight:600;z-index:45;display:none;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+#prompt.show{display:block}
+#crosshair{position:fixed;top:50%;left:50%;width:18px;height:18px;margin:-9px 0 0 -9px;z-index:40;pointer-events:none;display:none;opacity:.85}
+#crosshair::before,#crosshair::after{content:'';position:absolute;background:rgba(255,255,255,.92);box-shadow:0 0 4px #000}
+#crosshair::before{width:2px;height:18px;left:8px;top:0}
+#crosshair::after{width:18px;height:2px;top:8px;left:0}
+#crosshair.show{display:block}
+#crosshair.aim{width:32px;height:32px;margin:-16px 0 0 -16px;opacity:1}
+#crosshair.aim::before{height:32px;left:15px;background:#fbbf24}
+#crosshair.aim::after{width:32px;top:15px;background:#fbbf24}
+#aimBanner{position:fixed;top:20%;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.92);border:1px solid #fbbf24;color:#fde68a;padding:.45rem 1rem;border-radius:999px;font-size:.88rem;font-weight:600;z-index:46;display:none;pointer-events:none}
+#aimBanner.show{display:block}
+#vignette{position:fixed;inset:0;pointer-events:none;z-index:38;opacity:0;transition:opacity .4s;background:radial-gradient(ellipse at center,transparent 55%,rgba(190,18,60,.55) 100%)}
+#vignette.hurt{opacity:1;transition:opacity .08s}
+#bottomUI{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:none;flex-direction:column;align-items:center;gap:8px;z-index:50;pointer-events:none}
+#bottomUI.show{display:flex}
+#itemBar,#hotbar{display:flex;gap:5px;pointer-events:auto;flex-wrap:wrap;justify-content:center;max-width:96vw}
+.item-slot,.slot{width:54px;height:54px;background:linear-gradient(180deg,rgba(22,32,48,.95),rgba(10,16,28,.98));border:2px solid #334155;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;user-select:none;box-shadow:0 4px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05)}
+.item-slot .ico,.slot .ico{font-size:1.2rem;line-height:1}
+.item-slot .lbl{font-size:.55rem;color:#64748b;margin-top:1px;max-width:48px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-weight:600}
+.item-slot .cnt,.slot .cnt{position:absolute;right:2px;bottom:1px;font-size:.72rem;font-weight:800;font-family:'Share Tech Mono',monospace;color:#f1f5f9;text-shadow:0 1px 3px #000;background:rgba(0,0,0,.55);padding:0 3px;border-radius:4px}
+.item-slot.has{border-color:#0ea5e9;box-shadow:0 0 10px rgba(14,165,233,.2)}
+.item-slot.empty{opacity:.5}
+.slot{cursor:pointer;font-size:1.2rem}
+.slot.active{border-color:#38bdf8;box-shadow:0 0 16px rgba(56,189,248,.45)}
+.slot.empty{opacity:.4}
+.slot .n{position:absolute;left:3px;top:1px;font-size:.58rem;color:#64748b;font-weight:700}
+.bar-caption{font-size:.65rem;color:#64748b;letter-spacing:.12em;text-transform:uppercase;font-weight:600;pointer-events:none}
+#bossHud{position:fixed;top:58px;left:50%;transform:translateX(-50%);width:min(420px,90vw);display:none;z-index:55;pointer-events:none;background:rgba(8,12,22,.75);padding:.55rem .75rem;border-radius:12px;border:1px solid rgba(239,68,68,.35)}
+#bossHud.show{display:block}
+.bar-bg{background:#1e293b;border-radius:8px;height:12px;overflow:hidden;margin:.2rem 0;border:1px solid #334155}
+.bar-fill{height:100%;transition:width .2s}
+.bar-boss .bar-fill{background:linear-gradient(90deg,#b91c1c,#f97316)}
+.bar-player .bar-fill{background:linear-gradient(90deg,#0e7490,#22d3ee)}
+.recipe{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem;background:rgba(30,41,59,.75);border:1px solid #334155;border-radius:12px;margin:.45rem 0;flex-direction:column}
+.recipe:hover{border-color:#0ea5e9;background:rgba(30,41,59,.95)}
+.recipe.locked{opacity:.42;cursor:not-allowed}
+.recipe input[type=number]{font-family:inherit}
+.timer-bar{height:10px;background:#1e293b;border-radius:8px;overflow:hidden;margin:.75rem 0 .35rem;border:1px solid #334155}
+.timer-bar>i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);transform-origin:left center;transition:none}
+.timer-bar.urgent>i{background:#ef4444}
+.timer-label{font-size:.88rem;color:#fde68a;font-weight:700;text-align:center;font-family:'Share Tech Mono',monospace}
+.toast{position:fixed;top:16%;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.94);border:1px solid rgba(56,189,248,.5);color:#e2e8f0;padding:.65rem 1.25rem;border-radius:999px;z-index:80;display:none;font-size:.92rem;font-weight:600;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.45);max-width:86vw;text-align:center}
+.toast.show{display:block}
+#mineReticle{position:fixed;bottom:148px;left:50%;transform:translateX(-50%);background:rgba(8,15,28,.85);border:1px solid #475569;color:#94a3b8;padding:.28rem .75rem;border-radius:999px;font-size:.72rem;font-weight:600;z-index:45;display:none;pointer-events:none;white-space:nowrap}
+#mineReticle.show{display:block}
+#mineReticle.ore{border-color:#fbbf24;color:#fde68a}
+#loadErr{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#070b14;z-index:9999;padding:2rem}
+#loadErr.show{display:flex}
+#loadErr .panel{border-color:#f87171}
+#loadErr h1{color:#fca5a5}
+#diagBox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(7,11,20,.92);z-index:10000;padding:2rem;backdrop-filter:blur(4px)}
+#diagBox.show{display:flex}
+#diagList{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#fca5a5;margin:.6rem 0;line-height:1.6;max-height:34vh;overflow-y:auto}
+.extract-flow{display:flex;flex-direction:column;gap:.75rem;margin:1rem 0}
+.bag{display:flex;flex-wrap:wrap;gap:.45rem}
+.bag-btn{background:rgba(30,41,59,.9);border:1px solid #3d4f66;color:#e2e8f0;border-radius:10px;padding:.5rem .7rem;cursor:pointer;font-size:.84rem;font-family:inherit;font-weight:600}
+.bag-btn:hover{border-color:#38bdf8;background:rgba(14,116,144,.35)}
+.bag-btn:disabled{opacity:.35;cursor:not-allowed}
+.reactor{display:flex;align-items:center;justify-content:center;gap:.65rem;flex-wrap:wrap;padding:1.1rem;background:rgba(8,15,28,.7);border:2px dashed #3d4f66;border-radius:14px;min-height:110px}
+.reactor.heating{border-color:#f97316;box-shadow:0 0 28px rgba(249,115,22,.4);animation:pulseHeat .55s ease-in-out infinite alternate}
+@keyframes pulseHeat{from{box-shadow:0 0 10px rgba(249,115,22,.25)}to{box-shadow:0 0 30px rgba(251,191,36,.65)}}
+.put-slot{width:88px;height:88px;background:rgba(15,23,42,.95);border:2px solid #3d4f66;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.put-slot.filled{border-color:#0ea5e9;background:rgba(8,47,73,.65);box-shadow:0 0 12px rgba(14,165,233,.25)}
+.put-slot .big{font-size:1.55rem}
+.put-slot .sm{font-size:.66rem;color:#94a3b8;text-align:center;padding:0 4px;font-weight:600}
+.put-slot .x{position:absolute;top:2px;right:5px;color:#f87171;font-weight:700;font-size:.75rem}
+.plus-sign{font-size:1.35rem;color:#38bdf8;font-weight:700}
+.arrow-sign{font-size:1.2rem;color:#fbbf24}
+.heat-bar{height:12px;background:#1e293b;border-radius:8px;overflow-hidden;border:1px solid #334155}
+.heat-bar>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ea580c,#fbbf24,#fef3c7);transition:width .05s linear}
+.heat-label{font-size:.86rem;color:#fdba74;text-align:center;min-height:1.2em;font-weight:600}
+.formula-strip{background:rgba(8,15,28,.9);border-left:4px solid #0ea5e9;padding:.6rem .8rem;border-radius:8px;font-size:.86rem;color:#7dd3fc;font-family:'Share Tech Mono',monospace;white-space:pre-line}
+.zone-strip{display:flex;flex-direction:column;gap:.35rem;margin:.7rem 0}
+.zone-row{display:flex;gap:.5rem;align-items:center;background:rgba(30,41,59,.7);border:1px solid #334155;border-radius:10px;padding:.42rem .6rem;font-size:.78rem;color:#b6c4d8}
+.zone-row .z-ico{font-size:1.05rem;width:26px;text-align:center}
+.zone-row.lit{border-color:#f59e0b;background:rgba(120,53,15,.4);color:#fde68a}
+.think-box{background:rgba(12,40,70,.45);border:1px solid rgba(56,189,248,.35);border-radius:12px;padding:.8rem;margin:.5rem 0}
+.think-box h2{margin-top:0;color:#7dd3fc;font-size:.95rem}
+.exit-ticket{background:rgba(8,15,28,.9);border:1px solid rgba(251,191,36,.45);border-radius:12px;padding:.9rem;margin:1rem 0}
+.exit-ticket label{display:block;color:#fde68a;font-size:.92rem;margin-bottom:.5rem;font-weight:600}
+#winTimeBox{margin:.85rem 0;padding:.85rem 1rem;border-radius:12px;background:rgba(8,47,73,.5);border:1px solid rgba(56,189,248,.4);text-align:center}
+#winTimeBox .big-time{font-family:'Share Tech Mono',monospace;font-size:2rem;color:#7dd3fc;font-weight:700;letter-spacing:.08em}
+#reportBox{width:100%;min-height:130px;background:#0b1220;color:#a5f3fc;border:1px solid #155e75;border-radius:10px;font-family:'Share Tech Mono',monospace;font-size:.72rem;padding:.6rem;resize:vertical}
+.ladder{display:flex;flex-direction:column;gap:4px;margin:.6rem 0}
+.rung{display:flex;align-items:center;gap:.6rem;background:rgba(30,41,59,.75);border:1px solid #334155;border-radius:10px;padding:.42rem .7rem;font-size:.85rem;color:#b6c4d8}
+.rung .r-el{font-weight:800;width:44px;color:#e2e8f0;font-size:1rem}
+.rung .r-m{flex:1}
+.rung .r-tag{font-size:.7rem;font-weight:700;padding:.14rem .5rem;border-radius:999px;border:1px solid}
+.rung.electro .r-tag{color:#67e8f9;border-color:#0e7490;background:rgba(8,51,68,.6)}
+.rung.carbon .r-tag{color:#fdba74;border-color:#b45309;background:rgba(69,26,3,.55)}
+.rung.heat .r-tag{color:#fca5a5;border-color:#b91c1c;background:rgba(69,10,10,.5)}
+.rung.free .r-tag{color:#fde68a;border-color:#a16207;background:rgba(66,50,3,.55)}
+.rung.carbonline{border-top:3px dashed #f59e0b;border-radius:2px}
+.rung.met{box-shadow:0 0 0 1px #059669,inset 0 0 14px rgba(16,185,129,.12)}
+.rung.met .r-el{color:#6ee7b7}
+.tl-slots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:.7rem 0}
+.tl-slot{width:92px;height:96px;border:2px dashed #3d4f66;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#475569;text-align:center;background:rgba(15,23,42,.7);padding:4px;font-weight:700}
+.tl-slot.filled{border-style:solid;border-color:#0ea5e9;background:rgba(8,47,73,.75);cursor:pointer}
+.tl-slot.good{border-color:#059669;background:rgba(6,78,59,.5)}
+.tl-cards{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:.6rem 0}
+.tl-card{width:104px;background:linear-gradient(165deg,rgba(30,41,59,.95),rgba(15,23,42,.98));border:2px solid #475569;border-radius:12px;padding:.5rem .4rem;text-align:center;cursor:pointer;user-select:none;transition:transform .12s,border-color .12s}
+.tl-card:hover{transform:translateY(-3px);border-color:#38bdf8}
+.tl-card.locked{opacity:.35;cursor:not-allowed}
+.tl-card .c-ico{font-size:1.5rem}
+.tl-card .c-el{font-weight:800;font-size:1.05rem;color:#f1f5f9}
+.tl-card .c-nm{font-size:.68rem;color:#94a3b8;font-weight:600}
+.tl-card .c-hint{font-size:.62rem;color:#64748b;margin-top:3px;line-height:1.25}
+#touchUI{position:fixed;inset:0;z-index:48;pointer-events:none;display:none}
+#touchUI.show{display:block}
+#joyZone{position:absolute;left:12px;bottom:100px;width:150px;height:150px;pointer-events:auto;touch-action:none;-webkit-user-select:none;user-select:none}
+#joyBase{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:rgba(15,23,42,.45);border:2px solid rgba(56,189,248,.4);box-shadow:inset 0 0 20px rgba(0,0,0,.35)}
+#joyKnob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#7dd3fc,#0284c7);border:2px solid rgba(255,255,255,.35);box-shadow:0 4px 12px rgba(0,0,0,.4);pointer-events:none}
+#touchActions{position:absolute;right:10px;bottom:100px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:auto;touch-action:none}
+#touchActions .trow{display:flex;gap:8px}
+.tbtn{min-width:72px;min-height:56px;padding:.45rem .65rem;border-radius:14px;border:2px solid rgba(56,189,248,.4);background:rgba(15,23,42,.72);color:#e2e8f0;font-family:inherit;font-weight:700;font-size:.78rem;letter-spacing:.03em;box-shadow:0 4px 14px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent;user-select:none}
+.tbtn:active,.tbtn.on{background:rgba(14,165,233,.45);border-color:#38bdf8;transform:scale(.96)}
+.tbtn.big{min-width:88px;min-height:72px;font-size:.9rem;background:rgba(14,116,144,.55);border-color:#22d3ee}
+.tbtn.mine{background:rgba(180,83,9,.5);border-color:#fbbf24}
+.tbtn.use{background:rgba(5,150,105,.45);border-color:#34d399}
+.tbtn.aim{background:rgba(124,58,237,.4);border-color:#c084fc}
+.tbtn.shoot{background:rgba(220,38,38,.45);border-color:#f87171}
+#touchLookHint{position:absolute;right:18px;top:42%;transform:translateY(-50%);pointer-events:none;color:rgba(148,163,184,.55);font-size:.72rem;font-weight:600;text-align:right;max-width:110px;line-height:1.3}
+.modeRow{display:flex;gap:8px;margin:.5rem 0}
+.modeOpt{flex:1;background:rgba(30,41,59,.85);border:2px solid #3d4f66;border-radius:12px;padding:.6rem .7rem;cursor:pointer;font-size:.84rem;color:#b6c4d8;font-family:inherit;text-align:left}
+.modeOpt.sel{border-color:#38bdf8;background:rgba(8,47,73,.8)}
+.modeOpt b{color:#e2e8f0;display:block;margin-bottom:2px}
+@media (max-height:700px){
+  #joyZone{bottom:88px;transform:scale(.9);transform-origin:bottom left}
+  #touchActions{bottom:88px;transform:scale(.9);transform-origin:bottom right}
+  #bottomUI{bottom:6px}
+  .item-slot,.slot{width:48px;height:48px}
+}
+@media (pointer:coarse){
+  .item-slot,.slot{width:52px;height:52px}
+  .panel{max-height:85vh}
+  .btn,.quiz-opt,.pick-opt,.bag-btn{min-height:44px;font-size:.95rem}
+  #minimapWrap{display:none!important}
+  #missionPad{width:168px;font-size:.65rem;top:50px;left:8px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="crosshair"></div>
+<div id="vignette"></div>
+<div id="toast" class="toast"></div>
+<div id="mineReticle"></div>
+<div id="prompt"></div>
+
+<div id="hud"><div class="obj" id="objective"></div></div>
+
+<div id="hudBtns">
+  <button type="button" class="chipBtn" id="btnLadder">⚗️ <span data-i18n="ladderBtn">Reactivity</span></button>
+  <button type="button" class="chipBtn" id="btnMute">🔊 <span data-i18n="soundBtn">Sound</span></button>
+  <button type="button" class="chipBtn" id="btnLang">中文</button>
+</div>
+
+<div id="gameTimer">
+  <div class="t-label" data-i18n="missionTime">Mission time</div>
+  <div class="t-val" id="gameTimerVal">00:00</div>
+  <div class="t-pen" id="gameTimerPen"></div>
+</div>
+
+<div id="missionPad">
+  <b data-i18n="labMission">LAB MISSION</b>
+  <ul id="missionList"></ul>
+</div>
+
+<div id="minimapWrap">
+  <b data-i18n="mapTitle">WORLD MAP</b>
+  <canvas id="minimapCanvas" width="170" height="170"></canvas>
+  <span id="minimapLegend" style="font-size:.62rem;color:#64748b"></span>
+</div>
+
+<div id="aimBanner">🏹 <span data-i18n="aimHint">Aiming — Shoot (or left click) · Aim again to cancel</span></div>
+
+<div id="touchUI">
+  <div id="touchLookHint" data-i18n="dragLook">Drag here to look</div>
+  <div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
+  <div id="touchActions">
+    <div class="trow">
+      <button type="button" class="tbtn aim" id="btnTouchAim">🎯 <span data-i18n="aim">Aim</span></button>
+      <button type="button" class="tbtn shoot" id="btnTouchShoot">🏹 <span data-i18n="shoot">Shoot</span></button>
+    </div>
+    <div class="trow">
+      <button type="button" class="tbtn" id="btnTouchSprint" data-i18n="sprint">Sprint</button>
+      <button type="button" class="tbtn" id="btnTouchJump" data-i18n="jump">Jump</button>
+    </div>
+    <div class="trow">
+      <button type="button" class="tbtn use" id="btnTouchUse"><span data-i18n="useKey">E Use</span></button>
+      <button type="button" class="tbtn mine big" id="btnTouchMine">⛏ <span data-i18n="mine">Mine</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="bottomUI">
+  <div class="bar-caption" data-i18n="materials">Materials (count)</div>
+  <div id="itemBar"></div>
+  <div class="bar-caption" data-i18n="weapons">Weapons (tap to equip)</div>
+  <div id="hotbar"></div>
+</div>
+
+<div id="bossHud">
+  <div style="font-size:.8rem;margin-bottom:2px">🔥 <span data-i18n="oreBeast">Ore Beast</span></div>
+  <div class="bar-bg bar-boss"><div class="bar-fill" id="bossHpBar" style="width:100%"></div></div>
+  <div style="font-size:.8rem;margin:8px 0 2px"><span data-i18n="yourHp">Your HP</span> · <span id="equippedLabel"></span></div>
+  <div class="bar-bg bar-player"><div class="bar-fill" id="playerHpBar" style="width:100%"></div></div>
+</div>
+
+<div id="loadErr">
+  <div class="panel">
+    <h1>Game failed to load</h1>
+    <p id="loadErrMsg">Unknown error.</p>
+    <p class="hint">Keep <b>three.min.js</b> and <b>game.js</b> in the same folder as this HTML file.</p>
+  </div>
+</div>
+
+<!-- On-screen diagnosis (shown automatically if something fails in this browser) -->
+<div id="diagBox">
+  <div class="panel" style="border-color:#fbbf24">
+    <h1 style="color:#fde68a">⚠ Diagnosis / 診斷</h1>
+    <p style="color:#cbd5e1">Something is not working in this browser. Show this screen to your teacher. / 此瀏覽器出現問題，請把這畫面給老師看。</p>
+    <div id="diagList"></div>
+    <p class="hint" id="diagHint"></p>
+    <button type="button" class="btn" onclick="location.reload()">Reload 重新載入</button>
+    <button type="button" class="btn sec" onclick="document.getElementById('diagBox').classList.remove('show')">Hide 隱藏</button>
+  </div>
+</div>
+
+<!-- START -->
+<div id="screenStart" class="overlay">
+  <div class="panel">
+    <h1 data-i18n="title">Metal Extraction Quest II</h1>
+    <p style="margin-bottom:.8rem" data-i18n="intro">S3 chemistry adventure: mine ores, run a real blast furnace, electrolyse aluminium, craft weapons and defeat the Ore Beast. Every station follows the Lesson 18 chemistry.</p>
+    <h2 data-i18n="howTitle">How metals are extracted (remember this!)</h2>
+    <ul>
+      <li data-i18n="rule1">A metal's <b>position in the reactivity series</b> decides the method.</li>
+      <li data-i18n="rule2"><b>Below carbon</b> (Fe, Cu…) → heat the ore with <b>carbon / carbon monoxide</b>.</li>
+      <li data-i18n="rule3"><b>Above carbon</b> (Al…) → only <b>electrolysis</b> (electricity) works.</li>
+      <li data-i18n="rule4"><b>Very unreactive</b> (Ag, Hg) → oxides break down on <b>heating alone</b>; Au is found <b>free</b>.</li>
+    </ul>
+    <h2 data-i18n="controlsTitle">Controls</h2>
+    <ul>
+      <li data-i18n="ctrlPC"><b>PC:</b> WASD move · mouse look · left-click mine · E stations · 1–6 weapons · RMB bow aim</li>
+      <li data-i18n="ctrlTouch"><b>iPad / touch:</b> left joystick · drag right side to look · Mine / Use / Jump / Sprint buttons</li>
+    </ul>
+    <h2 data-i18n="modeTitle">Difficulty</h2>
+    <div class="modeRow">
+      <button type="button" class="modeOpt" id="modeRelaxed"><b data-i18n="relaxed">🌿 Relaxed lab</b><span data-i18n="relaxedDesc">Wrong answers cost HP + time. Good for first play.</span></button>
+      <button type="button" class="modeOpt sel" id="modeStandard"><b data-i18n="standard">⚔️ Standard</b><span data-i18n="standardDesc">No armour = one wrong boss answer defeats you.</span></button>
+    </div>
+    <p class="hint" id="libStatus">Loading 3D engine…</p>
+    <button type="button" class="btn" id="btnStart" disabled data-i18n="startGame">Start Game</button>
+    <button type="button" class="btn sec" id="btnLangStart">中文 / EN</button>
+    <p class="hint" id="bestTimeLine"></p>
+  </div>
+</div>
+
+<!-- EXTRACTION -->
+<div id="screenExtract" class="overlay hidden">
+  <div class="panel" style="max-width:660px">
+    <h1 id="exTitle">Extraction</h1>
+    <p id="exIntro"></p>
+    <div class="formula-strip" id="exFormula"></div>
+    <div class="zone-strip hidden" id="exZoneStrip"></div>
+
+    <h2 data-i18n="bagTitle">1. Your bag — click to put into the reactor</h2>
+    <div class="bag" id="exBag"></div>
+
+    <h2 data-i18n="reactorTitle">2. Reactor (put the correct blocks here)</h2>
+    <div class="reactor" id="exReactor"></div>
+
+    <div id="exPredict" class="think-box hidden">
+      <h2 data-i18n="predictTitle">3. Predict before heating</h2>
+      <p id="exPredictQ"></p>
+      <div id="exPredictOpts"></div>
+      <p class="hint" data-i18n="predictHint">Choose one answer, then click Heat.</p>
+    </div>
+
+    <div class="extract-flow">
+      <div class="heat-bar"><i id="exHeatFill"></i></div>
+      <div class="heat-label" id="exHeatLabel"></div>
+      <div id="exMsg"></div>
+    </div>
+
+    <div id="exExplain" class="think-box hidden">
+      <h2 data-i18n="explainTitle">4. Explain what happened</h2>
+      <p id="exExplainQ"></p>
+      <div id="exExplainOpts"></div>
+    </div>
+
+    <button type="button" class="btn" id="btnHeat">🔥 <span data-i18n="heatBtn">Heat / Extract</span></button>
+    <button type="button" class="btn sec" id="btnClearReactor" data-i18n="clearReactor">Clear reactor</button>
+    <button type="button" class="btn sec" id="btnCloseExtract" data-i18n="close">Close</button>
+    <p class="hint" id="exHint"></p>
+  </div>
+</div>
+
+<!-- CRAFT -->
+<div id="screenCraft" class="overlay hidden">
+  <div class="panel" style="max-width:580px">
+    <h1 data-i18n="anvilTitle">Crafting Anvil</h1>
+    <p data-i18n="anvilIntro">Weapons from Cu/Fe/Ag/Au. Al armour is optional — on Standard, without it a wrong boss answer is instant defeat.</p>
+    <div id="recipes"></div>
+    <button type="button" class="btn sec" id="btnCloseCraft" data-i18n="close">Close</button>
+  </div>
+</div>
+
+<!-- REACTIVITY LADDER -->
+<div id="screenLadder" class="overlay hidden">
+  <div class="panel" style="max-width:560px">
+    <h1 data-i18n="ladderTitle">The Reactivity Ladder</h1>
+    <p data-i18n="ladderIntro">The one rule of metal extraction: a metal's position in the reactivity series decides how it is extracted. Green = metals you have already produced.</p>
+    <div class="ladder" id="ladderBox"></div>
+    <button type="button" class="btn sec" id="btnCloseLadder" data-i18n="close">Close</button>
+  </div>
+</div>
+
+<!-- DISCOVERY TIMELINE -->
+<div id="screenTimeline" class="overlay hidden">
+  <div class="panel" style="max-width:640px">
+    <h1 data-i18n="tlTitle">Discovery Timeline</h1>
+    <p data-i18n="tlIntro">Collect metal cards as you meet each metal. Then place them in order of discovery — earliest first.</p>
+    <div class="tl-slots" id="tlSlots"></div>
+    <div class="tl-cards" id="tlCards"></div>
+    <div id="tlMsg"></div>
+    <button type="button" class="btn" id="btnTlCheck" data-i18n="tlCheck">Check order</button>
+    <button type="button" class="btn sec" id="btnTlClear" data-i18n="tlClear">Reset</button>
+    <button type="button" class="btn sec" id="btnCloseTimeline" data-i18n="close">Close</button>
+  </div>
+</div>
+
+<!-- GATE -->
+<div id="screenGate" class="overlay hidden">
+  <div class="panel">
+    <h1 data-i18n="gateTitle">Boss Gate</h1>
+    <p id="gateText"></p>
+    <button type="button" class="btn" id="btnEnterBoss" data-i18n="enterBoss">Enter Boss Arena</button>
+    <button type="button" class="btn sec" id="btnCloseGate" data-i18n="close">Close</button>
+  </div>
+</div>
+
+<!-- DODGE QUIZ -->
+<div id="screenDodge" class="overlay hidden">
+  <div class="panel">
+    <h1 data-i18n="dodgeTitle">Ore Beast attacks — answer in time!</h1>
+    <div class="timer-bar" id="dodgeTimerBar"><i id="dodgeTimerFill"></i></div>
+    <p class="timer-label" id="dodgeTimerLabel">10.0 s</p>
+    <p id="dodgeQ"></p>
+    <div id="dodgeOpts"></div>
+    <p class="hint" id="dodgeHint"></p>
+  </div>
+</div>
+
+<!-- WIN -->
+<div id="screenWin" class="overlay hidden">
+  <div class="panel">
+    <h1 data-i18n="winTitle">Victory!</h1>
+    <p id="winStats"></p>
+    <div id="winTimeBox">
+      <div style="font-size:.75rem;color:#64748b;letter-spacing:.12em;text-transform:uppercase" data-i18n="clearTime">Clear time</div>
+      <div class="big-time" id="winTimeVal">00:00</div>
+      <p class="hint" id="winTimeDetail" style="margin:0"></p>
+      <p class="hint" id="bestTimeNote" style="margin:0"></p>
+    </div>
+    <h2 data-i18n="recapTitle">Chemistry recap (S3 · Lesson 18)</h2>
+    <ul id="winRecapList"></ul>
+    <div class="think-box" id="nseBox">
+      <h2 data-i18n="nseTitle">🇨🇳 Reflection: rare earth elements</h2>
+      <p id="nseText"></p>
+    </div>
+    <div class="exit-ticket">
+      <label><b data-i18n="exitTicket">Exit ticket:</b> <span data-i18n="exitTicketQ">In the blast furnace, which substance removes oxygen from haematite?</span></label>
+      <div id="exitTicketOpts"></div>
+      <div id="exitTicketMsg"></div>
+    </div>
+    <h2 data-i18n="teacherReport">Teacher report</h2>
+    <textarea id="reportBox" readonly></textarea><br>
+    <button type="button" class="btn sec" id="btnCopyReport" data-i18n="copyReport">📋 Copy report for OneNote</button>
+    <span class="hint" id="copyMsg"></span>
+    <p class="hint" id="winMissionSummary"></p>
+    <button type="button" class="btn" id="btnRestart" data-i18n="playAgain">Play Again</button>
+  </div>
+</div>
+
+<!-- LOSE -->
+<div id="screenLose" class="overlay hidden">
+  <div class="panel">
+    <h1 data-i18n="loseTitle">Defeated!</h1>
+    <p data-i18n="loseText">On Standard, without aluminium armour one wrong answer defeats you. Craft Al armour (electrolysis cell → Al metal → anvil) and try again. Inventory is kept; the timer keeps running.</p>
+    <button type="button" class="btn" id="btnRetry" data-i18n="returnWorld">Return to World</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var CDNS = [
+    'three.min.js',
+    '../three.min.js',
+    'https://unpkg.com/three@0.149.0/build/three.min.js',
+    'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.149.0/three.min.js'
+  ];
+  function showLoadError(msg) {
+    var box = document.getElementById('loadErr');
+    var text = document.getElementById('loadErrMsg');
+    if (text) text.textContent = msg;
+    if (box) box.classList.add('show');
+    var st = document.getElementById('libStatus');
+    if (st) st.textContent = 'Failed to load 3D engine.';
+  }
+  function loadScript(url) {
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = url;
+      s.async = true;
+      s.onload = function () {
+        if (typeof window.THREE === 'undefined') reject(new Error('THREE missing after ' + url));
+        else resolve(url);
+      };
+      s.onerror = function () { reject(new Error('Network error: ' + url)); };
+      document.head.appendChild(s);
+    });
+  }
+  function loadThree(i) {
+    i = i || 0;
+    if (i >= CDNS.length) return Promise.reject(new Error('Could not load Three.js. Keep three.min.js next to this HTML file.'));
+    var st = document.getElementById('libStatus');
+    if (st) st.textContent = 'Loading 3D engine (' + (i + 1) + '/' + CDNS.length + ')…';
+    return loadScript(CDNS[i]).catch(function () { return loadThree(i + 1); });
+  }
+  loadThree().then(function () {
+    /* WebGL pre-check: fail fast with a readable message instead of hanging
+       an embedded browser whose WebGL is blocked or disabled. */
+    try {
+      var tc = document.createElement('canvas');
+      var gl = tc.getContext('webgl') || tc.getContext('experimental-webgl');
+      if (!gl) throw new Error('WebGL is not available in this browser/embedded view. Ask the hub to allow WebGL / hardware acceleration. (此環境無法使用 WebGL)');
+    } catch (e) {
+      if (window.__diag) window.__diag(e.message || String(e));
+      showLoadError(e.message || String(e));
+      return;
+    }
+    var g = document.createElement('script');
+    g.src = 'game.js';
+    g.onload = function () {
+      if (typeof window.__startMetalQuest === 'function') {
+        try { window.__startMetalQuest(window.THREE); }
+        catch (err) { console.error(err); showLoadError('Game init failed: ' + (err && err.message ? err.message : String(err))); }
+      } else showLoadError('game.js loaded but __startMetalQuest missing.');
+    };
+    g.onerror = function () { showLoadError('Could not load game.js — keep it next to this HTML file.'); };
+    document.head.appendChild(g);
+  }).catch(function (err) {
+    showLoadError(err && err.message ? err.message : String(err));
+  });
+})();
+</script>
+</body>
+</html>
