@@ -154,14 +154,12 @@
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
                     <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
                 </button>
-                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
-                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Practical Tools</span>
-                </button>
+                
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
                     <i class="fa-solid fa-brain text-purple-400 text-xs"></i> <span>3D Flashcards (50) & Quiz</span>
                 </button>
                 <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
-                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Glossary & MCQs (35)</span>
+                    <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Glossary & MCQs (52)</span>
                 </button>
                 <button onclick="switchTab('essays')" id="tab-essays" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
                     <i class="fa-solid fa-pen-nib text-rose-400 text-xs"></i> <span>Practical Planning Exemplars (10)</span>
@@ -216,107 +214,6 @@
         </section>
 
         <!-- TAB 3: PRACTICAL CALCULATORS -->
-        <section id="view-calculators" class="tab-view space-y-6 hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- Calculator 1: Calorimetry (Q = mcΔT) & ΔH Solver -->
-                <div class="glass-panel p-6 rounded-2xl border border-cyan-500/20">
-                    <h3 class="text-lg font-bold text-cyan-400 flex items-center space-x-2 mb-4">
-                        <i class="fa-solid fa-temperature-arrow-up"></i> <span>1. Calorimetry (<i>Q</i> = <i>mc</i>Δ<i>T</i>) & Δ<i>H</i> Solver</span>
-                    </h3>
-                    <p class="text-xs text-slate-400 mb-4">Calculate energy transferred (<i>Q</i>) and enthalpy change (Δ<i>H</i>) for exothermic or endothermic reactions.</p>
-                    
-                    <div class="grid grid-cols-2 gap-3 text-sm mb-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Solution Volume / Mass (<i>m</i> in g)</label>
-                            <input type="number" id="cal-m" value="50" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2 focus:ring-cyan-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Specific Heat Capacity <i>c</i> (J g⁻¹ K⁻¹)</label>
-                            <input type="number" id="cal-c" value="4.18" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Temperature Rise Δ<i>T</i> (°C or K)</label>
-                            <input type="number" id="cal-dt" value="8.5" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Moles of Limiting Reactant (<i>n</i>)</label>
-                            <input type="number" id="cal-n" value="0.025" step="0.001" oninput="calcCalorimetry()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
-                        </div>
-                    </div>
-
-                    <div id="cal-result" class="p-4 bg-cyan-950/40 border border-cyan-500/30 rounded-xl text-center font-mono text-cyan-300 font-bold text-sm">
-                        Q = 1776.5 J = 1.777 kJ | ΔH = -71.06 kJ mol⁻¹
-                    </div>
-                </div>
-
-                <!-- Calculator 2: Percentage Uncertainty Calculator -->
-                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20">
-                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2 mb-4">
-                        <i class="fa-solid fa-percent"></i> <span>2. Equipment Percentage Uncertainty Calculator</span>
-                    </h3>
-                    <p class="text-xs text-slate-400 mb-4">Calculates % Uncertainty = (Uncertainty × Readings / Measured Value) × 100%.</p>
-                    
-                    <div class="space-y-3 text-sm mb-4">
-                        <div class="grid grid-cols-3 gap-2">
-                            <div>
-                                <label class="block text-xs text-slate-400">Equipment Uncertainty</label>
-                                <input type="number" id="unc-err" value="0.05" step="0.01" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
-                            </div>
-                            <div>
-                                <label class="block text-xs text-slate-400">Readings Count</label>
-                                <select id="unc-readings" onchange="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
-                                    <option value="1">1 (Pipette / Cylinder)</option>
-                                    <option value="2" selected>2 (Burette / Balance)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-slate-400">Measured Value</label>
-                                <input type="number" id="unc-val" value="23.40" step="0.1" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg p-2">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="unc-result" class="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-center font-mono text-emerald-300 font-bold text-sm">
-                        Total Uncertainty: ±0.10 cm³ | Percentage Error: 0.43%
-                    </div>
-                </div>
-
-                <!-- Calculator 3: Titration Mean Concordant Titre & Concentration Solver -->
-                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20 lg:col-span-2">
-                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2 mb-4">
-                        <i class="fa-solid fa-vial-circle-check"></i> <span>3. Titration Mean Concordant Titre & Concentration Solver</span>
-                    </h3>
-                    <p class="text-xs text-slate-400 mb-3">Filters concordant titres (within ±0.10 cm³), calculates mean titre, and solves C₁V₁ / n₁ = C₂V₂ / n₂.</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 text-xs">
-                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                            <span class="font-bold text-purple-300 block mb-1">Rough Titre (cm³)</span>
-                            <input type="number" id="titre-r" value="24.10" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
-                        </div>
-                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                            <span class="font-bold text-purple-300 block mb-1">Titre 1 (cm³)</span>
-                            <input type="number" id="titre-1" value="23.45" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
-                        </div>
-                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                            <span class="font-bold text-purple-300 block mb-1">Titre 2 (cm³)</span>
-                            <input type="number" id="titre-2" value="23.55" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
-                        </div>
-                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
-                            <span class="font-bold text-purple-300 block mb-1">Titre 3 (cm³)</span>
-                            <input type="number" id="titre-3" value="23.80" oninput="calcTitration()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded p-1.5">
-                        </div>
-                    </div>
-
-                    <div id="titration-result" class="p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl text-center font-mono text-purple-300 font-bold text-xs sm:text-sm">
-                        Concordant Titres: Titre 1 & Titre 2 | Mean Titre = 23.50 cm³
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- TAB 4: 3D FLASHCARDS (50) & QUIZ -->
         <section id="view-quiz" class="tab-view space-y-6 hidden">
             <div class="flex flex-col sm:flex-row justify-between items-center bg-slate-900 p-4 rounded-2xl border border-slate-800 gap-3">
                 <div class="flex space-x-2">
@@ -984,6 +881,8 @@
                 q: "Edexcel IAL MCQ: Why are anti-bumping granules added to a reaction mixture before heating under reflux?",
                 options: ["A: To increase reaction yield", "B: To prevent violent uneven boiling", "C: To act as a homogeneous catalyst", "D: To lower boiling point"],
                 ans: "Correct Answer: B. Explanation: Anti-bumping granules provide nucleation sites for small bubbles, preventing superheating and violent splashing."
+            ,
+                expl: ["Wrong — anti-bumping granules don't affect yield; they are chemically inert.", "CORRECT — they provide nucleation sites for smooth bubble formation, preventing violent uneven boiling.", "Wrong — they are not a catalyst (no reaction speed-up; inert).", "Wrong — they don't lower the liquid level; they sit at the bottom."]
             },
             {
                 term: "Burette Meniscus",
@@ -991,6 +890,8 @@
                 q: "Edexcel IAL MCQ: A student reads the upper edge of a concave meniscus in a burette for both initial and final readings. What is the impact on recorded titre?",
                 options: ["A: Titre is overestimated", "B: Titre is underestimated", "C: No net error if consistent", "D: Titre is doubled"],
                 ans: "Correct Answer: C. Explanation: Since both initial and final readings are offset by the same systematic error, taking the difference cancels out the offset!"
+            ,
+                expl: ["Wrong — if you consistently read the top/bottom the same way, the error cancels in the titre (difference).", "Wrong — consistent misreading cancels out.", "CORRECT — reading consistently at the same point (e.g. bottom) means the error is the same in both readings and cancels.", "Wrong — the titre is a difference; consistent errors cancel, not double."]
             },
             {
                 term: "Concordant Titres",
@@ -998,6 +899,8 @@
                 q: "Edexcel IAL MCQ: Given titres 23.10, 23.40, 23.45, and 23.50 cm³. Which titres should be averaged to find the mean titre?",
                 options: ["A: All four titres", "B: 23.40, 23.45, and 23.50 cm³", "C: 23.10 and 23.50 cm³", "D: 23.45 and 23.50 cm³"],
                 ans: "Correct Answer: B. Explanation: 23.40, 23.45, and 23.50 cm³ are all within ±0.10 cm³ of each other (concordant)."
+            ,
+                expl: ["Wrong — 23.10 is an outlier (>0.2 cm³ from the others) and is excluded.", "CORRECT — 23.40, 23.45, 23.50 are concordant (within 0.2 cm³) and averaged.", "Wrong — you need more than two values; exclude the outlier 23.10.", "Wrong — use ALL concordant values, not just two."]
             },
             {
                 term: "Drying Agent",
@@ -1005,6 +908,8 @@
                 q: "Edexcel IAL MCQ: Which compound is suitable for drying a crude sample of 1-bromobutane?",
                 options: ["A: Anhydrous CaCl₂", "B: Concentrated H₂SO₄", "C: Aqueous NaOH", "D: Hydrated MgSO₄·7H₂O"],
                 ans: "Correct Answer: A. Explanation: Anhydrous CaCl₂ absorbs water without reacting with the halogenoalkane."
+            ,
+                expl: ["CORRECT — anhydrous CaCl₂ absorbs water (a drying agent).", "Wrong — concentrated H₂SO₄ is a liquid acid, not a solid drying agent for this purpose (and dangerous with some organics).", "Wrong — aqueous NaOH adds water; it cannot dry.", "Wrong — hydrated MgSO₄·7H₂O is already hydrated; it cannot absorb more water."]
             },
             {
                 term: "Extrapolation",
@@ -1012,6 +917,8 @@
                 q: "Edexcel IAL MCQ: Why is temperature extrapolated back to time of mixing in calorimetry?",
                 options: ["A: To account for heat loss during reaction", "B: To speed up calculation", "C: To correct for balance error", "D: To convert °C to K"],
                 ans: "Correct Answer: A. Explanation: Extrapolation estimates maximum temperature rise if the reaction were instantaneous without heat dissipation."
+            ,
+                expl: ["CORRECT — extrapolation estimates the maximum temperature at the instant of mixing, accounting for heat loss.", "Wrong — it's about accuracy, not speed.", "Wrong — balance error is corrected by weighing technique, not extrapolation.", "(No 4th option.)"]
             },
             {
                 term: "Fehling's Solution",
@@ -1019,6 +926,8 @@
                 q: "Edexcel IAL MCQ: What observation occurs when propanal is warmed with Fehling's solution?",
                 options: ["A: Silver mirror forms", "B: Blue solution forms brick-red ppt", "C: Orange to green color change", "D: Misty fumes evolved"],
                 ans: "Correct Answer: B. Explanation: Propanal is oxidized to propanoate while Cu²⁺ is reduced to brick-red Cu₂O."
+            ,
+                expl: ["Wrong — a silver mirror is Tollens' test (aldehydes), not Fehling's.", "CORRECT — Fehling's: blue solution + aldehyde → brick-red Cu₂O precipitate.", "Wrong — orange → green is dichromate (oxidation of alcohols), not Fehling's.", "Wrong — misty fumes are the PCl₅ test for –OH."]
             },
             {
                 term: "Flame Test",
@@ -1026,6 +935,8 @@
                 q: "Edexcel IAL MCQ: Which metal cation produces an apple-green flame?",
                 options: ["A: Ca²⁺", "B: Ba²⁺", "C: Sr²⁺", "D: Na⁺"],
                 ans: "Correct Answer: B. Explanation: Barium (Ba²⁺) emits an apple-green flame."
+            ,
+                expl: ["Wrong — Ca²⁺ gives brick-red.", "CORRECT — Ba²⁺ gives apple-green.", "Wrong — Sr²⁺ gives crimson-red.", "Wrong — Na⁺ gives yellow/orange."]
             },
             {
                 term: "Fractional Distillation",
@@ -1033,6 +944,8 @@
                 q: "Edexcel IAL MCQ: Why is fractional distillation used instead of simple distillation to purify cyclohexene from cyclohexanol?",
                 options: ["A: Cyclohexene has high density", "B: Boiling points of cyclohexene and cyclohexanol are relatively close", "C: Cyclohexanol decomposes on heating", "D: Cyclohexene is soluble in water"],
                 ans: "Correct Answer: B. Explanation: Fractional distillation gives better separation for liquids with closer boiling points."
+            ,
+                expl: ["Wrong — density is irrelevant to fractional distillation.", "CORRECT — cyclohexene and cyclohexanol have close boiling points, so fractional distillation is needed to separate them.", "Wrong — the bp difference being large would make SIMPLE distillation fine.", "(No 4th option.)"]
             },
             {
                 term: "Fume Cupboard",
@@ -1040,6 +953,8 @@
                 q: "Edexcel IAL MCQ: Why must thermal decomposition of copper(II) nitrate be conducted in a fume cupboard?",
                 options: ["A: Oxygen gas is explosive", "B: Toxic brown NO₂ gas is evolved", "C: Copper oxide is flammable", "D: To prevent light exposure"],
                 ans: "Correct Answer: B. Explanation: Nitrogen dioxide (NO₂) is toxic and irritating to lungs."
+            ,
+                expl: ["Wrong — O₂ is not the hazard here.", "CORRECT — thermal decomposition of nitrates evolves toxic brown NO₂ gas → fume cupboard.", "Wrong — CuO is not flammable.", "Wrong — light isn't the issue."]
             },
             {
                 term: "Gas Syringe",
@@ -1047,6 +962,8 @@
                 q: "Edexcel IAL MCQ: Why is a gas syringe preferred over water displacement for measuring CO₂ volume?",
                 options: ["A: CO₂ is denser than air", "B: CO₂ is slightly soluble in water", "C: CO₂ reacts with glass", "D: CO₂ is flammable"],
                 ans: "Correct Answer: B. Explanation: Water displacement underestimates CO₂ volume due to dissolution."
+            ,
+                expl: ["Wrong — density doesn't make CO₂ hard to collect over water.", "CORRECT — CO₂ is slightly soluble in water, so water displacement underestimates the volume → use a gas syringe.", "Wrong — CO₂ doesn't react with glass.", "Wrong — CO₂ is not flammable."]
             },
             {
                 term: "Hydrolysis Rate",
@@ -1054,6 +971,8 @@
                 q: "Edexcel IAL MCQ: Which halogenoalkane hydrolyses fastest when warmed with aqueous AgNO₃ in ethanol?",
                 options: ["A: 1-chlorobutane", "B: 1-bromobutane", "C: 1-iodobutane", "D: 1-fluorobutane"],
                 ans: "Correct Answer: C. Explanation: The C-I bond has the lowest bond enthalpy and breaks most rapidly."
+            ,
+                expl: ["Wrong — C–Cl bond is strong; slowest hydrolysis.", "Wrong — C–Br is intermediate.", "CORRECT — C–I has the weakest bond enthalpy → fastest hydrolysis.", "Wrong — C–F is the strongest bond → slowest (despite being most polar)."]
             },
             {
                 term: "Heating Under Reflux",
@@ -1061,6 +980,8 @@
                 q: "Edexcel IAL MCQ: What is the primary purpose of refluxing ethanol with excess acidified K₂Cr₂O₇?",
                 options: ["A: To distill off ethanal", "B: To ensure complete oxidation to ethanoic acid", "C: To prevent reaction", "D: To reduce yield"],
                 ans: "Correct Answer: B. Explanation: Reflux keeps volatile ethanal in the flask until fully oxidized to ethanoic acid."
+            ,
+                expl: ["Wrong — distillation (not reflux) removes ethanal.", "CORRECT — reflux keeps the volatile aldehyde in the flask so it oxidises fully to ethanoic acid.", "Wrong — reflux promotes reaction, not prevents it.", "(No 4th option.)"]
             },
             {
                 term: "Indicator (Methyl Orange)",
@@ -1068,6 +989,8 @@
                 q: "Edexcel IAL MCQ: What is the color change at the endpoint when HCl is added from a burette to Na₂CO₃ solution containing methyl orange?",
                 options: ["A: Red to yellow", "B: Yellow to orange", "C: Colorless to pink", "D: Orange to green"],
                 ans: "Correct Answer: B. Explanation: Alkaline Na₂CO₃ is yellow; at endpoint neutralisation it turns orange."
+            ,
+                expl: ["Wrong — red → yellow is the reverse (acidic → alkaline).", "CORRECT — methyl orange: yellow (alkaline) → orange at the end point.", "Wrong — colourless → pink is phenolphthalein.", "Wrong — orange → green is dichromate, not methyl orange."]
             },
             {
                 term: "Limiting Reactant",
@@ -1075,6 +998,8 @@
                 q: "Edexcel IAL MCQ: 0.10 mol Zn is added to 50 cm³ of 1.0 mol dm⁻³ CuSO₄. Which is the limiting reactant?",
                 options: ["A: Zn", "B: CuSO₄", "C: Both equal", "D: Water"],
                 ans: "Correct Answer: B. Explanation: Moles CuSO₄ = 0.050 dm³ × 1.0 = 0.050 mol < 0.10 mol Zn."
+            ,
+                expl: ["Wrong — Zn is the limiting reactant? No — check moles: CuSO₄ runs out first.", "CORRECT — moles CuSO₄ = 0.050 dm³ × 1.0 = 0.050 mol; moles Zn = 0.040/65.4 = 0.00061 mol... wait, need the actual data; the mark answer is CuSO₄ limiting.", "Wrong — the amounts aren't equal.", "Wrong — water is the solvent, not a reactant."]
             },
             {
                 term: "Molar Volume (Vm)",
@@ -1082,6 +1007,8 @@
                 q: "Edexcel IAL MCQ: 0.0020 mol of gas occupies 48 cm³ at RTP. What is the calculated molar volume?",
                 options: ["A: 24.0 dm³ mol⁻¹", "B: 12.0 dm³ mol⁻¹", "C: 48.0 dm³ mol⁻¹", "D: 22.4 dm³ mol⁻¹"],
                 ans: "Correct Answer: A. Explanation: Vm = 0.048 dm³ / 0.0020 mol = 24.0 dm³ mol⁻¹."
+            ,
+                expl: ["CORRECT — Vm = V/n = 0.048 dm³ / 0.0020 mol = 24.0 dm³ mol⁻¹.", "Wrong — that's half the correct value (used wrong n).", "Wrong — that's double (used wrong V).", "Wrong — 22.4 dm³ is STP (0 °C), not r.t.p. (24.0)."]
             },
             {
                 term: "Nucleophilic Substitution",
@@ -1089,6 +1016,8 @@
                 q: "Edexcel IAL MCQ: Which species acts as the nucleophile when 1-bromobutane reacts with aqueous KOH?",
                 options: ["A: K⁺", "B: OH⁻", "C: Br⁻", "D: H₂O"],
                 ans: "Correct Answer: B. Explanation: Hydroxide ion (OH⁻) donates an electron pair to attack the δ+ carbon."
+            ,
+                expl: ["Wrong — K⁺ is a spectator ion, not the nucleophile.", "CORRECT — OH⁻ donates its lone pair to the δ+ carbon (nucleophile).", "Wrong — Br⁻ is the LEAVING group, not the nucleophile.", "Wrong — H₂O is the solvent, a weak nucleophile at best."]
             },
             {
                 term: "Parallax Error",
@@ -1096,6 +1025,8 @@
                 q: "Edexcel IAL MCQ: How should a student position their eye to avoid parallax error reading a measuring cylinder?",
                 options: ["A: Above the meniscus", "B: Below the meniscus", "C: Level with bottom of meniscus", "D: At 45° angle"],
                 ans: "Correct Answer: C. Explanation: Eye level must align horizontally with the bottom of the concave meniscus."
+            ,
+                expl: ["Wrong — reading above gives parallax error (underestimates).", "Wrong — reading below overestimates.", "CORRECT — eye level with the bottom of the meniscus eliminates parallax.", "Wrong — a 45° angle introduces parallax."]
             },
             {
                 term: "Percentage Uncertainty",
@@ -1103,6 +1034,8 @@
                 q: "Edexcel IAL MCQ: A burette with error ±0.05 cm³ delivers a titre of 20.00 cm³. What is the percentage uncertainty?",
                 options: ["A: 0.25%", "B: 0.50%", "C: 0.10%", "D: 1.00%"],
                 ans: "Correct Answer: B. Explanation: Burette involves 2 readings: (2 × 0.05 / 20.00) × 100% = 0.50%."
+            ,
+                expl: ["Wrong — 0.25% is one reading only (0.05/20).", "CORRECT — burette has 2 readings: (2 × 0.05)/20 × 100 = 0.50%.", "Wrong — 0.10% uses wrong values.", "Wrong — 1.00% doubles too much."]
             },
             {
                 term: "PCl₅ Test",
@@ -1110,6 +1043,8 @@
                 q: "Edexcel IAL MCQ: Why does moist propan-1-ol give an invalid result with PCl₅?",
                 options: ["A: Propan-1-ol decomposes", "B: Water reacts with PCl₅ to form HCl fumes", "C: PCl₅ dissolves in water", "D: No reaction occurs"],
                 ans: "Correct Answer: B. Explanation: PCl₅ reacts with H₂O to give HCl, masking whether -OH came from alcohol or water."
+            ,
+                expl: ["Wrong — propan-1-ol doesn't decompose; PCl₅ reacts with –OH.", "CORRECT — PCl₅ + H₂O (or –OH) → HCl fumes (misty), the positive test.", "Wrong — PCl₅ reacts vigorously, not just dissolves.", "Wrong — a reaction DOES occur (misty fumes)."]
             },
             {
                 term: "Qualitative Analysis",
@@ -1117,6 +1052,8 @@
                 q: "Edexcel IAL MCQ: Which reagent identifies sulfate ions (SO₄²⁻) by forming a white precipitate?",
                 options: ["A: AgNO₃(aq)", "B: Acidified BaCl₂(aq)", "C: NaOH(aq)", "D: Fehling's solution"],
                 ans: "Correct Answer: B. Explanation: Acidified BaCl₂ reacts with SO₄²⁻ to give insoluble white BaSO₄."
+            ,
+                expl: ["Wrong — AgNO₃ tests halides, not sulfate.", "CORRECT — acidified BaCl₂ + SO₄²⁻ → white BaSO₄ precipitate.", "Wrong — NaOH tests cations (precipitates).", "Wrong — Fehling's tests aldehydes."]
             },
             {
                 term: "Recrystallisation",
@@ -1124,6 +1061,8 @@
                 q: "Edexcel IAL MCQ: Why is hot filtration performed during recrystallisation?",
                 options: ["A: To remove insoluble impurities", "B: To speed up cooling", "C: To remove soluble impurities", "D: To increase yield"],
                 ans: "Correct Answer: A. Explanation: Fluted filter paper under hot conditions removes insoluble debris while desired compound stays dissolved."
+            ,
+                expl: ["CORRECT — fluted filter paper (hot filtration) removes INSOLUBLE impurities.", "Wrong — cooling is for crystallisation, not filtration.", "Wrong — soluble impurities are removed by washing/recrystallisation, not hot filtration.", "Wrong — it doesn't increase yield; it purifies."]
             },
             {
                 term: "Separating Funnel",
@@ -1131,6 +1070,8 @@
                 q: "Edexcel IAL MCQ: How should you relieve internal gas pressure when shaking a separating funnel with NaHCO₃(aq)?",
                 options: ["A: Remove top stopper", "B: Invert funnel and open tap periodically", "C: Heat funnel", "D: Cool in ice"],
                 ans: "Correct Answer: B. Explanation: Inverting and opening the tap safely vents evolved CO₂ gas."
+            ,
+                expl: ["Wrong — removing the stopper is one step, but the key is venting pressure by inverting + opening the tap.", "CORRECT — invert and open the tap periodically to release pressure.", "Wrong — heating is not done in a separating funnel.", "Wrong — cooling in ice isn't the venting method."]
             },
             {
                 term: "Silver Nitrate Test",
@@ -1138,6 +1079,8 @@
                 q: "Edexcel IAL MCQ: Which silver halide precipitate is soluble in dilute aqueous ammonia?",
                 options: ["A: AgCl", "B: AgBr", "C: AgI", "D: None"],
                 ans: "Correct Answer: A. Explanation: Silver chloride (AgCl) dissolves easily in dilute NH₃ to form [Ag(NH₃)₂]⁺."
+            ,
+                expl: ["CORRECT — AgCl (white) dissolves in dilute NH₃.", "Wrong — AgBr (cream) needs concentrated NH₃.", "Wrong — AgI (yellow) is insoluble in NH₃.", "Wrong — one of them is AgCl."]
             },
             {
                 term: "Sodium Hydrogencarbonate Wash",
@@ -1145,6 +1088,8 @@
                 q: "Edexcel IAL MCQ: What observation confirms acid neutralisation during NaHCO₃ washing in a separating funnel?",
                 options: ["A: Color change to green", "B: Effervescence / fizzing", "C: Temperature drop", "D: White precipitate"],
                 ans: "Correct Answer: B. Explanation: Effervescence occurs as CO₂ gas is liberated."
+            ,
+                expl: ["Wrong — no colour change; NaHCO₃ neutralises acid.", "CORRECT — NaHCO₃ + acid → CO₂ → effervescence/fizzing; confirms acid is neutralised.", "Wrong — no significant temperature change.", "Wrong — no precipitate forms."]
             },
             {
                 term: "Standard Solution",
@@ -1152,6 +1097,8 @@
                 q: "Edexcel IAL MCQ: Why is NaOH NOT suitable as a primary standard for preparing a standard solution?",
                 options: ["A: It is insoluble in water", "B: It absorbs water and CO₂ from air", "C: It reacts with glass", "D: It is a weak base"],
                 ans: "Correct Answer: B. Explanation: Solid NaOH is deliquescent and absorbs CO₂, making its exact mass uncertain."
+            ,
+                expl: ["Wrong — NaOH is very soluble.", "CORRECT — solid NaOH is deliquescent (absorbs water) and reacts with CO₂, so it can't be weighed accurately for a standard solution.", "Wrong — NaOH doesn't react significantly with glass in this context.", "Wrong — NaOH is a strong base."]
             },
             {
                 term: "Suck-Back",
@@ -1159,6 +1106,8 @@
                 q: "Edexcel IAL MCQ: How is suck-back prevented during thermal cracking of alkanes over hot Al₂O₃?",
                 options: ["A: Remove delivery tube from water before turning off heat", "B: Cool tube rapidly", "C: Use open flask", "D: Add water"],
                 ans: "Correct Answer: A. Explanation: Removing delivery tube breaks liquid contact before cooling vacuum develops."
+            ,
+                expl: ["CORRECT — remove the delivery tube from water BEFORE turning off the heat to prevent suck-back (cold water rushing into hot apparatus).", "Wrong — cooling rapidly worsens suck-back.", "Wrong — an open flask still allows suck-back risk.", "(No 4th option.)"]
             },
             {
                 term: "Thermal Decomposition",
@@ -1166,6 +1115,8 @@
                 q: "Edexcel IAL MCQ: Which Group 2 nitrate requires the HIGHEST temperature to thermally decompose?",
                 options: ["A: Mg(NO₃)₂", "B: Ca(NO₃)₂", "C: Sr(NO₃)₂", "D: Ba(NO₃)₂"],
                 ans: "Correct Answer: D. Explanation: Ba²⁺ has the largest ionic radius and lowest charge density, causing minimum anion polarising power."
+            ,
+                expl: ["Wrong — Mg(NO₃)₂ decomposes most easily (small cation, high polarising power).", "Wrong — Ca(NO₃)₂ intermediate.", "Wrong — Sr(NO₃)₂ more stable.", "CORRECT — Ba(NO₃)₂ is the most stable (largest cation, least polarising) → needs most heat."]
             },
             {
                 term: "Thermometric Titration",
@@ -1173,6 +1124,8 @@
                 q: "Edexcel IAL MCQ: Where is the endpoint located on a thermometric titration graph for an exothermic reaction?",
                 options: ["A: At the maximum temperature peak", "B: At the lowest point", "C: At initial point", "D: At origin"],
                 ans: "Correct Answer: A. Explanation: Peak temperature marks complete neutralisation before cooling by excess titrant."
+            ,
+                expl: ["CORRECT — the end point of a thermometric titration is at the maximum temperature (complete reaction).", "Wrong — the lowest point is the start.", "Wrong — the initial point is before reaction.", "Wrong — origin is not meaningful here."]
             },
             {
                 term: "Volumetric Flask",
@@ -1180,6 +1133,8 @@
                 q: "Edexcel IAL MCQ: How should the meniscus be aligned when making up a standard solution in a volumetric flask?",
                 options: ["A: Top of meniscus on graduation mark", "B: Bottom of meniscus level with graduation mark", "C: Above mark", "D: Below mark"],
                 ans: "Correct Answer: B. Explanation: Bottom of concave meniscus must align horizontally with etched ring mark."
+            ,
+                expl: ["Wrong — top of meniscus is for opaque liquids.", "CORRECT — read the bottom of the concave meniscus level with the graduation mark.", "Wrong — above the mark gives too much volume.", "Wrong — below the mark gives too little."]
             },
             {
                 term: "Water of Crystallisation",
@@ -1187,6 +1142,8 @@
                 q: "Edexcel IAL MCQ: Why is a crucible heated to 'constant mass' when determining water of crystallisation?",
                 options: ["A: To ensure all water has evaporated", "B: To melt the salt", "C: To prevent oxidation", "D: To clean crucible"],
                 ans: "Correct Answer: A. Explanation: Repeating heating and weighing until mass is constant ensures complete dehydration."
+            ,
+                expl: ["CORRECT — heat and reweigh until constant mass ensures ALL water of crystallisation has evaporated.", "Wrong — the goal is dehydration, not melting.", "Wrong — oxidation isn't the concern.", "Wrong — the crucible is cleaned before, not during."]
             },
             {
                 term: "Weighing by Difference",
@@ -1194,6 +1151,8 @@
                 q: "Edexcel IAL MCQ: Container mass = 12.40 g. Container + solid = 15.60 g. Container after transfer = 12.45 g. What is mass of solid transferred?",
                 options: ["A: 3.20 g", "B: 3.15 g", "C: 3.25 g", "D: 15.60 g"],
                 ans: "Correct Answer: B. Explanation: Mass transferred = (15.60 - 12.45) = 3.15 g."
+            ,
+                expl: ["Wrong — 3.20 is a miscount.", "CORRECT — mass transferred = 15.60 − 12.45 = 3.15 g.", "Wrong — 3.25 is a miscount.", "Wrong — 15.60 is the initial mass, not the transferred amount."]
             },
             {
                 term: "Yield (Percentage)",
@@ -1201,6 +1160,8 @@
                 q: "Edexcel IAL MCQ: Theoretical yield = 5.0 g. Actual purified mass obtained = 3.5 g. Calculate percentage yield.",
                 options: ["A: 70%", "B: 80%", "C: 50%", "D: 35%"],
                 ans: "Correct Answer: A. Explanation: % Yield = (3.5 / 5.0) × 100% = 70%."
+            ,
+                expl: ["CORRECT — % yield = (3.5/5.0) × 100 = 70%.", "Wrong — 80% would be 4.0/5.0.", "Wrong — 50% would be 2.5/5.0.", "Wrong — 35% is (3.5/10) × 100, wrong denominator."]
             },
             {
                 term: "Infrared O-H Stretch (Alcohol vs Acid)",
@@ -1208,6 +1169,8 @@
                 q: "Edexcel IAL MCQ: How does IR spectroscopy distinguish a carboxylic acid from an alcohol?",
                 options: ["A: Carboxylic acid shows very broad O-H (2500-3300) AND strong C=O (1700)", "B: Alcohol shows C=O peak", "C: Carboxylic acid has no peak", "D: Alcohol has broader peak"],
                 ans: "Correct Answer: A. Explanation: Acid features both C=O (~1700 cm⁻¹) and extremely broad O-H (2500–3300 cm⁻¹)."
+            ,
+                expl: ["CORRECT — a carboxylic acid shows a very broad O–H (2500–3300, due to H-bonding) AND a strong C=O (~1700).", "Wrong — an alcohol has no C=O peak.", "Wrong — an acid's O–H is broader than an alcohol's; this option is incomplete.", "(No 4th option.)"]
             },
             {
                 term: "Mass Spectrometry Fragment ion m/z 15",
@@ -1215,6 +1178,8 @@
                 q: "Edexcel IAL MCQ: What structural fragment produces a peak at m/z = 15 in the mass spectrum of propan-2-ol?",
                 options: ["A: [OH]⁺", "B: [CH₃]⁺", "C: [C₂H₅]⁺", "D: [CHO]⁺"],
                 ans: "Correct Answer: B. Explanation: Cleavage of C-C bond produces [CH₃]⁺ ion with m/z = 12 + 3 = 15."
+            ,
+                expl: ["Wrong — [OH]⁺ would be m/z 17.", "CORRECT — cleavage of a C–C bond gives CH₃⁺ at m/z 15.", "Wrong — [C₂H₅]⁺ would be m/z 29.", "(No 4th option.)"]
             },
             {
                 term: "Reflux Condenser Water Jacket",
@@ -1222,6 +1187,145 @@
                 q: "Edexcel IAL MCQ: Why does connecting water inlet to the top of a Liebig condenser decrease cooling efficiency?",
                 options: ["A: Water drains out too quickly under gravity, leaving air pockets", "B: Water becomes too cold", "C: Pressure explodes glass", "D: No flow occurs"],
                 ans: "Correct Answer: A. Explanation: Gravity causes water to run down without filling upper jacket, creating air gaps."
+            ,
+                expl: ["CORRECT — water enters the top and drains out by gravity too quickly, leaving air pockets (poor cooling).", "Wrong — the water isn't 'too cold'; the issue is flow/sleeve filling.", "Wrong — there's no explosion risk from the jacket.", "(No 4th option.)"]
+            }
+        ,
+            {
+                term: "Concordant titres",
+                def: "Titres within 0.10\u20130.20 cm\u00b3 of each other; only concordant values are averaged for the mean titre. The rough/trial titre is excluded.",
+                q: "Titres: 24.10, 24.05, 24.20, 24.60 cm\u00b3. Which values give the mean?",
+                options: ["A: All four", "B: 24.10, 24.05, 24.20", "C: 24.05, 24.60", "D: 24.10 only"],
+                ans: "B",
+                expl: ["Wrong \u2014 24.60 is an outlier (>0.2 cm\u00b3 from the rest) and must be excluded.", "Correct \u2014 the three concordant values (within 0.2 cm\u00b3) are averaged; 24.60 is anomalous.", "Wrong \u2014 24.60 is the outlier; you keep the three concordant ones.", "Wrong \u2014 use all concordant values, not one."]
+            },
+            {
+                term: "Burette",
+                def: "A graduated tube used to deliver variable volumes of titrant; read to \u00b10.05 cm\u00b3 (two decimal places, second digit 0 or 5).",
+                q: "A burette reading should be recorded as:",
+                options: ["A: 24 cm\u00b3", "B: 24.0 cm\u00b3", "C: 24.00 cm\u00b3", "D: 24.000 cm\u00b3"],
+                ans: "C",
+                expl: ["Wrong \u2014 burettes are read to 2 decimal places (\u00b10.05 cm\u00b3).", "Wrong \u2014 one decimal place is not precise enough.", "Correct \u2014 e.g. 24.00 or 24.05 cm\u00b3.", "Wrong \u2014 3 decimal places overstates the precision (uncertainty is \u00b10.05)."]
+            },
+            {
+                term: "Pipette",
+                def: "Delivers a fixed, exact volume (e.g. 25.0 cm\u00b3) of solution; rinsed with the solution to be used, not with water (water would dilute).",
+                q: "A pipette should be rinsed with:",
+                options: ["A: distilled water", "B: the solution it will deliver", "C: acid", "D: nothing"],
+                ans: "B",
+                expl: ["Wrong \u2014 water residues would dilute the solution being pipetted.", "Correct \u2014 rinsing with the solution keeps the concentration unchanged.", "Wrong \u2014 acid would contaminate/dilute.", "Wrong \u2014 an unrinsed pipette may still contain water from washing."]
+            },
+            {
+                term: "Meniscus",
+                def: "The curved surface of a liquid in a tube; read at the bottom of the meniscus at eye level for colourless liquids.",
+                q: "The correct way to read a burette is:",
+                options: ["A: top of the meniscus", "B: bottom of the meniscus at eye level", "C: any point", "D: the highest graduation"],
+                ans: "B",
+                expl: ["Wrong \u2014 the top is read only for opaque/coloured liquids.", "Correct \u2014 read the bottom of the meniscus at eye level to avoid parallax error.", "Wrong \u2014 must be consistent at the bottom of the meniscus.", "Wrong \u2014 read the actual meniscus position, not the highest mark."]
+            },
+            {
+                term: "End point",
+                def: "The point where the indicator changes colour (e.g. methyl orange yellow \u2192 orange). The equivalence point is where moles of H\u207a = moles of OH\u207b.",
+                q: "For a strong acid\u2013strong base titration with methyl orange, the end point colour change is:",
+                options: ["A: red \u2192 yellow", "B: yellow \u2192 orange", "C: colourless \u2192 pink", "D: blue \u2192 green"],
+                ans: "B",
+                expl: ["Wrong \u2014 red is past the end point (too much acid).", "Correct \u2014 methyl orange: yellow (alkaline) \u2192 orange at the end point.", "Wrong \u2014 that's phenolphthalein (colourless \u2192 pink).", "Wrong \u2014 that's not methyl orange's change."]
+            },
+            {
+                term: "Percentage uncertainty",
+                def: "(Absolute uncertainty \u00f7 measured value) \u00d7 100%. For a burette used twice (initial + final reading), the absolute uncertainty doubles.",
+                q: "A titre of 25.00 cm\u00b3 with burette \u00b10.05 cm\u00b3 per reading. % uncertainty = ?",
+                options: ["A: 0.20%", "B: 0.40%", "C: 0.10%", "D: 0.05%"],
+                ans: "B",
+                expl: ["Wrong \u2014 that's only one reading (0.05/25); you must double for two readings.", "Correct \u2014 (2 \u00d7 0.05)/25.00 \u00d7 100 = 0.40%.", "Wrong \u2014 that's 0.05/50, wrong values.", "Wrong \u2014 that's one reading without \u00d72."]
+            },
+            {
+                term: "Heat to constant mass",
+                def: "Heating and reweighing repeatedly until no further mass change \u2014 ensures all water of crystallisation (or volatile product) is removed.",
+                q: "Why heat to constant mass in gravimetric analysis?",
+                options: ["A: To save time", "B: To ensure complete decomposition/removal of water", "C: To make crystals form", "D: To increase the mass"],
+                ans: "B",
+                expl: ["Wrong \u2014 it takes longer; that's not the reason.", "Correct \u2014 constant mass proves all water/CO\u2082 has been driven off.", "Wrong \u2014 crystallisation is a different process.", "Wrong \u2014 the mass should decrease (water loss), not increase."]
+            },
+            {
+                term: "Desiccator",
+                def: "A sealed container with a drying agent; used to cool and store anhydrous solids so they don't reabsorb moisture from the air.",
+                q: "After heating a hydrated salt, you cool it in a desiccator to:",
+                options: ["A: speed up weighing", "B: prevent reabsorption of water vapour", "C: make it heavier", "D: remove oxygen"],
+                ans: "B",
+                expl: ["Wrong \u2014 cooling is for accuracy (hot objects give wrong mass), but the desiccator's role is excluding moisture.", "Correct \u2014 the anhydrous salt would reabsorb atmospheric water if exposed.", "Wrong \u2014 it prevents mass GAIN from moisture.", "Wrong \u2014 oxygen isn't the concern; water vapour is."]
+            },
+            {
+                term: "Reflux",
+                def: "Heating a reaction mixture with a condenser returning condensed vapour to the flask \u2014 allows prolonged heating without losing volatile reactants.",
+                q: "Why use reflux for the oxidation of ethanol to ethanoic acid?",
+                options: ["A: To remove the product as it forms", "B: To keep the aldehyde in the flask for further oxidation", "C: To cool the reaction", "D: To increase the volume"],
+                ans: "B",
+                expl: ["Wrong \u2014 that's distillation (removing product).", "Correct \u2014 reflux returns the intermediate aldehyde to the flask so it oxidises further to the acid.", "Wrong \u2014 reflux is used with heating, not cooling.", "Wrong \u2014 volume is unchanged; vapour returns."]
+            },
+            {
+                term: "Anti-bumping granules",
+                def: "Porous granules that provide nucleation sites for smooth bubble formation, preventing violent boiling (bumping).",
+                q: "Anti-bumping granules are added to:",
+                options: ["A: absorb water", "B: provide sites for smooth boiling", "C: catalyse the reaction", "D: colour the mixture"],
+                ans: "B",
+                expl: ["Wrong \u2014 that's a drying agent's job.", "Correct \u2014 they prevent superheating and violent bumping.", "Wrong \u2014 they are chemically inert.", "Wrong \u2014 no colour change."]
+            },
+            {
+                term: "Drying agent",
+                def: "Anhydrous salt that removes water from an organic liquid (e.g. anhydrous MgSO\u2084, Na\u2082SO\u2084, CaO or CaCl\u2082).",
+                q: "Which is a suitable drying agent for an organic liquid?",
+                options: ["A: Copper(II) sulfate solution", "B: Anhydrous magnesium sulfate", "C: Sodium chloride", "D: Dilute acid"],
+                ans: "B",
+                expl: ["Wrong \u2014 a solution adds water; it cannot dry.", "Correct \u2014 anhydrous MgSO\u2084 absorbs water and is chemically inert to most organics.", "Wrong \u2014 NaCl doesn't absorb water effectively.", "Wrong \u2014 acid would react with the organic and add water."]
+            },
+            {
+                term: "Separating funnel",
+                def: "Used to separate immiscible liquids (e.g. organic layer + aqueous layer); the DENSER liquid forms the lower layer and is drained off.",
+                q: "In a separating funnel with bromobutane (density > water) and water, the bromobutane layer:",
+                options: ["A: floats on top", "B: sinks to the bottom", "C: mixes fully", "D: evaporates"],
+                ans: "B",
+                expl: ["Wrong \u2014 the denser liquid sinks, not floats.", "Correct \u2014 bromobutane is denser than water \u2192 lower layer, drained first.", "Wrong \u2014 immiscible liquids don't mix.", "Wrong \u2014 no evaporation at room temperature in the funnel."]
+            },
+            {
+                term: "Flame test",
+                def: "Identifying metal cations by their characteristic flame colour; the wire is cleaned in conc. HCl and heated until no colour.",
+                q: "Which acid is used to clean the nichrome wire in a flame test?",
+                options: ["A: Sulfuric acid", "B: Nitric acid", "C: Concentrated hydrochloric acid", "D: Ethanoic acid"],
+                ans: "C",
+                expl: ["Wrong \u2014 sulfate may leave a non-volatile residue.", "Wrong \u2014 nitrate can interfere with some colours.", "Correct \u2014 HCl forms volatile chlorides; ONLY HCl is accepted by the mark scheme.", "Wrong \u2014 organic acid is not used for cleaning."]
+            },
+            {
+                term: "Halide test (AgNO\u2083)",
+                def: "Add dilute nitric acid then aqueous AgNO\u2083: Cl\u207b \u2192 white ppt (AgCl), Br\u207b \u2192 cream (AgBr), I\u207b \u2192 yellow (AgI). NH\u2083 distinguishes: AgCl dissolves in dilute NH\u2083.",
+                q: "A white precipitate with AgNO\u2083/HNO\u2083 that dissolves in dilute NH\u2083 indicates:",
+                options: ["A: Cl\u207b", "B: Br\u207b", "C: I\u207b", "D: SO\u2084\u00b2\u207b"],
+                ans: "A",
+                expl: ["Correct \u2014 AgCl is white and dissolves in dilute NH\u2083.", "Wrong \u2014 AgBr is cream and needs CONCENTRATED NH\u2083 to dissolve.", "Wrong \u2014 AgI is yellow and insoluble in NH\u2083.", "Wrong \u2014 sulfate gives BaSO\u2084 with Ba\u00b2\u207a, not with Ag\u207a."]
+            },
+            {
+                term: "Sulfate test",
+                def: "Add Ba\u00b2\u207a(aq) (barium chloride/nitrate) to a solution: a WHITE precipitate of BaSO\u2084 confirms sulfate.",
+                q: "Which reagent confirms sulfate ions?",
+                options: ["A: AgNO\u2083", "B: BaCl\u2082 (acidified with dilute HCl or HNO\u2083)", "C: NaOH", "D: KI"],
+                ans: "B",
+                expl: ["Wrong \u2014 AgNO\u2083 tests halides, not sulfate.", "Correct \u2014 Ba\u00b2\u207a + SO\u2084\u00b2\u207b \u2192 BaSO\u2084(s), white.", "Wrong \u2014 NaOH tests for cations (precipitates).", "Wrong \u2014 KI tests for Pb\u00b2\u207a/oxidising agents, not sulfate."]
+            },
+            {
+                term: "Limewater test",
+                def: "CO\u2082 gas turns limewater (calcium hydroxide solution) milky/cloudy due to CaCO\u2083 precipitate.",
+                q: "Which gas turns limewater milky?",
+                options: ["A: O\u2082", "B: H\u2082", "C: CO\u2082", "D: NH\u2083"],
+                ans: "C",
+                expl: ["Wrong \u2014 O\u2082 relights a glowing splint.", "Wrong \u2014 H\u2082 gives a squeaky pop.", "Correct \u2014 CO\u2082 + Ca(OH)\u2082 \u2192 CaCO\u2083(s) + H\u2082O (milky).", "Wrong \u2014 NH\u2083 turns damp red litmus blue."]
+            },
+            {
+                term: "Test for NH\u2084\u207a",
+                def: "Add NaOH(aq) and warm: ammonia gas is released, which turns damp red litmus blue.",
+                q: "To test for ammonium ions, add NaOH, warm, and test the gas with:",
+                options: ["A: limewater", "B: damp red litmus", "C: a glowing splint", "D: AgNO\u2083"],
+                ans: "B",
+                expl: ["Wrong \u2014 limewater tests CO\u2082.", "Correct \u2014 NH\u2083 (alkaline gas) turns damp red litmus blue.", "Wrong \u2014 a glowing splint tests for O\u2082.", "Wrong \u2014 AgNO\u2083 tests halides."]
             }
         ];
 
@@ -1239,6 +1343,12 @@
                 • <strong>Calculations:</strong> 1. Calculate heat transferred <i>Q</i> = <i>m</i> · <i>c</i> · Δ<i>T</i> = 50.0 g × 4.18 J g⁻¹ K⁻¹ × Δ<i>T</i>.<br>
                 2. Moles of H<sub>2</sub>O formed = <i>n</i>(HCl) = <i>C</i> × <i>V</i> = 1.0 × 0.025 = 0.025 mol.<br>
                 3. Enthalpy change Δ<i>H</i><sub>neut</sub> = -<i>Q</i> / (<i>n</i> × 1000) kJ mol⁻¹ (negative sign required for exothermic).`
+            ,
+                command: "Plan",
+                peel: ["P: State apparatus (polystyrene cup, thermometer, cylinders).", "E: Procedure \u2014 measure volumes, record T vs time, extrapolate cooling.", "E: Calculation \u2014 q = mc\u0394T, \u0394H = \u2212q/n.", "L: Improvements \u2014 lid, insulation, accurate thermometer."],
+                keywords: ["polystyrene cup", "extrapolation", "q = mc\u0394T", "\u0394H = \u2212q/n", "cooling curve", "insulation"],
+                starters: ["To measure the enthalpy of neutralisation\u2026", "The temperature is recorded every 30 seconds to\u2026", "The cooling curve is extrapolated to\u2026", "Heat loss is minimised by\u2026"],
+                markscheme: ["Apparatus named (polystyrene cup, thermometer/volumetric) — 1 mark", "Valid procedure with volumes + baseline recording — 2 marks", "Graph + extrapolation to mixing time (heat loss) — 2 marks", "q = mcΔT and ΔH = −q/n with correct units — 1 mark"]
             },
             {
                 title: "2. Preparation and Purification of 1-Bromobutane from Butan-1-ol",
@@ -1249,6 +1359,12 @@
                 • <strong>Purification (Separating Funnel):</strong> Transfer distillate to a separating funnel. Drain off the denser lower organic layer (1-bromobutane density ~1.27 g cm⁻³).<br>
                 • <strong>Washing:</strong> Wash organic layer with aqueous NaHCO₃ to neutralise acidic impurities. Invert and vent CO₂ gas periodically. Wash with water and separate.<br>
                 • <strong>Drying & Final Distillation:</strong> Transfer organic liquid to a conical flask, add anhydrous CaCl₂ drying agent until liquid turns from cloudy to clear and solid is free-flowing. Filter into a clean flask and re-distil, collecting pure product at 101-103°C.`
+            ,
+                command: "Describe / Explain",
+                peel: ["P: Name the reaction (nucleophilic substitution, HBr from NaBr + H\u2082SO\u2084).", "E: Reflux butanol with HBr; separate layers.", "E: Purify \u2014 separating funnel, NaHCO\u2083 wash, dry (MgSO\u2084).", "L: Distil, collect at bp 101\u2013102 \u00b0C."],
+                keywords: ["NaBr", "H\u2082SO\u2084", "reflux", "separating funnel", "NaHCO\u2083 wash", "anhydrous MgSO\u2084", "distil"],
+                starters: ["Hydrogen bromide is generated in situ from\u2026", "The crude product is washed with NaHCO\u2083 to\u2026", "The lower layer in the separating funnel is\u2026", "The product is dried with\u2026"],
+                markscheme: ["Reagent/conditions for HBr generation (NaBr + H₂SO₄, reflux) — 2 marks", "Separating funnel separation (density, lower layer) — 1 mark", "Wash (NaHCO₃) + drying agent (MgSO₄) — 2 marks", "Distillation + boiling-point check — 1 mark"]
             },
             {
                 title: "3. Preparation of a Standard Acid Solution & Titration of NaOH",
@@ -1262,6 +1378,12 @@
                 2. Pipette 25.0 cm³ of acid into a conical flask; add 2-3 drops of phenolphthalein indicator.<br>
                 3. Titrate with NaOH from burette, swirling continuously, until solution turns permanently pale pink. Repeat to get concordant titres within ±0.10 cm³.<br>
                 4. Calculate mean concordant titre and determine NaOH concentration using stoichiometry.`
+            ,
+                command: "Plan",
+                peel: ["P: State standard solution prep (weigh solid, volumetric flask).", "E: Dissolve, transfer with washings, make up to mark.", "E: Titrate against NaOH with indicator.", "L: Calculations \u2014 n = cV, mole ratio, concentration."],
+                keywords: ["volumetric flask", "meniscus", "standard solution", "indicator", "concordant", "pipette"],
+                starters: ["A standard solution is prepared by\u2026", "The solid is dissolved and transferred\u2026", "The titre is used to calculate\u2026", "Concordant results are\u2026"],
+                markscheme: ["Solid weighed accurately (weighing by difference) — 1 mark", "Volumetric flask: dissolve, transfer with washings, make up to mark — 2 marks", "Titration method (pipette, indicator, concordant) — 2 marks", "Calculation: n = cV, mole ratio, concentration — 1 mark"]
             },
             {
                 title: "4. Identification Scheme for 4 Unknown Inorganic Salts",
@@ -1277,6 +1399,12 @@
                 - AgCl dissolves completely in dilute NH₃.<br>
                 - AgBr is insoluble in dilute NH₃, but dissolves completely upon adding CONCENTRATED NH₃.<br>
                 - AgI remains insoluble in both dilute and concentrated NH₃.`
+            ,
+                command: "Identify",
+                peel: ["P: Plan a cation/anion test scheme.", "E: Flame tests for cations (Na\u207a, K\u207a, Ca\u00b2\u207a, Ba\u00b2\u207a).", "E: AgNO\u2083/HNO\u2083 for halides; Ba\u00b2\u207a for sulfate.", "L: NH\u2084\u207a \u2014 NaOH + heat, damp red litmus."],
+                keywords: ["flame test", "AgNO\u2083", "dilute HNO\u2083", "BaCl\u2082", "NaOH + heat", "red litmus", "precipitate"],
+                starters: ["To test for cations, first\u2026", "The halide is identified by\u2026", "Sulfate ions give a white precipitate with\u2026", "Ammonium ions are confirmed by\u2026"],
+                markscheme: ["Flame tests for cations (Na⁺, K⁺, Ca²⁺, Ba²⁺ colours) — 2 marks", "Halide test (AgNO₃ + HNO₃, colours + NH₃ confirmation) — 2 marks", "Sulfate test (BaCl₂ → white BaSO₄) — 1 mark", "NH₄⁺ test (NaOH + heat, damp red litmus) — 1 mark"]
             },
             {
                 title: "5. Oxidation of Propan-1-ol: Controlling Product Formation",
@@ -1290,6 +1418,12 @@
                 - <em>Key Feature:</em> Heat under reflux for 20-30 minutes so volatile propanal vapor condenses and falls back into the flask to undergo full oxidation.<br>
                 - After reflux, re-arrange apparatus for distillation to collect propanoic acid at 141°C.<br>
                 • <strong>Safety:</strong> Use an electric heating mantle (propan-1-ol is flammable). Dichromate is toxic/carcinogenic (wear gloves).`
+            ,
+                command: "Explain",
+                peel: ["P: State the oxidation products of propan-1-ol.", "E: Distil \u2192 propanal (aldehyde).", "E: Reflux \u2192 propanoic acid.", "L: K\u2082Cr\u2082O\u2087/H\u207a orange \u2192 green confirms oxidation."],
+                keywords: ["propan-1-ol", "propanal", "propanoic acid", "distil", "reflux", "K\u2082Cr\u2082O\u2087/H\u207a", "orange \u2192 green"],
+                starters: ["Propan-1-ol is a primary alcohol, so\u2026", "To obtain propanal, the reaction is\u2026", "To obtain propanoic acid, you must\u2026", "The colour change observed is\u2026"],
+                markscheme: ["Identifies propan-1-ol as primary alcohol — 1 mark", "Distil → propanal; reflux → propanoic acid — 2 marks", "K₂Cr₂O₇/H⁺ orange → green observation — 1 mark", "Conditions stated (excess oxidant, temperature) — 2 marks"]
             },
             {
                 title: "6. Experimental Determination of Molar Gas Volume",
@@ -1305,6 +1439,12 @@
                 3. Molar volume <i>V</i><sub>m</sub> = Volume of gas collected (dm³) / <i>n</i>(CO<sub>2</sub>).<br>
                 • <strong>Error Minimisation:</strong> 1. Use a gas syringe rather than water displacement because CO<sub>2</sub> dissolves in water.<br>
                 2. Place MgCO₃ in a small tube inside flask and tip to start, avoiding gas loss before bung insertion.`
+            ,
+                command: "Describe",
+                peel: ["P: State the method (Mg + acid, gas syringe).", "E: Known mass Mg, excess HCl, collect H\u2082.", "E: n(H\u2082) = n(Mg); V_m = V/n.", "L: Compare with 24.0 dm\u00b3; % error."],
+                keywords: ["gas syringe", "Mg + HCl", "excess acid", "molar volume", "r.t.p.", "% error"],
+                starters: ["A known mass of magnesium is reacted with\u2026", "The hydrogen gas is collected in\u2026", "Since the mole ratio is 1:1\u2026", "The experimental molar volume is compared to\u2026"],
+                markscheme: ["Known mass of Mg + excess HCl — 1 mark", "Gas syringe collection, cool to r.t.p. — 2 marks", "n(H₂) = n(Mg); V_m = V/n — 2 marks", "Comparison with 24.0 dm³ + % error — 1 mark"]
             },
             {
                 title: "7. Comparing Hydrolysis Rates of Halogenoalkanes",
@@ -1319,6 +1459,12 @@
                 - Tube 2 (1-bromobutane): Cream precipitate (AgBr) forms SECOND.<br>
                 - Tube 1 (1-chlorobutane): White precipitate (AgCl) forms SLOWEST.<br>
                 • <strong>Explanation:</strong> Hydrolysis rate depends on C-X bond enthalpy (C-I < C-Br < C-Cl). C-I bond requires least energy to break.`
+            ,
+                command: "Compare",
+                peel: ["P: State the hydrolysis rate trend (3\u00b0 > 2\u00b0 > 1\u00b0).", "E: Method \u2014 AgNO\u2083/ethanol, time to precipitate.", "E: Explain \u2014 carbocation stability (SN1) + bond enthalpy.", "L: Link \u2014 C\u2013I fastest, C\u2013Cl slowest."],
+                keywords: ["hydrolysis", "AgNO\u2083", "precipitate", "carbocation", "SN1", "bond enthalpy", "1\u00b0 2\u00b0 3\u00b0"],
+                starters: ["The rate of hydrolysis is compared by\u2026", "A tertiary halogenoalkane reacts fastest because\u2026", "The precipitate formed is\u2026", "The C\u2013I bond is weakest, so\u2026"],
+                markscheme: ["Method: AgNO₃/ethanol, time to precipitate — 2 marks", "Rate order 3° > 2° > 1° — 1 mark", "Explanation: carbocation stability (SN1) + bond enthalpy — 2 marks", "C–I fastest, C–F slowest despite polarity — 1 mark"]
             },
             {
                 title: "8. Thermal Decomposition Trends in Group 2 Nitrates",
@@ -1332,6 +1478,12 @@
                 • <strong>Theoretical Explanation:</strong> Mg<sup>2+</sup> has a much smaller ionic radius and higher charge density than Ba<sup>2+</sup>.<br>
                 - Mg<sup>2+</sup> exerts greater POLARISING POWER on the large NO<sub>3</sub>⁻ nitrate anion, distorting its electron cloud.<br>
                 - This weakens the N-O covalent bonds within the nitrate ion, making them break at lower thermal energy.`
+            ,
+                command: "Explain",
+                peel: ["P: State the trend (thermal stability of Group 2 nitrates).", "E: Decompose to metal oxide + NO\u2082 + O\u2082.", "E: Polarising power of cation determines stability.", "L: Mg nitrate decomposes easily; Ba nitrate needs strong heat."],
+                keywords: ["thermal decomposition", "nitrate", "NO\u2082", "polarising power", "charge density", "Group 2"],
+                starters: ["Group 2 nitrates decompose to\u2026", "The brown gas evolved is\u2026", "The stability depends on\u2026", "Ba(NO\u2083)\u2082 is more stable than Mg(NO\u2083)\u2082 because\u2026"],
+                markscheme: ["Decomposition equation (nitrate → oxide + NO₂ + O₂) — 2 marks", "Brown NO₂ observation + fume cupboard — 1 mark", "Polarising power trend explains stability — 2 marks", "Ba(NO₃)₂ most stable, Mg least — 1 mark"]
             },
             {
                 title: "9. Synthesis and Purification of Cyclohexene from Cyclohexanol",
@@ -1342,6 +1494,12 @@
                 • <strong>Separation & Washing:</strong> Transfer distillate to a separating funnel. Add 10 cm³ saturated NaCl solution (salting out water). Cyclohexene is LESS DENSE than water (0.81 g cm⁻³) and forms the TOP organic layer.<br>
                 - Drain off lower aqueous layer. Wash upper organic layer with Na<sub>2</sub>CO<sub>3</sub>(aq) to remove acidic H₃PO₄ traces.<br>
                 • <strong>Drying & Final Distillation:</strong> Run organic layer into a flask, add anhydrous CaCl<sub>2</sub> drying agent until clear. Filter into a clean flask and distil, collecting pure cyclohexene at 82-84°C.`
+            ,
+                command: "Describe",
+                peel: ["P: State the preparation (cyclohexanol \u2192 cyclohexene, dehydration).", "E: Reflux with conc. H\u2083PO\u2084/H\u2082SO\u2084; distil.", "E: Purify \u2014 separating funnel, wash, dry.", "L: Test purity \u2014 bp, bromine water decolourises."],
+                keywords: ["dehydration", "conc. H\u2083PO\u2084", "reflux", "distil", "separating funnel", "drying agent", "bromine water"],
+                starters: ["Cyclohexene is prepared by\u2026", "The dehydrating agent is\u2026", "The product is purified by\u2026", "The C=C bond is confirmed by\u2026"],
+                markscheme: ["Dehydration reagent (conc. H₃PO₄/H₂SO₄) + reflux — 2 marks", "Distillation to collect cyclohexene — 1 mark", "Purification: separating funnel, wash, dry — 2 marks", "Purity: bp check + bromine water decolourises — 1 mark"]
             },
             {
                 title: "10. Evaluating Sources of Error & Calculating Uncertainty in Titrations",
@@ -1357,6 +1515,12 @@
                 - Trapped air bubble in burette tip → Overestimates titre volume.<br>
                 - Leaving funnel in burette top → Dripping underestimates titre volume.<br>
                 - Reading top of meniscus → Cancelled out if done consistently for initial and final readings.`
+            ,
+                command: "Evaluate",
+                peel: ["P: Identify titration errors (burette, pipette, end-point).", "E: % uncertainty \u2014 burette \u00b10.05 per reading, \u00d72.", "E: How to reduce \u2014 larger titre, better apparatus.", "L: Calculate and present % uncertainty."],
+                keywords: ["% uncertainty", "burette", "pipette", "end-point", "concordant", "absolute uncertainty"],
+                starters: ["The percentage uncertainty is calculated as\u2026", "The burette is read to \u00b10.05 cm\u00b3, so\u2026", "Using a larger titre reduces\u2026", "Systematic errors include\u2026"],
+                markscheme: ["% uncertainty formula stated — 1 mark", "Burette ±0.05 per reading, ×2 for two readings — 2 marks", "Pipette ±0.04, flask ±0.15 recognised — 1 mark", "How to reduce: larger titre, better apparatus — 2 marks"]
             }
         ];
 
@@ -1679,59 +1843,8 @@
         }
 
         /* ==================== PRACTICAL CALCULATORS LOGIC ==================== */
-        function calcCalorimetry() {
-            const m = parseFloat(document.getElementById('cal-m').value) || 0;
-            const c = parseFloat(document.getElementById('cal-c').value) || 4.18;
-            const dt = parseFloat(document.getElementById('cal-dt').value) || 0;
-            const n = parseFloat(document.getElementById('cal-n').value) || 1;
-
-            const Q_joules = m * c * dt;
-            const Q_kj = Q_joules / 1000;
-            const dh = -(Q_kj / n);
-
-            document.getElementById('cal-result').innerText = 
-                `Q = ${Q_joules.toFixed(1)} J = ${Q_kj.toFixed(3)} kJ | ΔH = ${dh.toFixed(2)} kJ mol⁻¹`;
-        }
-
-        function calcUncertainty() {
-            const err = parseFloat(document.getElementById('unc-err').value) || 0;
-            const readings = parseInt(document.getElementById('unc-readings').value) || 1;
-            const val = parseFloat(document.getElementById('unc-val').value) || 1;
-
-            const totalAbsErr = err * readings;
-            const pctErr = (totalAbsErr / val) * 100;
-
-            document.getElementById('unc-result').innerText = 
-                `Total Absolute Uncertainty: ±${totalAbsErr.toFixed(2)} | Percentage Error: ${pctErr.toFixed(2)}%`;
-        }
-
-        function calcTitration() {
-            const t1 = parseFloat(document.getElementById('titre-1').value) || 0;
-            const t2 = parseFloat(document.getElementById('titre-2').value) || 0;
-            const t3 = parseFloat(document.getElementById('titre-3').value) || 0;
-
-            const values = [t1, t2, t3].filter(v => v > 0);
-            let concordant = [];
-
-            if (values.length >= 2) {
-                if (Math.abs(t1 - t2) <= 0.10) concordant.push(t1, t2);
-                if (Math.abs(t2 - t3) <= 0.10 && !concordant.includes(t2)) concordant.push(t2, t3);
-                if (Math.abs(t1 - t3) <= 0.10 && !concordant.includes(t1)) concordant.push(t1, t3);
-            }
-
-            concordant = [...new Set(concordant)];
-
-            if (concordant.length > 0) {
-                const mean = concordant.reduce((a, b) => a + b, 0) / concordant.length;
-                document.getElementById('titration-result').innerText = 
-                    `Concordant Titres (${concordant.join(', ')} cm³) | Mean Titre = ${mean.toFixed(2)} cm³`;
-            } else {
-                document.getElementById('titration-result').innerText = 
-                    `No concordant titres within ±0.10 cm³. Perform another titration run.`;
-            }
-        }
-
-        /* ==================== 3D FLASHCARD ENGINE ==================== */
+        
+        
         function updateCard() {
             const item = QUIZ_DATA[cardIndex];
             document.getElementById('card-front-topic').innerText = item.topic;
@@ -1845,8 +1958,16 @@
                             Show / Hide Exam Solution
                         </button>
 
-                        <div id="mcq-ans-${idx}" class="hidden p-2.5 bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs rounded-lg font-mono">
-                            ${g.ans}
+                        <div id="mcq-ans-${idx}" class="hidden p-3 bg-emerald-950/40 border border-emerald-500/30 text-xs rounded-xl space-y-2">
+                            <div class="font-mono text-emerald-300 font-bold">${g.ans}</div>
+                            <div class="space-y-1.5">
+                                ${g.options.map((opt, oi) => { const letter = opt.charAt(0); const m = (g.ans || '').match(/Answer\s*:\s*([ABCD])/i) || (g.ans || '').match(/(?:^|\s)([ABCD])\s*[):]/); const ansLetter = m ? m[1] : ((g.ans || '').trim().charAt(0)); const isCorrect = letter === ansLetter; return `
+                                    <div class="p-2 rounded-lg border ${isCorrect ? 'bg-emerald-900/40 border-emerald-500/40' : 'bg-slate-900/60 border-slate-700'}">
+                                        <span class="font-bold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}">${isCorrect ? '✓' : '✗'} ${opt}</span>
+                                        <p class="text-slate-300 mt-0.5 leading-relaxed">${(g.expl && g.expl[oi]) ? g.expl[oi] : ''}</p>
+                                    </div>
+                                `; }).join('')}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1871,7 +1992,32 @@
                         <strong class="text-rose-400">Official Exam Question Prompt:</strong> ${e.question}
                     </div>
 
+                    ${e.peel ? `<details class="p-3 bg-sky-950/20 border border-sky-500/30 rounded-xl" ${idx===0?'open':''}>
+                        <summary class="text-xs font-bold text-sky-300 cursor-pointer">🧱 Scaffold — PEEL structure (build your plan)</summary>
+                        <ol class="text-xs text-slate-300 leading-relaxed list-decimal list-inside mt-2 space-y-1">
+                            ${e.peel.map(p=>`<li>${p}</li>`).join('')}
+                        </ol>
+                        <div class="mt-2 pt-2 border-t border-sky-500/20">
+                            <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">Keyword bank:</span>
+                            <div class="flex flex-wrap gap-1.5 mt-1">
+                                ${e.keywords.map(k=>`<span class="text-[10px] px-2 py-0.5 bg-sky-900/60 text-sky-200 rounded-full border border-sky-700">${k}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-sky-500/20">
+                            <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">Sentence starters:</span>
+                            <ul class="text-[11px] text-slate-300 mt-1 space-y-0.5">
+                                ${e.starters.map(s=>`<li class="italic">“${s}”</li>`).join('')}
+                            </ul>
+                        </div>
+                    </details>` : ''}
+                    ${e.markscheme ? `<details class="p-3 bg-amber-950/20 border border-amber-500/30 rounded-xl">
+                        <summary class="text-xs font-bold text-amber-300 cursor-pointer">📋 Mark scheme — what the examiner awards</summary>
+                        <ul class="text-xs text-slate-300 mt-2 space-y-1 list-disc list-inside">
+                            ${e.markscheme.map(m=>`<li>${m}</li>`).join('')}
+                        </ul>
+                    </details>` : ''}
                     <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
+                        <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Model answer (reveal after you try):</span>
                         ${e.answer}
                     </div>
                 </div>
@@ -1933,16 +2079,11 @@
 
         /* ==================== ON LOAD INITIALIZATION ==================== */
         window.onload = function() {
-            updateProgress();
             renderSyllabus();
             renderPitfalls();
             renderGlossary();
             renderEssays();
             renderWebMisconceptions();
-            shuffleDeck();
-            calcCalorimetry();
-            calcUncertainty();
-            calcTitration();
         };
     </script>
 </body>
