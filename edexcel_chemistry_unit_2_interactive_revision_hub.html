@@ -75,14 +75,12 @@
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white">
                     Pitfalls Vault (10)
                 </button>
-                <button onclick="switchTab('calculators')" id="tab-calculators" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white">
-                    Calculators (4)
-                </button>
+                
                 <button onclick="switchTab('flashcards')" id="tab-flashcards" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white">
                     3D Flashcards (50)
                 </button>
                 <button onclick="switchTab('glossary')" id="tab-glossary" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white">
-                    Glossary & MCQs (35)
+                    Glossary & MCQs (59)
                 </button>
                 <button onclick="switchTab('essays')" id="tab-essays" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white">
                     6-Mark Essays (10)
@@ -134,124 +132,6 @@
         </section>
 
         <!-- TAB 3: CALCULATORS -->
-        <section id="view-calculators" class="hidden space-y-8">
-            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/50">
-                <h2 class="text-xl font-bold text-white">Interactive Unit 2 Chemistry Solvers</h2>
-                <p class="text-sm text-slate-400">Perform calculations and verify your working with step-by-step Edexcel standard formulas.</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Calc 1: Q = mcΔT -->
-                <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700 shadow-xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                        <h3 class="font-bold text-indigo-400 flex items-center gap-2">
-                            <span>🔥</span> Calorimetry: Q = mcΔT & ΔH
-                        </h3>
-                        <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">Core Practical 2</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-400 mb-1">Water Mass (g or cm³)</label>
-                            <input type="number" id="calc1-m" value="100" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 mb-1">Specific Heat (J g⁻¹ K⁻¹)</label>
-                            <input type="number" id="calc1-c" value="4.18" step="0.01" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 mb-1">Temp Change ΔT (°C or K)</label>
-                            <input type="number" id="calc1-dt" value="12.5" step="0.1" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 mb-1">Moles Reacted (mol)</label>
-                            <input type="number" id="calc1-n" value="0.025" step="0.001" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                    </div>
-                    <button onclick="computeCalorimetry()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg text-xs font-bold transition">Calculate Heat & Enthalpy</button>
-                    <div id="calc1-output" class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/80 text-xs font-mono text-cyan-300">
-                        Results will appear here...
-                    </div>
-                </div>
-
-                <!-- Calc 2: Hess Law / Bond Enthalpy -->
-                <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700 shadow-xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                        <h3 class="font-bold text-amber-400 flex items-center gap-2">
-                            <span>⚖️</span> Hess's Law / Bond Enthalpies
-                        </h3>
-                        <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">Topic 6</span>
-                    </div>
-                    <div class="space-y-3 text-xs">
-                        <div>
-                            <label class="block text-slate-400 mb-1">Sum of Bonds Broken (Reactants) - kJ mol⁻¹</label>
-                            <input type="number" id="calc2-broken" value="2648" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 mb-1">Sum of Bonds Formed (Products) - kJ mol⁻¹</label>
-                            <input type="number" id="calc2-formed" value="3470" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                    </div>
-                    <button onclick="computeHess()" class="w-full bg-amber-600 hover:bg-amber-500 text-white py-2 rounded-lg text-xs font-bold transition">Calculate ΔH = Σ(Broken) - Σ(Formed)</button>
-                    <div id="calc2-output" class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/80 text-xs font-mono text-amber-300">
-                        Results will appear here...
-                    </div>
-                </div>
-
-                <!-- Calc 3: Reaction Rate 1/t -->
-                <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700 shadow-xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                        <h3 class="font-bold text-emerald-400 flex items-center gap-2">
-                            <span>⏱️</span> Reaction Kinetics: Initial Rate (1/t)
-                        </h3>
-                        <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">Topic 9</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-400 mb-1">Reaction Time t (seconds)</label>
-                            <input type="number" id="calc3-time" value="45" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 mb-1">Volume change ΔV (cm³)</label>
-                            <input type="number" id="calc3-vol" value="25" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                    </div>
-                    <button onclick="computeRates()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg text-xs font-bold transition">Calculate Rate (s⁻¹ & cm³ s⁻¹)</button>
-                    <div id="calc3-output" class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/80 text-xs font-mono text-emerald-300">
-                        Results will appear here...
-                    </div>
-                </div>
-
-                <!-- Calc 4: Apparatus Percentage Uncertainty -->
-                <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700 shadow-xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-700 pb-3">
-                        <h3 class="font-bold text-rose-400 flex items-center gap-2">
-                            <span>🎯</span> Experimental % Uncertainty
-                        </h3>
-                        <span class="text-xs bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded">Core Practical Skills</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-400 mb-1">Equipment Margin Error (±)</label>
-                            <input type="number" id="calc4-err" value="0.05" step="0.01" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                        <div>
-                            <label class="block text-slate-400 mb-1">No. of Readings Taken</label>
-                            <input type="number" id="calc4-readings" value="2" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-slate-400 mb-1">Measured Value (e.g. Titre cm³)</label>
-                            <input type="number" id="calc4-val" value="23.50" step="0.1" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
-                        </div>
-                    </div>
-                    <button onclick="computeUncertainty()" class="w-full bg-rose-600 hover:bg-rose-500 text-white py-2 rounded-lg text-xs font-bold transition">Calculate % Uncertainty</button>
-                    <div id="calc4-output" class="bg-slate-900/80 p-3 rounded-lg border border-slate-700/80 text-xs font-mono text-rose-300">
-                        Results will appear here...
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 4: 3D FLASHCARDS -->
         <section id="view-flashcards" class="hidden space-y-6">
             <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -483,41 +363,479 @@
 
         /* ==================== 3. GLOSSARY DATA (35 TERMS WITH PAST PAPER MCQS) ==================== */
         const GLOSSARY_DATA = [
-            { term: "Enthalpy Change (ΔH)", def: "Heat energy change measured under constant pressure conditions.", q: "Which reaction has a negative enthalpy change? A) Thermal decomposition B) Combustion C) Ionisation D) Bond breaking", ans: "Correct Answer: B) Combustion (always exothermic, ΔH < 0)." },
-            { term: "Standard Enthalpy of Formation (ΔfH°)", def: "Enthalpy change when 1 mole of a compound is formed from its constituent elements in standard states under standard conditions.", q: "Which equation represents standard enthalpy of formation of water? A) H2(g) + 1/2 O2(g) -> H2O(l) B) 2H2(g) + O2(g) -> 2H2O(l) C) H+(aq) + OH-(aq) -> H2O(l)", ans: "Correct Answer: A) Forms exactly 1 mole of liquid water from standard state elements." },
-            { term: "Standard Enthalpy of Combustion (ΔcH°)", def: "Enthalpy change when 1 mole of a substance burns completely in excess oxygen under standard conditions.", q: "Standard enthalpy of combustion of carbon forms: A) CO(g) B) CO2(g) C) C(s) D) CO32-(aq)", ans: "Correct Answer: B) CO2(g) (complete combustion product)." },
-            { term: "Hess's Law", def: "The total enthalpy change of a chemical reaction is independent of the route taken, provided initial and final conditions are identical.", q: "If Route 1 = A -> B (ΔH1) and Route 2 = A -> C -> B (ΔH2 + ΔH3), then: A) ΔH1 = ΔH2 + ΔH3 B) ΔH1 = ΔH2 - ΔH3 C) ΔH1 = -ΔH2 - ΔH3", ans: "Correct Answer: A) ΔH1 = ΔH2 + ΔH3 by Hess's Law." },
-            { term: "Mean Bond Enthalpy", def: "Energy required to break 1 mole of a specified covalent bond in the gas phase, averaged over a wide range of compounds.", q: "Why do calculated bond enthalpy ΔH values differ from experimental calorimetry? A) Bond enthalpies apply to gaseous state B) Calorimetry is 100% efficient C) Bond enthalpies vary with pressure", ans: "Correct Answer: A) Bond enthalpies are gaseous averages." },
-            { term: "London Forces", def: "Temporary dipole-induced dipole attractive forces present between all atoms and molecules.", q: "Which molecule has the strongest London forces? A) CH4 B) C2H6 C) C4H10 D) C8H18", ans: "Correct Answer: D) C8H18 (largest electron count and surface area)." },
-            { term: "Hydrogen Bond", def: "Strong intermolecular force between an electron-deficient δ+ H atom bonded to N, O, or F and a lone pair on an adjacent N, O, or F atom.", q: "Which compound exhibits hydrogen bonding between its molecules? A) CH3OCH3 B) CH3CH2OH C) CH3CHO D) CH3Cl", ans: "Correct Answer: B) Ethanol contains an O-H group." },
-            { term: "Electronegativity", def: "The relative ability of an atom in a covalent bond to attract the bonding pair of electrons toward itself.", q: "Which element is the most electronegative? A) Oxygen B) Fluorine C) Chlorine D) Nitrogen", ans: "Correct Answer: B) Fluorine (value 4.0 on Pauling scale)." },
-            { term: "Oxidation Number", def: "A number assigned to an atom in a compound representing the hypothetical charge it would have if all bonds were purely ionic.", q: "What is the oxidation number of sulfur in Na2SO3? A) +2 B) +4 C) +6 D) -2", ans: "Correct Answer: B) +4 (2(+1) + S + 3(-2) = 0 => S = +4)." },
-            { term: "Disproportionation", def: "A redox reaction in which an element in a single species is simultaneously oxidised and reduced.", q: "In Cl2 + 2NaOH -> NaCl + NaClO + H2O, chlorine oxidation states change from: A) 0 to -1 and +1 B) 0 to -1 and +5 C) +1 to -1 and 0", ans: "Correct Answer: A) 0 to -1 (reduced) and +1 (oxidised)." },
-            { term: "Oxidising Agent", def: "A substance that accepts electrons from another species and is itself reduced in the process.", q: "In 2I- + Cl2 -> I2 + 2Cl-, the oxidising agent is: A) I- B) Cl2 C) I2 D) Cl-", ans: "Correct Answer: B) Cl2 (gains electrons, reduced to Cl-)." },
-            { term: "Reducing Agent", def: "A substance that donates electrons to another species and is itself oxidised in the process.", q: "Which halide ion is the strongest reducing agent? A) F- B) Cl- C) Br- D) I-", ans: "Correct Answer: D) I- (largest radius, loses valence e- easiest)." },
-            { term: "Thermal Stability", def: "A measure of the resistance of a compound to decomposition when subjected to heating.", q: "Which Group 2 carbonate requires the highest temperature to decompose? A) MgCO3 B) CaCO3 C) SrCO3 D) BaCO3", ans: "Correct Answer: D) BaCO3 (largest cation, lowest polarising power)." },
-            { term: "Polarising Power", def: "The ability of a cation to attract electron density from an adjacent anion and distort its electron cloud.", q: "Which cation has the highest polarising power? A) Na+ B) Mg2+ C) Ca2+ D) K+", ans: "Correct Answer: B) Mg2+ (small ionic radius, high +2 charge)." },
-            { term: "Activation Energy (Ea)", def: "The minimum kinetic energy required by colliding particles for a collision to result in a chemical reaction.", q: "Adding a catalyst to a reaction: A) Lowers Ea B) Increases Ea C) Increases ΔH D) Decreases ΔH", ans: "Correct Answer: A) Provides alternative pathway with lower Ea." },
-            { term: "Maxwell-Boltzmann Distribution", def: "A statistical distribution showing the spread of kinetic energies among gaseous particles at a specific temperature.", q: "Increasing temperature causes the Maxwell-Boltzmann peak to: A) Shift right and higher B) Shift right and lower C) Shift left and lower", ans: "Correct Answer: B) Shift right and lower (broader distribution)." },
-            { term: "Dynamic Equilibrium", def: "A state in a closed system where the rates of forward and backward reactions are equal and concentrations remain constant.", q: "At dynamic equilibrium: A) Reactant conc = Product conc B) Reaction stops C) Forward rate = Backward rate", ans: "Correct Answer: C) Forward rate = Backward rate." },
-            { term: "Le Chatelier's Principle", def: "If a system at equilibrium is subjected to a change in conditions, the position of equilibrium shifts to counteract that change.", q: "For N2 + 3H2 <=> 2NH3 (exo), increasing temperature shifts equilibrium: A) Right B) Left C) No change", ans: "Correct Answer: B) Left (endothermic direction to absorb heat)." },
-            { term: "Nucleophile", def: "An electron-pair donor containing a lone pair of electrons or a negative charge that attacks electron-deficient Cδ+ centers.", q: "Which species acts as a nucleophile? A) H+ B) :NH3 C) AlCl3 D) NO2+", ans: "Correct Answer: B) :NH3 has a lone pair of electrons to donate." },
-            { term: "Electrophile", def: "An electron-pair acceptor that is attracted to regions of high electron density (such as C=C double bonds).", q: "Which species acts as an electrophile in alkene additions? A) OH- B) Br2 (or Brδ+) C) NH3 D) CN-", ans: "Correct Answer: B) Br2 (accepts electron pair from π bond)." },
-            { term: "Hydrolysis", def: "A chemical reaction where water or aqueous hydroxide ions break chemical bonds in a molecule.", q: "Hydrolysis of 1-bromopropane with aqueous KOH produces: A) Propene B) Propan-1-ol C) Propanal D) Propanoic acid", ans: "Correct Answer: B) Propan-1-ol via nucleophilic substitution." },
-            { term: "Elimination Reaction", def: "A reaction in which a small molecule (like HCl or H2O) is removed from a parent molecule, forming a C=C double bond.", q: "Reacting 2-bromobutane with ethanolic KOH produces: A) Butan-2-ol B) But-2-ene C) Butanal D) Butanoic acid", ans: "Correct Answer: B) But-2-ene via elimination." },
-            { term: "Primary Halogenoalkane", def: "A halogenoalkane where the halogen atom is attached to a carbon atom bonded to only one other carbon atom (or none).", q: "Which is a primary halogenoalkane? A) 1-chlorobutane B) 2-chlorobutane C) 2-chloro-2-methylpropane", ans: "Correct Answer: A) 1-chlorobutane (1 R group on C-Cl)." },
-            { term: "Tertiary Halogenoalkane", def: "A halogenoalkane where the halogen atom is attached to a carbon atom bonded to three other carbon atoms.", q: "Tertiary halogenoalkanes hydrolyse predominantly via: A) SN1 mechanism B) SN2 mechanism C) Free radical mechanism", ans: "Correct Answer: A) SN1 mechanism via stable 3° carbocation." },
-            { term: "Primary Alcohol", def: "An alcohol in which the -OH group is attached to a carbon atom bonded to only one other carbon atom (or none).", q: "Oxidation of propan-1-ol under distillation yields: A) Propanal B) Propanoic acid C) Propanone D) Propene", ans: "Correct Answer: A) Propanal (aldehyde distilled off)." },
-            { term: "Secondary Alcohol", def: "An alcohol in which the -OH group is attached to a carbon atom bonded to two other carbon atoms.", q: "Oxidation of propan-2-ol under reflux yields: A) Propanal B) Propanoic acid C) Propanone D) No reaction", ans: "Correct Answer: C) Propanone (ketone)." },
-            { term: "Tertiary Alcohol", def: "An alcohol in which the -OH group is attached to a carbon atom bonded to three other carbon atoms.", q: "Refluxing 2-methylpropan-2-ol with K2Cr2O7/H2SO4 results in: A) Green solution B) Orange solution remains C) Effervescence", ans: "Correct Answer: B) Orange solution remains (3° alcohols resist oxidation)." },
-            { term: "Reflux", def: "A laboratory technique involving continuous boiling and condensation of a reaction mixture to prevent loss of volatile reactants.", q: "Reflux is used in organic synthesis to: A) Distill off products B) Heat volatile liquids without loss C) Separate immiscible layers", ans: "Correct Answer: B) Heat volatile liquids without loss." },
-            { term: "Distillation", def: "A purification process that separates components of a liquid mixture based on differences in their boiling points.", q: "Distillation of a primary alcohol oxidation mixture isolates: A) Carboxylic acid B) Aldehyde C) Ketone D) Alkene", ans: "Correct Answer: B) Aldehyde (lower boiling point than acid)." },
-            { term: "Drying Agent", def: "An anhydrous inorganic salt (e.g. Na2SO4, MgSO4) added to an organic liquid to absorb residual water traces.", q: "An organic liquid is fully dry when the added drying agent: A) Dissolves completely B) Clumps together C) Remains free-flowing and solution turns clear", ans: "Correct Answer: C) Remains free-flowing and clear." },
-            { term: "Molecular Ion Peak (M+)", def: "The peak in a mass spectrum corresponding to the unfragmented ionized molecule, giving its relative molecular mass Mr.", q: "The M+ peak of propan-1-ol (C3H8O) appears at m/z: A) 44 B) 58 C) 60 D) 31", ans: "Correct Answer: C) 60 (3x12 + 8x1 + 16 = 60)." },
-            { term: "Fragmentation Pattern", def: "The array of smaller m/z peaks in a mass spectrum produced when the molecular ion breaks into smaller ionic fragments.", q: "A strong peak at m/z = 15 in a mass spectrum represents: A) CH3+ B) OH+ C) C2H5+ D) CHO+", ans: "Correct Answer: A) CH3+ fragment (12 + 3 = 15)." },
-            { term: "Infrared Spectroscopy", def: "An analytical technique identifying functional groups based on characteristic vibrational absorption frequencies of covalent bonds.", q: "A broad IR absorption peak between 3200-3600 cm⁻¹ indicates: A) C=O bond B) C-H bond C) O-H bond in alcohol D) C=C bond", ans: "Correct Answer: C) O-H bond in alcohol." },
-            { term: "Wavenumber", def: "The spatial frequency of infrared radiation measured in reciprocal centimeters (cm⁻¹), proportional to energy.", q: "Which bond absorbs IR radiation at ~1700 cm⁻¹? A) O-H B) C=O C) C-H D) C-C", ans: "Correct Answer: B) C=O carbonyl group stretch." },
-            { term: "Fingerprint Region", def: "The complex region of an IR spectrum below 1500 cm⁻¹ unique to a specific molecule, used for definitive identification by database comparison.", q: "The IR fingerprint region is located below: A) 4000 cm⁻¹ B) 3000 cm⁻¹ C) 2000 cm⁻¹ D) 1500 cm⁻¹", ans: "Correct Answer: D) 1500 cm⁻¹." }
+            {
+                term: "Enthalpy Change (ΔH)",
+                def: "Heat energy change measured under constant pressure conditions.",
+                q: "Which reaction has a negative enthalpy change?",
+                options: ["A) Thermal decomposition", "B) Combustion", "C) Ionisation", "D) Bond breaking"],
+                ans: "Correct Answer: B) Combustion (always exothermic, ΔH < 0).",
+                expl: ["Thermal decomposition is usually endothermic (absorbs heat), so ΔH is positive, not negative.", "CORRECT — combustion always releases heat (exothermic), so ΔH is negative.", "Ionisation absorbs energy (removing electrons), so ΔH is positive.", "Bond breaking absorbs energy (endothermic), so ΔH is positive."]
+            },
+            {
+                term: "Standard Enthalpy of Formation (ΔfH°)",
+                def: "Enthalpy change when 1 mole of a compound is formed from its constituent elements in standard states under standard conditions.",
+                q: "Which equation represents standard enthalpy of formation of water?",
+                options: ["A) H₂(g) + 1/2 O₂(g) -> H₂O(l)", "B) 2H₂(g) + O₂(g) -> 2H₂O(l)", "C) H+(aq) + OH-(aq) -> H₂O(l)"],
+                ans: "Correct Answer: A) Forms exactly 1 mole of liquid water from standard state elements.",
+                expl: ["CORRECT — 1 mole of H₂O(l) forms from its elements in standard states (H₂(g), O₂(g)).", "Wrong — this forms 2 moles of H₂O, so it's 2×ΔHf°, not ΔHf°.", "Wrong — this is neutralisation (H⁺ + OH⁻), not formation from elements.", "Wrong — water is not formed from H₂O₂; this isn't a formation reaction."]
+            },
+            {
+                term: "Standard Enthalpy of Combustion (ΔcH°)",
+                def: "Enthalpy change when 1 mole of a substance burns completely in excess oxygen under standard conditions.",
+                q: "Standard enthalpy of combustion of carbon forms:",
+                options: ["A) CO(g)", "B) CO₂(g)", "C) C(s)", "D) CO₃²⁻(aq)"],
+                ans: "Correct Answer: B) CO₂(g) (complete combustion product).",
+                expl: ["Wrong — CO is incomplete combustion; ΔHc requires complete combustion to CO₂.", "CORRECT — complete combustion of carbon gives CO₂(g).", "Wrong — C(s) is the reactant, not the product.", "Wrong — CO₃²⁻ is not a combustion product of carbon."]
+            },
+            {
+                term: "Hess's Law",
+                def: "The total enthalpy change of a chemical reaction is independent of the route taken, provided initial and final conditions are identical.",
+                q: "If Route 1 = A -> B (ΔH₁) and Route 2 = A -> C -> B (ΔH₂ + ΔH₃), then:",
+                options: ["A) ΔH₁ = ΔH₂ + ΔH₃", "B) ΔH₁ = ΔH₂ - ΔH₃", "C) ΔH₁ = -ΔH₂ - ΔH₃"],
+                ans: "Correct Answer: A) ΔH₁ = ΔH₂ + ΔH₃ by Hess's Law.",
+                expl: ["CORRECT — Hess's Law: the enthalpy change is independent of route, so ΔH₁ = ΔH₂ + ΔH₃.", "Wrong — this would imply a different net route; the two routes must give the same overall ΔH.", "Wrong — the sign is wrong; both routes go A → B, so ΔH₁ = ΔH₂ + ΔH₃ (positive sum)."]
+            },
+            {
+                term: "Mean Bond Enthalpy",
+                def: "Energy required to break 1 mole of a specified covalent bond in the gas phase, averaged over a wide range of compounds.",
+                q: "Why do calculated bond enthalpy ΔH values differ from experimental calorimetry?",
+                options: ["A) Bond enthalpies apply to gaseous state", "B) Calorimetry is 100% efficient", "C) Bond enthalpies vary with pressure"],
+                ans: "Correct Answer: A) Bond enthalpies are gaseous averages.",
+                expl: ["Wrong — bond enthalpies being for gases is a CAUSE of difference, but the question asks why calculated ≠ experimental; the answer is the averaged/gaseous nature.", "Wrong — calorimetry isn't inherently 'incorrect'; the difference is because bond enthalpies are MEAN values averaged over many compounds, not the exact bonds in one molecule.", "CORRECT — mean bond enthalpies are averages over many different compounds, so they differ from the exact experimental value for a specific molecule.", "Wrong — this is not the reason; the key is the 'mean/averaged' nature of tabulated bond enthalpies."]
+            },
+            {
+                term: "London Forces",
+                def: "Temporary dipole-induced dipole attractive forces present between all atoms and molecules.",
+                q: "Which molecule has the strongest London forces?",
+                options: ["A) CH₄", "B) C₂H₆", "C) C₄H₁₀", "D) C₈H₁₈"],
+                ans: "Correct Answer: D) C₈H₁₈ (largest electron count and surface area).",
+                expl: ["Wrong — CH₄ has the fewest electrons, so the weakest London forces.", "Wrong — C₂H₆ has more electrons than CH₄ but fewer than C₄H₁₀/C₈H₁₈.", "Wrong — C₄H₁₀ has strong London forces but C₈H₁₈ has more electrons.", "CORRECT — C₈H₁₈ has the most electrons and largest surface area → strongest London forces."]
+            },
+            {
+                term: "Hydrogen Bond",
+                def: "Strong intermolecular force between an electron-deficient δ+ H atom bonded to N, O, or F and a lone pair on an adjacent N, O, or F atom.",
+                q: "Which compound exhibits hydrogen bonding between its molecules?",
+                options: ["A) CH₃OCH₃", "B) CH₃CH₂OH", "C) CH₃CHO", "D) CH₃Cl"],
+                ans: "Correct Answer: B) Ethanol contains an O-H group.",
+                expl: ["Wrong — CH₃OCH₃ has O but no O–H bond; H is bonded to C, so no H-bonding between its molecules.", "CORRECT — CH₃CH₂OH has an O–H bond; the δ+ H bonds to a lone pair on another molecule's O.", "Wrong — CH₃CHO has C=O but no O–H bond; H is on C, so no H-bonding.", "Wrong — CH₃Cl has no N/O/F with a lone pair capable of H-bonding."]
+            },
+            {
+                term: "Electronegativity",
+                def: "The relative ability of an atom in a covalent bond to attract the bonding pair of electrons toward itself.",
+                q: "Which element is the most electronegative?",
+                options: ["A) Oxygen", "B) Fluorine", "C) Chlorine", "D) Nitrogen"],
+                ans: "Correct Answer: B) Fluorine (value 4.0 on Pauling scale).",
+                expl: ["Wrong — O (3.5) is electronegative but less than F.", "CORRECT — F (4.0) is the most electronegative element.", "Wrong — Cl (3.0) is less electronegative than F.", "Wrong — N (3.0) is less electronegative than F."]
+            },
+            {
+                term: "Oxidation Number",
+                def: "A number assigned to an atom in a compound representing the hypothetical charge it would have if all bonds were purely ionic.",
+                q: "What is the oxidation number of sulfur in Na₂SO₃?",
+                options: ["A) +2", "B) +4", "C) +6", "D) -2"],
+                ans: "Correct Answer: B) +4 (2(+1) + S + 3(-2) = 0 => S = +4).",
+                expl: ["Wrong — +2 would need S in Na₂SO₃ to be +2, but 2(+1) + S + 3(−2) = 0 → S = +4.", "CORRECT — 2 + S − 6 = 0 → S = +4.", "Wrong — +6 is the oxidation state of S in Na₂SO₄ (sulfate), not sulfite.", "Wrong — −2 is the oxidation state of O here, not S."]
+            },
+            {
+                term: "Disproportionation",
+                def: "A redox reaction in which an element in a single species is simultaneously oxidised and reduced.",
+                q: "In Cl₂ + 2NaOH -> NaCl + NaClO + H₂O, chlorine oxidation states change from:",
+                options: ["A) 0 to -1 and +1", "B) 0 to -1 and +5", "C) +1 to -1 and 0"],
+                ans: "Correct Answer: A) 0 to -1 (reduced) and +1 (oxidised).",
+                expl: ["CORRECT — Cl₂ (0) is both reduced to Cl⁻ (−1) AND oxidised to ClO⁻ (+1): disproportionation.", "Wrong — NaClO has Cl at +1, not +5; +5 would be chlorate(V).", "Wrong — Cl₂ starts at 0, not +1."]
+            },
+            {
+                term: "Oxidising Agent",
+                def: "A substance that accepts electrons from another species and is itself reduced in the process.",
+                q: "In 2I- + Cl₂ -> I₂ + 2Cl-, the oxidising agent is:",
+                options: ["A) I-", "B) Cl₂", "C) I₂", "D) Cl-"],
+                ans: "Correct Answer: B) Cl₂ (gains electrons, reduced to Cl-).",
+                expl: ["Wrong — I⁻ is the reducing agent (it loses electrons, is oxidised to I₂).", "CORRECT — Cl₂ gains electrons (is reduced to Cl⁻), so it is the oxidising agent.", "Wrong — I₂ is the oxidation product, not the oxidising agent.", "Wrong — Cl⁻ is the reduction product, not the oxidising agent."]
+            },
+            {
+                term: "Reducing Agent",
+                def: "A substance that donates electrons to another species and is itself oxidised in the process.",
+                q: "Which halide ion is the strongest reducing agent?",
+                options: ["A) F-", "B) Cl-", "C) Br-", "D) I-"],
+                ans: "Correct Answer: D) I- (largest radius, loses valence e- easiest).",
+                expl: ["Wrong — F⁻ is the weakest reducing agent (F is most electronegative, holds electrons tightly).", "Wrong — Cl⁻ is a weak reducing agent.", "Wrong — Br⁻ is a moderate reducing agent.", "CORRECT — I⁻ is the largest ion, holds its outer electron most loosely → easiest to oxidise → strongest reducing agent."]
+            },
+            {
+                term: "Thermal Stability",
+                def: "A measure of the resistance of a compound to decomposition when subjected to heating.",
+                q: "Which Group 2 carbonate requires the highest temperature to decompose?",
+                options: ["A) MgCO₃", "B) CaCO₃", "C) SrCO₃", "D) BaCO₃"],
+                ans: "Correct Answer: D) BaCO₃ (largest cation, lowest polarising power).",
+                expl: ["Wrong — MgCO₃ decomposes at the LOWEST temperature (Mg²⁺ most polarising).", "Wrong — CaCO₃ decomposes at a lower temperature than BaCO₃.", "Wrong — SrCO₃ is intermediate.", "CORRECT — BaCO₃ is the most stable (largest cation, lowest polarising power → needs most heat)."]
+            },
+            {
+                term: "Polarising Power",
+                def: "The ability of a cation to attract electron density from an adjacent anion and distort its electron cloud.",
+                q: "Which cation has the highest polarising power?",
+                options: ["A) Na+", "B) Mg²⁺", "C) Ca²⁺", "D) K+"],
+                ans: "Correct Answer: B) Mg²⁺ (small ionic radius, high +2 charge).",
+                expl: ["Wrong — Na⁺ has only +1 charge and is larger than Mg²⁺.", "CORRECT — Mg²⁺ is small and highly charged → highest charge density → highest polarising power (of the options).", "Wrong — Ca²⁺ is larger than Mg²⁺, lower charge density.", "Wrong — K⁺ is large with +1 charge, weakest polariser."]
+            },
+            {
+                term: "Activation Energy (Ea)",
+                def: "The minimum kinetic energy required by colliding particles for a collision to result in a chemical reaction.",
+                q: "Adding a catalyst to a reaction:",
+                options: ["A) Lowers Ea", "B) Increases Ea", "C) Increases ΔH", "D) Decreases ΔH"],
+                ans: "Correct Answer: A) Provides alternative pathway with lower Ea.",
+                expl: ["CORRECT — a catalyst provides an alternative route with LOWER activation energy.", "Wrong — a catalyst lowers Ea, it never increases it.", "Wrong — a catalyst does not change ΔH (the overall enthalpy change is unaffected).", "Wrong — a catalyst does not change ΔH."]
+            },
+            {
+                term: "Maxwell-Boltzmann Distribution",
+                def: "A statistical distribution showing the spread of kinetic energies among gaseous particles at a specific temperature.",
+                q: "Increasing temperature causes the Maxwell-Boltzmann peak to:",
+                options: ["A) Shift right and higher", "B) Shift right and lower", "C) Shift left and lower"],
+                ans: "Correct Answer: B) Shift right and lower (broader distribution).",
+                expl: ["Wrong — the peak shifts RIGHT but LOWER (more molecules at higher energies, spread out).", "CORRECT — the peak moves right (higher energy) and down (lower peak height); area under the curve stays constant.", "Wrong — the peak shifts right, not left, when temperature rises.", "(No 4th option in this entry — 3 options only.)"]
+            },
+            {
+                term: "Dynamic Equilibrium",
+                def: "A state in a closed system where the rates of forward and backward reactions are equal and concentrations remain constant.",
+                q: "At dynamic equilibrium:",
+                options: ["A) Reactant conc = Product conc", "B) Reaction stops", "C) Forward rate = Backward rate"],
+                ans: "Correct Answer: C) Forward rate = Backward rate.",
+                expl: ["Wrong — [reactants] and [products] are CONSTANT, not necessarily equal.", "Wrong — the reaction continues; rates are equal but non-zero.", "CORRECT — forward rate = backward rate at dynamic equilibrium."]
+            },
+            {
+                term: "Le Chatelier's Principle",
+                def: "If a system at equilibrium is subjected to a change in conditions, the position of equilibrium shifts to counteract that change.",
+                q: "For N₂ + 3H₂ <=> 2NH₃ (exo), increasing temperature shifts equilibrium:",
+                options: ["A) Right", "B) Left", "C) No change"],
+                ans: "Correct Answer: B) Left (endothermic direction to absorb heat).",
+                expl: ["Wrong — increasing temperature favours the ENDOTHERMIC direction; for this exothermic forward reaction, it shifts LEFT, not right.", "CORRECT — temperature ↑ favours the endothermic (reverse) direction → shifts left, lowering NH₃ yield.", "Wrong — temperature affects the position of an exo/endo equilibrium."]
+            },
+            {
+                term: "Nucleophile",
+                def: "An electron-pair donor containing a lone pair of electrons or a negative charge that attacks electron-deficient Cδ+ centers.",
+                q: "Which species acts as a nucleophile?",
+                options: ["A) H+", "B) :NH₃", "C) AlCl₃", "D) NO²⁺"],
+                ans: "Correct Answer: B) :NH₃ has a lone pair of electrons to donate.",
+                expl: ["Wrong — H⁺ is an electrophile (electron-pair acceptor), not a nucleophile.", "CORRECT — :NH₃ has a lone pair and donates it to an electron-deficient centre.", "Wrong — AlCl₃ is an electron-pair acceptor (Lewis acid/electrophile).", "Wrong — NO₂⁺ is an electrophile (electron-pair acceptor)."]
+            },
+            {
+                term: "Electrophile",
+                def: "An electron-pair acceptor that is attracted to regions of high electron density (such as C=C double bonds).",
+                q: "Which species acts as an electrophile in alkene additions?",
+                options: ["A) OH-", "B) Br₂ (or Brδ+)", "C) NH₃", "D) CN-"],
+                ans: "Correct Answer: B) Br₂ (accepts electron pair from π bond).",
+                expl: ["Wrong — OH⁻ is a nucleophile (donates electrons), not an electrophile.", "CORRECT — Br₂ (or Brδ+) accepts an electron pair from the π bond → electrophile.", "Wrong — NH₃ is a nucleophile (lone-pair donor).", "Wrong — CN⁻ is a nucleophile (negative ion, lone pair)."]
+            },
+            {
+                term: "Hydrolysis",
+                def: "A chemical reaction where water or aqueous hydroxide ions break chemical bonds in a molecule.",
+                q: "Hydrolysis of 1-bromopropane with aqueous KOH produces:",
+                options: ["A) Propene", "B) Propan-1-ol", "C) Propanal", "D) Propanoic acid"],
+                ans: "Correct Answer: B) Propan-1-ol via nucleophilic substitution.",
+                expl: ["Wrong — propene is the ELIMINATION product (ethanolic KOH), not aqueous hydrolysis.", "CORRECT — aqueous KOH gives nucleophilic substitution → propan-1-ol.", "Wrong — propanal is an oxidation product, not hydrolysis.", "Wrong — propanoic acid is from further oxidation, not aqueous hydrolysis."]
+            },
+            {
+                term: "Elimination Reaction",
+                def: "A reaction in which a small molecule (like HCl or H₂O) is removed from a parent molecule, forming a C=C double bond.",
+                q: "Reacting 2-bromobutane with ethanolic KOH produces:",
+                options: ["A) Butan-2-ol", "B) But-2-ene", "C) Butanal", "D) Butanoic acid"],
+                ans: "Correct Answer: B) But-2-ene via elimination.",
+                expl: ["Wrong — butan-2-ol is the substitution product (aqueous KOH), not elimination.", "CORRECT — ethanolic KOH gives elimination → but-2-ene (C=C formed).", "Wrong — butanal is an oxidation product, not elimination.", "Wrong — butanoic acid is from oxidation, not elimination."]
+            },
+            {
+                term: "Primary Halogenoalkane",
+                def: "A halogenoalkane where the halogen atom is attached to a carbon atom bonded to only one other carbon atom (or none).",
+                q: "Which is a primary halogenoalkane?",
+                options: ["A) 1-chlorobutane", "B) 2-chlorobutane", "C) 2-chloro-2-methylpropane"],
+                ans: "Correct Answer: A) 1-chlorobutane (1 R group on C-Cl).",
+                expl: ["CORRECT — 1-chlorobutane: Cl on a carbon bonded to one other carbon (primary).", "Wrong — 2-chlorobutane: Cl on a carbon bonded to two carbons (secondary).", "Wrong — 2-chloro-2-methylpropane: Cl on a carbon bonded to three carbons (tertiary)."]
+            },
+            {
+                term: "Tertiary Halogenoalkane",
+                def: "A halogenoalkane where the halogen atom is attached to a carbon atom bonded to three other carbon atoms.",
+                q: "Tertiary halogenoalkanes hydrolyse predominantly via:",
+                options: ["A) SN₁ mechanism", "B) SN₂ mechanism", "C) Free radical mechanism"],
+                ans: "Correct Answer: A) SN₁ mechanism via stable 3° carbocation.",
+                expl: ["CORRECT — tertiary halogenoalkanes hydrolyse via SN₁ (stable 3° carbocation intermediate).", "Wrong — SN₂ is favoured by PRIMARY halogenoalkanes (one-step backside attack).", "Wrong — free-radical mechanism is for alkanes + halogens (UV), not hydrolysis."]
+            },
+            {
+                term: "Primary Alcohol",
+                def: "An alcohol in which the -OH group is attached to a carbon atom bonded to only one other carbon atom (or none).",
+                q: "Oxidation of propan-1-ol under distillation yields:",
+                options: ["A) Propanal", "B) Propanoic acid", "C) Propanone", "D) Propene"],
+                ans: "Correct Answer: A) Propanal (aldehyde distilled off).",
+                expl: ["CORRECT — distillation removes the aldehyde (propanal) before further oxidation.", "Wrong — propanoic acid forms under REFLUX (prolonged heating), not distillation.", "Wrong — propanone is from a secondary alcohol, not propan-1-ol.", "Wrong — propene is an elimination product, not an oxidation product."]
+            },
+            {
+                term: "Secondary Alcohol",
+                def: "An alcohol in which the -OH group is attached to a carbon atom bonded to two other carbon atoms.",
+                q: "Oxidation of propan-2-ol under reflux yields:",
+                options: ["A) Propanal", "B) Propanoic acid", "C) Propanone", "D) No reaction"],
+                ans: "Correct Answer: C) Propanone (ketone).",
+                expl: ["Wrong — propanal is from a primary alcohol, not propan-2-ol.", "Wrong — propanoic acid is from a primary alcohol oxidised fully.", "CORRECT — propan-2-ol is secondary → oxidises to propanone (ketone), which resists further oxidation.", "Wrong — secondary alcohols DO react (to ketones)."]
+            },
+            {
+                term: "Tertiary Alcohol",
+                def: "An alcohol in which the -OH group is attached to a carbon atom bonded to three other carbon atoms.",
+                q: "Refluxing 2-methylpropan-2-ol with K₂Cr₂O₇/H₂SO₄ results in:",
+                options: ["A) Green solution", "B) Orange solution remains", "C) Effervescence"],
+                ans: "Correct Answer: B) Orange solution remains (3° alcohols resist oxidation).",
+                expl: ["Wrong — green indicates reduction of dichromate (oxidation occurred); tertiary alcohol does NOT oxidise.", "CORRECT — tertiary alcohols have no H on the C–OH carbon → no oxidation → orange solution remains.", "Wrong — no gas is evolved; no reaction occurs."]
+            },
+            {
+                term: "Reflux",
+                def: "A laboratory technique involving continuous boiling and condensation of a reaction mixture to prevent loss of volatile reactants.",
+                q: "Reflux is used in organic synthesis to:",
+                options: ["A) Distill off products", "B) Heat volatile liquids without loss", "C) Separate immiscible layers"],
+                ans: "Correct Answer: B) Heat volatile liquids without loss.",
+                expl: ["Wrong — distillation removes products; reflux returns vapour.", "CORRECT — reflux heats volatile liquids without loss (vapour condenses and returns).", "Wrong — separating immiscible layers uses a separating funnel."]
+            },
+            {
+                term: "Distillation",
+                def: "A purification process that separates components of a liquid mixture based on differences in their boiling points.",
+                q: "Distillation of a primary alcohol oxidation mixture isolates:",
+                options: ["A) Carboxylic acid", "B) Aldehyde", "C) Ketone", "D) Alkene"],
+                ans: "Correct Answer: B) Aldehyde (lower boiling point than acid).",
+                expl: ["Wrong — the carboxylic acid needs reflux to form; distillation isolates the aldehyde first.", "CORRECT — distillation removes the aldehyde (lower bp) as it forms.", "Wrong — ketones come from secondary alcohols.", "Wrong — alkenes come from elimination, not oxidation."]
+            },
+            {
+                term: "Drying Agent",
+                def: "An anhydrous inorganic salt (e.g. Na₂SO₄, MgSO₄) added to an organic liquid to absorb residual water traces.",
+                q: "An organic liquid is fully dry when the added drying agent:",
+                options: ["A) Dissolves completely", "B) Clumps together", "C) Remains free-flowing and solution turns clear"],
+                ans: "Correct Answer: C) Remains free-flowing and clear.",
+                expl: ["Wrong — the drying agent should NOT dissolve; it absorbs water.", "Wrong — clumping means it's absorbing water (still drying); fully dry = free-flowing.", "CORRECT — when dry, the agent remains free-flowing (not clumped) and the liquid is clear."]
+            },
+            {
+                term: "Molecular Ion Peak (M+)",
+                def: "The peak in a mass spectrum corresponding to the unfragmented ionized molecule, giving its relative molecular mass Mr.",
+                q: "The M+ peak of propan-1-ol (C₃H₈O) appears at m/z:",
+                options: ["A) 44", "B) 58", "C) 60", "D) 31"],
+                ans: "Correct Answer: C) 60 (3x₁₂ + 8x₁ + 16 = 60).",
+                expl: ["Wrong — Mᵣ of propan-1-ol C₃H₈O = 36 + 8 + 16 = 60, so M⁺ is at m/z 60.", "Wrong — 58 would be propanal (C₃H₆O, Mᵣ 58).", "CORRECT — M⁺ = molecular ion = Mᵣ = 60 for C₃H₈O.", "Wrong — 31 is a fragment (CH₂OH⁺), not the molecular ion."]
+            },
+            {
+                term: "Fragmentation Pattern",
+                def: "The array of smaller m/z peaks in a mass spectrum produced when the molecular ion breaks into smaller ionic fragments.",
+                q: "A strong peak at m/z = 15 in a mass spectrum represents:",
+                options: ["A) CH³⁺", "B) OH+", "C) C₂H⁵⁺", "D) CHO+"],
+                ans: "Correct Answer: A) CH³⁺ fragment (12 + 3 = 15).",
+                expl: ["CORRECT — m/z 15 = CH₃⁺ (methyl cation, Mᵣ 15).", "Wrong — OH⁺ would be m/z 17.", "Wrong — C₂H₅⁺ would be m/z 29.", "Wrong — CHO⁺ would be m/z 29."]
+            },
+            {
+                term: "Infrared Spectroscopy",
+                def: "An analytical technique identifying functional groups based on characteristic vibrational absorption frequencies of covalent bonds.",
+                q: "A broad IR absorption peak between 3200-3600 cm⁻¹ indicates:",
+                options: ["A) C=O bond", "B) C-H bond", "C) O-H bond in alcohol", "D) C=C bond"],
+                ans: "Correct Answer: C) O-H bond in alcohol.",
+                expl: ["Wrong — C=O is a sharp peak at ~1700 cm⁻¹.", "Wrong — C–H is ~2850–2960 cm⁻¹.", "CORRECT — O–H (alcohol) gives a broad peak 3200–3600 cm⁻¹.", "(No 4th option.)"]
+            },
+            {
+                term: "Wavenumber",
+                def: "The spatial frequency of infrared radiation measured in reciprocal centimeters (cm⁻¹), proportional to energy.",
+                q: "Which bond absorbs IR radiation at ~1700 cm⁻¹?",
+                options: ["A) O-H", "B) C=O", "C) C-H", "D) C-C"],
+                ans: "Correct Answer: B) C=O carbonyl group stretch.",
+                expl: ["Wrong — O–H is ~3200–3600 cm⁻¹ (broad).", "CORRECT — C=O absorbs strongly at ~1700 cm⁻¹.", "Wrong — C–H is ~2850–2960 cm⁻¹.", "Wrong — C–C does not absorb strongly in IR (no dipole change)."]
+            },
+            {
+                term: "Fingerprint Region",
+                def: "The complex region of an IR spectrum below 1500 cm⁻¹ unique to a specific molecule, used for definitive identification by database comparison.",
+                q: "The IR fingerprint region is located below:",
+                options: ["A) 4000 cm⁻¹", "B) 3000 cm⁻¹", "C) 2000 cm⁻¹", "D) 1500 cm⁻¹"],
+                ans: "Correct Answer: D) 1500 cm⁻¹.",
+                expl: ["Wrong — 4000 cm⁻¹ is the high-wavenumber end (functional group region).", "Wrong — 3000 cm⁻¹ is still in the functional-group region.", "Wrong — 2000 cm⁻¹ is the boundary.", "CORRECT — the fingerprint region is BELOW ~1500 cm⁻¹, unique to each compound."]
+            }
+        ,
+            {
+                term: "Enthalpy change (\u0394H)",
+                def: "Heat energy change at constant pressure, in kJ mol\u207b\u00b9. Negative = exothermic (releases heat); positive = endothermic (absorbs heat).",
+                q: "Which statement about \u0394H is correct?",
+                options: ["A: Exothermic reactions have positive \u0394H", "B: \u0394H is measured in J only", "C: Endothermic reactions have positive \u0394H", "D: \u0394H is always negative"],
+                ans: "C",
+                expl: ["Wrong \u2014 exothermic means heat is RELEASED, so \u0394H is negative.", "Wrong \u2014 \u0394H for reactions is in kJ mol\u207b\u00b9 (or kJ).", "Correct \u2014 endothermic reactions absorb heat, so \u0394H is positive.", "Wrong \u2014 \u0394H can be positive (endothermic) or negative (exothermic)."]
+            },
+            {
+                term: "Standard enthalpy of formation (\u0394Hf\u00b0)",
+                def: "Enthalpy change when 1 mole of a compound forms from its elements in their standard states under standard conditions (298 K, 100 kPa).",
+                q: "Which equation represents \u0394Hf\u00b0 of water?",
+                options: ["A: H\u2082(g) + \u00bdO\u2082(g) \u2192 H\u2082O(l)", "B: 2H\u2082(g) + O\u2082(g) \u2192 2H\u2082O(l)", "C: H\u2082O(l) \u2192 H\u2082(g) + \u00bdO\u2082(g)", "D: H\u207a(aq) + OH\u207b(aq) \u2192 H\u2082O(l)"],
+                ans: "A",
+                expl: ["Correct \u2014 1 mole of H\u2082O forms from elements in standard states (H\u2082 gas, O\u2082 gas).", "Wrong \u2014 this forms 2 moles of H\u2082O, so it is 2\u00d7\u0394Hf\u00b0, not \u0394Hf\u00b0.", "Wrong \u2014 this is decomposition (reverse of formation), \u0394H = \u2212\u0394Hf\u00b0.", "Wrong \u2014 this is neutralisation, not formation from elements."]
+            },
+            {
+                term: "Standard enthalpy of combustion (\u0394Hc\u00b0)",
+                def: "Enthalpy change when 1 mole of a substance is completely burned in oxygen under standard conditions. Always exothermic (negative).",
+                q: "Complete combustion of 1 mol methane: CH\u2084 + 2O\u2082 \u2192 CO\u2082 + 2H\u2082O. \u0394Hc\u00b0 is:",
+                options: ["A: positive", "B: negative", "C: zero", "D: cannot be determined"],
+                ans: "B",
+                expl: ["Wrong \u2014 combustion always releases heat (exothermic).", "Correct \u2014 combustion is always exothermic, so \u0394Hc\u00b0 is negative.", "Wrong \u2014 energy is released, so \u0394H \u2260 0.", "Wrong \u2014 combustion enthalpies are measurable and always negative."]
+            },
+            {
+                term: "Hess's Law",
+                def: "The enthalpy change of a reaction is independent of the route taken, depending only on the initial and final states.",
+                q: "Hess's Law allows calculation of \u0394H for reactions that:",
+                options: ["A: are too fast to measure", "B: are difficult to measure directly (e.g. slow, incomplete)", "C: always have positive \u0394H", "D: never occur"],
+                ans: "B",
+                expl: ["Wrong \u2014 Hess's Law is about indirect routes, not speed.", "Correct \u2014 use enthalpy cycles when direct measurement is impractical (slow, side reactions, incomplete).", "Wrong \u2014 Hess's Law works for any sign of \u0394H.", "Wrong \u2014 the reactions do occur; they are just hard to measure directly."]
+            },
+            {
+                term: "Bond enthalpy",
+                def: "Energy required to break one mole of a covalent bond in gaseous molecules, averaged over similar bonds. \u0394H = \u03a3(bonds broken) \u2212 \u03a3(bonds formed).",
+                q: "Using bond enthalpies, \u0394H = ?",
+                options: ["A: \u03a3 bonds formed \u2212 \u03a3 bonds broken", "B: \u03a3 bonds broken \u2212 \u03a3 bonds formed", "C: \u03a3 bonds broken + \u03a3 bonds formed", "D: bond energy \u00d7 temperature"],
+                ans: "B",
+                expl: ["Wrong \u2014 reversed; breaking bonds absorbs energy (positive), forming releases (negative).", "Correct \u2014 energy in (broken) minus energy out (formed).", "Wrong \u2014 they are subtracted, not added.", "Wrong \u2014 no such formula; bond enthalpy is per mole of bonds."]
+            },
+            {
+                term: "Calorimetry",
+                def: "Measuring heat change of a reaction by the temperature change of a known mass of water/solution: q = mc\u0394T, then \u0394H = \u2212q/n.",
+                q: "In q = mc\u0394T, the mass m is the mass of:",
+                options: ["A: the solid reactant (e.g. Mg)", "B: the water or solution", "C: the calorimeter", "D: the product"],
+                ans: "B",
+                expl: ["Wrong \u2014 this is the most common calorimetry error; the reactant mass is tiny.", "Correct \u2014 the water/solution absorbs the heat; 1 cm\u00b3 \u2248 1 g.", "Wrong \u2014 the calorimeter's heat capacity is separate (and usually ignored).", "Wrong \u2014 use the solution that undergoes the temperature change."]
+            },
+            {
+                term: "Specific heat capacity (c)",
+                def: "Energy needed to raise the temperature of 1 g of a substance by 1 \u00b0C (or 1 K). For water, c = 4.18 J g\u207b\u00b9 K\u207b\u00b9.",
+                q: "q = mc\u0394T. If m = 50 g, c = 4.18, \u0394T = 6.0 K, q = ?",
+                options: ["A: 1254 J", "B: 125.4 J", "C: 12540 J", "D: 12.54 J"],
+                ans: "A",
+                expl: ["Correct \u2014 q = 50 \u00d7 4.18 \u00d7 6.0 = 1254 J.", "Wrong \u2014 missed \u00d7₁₀ (used m=5).", "Wrong \u2014 \u00d7₁₀ too large (used m=500).", "Wrong \u2014 \u00d7₁₀₀ too small (used m=0.5)."]
+            },
+            {
+                term: "London (dispersion) forces",
+                def: "Weak temporary induced-dipole attractions between all molecules; strength increases with electron count/surface area.",
+                q: "Which has the strongest London forces?",
+                options: ["A: CH\u2084", "B: C\u2082H\u2086", "C: C\u2083H\u2088", "D: C\u2084H\u2081\u2080"],
+                ans: "D",
+                expl: ["Wrong \u2014 fewest electrons, weakest dispersion.", "Wrong \u2014 more electrons than CH\u2084 but less than C\u2083H\u2088/C\u2084H\u2081\u2080.", "Wrong \u2014 strong, but C\u2084H\u2081\u2080 has more electrons.", "Correct \u2014 most electrons \u2192 strongest temporary dipoles \u2192 highest bp."]
+            },
+            {
+                term: "Permanent dipole\u2013dipole forces",
+                def: "Attractions between polar molecules (molecules with a permanent dipole); stronger than London for similar size.",
+                q: "Which molecule has a permanent dipole?",
+                options: ["A: CO\u2082", "B: CCl\u2084", "C: HCl", "D: CH\u2084"],
+                ans: "C",
+                expl: ["Wrong \u2014 linear, symmetric: C=O dipoles cancel.", "Wrong \u2014 tetrahedral symmetry cancels the C\u2013Cl dipoles.", "Correct \u2014 polar covalent bond, no symmetry cancellation \u2192 permanent dipole.", "Wrong \u2014 tetrahedral, all C\u2013H bonds nearly non-polar, symmetric."]
+            },
+            {
+                term: "Hydrogen bonding",
+                def: "Strong dipole\u2013dipole attraction between an H bonded to N/O/F and a lone pair on N/O/F of another molecule.",
+                q: "Which can form hydrogen bonds with itself?",
+                options: ["A: CH\u2084", "B: H\u2082S", "C: H\u2082O", "D: HCl"],
+                ans: "C",
+                expl: ["Wrong \u2014 no N/O/F; C\u2013H bonds are not polar enough.", "Wrong \u2014 S is not electronegative enough for H-bonding.", "Correct \u2014 O\u2013H bond + lone pairs on O \u2192 strong H-bond network (high bp).", "Wrong \u2014 Cl is electronegative but H\u2013Cl... actually HCl does NOT self-H-bond strongly (Cl's lone pairs are diffuse); the exam answer is H\u2082O."]
+            },
+            {
+                term: "Ion\u2013dipole forces",
+                def: "Attraction between an ion and the partial charge of a polar molecule (e.g. hydration of ions in water).",
+                q: "When NaCl dissolves, the dominant ion\u2013water interaction is:",
+                options: ["A: ion\u2013dipole", "B: dipole\u2013dipole", "C: London", "D: covalent"],
+                ans: "A",
+                expl: ["Correct \u2014 Na\u207a/Cl\u207b attract the \u03b4\u2212/\u03b4+ ends of water's permanent dipoles.", "Wrong \u2014 dipole\u2013dipole is between two neutral polar molecules.", "Wrong \u2014 London is between all molecules but is weaker and not the dominant solvation force.", "Wrong \u2014 Na\u207a and Cl\u207b dissociate; no covalent bond forms with water."]
+            },
+            {
+                term: "Oxidation number",
+                def: "A bookkeeping charge assigned to an atom in a species; oxidation = increase, reduction = decrease.",
+                q: "The oxidation number of Cl in ClO\u2083\u207b is:",
+                options: ["A: +3", "B: +5", "C: +7", "D: \u2212₁"],
+                ans: "B",
+                expl: ["Wrong \u2014 mis-counted; x + 3(\u2212₂) = \u2212₁ \u2192 x = +5.", "Correct \u2014 x + 3(\u2212₂) = \u2212₁ \u2192 x = +5.", "Wrong \u2014 that's ClO\u2084\u207b (x + 4(\u2212₂) = \u2212₁ \u2192 +7).", "Wrong \u2014 \u2212₁ is the chloride ion Cl\u207b, not chlorate."]
+            },
+            {
+                term: "Disproportionation",
+                def: "A reaction where one element is simultaneously oxidised AND reduced (its oxidation number both increases and decreases).",
+                q: "Which is a disproportionation reaction?",
+                options: ["A: Cl\u2082 + 2NaOH \u2192 NaCl + NaClO + H\u2082O", "B: Zn + CuSO\u2084 \u2192 ZnSO\u2084 + Cu", "C: AgNO\u2083 + NaCl \u2192 AgCl + NaNO\u2083", "D: CaCO\u2083 \u2192 CaO + CO\u2082"],
+                ans: "A",
+                expl: ["Correct \u2014 Cl in Cl\u2082 (0) \u2192 Cl\u207b (\u2212₁) and ClO\u207b (+1): same element oxidised and reduced.", "Wrong \u2014 Zn is oxidised, Cu\u00b2\u207a reduced: two different elements, not disproportionation.", "Wrong \u2014 precipitation, no oxidation state change.", "Wrong \u2014 thermal decomposition, no redox."]
+            },
+            {
+                term: "Halogens \u2014 reactivity",
+                def: "Reactivity (oxidising power) decreases down Group 7: F\u2082 > Cl\u2082 > Br\u2082 > I\u2082. A more reactive halogen displaces a less reactive one from its salt.",
+                q: "Which reaction occurs?",
+                options: ["A: Cl\u2082 + 2NaBr \u2192 2NaCl + Br\u2082", "B: Br\u2082 + 2NaCl \u2192 2NaBr + Cl\u2082", "C: I\u2082 + 2NaBr \u2192 2NaI + Br\u2082", "D: Br\u2082 + 2NaI \u2192 no reaction"],
+                ans: "A",
+                expl: ["Correct \u2014 Cl is more reactive than Br, displaces it.", "Wrong \u2014 Br is LESS reactive than Cl; cannot displace Cl.", "Wrong \u2014 I is less reactive than Br; cannot displace Br.", "Wrong \u2014 Br IS more reactive than I, so it DOES displace I (gives Br\u207b and I\u2082)."]
+            },
+            {
+                term: "Group 2 trends",
+                def: "Down Group 2: atomic radius \u2191, first IE \u2193, reactivity \u2191, hydroxide solubility \u2191, sulfate solubility \u2193.",
+                q: "Which statement about Group 2 is correct?",
+                options: ["A: Reactivity decreases down the group", "B: Sulfate solubility increases down the group", "C: Hydroxide solubility increases down the group", "D: Atomic radius decreases down the group"],
+                ans: "C",
+                expl: ["Wrong \u2014 reactivity INCREASES down Group 2 (easier to lose outer electrons).", "Wrong \u2014 sulfate solubility DECREASES (BaSO\u2084 is very insoluble).", "Correct \u2014 Mg(OH)\u2082 sparingly soluble \u2192 Ba(OH)\u2082 very soluble.", "Wrong \u2014 atomic radius INCREASES down the group."]
+            },
+            {
+                term: "Activation energy (Ea)",
+                def: "The minimum energy colliding particles must have for a reaction to occur.",
+                q: "A catalyst works by:",
+                options: ["A: increasing Ea", "B: providing an alternative route with lower Ea", "C: increasing the temperature", "D: shifting the equilibrium position"],
+                ans: "B",
+                expl: ["Wrong \u2014 a catalyst LOWERS Ea, it does not raise it.", "Correct \u2014 alternative pathway with lower activation energy \u2192 more successful collisions.", "Wrong \u2014 a catalyst doesn't change temperature; it lowers Ea.", "Wrong \u2014 a catalyst does NOT shift equilibrium position (affects rate only)."]
+            },
+            {
+                term: "Maxwell\u2013Boltzmann distribution",
+                def: "Distribution of molecular energies at a given temperature; area under curve = total molecules; right of Ea = molecules that can react.",
+                q: "Raising temperature shifts the M\u2013B curve so that:",
+                options: ["A: the peak moves up and left", "B: the peak moves down and right", "C: total area increases", "D: Ea increases"],
+                ans: "B",
+                expl: ["Wrong \u2014 peak moves DOWN (more molecules at higher energies spread out) and RIGHT.", "Correct \u2014 peak lower and to the right; area under curve constant; more molecules above Ea.", "Wrong \u2014 total area is constant (same number of molecules).", "Wrong \u2014 Ea is fixed by the reaction; temperature doesn't change it."]
+            },
+            {
+                term: "Dynamic equilibrium",
+                def: "In a closed system, the forward and reverse rates are equal; concentrations are constant (not necessarily equal).",
+                q: "At dynamic equilibrium:",
+                options: ["A: the reaction stops", "B: [reactants] = [products]", "C: forward rate = reverse rate (\u2260 0)", "D: only the forward reaction occurs"],
+                ans: "C",
+                expl: ["Wrong \u2014 the reaction continues; rates are equal, not zero.", "Wrong \u2014 concentrations are CONSTANT, not necessarily equal.", "Correct \u2014 rates equal and non-zero; concentrations constant.", "Wrong \u2014 both directions occur at equal rates."]
+            },
+            {
+                term: "Le Chatelier's principle",
+                def: "If a system at equilibrium is disturbed, the position shifts to oppose the change.",
+                q: "For N\u2082 + 3H\u2082 \u21cc 2NH\u2083 (exothermic), increasing pressure shifts the position:",
+                options: ["A: to the left", "B: to the right", "C: no change", "D: to the side with more gas moles"],
+                ans: "B",
+                expl: ["Wrong \u2014 increasing pressure favours FEWER gas moles.", "Correct \u2014 products side has 2 mol gas vs 4 mol reactants \u2192 shifts right.", "Wrong \u2014 pressure affects equilibrium with unequal gas moles.", "Wrong \u2014 it shifts AWAY from more gas moles (to fewer)."]
+            },
+            {
+                term: "Nucleophile",
+                def: "An electron-pair donor that attacks a positive (electron-deficient) centre, e.g. OH\u207b, CN\u207b, NH\u2083.",
+                q: "Which is a nucleophile?",
+                options: ["A: AlCl\u2083", "B: OH\u207b", "C: NO\u2082\u207a", "D: H\u207a"],
+                ans: "B",
+                expl: ["Wrong \u2014 AlCl\u2083 is an electron-pair ACCEPTOR (electrophile/Lewis acid).", "Correct \u2014 OH\u207b has a lone pair and donates it (attacks \u03b4+ carbon).", "Wrong \u2014 NO\u2082\u207a is an electrophile (electron-pair acceptor).", "Wrong \u2014 H\u207a accepts a pair; it is an electrophile."]
+            },
+            {
+                term: "Electrophile",
+                def: "An electron-pair acceptor that attacks an electron-rich centre, e.g. H\u207a, NO\u2082\u207a, Br\u207a (from Br\u2082).",
+                q: "In electrophilic addition of HBr to ethene, the electrophile is:",
+                options: ["A: Br\u207b", "B: H\u03b4+ of HBr", "C: OH\u207b", "D: the \u03c0 bond"],
+                ans: "B",
+                expl: ["Wrong \u2014 Br\u207b is a nucleophile, formed after the initial attack.", "Correct \u2014 the \u03b4+ hydrogen accepts the \u03c0 electron pair first.", "Wrong \u2014 OH\u207b is a nucleophile, not involved here.", "Wrong \u2014 the \u03c0 bond is the electron-RICH site being attacked, not the electrophile."]
+            },
+            {
+                term: "SN₁ vs SN₂",
+                def: "SN₁: two-step, carbocation intermediate, favoured by tertiary halogenoalkanes. SN₂: one-step backside attack, favoured by primary.",
+                q: "Which halogenoalkane reacts fastest by SN₁?",
+                options: ["A: 1-chlorobutane", "B: 2-chlorobutane", "C: 2-chloro-2-methylpropane", "D: chloromethane"],
+                ans: "C",
+                expl: ["Wrong \u2014 primary; SN₁ needs a stable carbocation, which primary can't form well.", "Wrong \u2014 secondary; forms a 2\u00b0 carbocation (less stable than 3\u00b0).", "Correct \u2014 tertiary; forms the most stable 3\u00b0 carbocation \u2192 fastest SN₁.", "Wrong \u2014 primary (methyl); SN₁ unfavourable."]
+            },
+            {
+                term: "IR spectroscopy",
+                def: "Identifies functional groups by the absorption of IR radiation causing bond vibrations (stretching/bending).",
+                q: "A broad absorption at 3200\u2013₃₆₀₀ cm\u207b\u00b9 indicates:",
+                options: ["A: C=O stretch", "B: O\u2013H stretch (alcohol)", "C: C\u2013H stretch", "D: C\u2013O stretch"],
+                ans: "B",
+                expl: ["Wrong \u2014 C=O is a strong sharp peak at ~1700 cm\u207b\u00b9.", "Correct \u2014 O\u2013H gives a broad peak 3200\u2013₃₆₀₀ cm\u207b\u00b9.", "Wrong \u2014 C\u2013H is ~2850\u2013₂₉₆₀ cm\u207b\u00b9.", "Wrong \u2014 C\u2013O is ~1000\u2013₁₃₀₀ cm\u207b\u00b9."]
+            },
+            {
+                term: "Reflux vs distillation",
+                def: "Reflux: condense and return vapour to the flask (for heating reactions, e.g. oxidation to acid). Distillation: remove vapour as it condenses (to collect product).",
+                q: "To oxidise ethanol fully to ethanoic acid, you should:",
+                options: ["A: distil continuously", "B: reflux then distil", "C: use no condenser", "D: collect the first drops"],
+                ans: "B",
+                expl: ["Wrong \u2014 continuous distillation removes the aldehyde before full oxidation.", "Correct \u2014 reflux keeps the aldehyde in the flask for further oxidation, then distil to collect the acid.", "Wrong \u2014 a condenser is needed to prevent loss of volatile reactants.", "Wrong \u2014 the first drops would be the aldehyde, not the acid."]
+            }
         ];
 
         /* ==================== 4. ESSAYS DATA (10 LEVEL 3 MODEL ANSWERS) ==================== */
@@ -533,7 +851,11 @@
                     "• Relative boiling point order: Water (100 °C) > Ethanol (78 °C) > Methane (-161 °C).",
                     "• Energy requirement: Overcoming strong hydrogen bonds requires significantly more thermal energy than overcoming weak London forces alone."
                 ]
-            },
+            ,
+                command: "Compare & contrast",
+                peel: ["P: State the three molecules' bond types (CH\u2084 non-polar; H\u2082O/ethanol polar with O\u2013H).", "E: CH\u2084 \u2014 only weak London forces (few electrons).", "E: H\u2082O/ethanol \u2014 London + strong H-bonds (O\u2013H \u2026 lone pair).", "L: Link: more/stronger IMF \u2192 higher bp (CH\u2084 \u2212162 \u00b0C < ethanol 78 \u00b0C < water 100 \u00b0C)."],
+                keywords: ["London forces", "hydrogen bonding", "O\u2013H bond", "lone pair", "boiling point", "electron count"],
+                starters: ["Methane is a symmetrical non-polar molecule, so\u2026", "Water and ethanol both contain\u2026", "Hydrogen bonds form between\u2026", "The higher boiling point of water is because\u2026"]},
             {
                 title: "Essay 2: Thermal Decomposition & Polarising Power in Group 2 Carbonates",
                 prompt: "Explain why magnesium carbonate (MgCO3) decomposes at a much lower temperature than barium carbonate (BaCO3). Relate your explanation to ionic radii and charge density.",
@@ -545,7 +867,11 @@
                     "• This electron cloud distortion weakens the C-O covalent bond within the carbonate anion.",
                     "• Less thermal energy is required to break the weakened C-O bond in MgCO3, resulting in a lower thermal decomposition temperature compared to BaCO3."
                 ]
-            },
+            ,
+                command: "Explain",
+                peel: ["P: State the trend \u2014 Group 2 carbonates decompose more readily down the group.", "E: Thermal stability depends on the polarising power of the cation.", "E: Smaller cations (Mg\u00b2\u207a) polarise CO\u2083\u00b2\u207b more \u2192 easier decomposition.", "L: Link: larger cations (Ba\u00b2\u207a) polarise less \u2192 carbonate more stable."],
+                keywords: ["polarising power", "charge density", "carbonate", "thermal decomposition", "cation radius"],
+                starters: ["Down Group 2, the carbonates become\u2026", "The tendency to decompose depends on\u2026", "Mg\u00b2\u207a has a high charge density, so it\u2026", "A larger cation like Ba\u00b2\u207a polarises the carbonate\u2026"]},
             {
                 title: "Essay 3: Optimization of Industrial Equilibrium Conditions (Ethene Hydration)",
                 prompt: "Describe the industrial hydration of ethene to form ethanol: CH2=CH2(g) + H2O(g) <=> CH3CH2OH(g) (ΔH = -42 kJ mol⁻¹). Justify the compromise temperature (300 °C) and pressure (7 MPa) used.",
@@ -557,7 +883,11 @@
                     "• Catalyst Role: Phosphoric(V) acid (H3PO4) catalyst on solid silica support increases rate without altering equilibrium yield.",
                     "• Product Removal: Unreacted ethene and steam are recycled, and ethanol is continuously condensed to push overall yield close to 100%."
                 ]
-            },
+            ,
+                command: "Discuss / Justify",
+                peel: ["P: State the equilibrium (C\u2082H\u2084 + H\u2082O \u21cc C\u2082H\u2085OH, exothermic).", "E: Low T favours yield (exothermic) but slows rate.", "E: High P favours yield (fewer gas moles) but costs more.", "L: Compromise: ~300 \u00b0C, 60\u201370 atm, H\u2083PO\u2084 catalyst \u2014 balance yield, rate, cost."],
+                keywords: ["exothermic", "Le Chatelier", "compromise", "pressure", "catalyst", "yield vs rate"],
+                starters: ["The industrial conditions are a compromise because\u2026", "Low temperature favours\u2026", "High pressure shifts the equilibrium\u2026", "A catalyst is used because\u2026"]},
             {
                 title: "Essay 4: Hydrolysis Kinetics of Halogenoalkanes: Bond Enthalpy vs Polarity",
                 prompt: "Describe an experiment to compare the rates of hydrolysis of 1-chlorobutane, 1-bromobutane, and 1-iodobutane. Explain the observed trend in terms of bond enthalpy and bond polarity.",
@@ -568,7 +898,11 @@
                     "• Bond Enthalpy Argument: C-I bond enthalpy (~238 kJ mol⁻¹) is significantly weaker than C-Br (~276 kJ mol⁻¹) and C-Cl (~338 kJ mol⁻¹).",
                     "• Conclusion & Controlling Factor: The rate of hydrolysis is dictated by BOND ENTHALPY (bond strength), NOT bond polarity. The weaker C-I bond requires less activation energy to break, leading to the fastest rate."
                 ]
-            },
+            ,
+                command: "Explain",
+                peel: ["P: State the trend \u2014 hydrolysis rate: 3\u00b0 > 2\u00b0 > 1\u00b0, and C\u2013I > C\u2013Br > C\u2013Cl.", "E: Bond enthalpy: C\u2013I weakest, breaks most easily.", "E: Carbocation stability: 3\u00b0 most stable \u2192 fastest SN1.", "L: Link: polarity is NOT the deciding factor (C\u2013F most polar but slowest)."],
+                keywords: ["bond enthalpy", "carbocation stability", "SN1", "SN2", "C\u2013X bond", "hydrolysis"],
+                starters: ["The rate of hydrolysis depends on\u2026", "Although C\u2013F is the most polar bond\u2026", "Tertiary halogenoalkanes hydrolyse fastest because\u2026"]},
             {
                 title: "Essay 5: Oxidation Pathways of Primary, Secondary, and Tertiary Alcohols",
                 prompt: "Outline how primary, secondary, and tertiary alcohols react when heated with acidified potassium dichromate(VI). Describe the apparatus and conditions needed to isolate specific products.",
@@ -580,7 +914,11 @@
                     "• Tertiary Alcohols (e.g. 2-methylpropan-2-ol): Resistant to oxidation because the C-OH carbon carries no hydrogen atoms. Solution remains orange.",
                     "• Colour Change: In successful oxidations (1° and 2°), orange dichromate ions (Cr2O72-) are reduced to green chromium(III) ions (Cr3+)."
                 ]
-            },
+            ,
+                command: "Explain / Predict",
+                peel: ["P: State the oxidation classes.", "E: Primary \u2192 aldehyde (distil) \u2192 carboxylic acid (reflux).", "E: Secondary \u2192 ketone (stops).", "L: Tertiary \u2192 no reaction (no H on C\u2013OH)."],
+                keywords: ["primary", "secondary", "tertiary", "K\u2082Cr\u2082O\u2087/H\u207a", "distil", "reflux", "aldehyde", "ketone"],
+                starters: ["A primary alcohol can be oxidised to\u2026", "To stop at the aldehyde, you must\u2026", "A secondary alcohol gives\u2026", "Tertiary alcohols do not react because\u2026"]},
             {
                 title: "Essay 6: Evaluation of Errors in Calorimetry Experiments",
                 prompt: "A student measures the enthalpy change of combustion of ethanol using a spirit burner and copper calorimeter. The experimental value is -850 kJ mol⁻¹ compared to the data book value of -1367 kJ mol⁻¹. Explain three main sources of error and how to improve the procedure.",
@@ -591,7 +929,11 @@
                     "• Non-Standard Conditions: Water formed is in the gaseous state initially rather than standard liquid state H2O(l).",
                     "• Improvements: Use a draught shield to enclose the burner; insulate the calorimeter with a polystyrene lid; burn fuel in a bomb calorimeter with pure O2 under pressure; keep spirit burner capped when not lit."
                 ]
-            },
+            ,
+                command: "Evaluate",
+                peel: ["P: Identify the calorimetry errors (heat loss, mass used, thermometer).", "E: Heat loss \u2192 \u0394T too small \u2192 \u0394H less exothermic.", "E: Mass error \u2014 must use mass of solution, not solid.", "L: Improvements: polystyrene cup, lid, extrapolate cooling curve."],
+                keywords: ["heat loss", "polystyrene", "\u0394T", "mass of solution", "% uncertainty", "extrapolation"],
+                starters: ["The main source of error is\u2026", "Heat loss to the surroundings makes \u0394H\u2026", "Using the mass of the solid instead of the solution\u2026", "To improve accuracy, one could\u2026"]},
             {
                 title: "Essay 7: Maxwell-Boltzmann Distributions & Temperature Effects on Rates",
                 prompt: "Use the Maxwell-Boltzmann distribution curve to explain why a small increase in temperature leads to a large increase in the rate of a chemical reaction.",
@@ -603,7 +945,11 @@
                     "• Key Factor for Rate Increase: The area under the curve to the RIGHT of Ea represents the fraction of particles with energy E >= Ea.",
                     "• Conclusion: At higher temperature, a significantly LARGER fraction of colliding particles possess energy >= Ea, resulting in a dramatic increase in the frequency of EFFECTIVE collisions."
                 ]
-            },
+            ,
+                command: "Explain",
+                peel: ["P: Describe the M\u2013B curve (energy vs number of molecules).", "E: Raising T shifts curve \u2014 peak lower, further right.", "E: Area under curve constant (same molecules).", "L: More molecules exceed Ea \u2192 higher rate."],
+                keywords: ["Maxwell\u2013Boltzmann", "activation energy", "most probable energy", "area under curve", "temperature"],
+                starters: ["The Maxwell\u2013Boltzmann distribution shows\u2026", "When temperature increases, the curve\u2026", "The area under the curve represents\u2026", "More molecules now have energy greater than\u2026"]},
             {
                 title: "Essay 8: Reaction of Solid Group 1 Halides with Concentrated Sulfuric Acid",
                 prompt: "Describe and compare the reactions of solid NaCl, NaBr, and NaI with concentrated sulfuric acid. Explain the differences in reducing power of the halide ions.",
@@ -614,7 +960,11 @@
                     "• Reducing Power Trend: Reducing power INCREASES down Group 7: I- > Br- > Cl- > F-.",
                     "• Explanation: Down the group, ionic radius increases and electron shielding increases. Valence electrons are lost more easily from larger halide ions."
                 ]
-            },
+            ,
+                command: "Explain / Compare",
+                peel: ["P: State the reaction types (redox) with conc. H\u2082SO\u2084.", "E: NaCl \u2192 HCl (no redox).", "E: NaBr \u2192 Br\u2082 (H\u2082SO\u2084 oxidises Br\u207b), SO\u2082 formed.", "L: NaI \u2192 I\u2082, H\u2082S (strongest reducing agent)."],
+                keywords: ["reducing agent", "H\u2082SO\u2084", "halide", "redox", "SO\u2082", "H\u2082S", "Br\u2082", "I\u2082"],
+                starters: ["Concentrated sulfuric acid acts as\u2026", "Chloride ions are not oxidised because\u2026", "Bromide ions are oxidised to\u2026", "Iodide is the strongest reducing agent, giving\u2026"]},
             {
                 title: "Essay 9: Preparation and Multi-Stage Purification of a Liquid Organic Product",
                 prompt: "Outline the full procedure for preparing 2-chloro-2-methylpropane from 2-methylpropan-2-ol and concentrated hydrochloric acid, including purification.",
@@ -626,7 +976,11 @@
                     "• Drying Stage: Add anhydrous sodium sulfate (Na2SO4) or magnesium sulfate (MgSO4) as a drying agent. Swirl until cloudy liquid turns completely CLEAR.",
                     "• Final Purification: Filter off drying agent and DISTILL the clear liquid, collecting the fraction boiling at the exact boiling point of 2-chloro-2-methylpropane (51 °C)."
                 ]
-            },
+            ,
+                command: "Describe / Explain",
+                peel: ["P: Outline the synthesis (e.g. 1-bromobutane from butanol).", "E: Reflux with HBr/H\u2082SO\u2084, then separate.", "E: Purify \u2014 separating funnel, wash, drying agent.", "L: Distil and check boiling point."],
+                keywords: ["reflux", "separating funnel", "drying agent", "distillation", "density", "immiscible"],
+                starters: ["The product is purified by\u2026", "In the separating funnel, the organic layer\u2026", "Anhydrous magnesium sulfate is used to\u2026", "A sharp boiling point indicates\u2026"]},
             {
                 title: "Essay 10: Analytical Structure Elucidation using Combined IR and Mass Spectrometry",
                 prompt: "An unknown organic compound X contains C, H, and O. Mass spectrum shows M+ peak at m/z = 58 and a strong fragment at m/z = 29. IR spectrum shows strong absorption at 1715 cm⁻¹ and C-H stretch at 2900 cm⁻¹, but NO broad absorption at 3200-3600 cm⁻¹. Deduce the structure of X.",
@@ -641,7 +995,11 @@
                     "• Structural Deduction: Propanal (CH3CH2CHO) fragments to form [CHO]+ (m/z 29) and [C2H5]+ (m/z 29). Propanone (CH3COCH3) fragments to [CH3CO]+ (m/z 43) and [CH3]+ (m/z 15).",
                     "• Final Identity: Compound X is PROPANAL (aldehyde)."
                 ]
-            }
+            ,
+                command: "Analyse",
+                peel: ["P: State what IR + mass spec reveal.", "E: IR \u2014 functional groups (O\u2013H, C=O, C\u2013O) by bond stretches.", "E: Mass spec \u2014 M\u207a gives M\u1d63; fragments identify structure.", "L: Combine: e.g. M\u1d63 + O\u2013H + C=O \u2192 carboxylic acid."],
+                keywords: ["IR", "mass spectrometry", "M\u207a", "M\u1d63", "fragment", "O\u2013H stretch", "C=O stretch"],
+                starters: ["The IR spectrum identifies\u2026", "The molecular ion peak gives\u2026", "Fragmentation in the mass spectrum suggests\u2026", "Combining the two techniques, the compound is\u2026"]}
         ];
 
         /* ==================== 5. MISCONCEPTIONS DATA (20 COMMUNITY MYTHS) ==================== */
@@ -733,20 +1091,18 @@
 
         /* ==================== INITIALIZATION ==================== */
         window.onload = function() {
-            shuffleFlashcards();
             renderSyllabus();
             renderPitfalls();
             renderFlashcard();
             renderGlossary();
             renderEssays();
             renderMisconceptions();
-            updateMasteryBar();
         };
 
         /* ==================== TAB SWITCHING ==================== */
         function switchTab(tab) {
             activeTab = tab;
-            const tabs = ['syllabus', 'pitfalls', 'calculators', 'flashcards', 'glossary', 'essays', 'misconceptions'];
+            const tabs = ['syllabus', 'pitfalls', 'flashcards', 'glossary', 'essays', 'misconceptions'];
             tabs.forEach(t => {
                 const view = document.getElementById(`view-${t}`);
                 const btn = document.getElementById(`tab-${t}`);
@@ -856,82 +1212,10 @@
         }
 
         /* ==================== TAB 3: CALCULATORS LOGIC ==================== */
-        function computeCalorimetry() {
-            const m = parseFloat(document.getElementById('calc1-m').value);
-            const c = parseFloat(document.getElementById('calc1-c').value);
-            const dt = parseFloat(document.getElementById('calc1-dt').value);
-            const n = parseFloat(document.getElementById('calc1-n').value);
-
-            if (!m || !c || !dt || !n) {
-                document.getElementById('calc1-output').innerText = "Please enter valid numeric inputs.";
-                return;
-            }
-
-            const qJoules = m * c * dt;
-            const qKJ = qJoules / 1000;
-            const deltaH = -(qKJ / n);
-
-            document.getElementById('calc1-output').innerHTML = `
-                • Heat Transferred Q = ${qJoules.toFixed(1)} J (${qKJ.toFixed(3)} kJ)<br>
-                • Enthalpy Change ΔH = ${deltaH.toFixed(2)} kJ mol⁻¹ (${deltaH < 0 ? 'Exothermic' : 'Endothermic'})
-            `;
-        }
-
-        function computeHess() {
-            const broken = parseFloat(document.getElementById('calc2-broken').value);
-            const formed = parseFloat(document.getElementById('calc2-formed').value);
-
-            if (isNaN(broken) || isNaN(formed)) {
-                document.getElementById('calc2-output').innerText = "Please enter valid bond sum numbers.";
-                return;
-            }
-
-            const deltaH = broken - formed;
-            document.getElementById('calc2-output').innerHTML = `
-                • ΔH = Σ(Bonds Broken) - Σ(Bonds Formed)<br>
-                • ΔH = ${broken} - ${formed} = <strong>${deltaH.toFixed(1)} kJ mol⁻¹</strong><br>
-                • Nature: ${deltaH < 0 ? 'Exothermic (-ΔH)' : 'Endothermic (+ΔH)'}
-            `;
-        }
-
-        function computeRates() {
-            const t = parseFloat(document.getElementById('calc3-time').value);
-            const v = parseFloat(document.getElementById('calc3-vol').value);
-
-            if (!t || t <= 0) {
-                document.getElementById('calc3-output').innerText = "Time must be greater than zero.";
-                return;
-            }
-
-            const rateReciprocal = 1 / t;
-            const rateVol = v / t;
-
-            document.getElementById('calc3-output').innerHTML = `
-                • Relative Rate (1/t) = ${rateReciprocal.toFixed(4)} s⁻¹<br>
-                • Initial Gas Rate (ΔV/t) = ${rateVol.toFixed(3)} cm³ s⁻¹
-            `;
-        }
-
-        function computeUncertainty() {
-            const err = parseFloat(document.getElementById('calc4-err').value);
-            const readings = parseInt(document.getElementById('calc4-readings').value);
-            const val = parseFloat(document.getElementById('calc4-val').value);
-
-            if (!err || !readings || !val) {
-                document.getElementById('calc4-output').innerText = "Please enter valid numeric parameters.";
-                return;
-            }
-
-            const totalErr = err * readings;
-            const percentage = (totalErr / val) * 100;
-
-            document.getElementById('calc4-output').innerHTML = `
-                • Total Absolute Error = ±${totalErr.toFixed(3)}<br>
-                • Percentage Uncertainty = <strong>${percentage.toFixed(2)}%</strong>
-            `;
-        }
-
-        /* ==================== TAB 4: FLASHCARDS ==================== */
+        
+        
+        
+        
         function renderFlashcard() {
             const card = FLASHCARDS_DATA[currentFlashcardIdx];
             document.getElementById('fc-front-topic').textContent = card.topic;
@@ -992,11 +1276,25 @@
                     <div class="bg-slate-900/90 p-3.5 rounded-lg border border-slate-700/80 space-y-2">
                         <span class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">Edexcel Exam Question</span>
                         <p class="text-xs text-slate-200 font-medium">${g.q}</p>
+                        ${g.options ? `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-[11px] text-slate-300">
+                            ${g.options.map((opt, oi) => `<div class="bg-slate-900/80 border border-slate-700/70 hover:border-indigo-500/50 rounded-lg px-2.5 py-2 flex items-start gap-2 transition-colors">
+                                <span class="shrink-0 w-5 h-5 rounded-full bg-indigo-950 border border-indigo-500/40 text-indigo-300 text-[10px] font-bold flex items-center justify-center mt-0.5">${String.fromCharCode(65+oi)}</span>
+                                <span class="leading-snug">${opt.replace(/^[A-D]\)\s*/, '')}</span>
+                            </div>`).join('')}
+                        </div>` : ''}
                         <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold underline block pt-1">
-                            Toggle Solution & Mark Scheme
+                            Toggle Solution & Mark Scheme — why each option is right / wrong
                         </button>
-                        <div class="hidden text-xs text-emerald-400 font-mono bg-emerald-950/30 p-2.5 rounded border border-emerald-500/30 mt-2">
-                            ${g.ans}
+                        <div class="hidden text-xs bg-emerald-950/30 p-2.5 rounded border border-emerald-500/30 mt-2 space-y-2">
+                            <div class="text-emerald-400 font-mono font-bold">${g.ans}</div>
+                            ${g.expl ? `<div class="space-y-1.5">
+                                ${g.options.map((opt, oi) => { const letter = opt.charAt(0); const m = (g.ans || '').match(/Answer\s*:\s*([ABCD])/i) || (g.ans || '').match(/(?:^|\s)([ABCD])\s*[):]/); const ansLetter = m ? m[1] : ((g.ans || '').trim().charAt(0)); const isCorrect = letter === ansLetter; return `
+                                    <div class="p-2 rounded-lg border ${isCorrect ? 'bg-emerald-900/40 border-emerald-500/40' : 'bg-slate-900/60 border-slate-700'}">
+                                        <span class="font-bold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}">${isCorrect ? '✓' : '✗'} ${opt}</span>
+                                        <p class="text-slate-300 mt-0.5 leading-relaxed">${g.expl[oi] || ''}</p>
+                                    </div>
+                                `; }).join('')}
+                            </div>` : ''}
                         </div>
                     </div>
                 </div>
@@ -1018,6 +1316,24 @@
                         <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-1">Exam Prompt:</span>
                         <p class="text-xs text-slate-200 italic leading-relaxed">${e.prompt}</p>
                     </div>
+                    ${e.peel ? `<details class="bg-slate-900/60 p-3.5 rounded-lg border border-indigo-500/30" ${idx===0?'open':''}>
+                        <summary class="text-xs font-bold text-indigo-300 cursor-pointer">🧱 Scaffold — PEEL structure (build your answer)</summary>
+                        <ol class="text-xs text-slate-300 leading-relaxed list-decimal list-inside mt-2 space-y-1">
+                            ${e.peel.map(p=>`<li>${p}</li>`).join('')}
+                        </ol>
+                        <div class="mt-2 pt-2 border-t border-indigo-500/20">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Keyword bank:</span>
+                            <div class="flex flex-wrap gap-1.5 mt-1">
+                                ${e.keywords.map(k=>`<span class="text-[10px] px-2 py-0.5 bg-indigo-900/60 text-indigo-200 rounded-full border border-indigo-700">${k}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-indigo-500/20">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Sentence starters:</span>
+                            <ul class="text-[11px] text-slate-300 mt-1 space-y-0.5">
+                                ${e.starters.map(s=>`<li class="italic">“${s}”</li>`).join('')}
+                            </ul>
+                        </div>
+                    </details>` : ''}
                     <div class="space-y-2">
                         <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">Mark Scheme Marking Points (Full Marks):</span>
                         <ul class="space-y-2 text-xs text-slate-300">
