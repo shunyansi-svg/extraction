@@ -141,9 +141,6 @@
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
                     <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
                 </button>
-                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
-                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Calculators</span>
-                </button>
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
                     <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (100)</span>
                 </button>
@@ -200,96 +197,6 @@
             <div id="pitfalls-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
         </section>
 
-        <!-- TAB 3: INTERACTIVE CALCULATORS -->
-        <section id="view-calculators" class="tab-view space-y-6 hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- Calculator 1 -->
-                <div class="glass-panel p-6 rounded-2xl border border-sky-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-sky-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-bolt"></i> <span>Cell Potential & Feasibility ($E^\circ_{\text{cell}}$, $\Delta S_{\text{total}}$, $K$)</span>
-                    </h3>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">$E^\circ$ Reduction Half-Cell (V)</label>
-                            <input type="number" id="calc-ered" value="1.33" step="any" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">$E^\circ$ Oxidation Half-Cell (V)</label>
-                            <input type="number" id="calc-eox" value="0.77" step="any" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Electrons Transferred ($n$)</label>
-                            <input type="number" id="calc-n-elec" value="6" min="1" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Temperature ($T$ in K)</label>
-                            <input type="number" id="calc-temp-k" value="298" oninput="calcCellPotential()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                        </div>
-                    </div>
-                    <div id="cell-output" class="p-4 bg-sky-950/40 border border-sky-500/30 rounded-xl font-mono text-xs text-sky-300 space-y-1"></div>
-                </div>
-
-                <!-- Calculator 2 -->
-                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-palette"></i> <span>d-Orbital Splitting & Light ($\Delta E = h\nu = \frac{hc}{\lambda}$)</span>
-                    </h3>
-                    <div class="text-xs space-y-2">
-                        <label class="block text-slate-300 font-semibold">Absorbed Light Wavelength $\lambda$ (nm)</label>
-                        <input type="number" id="calc-wavelength" value="600" oninput="calcLightSplitting()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                    </div>
-                    <div id="splitting-output" class="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl font-mono text-xs text-emerald-300 space-y-1"></div>
-                </div>
-
-                <!-- Calculator 3 -->
-                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-diagram-project"></i> <span>Multi-Step Yield Calculator</span>
-                    </h3>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Step 1 Yield (%)</label>
-                            <input type="number" id="yield-s1" value="75" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Step 2 Yield (%)</label>
-                            <input type="number" id="yield-s2" value="80" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Step 3 Yield (%)</label>
-                            <input type="number" id="yield-s3" value="65" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Step 4 Yield (%)</label>
-                            <input type="number" id="yield-s4" value="90" oninput="calcMultiYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                        </div>
-                    </div>
-                    <div id="yield-output" class="p-4 bg-purple-950/40 border border-purple-500/30 rounded-xl font-mono text-xs text-purple-300 space-y-1"></div>
-                </div>
-
-                <!-- Calculator 4 -->
-                <div class="glass-panel p-6 rounded-2xl border border-cyan-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-cyan-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-vial-circle-check"></i> <span>Amine Basicity & pH Solver</span>
-                    </h3>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Amine $K_b$ ($\text{mol dm}^{-3}$)</label>
-                            <input type="number" id="calc-kb" value="0.00044" step="any" oninput="calcAminePH()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Concentration $[\text{B}]$ ($\text{mol dm}^{-3}$)</label>
-                            <input type="number" id="calc-conc-b" value="0.10" step="any" oninput="calcAminePH()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                        </div>
-                    </div>
-                    <div id="amine-output" class="p-4 bg-cyan-950/40 border border-cyan-500/30 rounded-xl font-mono text-xs text-cyan-300 space-y-1"></div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- TAB 4: 100 3D FLASHCARDS -->
         <section id="view-quiz" class="tab-view space-y-6 hidden">
             <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center space-x-2">
@@ -301,7 +208,7 @@
                 </div>
 
                 <div class="relative w-full md:w-72">
-                    <input type="text" id="card-search" oninput="filterCards()" placeholder="Search 100 flashcards..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-sky-500">
+                    <input type="text" id="card-search" oninput="filterCards()" placeholder="Search 50 flashcards..." class="w-full bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-400 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-sky-500">
                 </div>
             </div>
 
@@ -313,7 +220,7 @@
                     </div>
                     <div class="flex items-center space-x-2">
                         <span>Jump to:</span>
-                        <input type="number" id="jump-card-input" min="1" max="100" onchange="jumpToCard(this.value)" class="w-16 bg-slate-900 border border-slate-700 text-sky-300 text-center rounded p-1 text-xs font-mono">
+                        <input type="number" id="jump-card-input" min="1" max="50" onchange="jumpToCard(this.value)" class="w-16 bg-slate-900 border border-slate-700 text-sky-300 text-center rounded p-1 text-xs font-mono">
                     </div>
                 </div>
 
@@ -559,234 +466,1680 @@
         ];
 
         // 100 Flashcards Array
-        const FLASHCARDS_DATA = [];
-        // Populate 100 flashcards across all 5 topics
-        const topicNames = [
-            "Topic 16: Redox",
-            "Topic 17: Transition Metals",
-            "Topic 18: Arenes",
-            "Topic 19: Organic Nitrogen",
-            "Topic 20: Synthesis"
-        ];
-        
-        // Base questions database
-        const baseCards = [
-            // Redox
-            { topic: "Topic 16: Redox", spec: "Spec 16.2", q: "Define 'Standard Electrode Potential' ($E^\\circ$).", a: "• Electromotive force (emf) of a half-cell compared with a standard hydrogen electrode under standard conditions (298 K, 100 kPa gas pressure, 1.00 mol dm⁻³ ion concentration)." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.4", q: "State components and conditions of the Standard Hydrogen Electrode (SHE).", a: "• Platinum electrode coated with platinum black.\n• $\\text{H}_2$ gas at 100 kPa and 298 K.\n• 1.00 mol dm⁻³ $\\text{H}^+$(aq) solution." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.7", q: "How is standard cell potential $E^\\circ_{\\text{cell}}$ calculated?", a: "• $E^\\circ_{\\text{cell}} = E^\\circ(\\text{reduced species}) - E^\\circ(\\text{oxidised species})$." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.10", q: "What $E^\\circ_{\\text{cell}}$ value dictates thermodynamic feasibility?", a: "• $E^\\circ_{\\text{cell}}$ MUST be POSITIVE ($E^\\circ_{\\text{cell}} > 0\\text{ V}$)." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.11", q: "State the equation linking $E^\\circ_{\\text{cell}}$ to Total Entropy Change ($\\Delta S_{\\text{total}}$).", a: "• $\\Delta S_{\\text{total}} = \\frac{n F E^\\circ_{\\text{cell}}}{T}$." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.12", q: "Why might a feasible redox reaction (positive $E^\\circ_{\\text{cell}}$) fail to react?", a: "• High activation energy ($E_a$), making it kinetically extremely slow." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "State color change at end-point of manganate(VII) titration with $\\text{Fe}^{2+}$.", a: "• Colourless to permanent faint pink." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "When is starch indicator added during iodine-thiosulfate titration?", a: "• Added near end-point when solution turns pale straw-yellow." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "State end-point color change for iodine-thiosulfate titration with starch.", a: "• Blue-black to COLOURLESS." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.18", q: "Write anode and cathode equations for acidic $\\text{H}_2\\text{-O}_2$ fuel cell.", a: "• Anode: $2\\text{H}_2 \\rightarrow 4\\text{H}^+ + 4e^-$\n• Cathode: $\\text{O}_2 + 4\\text{H}^+ + 4e^- \\rightarrow 2\\text{H}_2\\text{O}$." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.19", q: "Write overall equation for $\\text{H}_2\\text{-O}_2$ fuel cell.", a: "• $2\\text{H}_2(\\text{g}) + \\text{O}_2(\\text{g}) \\rightarrow 2\\text{H}_2\\text{O}(\\text{l})$." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.8", q: "What do | and || represent in conventional cell notation?", a: "• Single line | = Phase boundary.\n• Double line || = Salt bridge." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.8", q: "State the function of a salt bridge.", a: "• Allows ion movement to complete circuit while preventing solution mixing." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.9", q: "How does increasing reactant ion concentration affect electrode potential $E$?", a: "• Shifts equilibrium to favor reduction, making $E$ MORE POSITIVE." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.14", q: "Define a 'disproportionation reaction'.", a: "• Redox reaction where atoms of the same element in a single species are simultaneously oxidised and reduced." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "Write ionic equation for reaction between $\\text{MnO}_4^-$ and $\\text{Fe}^{2+}$ in acid.", a: "• $\\text{MnO}_4^- + 5\\text{Fe}^{2+} + 8\\text{H}^+ \\rightarrow \\text{Mn}^{2+} + 5\\text{Fe}^{3+} + 4\\text{H}_2\\text{O}$." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.15", q: "Write ionic equation for reaction between $\\text{I}_2$ and thiosulfate ($\\text{S}_2\\text{O}_3^{2-}$).", a: "• $\\text{I}_2 + 2\\text{S}_2\\text{O}_3^{2-} \\rightarrow 2\\text{I}^- + \\text{S}_4\\text{O}_6^{2-}$." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.18", q: "State two advantages of fuel cells over combustion engines.", a: "• Zero carbon emissions (only $\\text{H}_2\\text{O}$ produced).\n• Higher energy efficiency." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.18", q: "State two disadvantages of using hydrogen fuel.", a: "• Storage difficulties/hazards for high-pressure $\\text{H}_2$.\n• Production relies on fossil fuel reforming." },
-            { topic: "Topic 16: Redox", spec: "Spec 16.4", q: "Why is a calomel electrode used instead of SHE?", a: "• SHE is fragile and requires continuous $\\text{H}_2$ gas supply; calomel is compact and robust." },
+        const FLASHCARDS_DATA = [
+ {
+  "id": 1,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.1",
+  "q": "How do you balance a redox half-equation such as MnO₄⁻ → Mn²⁺ in acid?",
+  "a": "• Balance atoms first, then oxygen by adding H₂O, then hydrogen by adding H⁺, then charge by adding electrons (e⁻).<br>• MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O — the 5 electrons balance the charge change from +7 to +2 (check: −1 + 8 = +7 on the left, +2 on the right, so 5e⁻ needed).<br>• MS keyword: electrons MUST balance charge."
+ },
+ {
+  "id": 2,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.2",
+  "q": "Define standard electrode potential (E°).",
+  "a": "• E° = the electromotive force (emf) of a half-cell compared with the standard hydrogen electrode under standard conditions (298 K, 100 kPa gas pressure, 1.00 mol dm⁻³ ion concentration).<br>• It measures the tendency of the half-cell to gain electrons (be reduced).<br>• MS trap: always quote the standard conditions in the definition."
+ },
+ {
+  "id": 3,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.4",
+  "q": "Describe the standard hydrogen electrode (SHE).",
+  "a": "• Platinum electrode (inert, coated with platinum black for a large surface area) dipping into 1.00 mol dm⁻³ H⁺(aq) at 298 K.<br>• H₂ gas at 100 kPa bubbled over the electrode; equilibrium: ½H₂(g) ⇌ H⁺(aq) + e⁻.<br>• Assigned E° = 0.00 V — all other half-cells are measured against it via a salt bridge and high-resistance voltmeter."
+ },
+ {
+  "id": 4,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.7",
+  "q": "How is the standard cell potential E°<sub>cell</sub> calculated?",
+  "a": "• E°<sub>cell</sub> = E°(reduction, cathode) − E°(reduction, anode) — i.e. the more positive half-cell is reduced, the less positive is oxidised.<br>• Alternative: E°<sub>cell</sub> = E°<sub>red</sub> − E°<sub>ox</sub>.<br>• MS trap: do NOT multiply E° values by stoichiometric coefficients when balancing the redox equation."
+ },
+ {
+  "id": 5,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.7",
+  "q": "How is a conventional cell diagram written?",
+  "a": "• Convention: reduced | oxidised || oxidised | reduced — the single line | is a phase boundary, the double line || is the salt bridge.<br>• Example: Zn(s) | Zn²⁺(aq) || Cu²⁺(aq) | Cu(s).<br>• The more positive (reduction) half-cell is written on the right."
+ },
+ {
+  "id": 6,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.10",
+  "q": "What does a positive E°<sub>cell</sub> indicate?",
+  "a": "• E°<sub>cell</sub> > 0 means the reaction is thermodynamically feasible: ΔS<sub>total</sub> > 0 and ΔG° < 0.<br>• MS phrasing: the reaction CAN occur / is feasible under standard conditions.<br>• It says nothing about RATE — a feasible reaction may still be very slow (high Eₐ)."
+ },
+ {
+  "id": 7,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.10",
+  "q": "Why might a reaction with positive E°<sub>cell</sub> not occur in practice?",
+  "a": "• Kinetic limitation: high activation energy means no observable rate at room temperature.<br>• Non-standard conditions: different ion concentrations shift half-cell equilibria (Le Chatelier), changing E away from E°.<br>• Side reactions: alternative redox pathways or atmospheric oxidation can give different products."
+ },
+ {
+  "id": 8,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.11",
+  "q": "Describe the hydrogen-oxygen fuel cell.",
+  "a": "• Anode (oxidation): 2H₂ + 4OH⁻ → 4H₂O + 4e⁻ (or H₂ → 2H⁺ + 2e⁻ in acid); cathode (reduction): O₂ + 2H₂O + 4e⁻ → 4OH⁻.<br>• Overall: 2H₂ + O₂ → 2H₂O, E°<sub>cell</sub> = +1.23 V.<br>• Fuel and oxidant are supplied continuously, so it keeps producing electrical energy; only water is produced (no greenhouse gases), and efficiency is not limited by the Carnot cycle."
+ },
+ {
+  "id": 9,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.8",
+  "q": "How does changing ion concentration affect electrode potential?",
+  "a": "• Increasing the concentration of the oxidised species favours reduction, making E more positive; the reverse makes E less positive (Le Chatelier).<br>• E.g. Cu²⁺ + 2e⁻ ⇌ Cu: higher [Cu²⁺] pushes equilibrium right, increasing E.<br>• This is why E° is only valid at 1.00 mol dm⁻³ — real cells run at other concentrations behave differently."
+ },
+ {
+  "id": 10,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.1",
+  "q": "How do you find the oxidation state of the transition metal in a complex ion?",
+  "a": "• Sum of oxidation states = charge on the complex ion; each ligand has a known charge (H₂O, NH₃ = 0; Cl⁻ = −1; CN⁻ = −1; OH⁻ = −1).<br>• Example: [Fe(CN)₆]³⁻: x + 6(−1) = −3, so x = +3 — iron is Fe(III).<br>• MS trap: oxidation state is a bookkeeping number, not the actual charge on the metal ion."
+ },
+ {
+  "id": 11,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.1",
+  "q": "What makes a d-block element a transition metal?",
+  "a": "• It must form at least one stable ion with an INCOMPLETELY filled d-subshell.<br>• Zn ([Ar]3d¹⁰4s²) and Hg ([Xe]4f¹⁴5d¹⁰6s²) are d-block but NOT transition metals because their common ions (Zn²⁺, Hg²⁺) have a full d¹⁰ configuration.<br>• Example: Cu forms Cu²⁺ (3d⁹) so copper IS a transition metal."
+ },
+ {
+  "id": 12,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.2",
+  "q": "What is a ligand and how does it bond to a metal ion?",
+  "a": "• A ligand is a molecule or ion that donates a LONE PAIR of electrons to the central metal ion.<br>• The bond formed is a DATIVE (coordinate) covalent bond — both electrons come from the ligand.<br>• Examples: H₂O, NH₃, Cl⁻, CN⁻, OH⁻ (monodentate); en and C₂O₄²⁻ (bidentate)."
+ },
+ {
+  "id": 13,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.2",
+  "q": "Define coordination number.",
+  "a": "• The total number of DATIVE COVALENT BONDS formed between the ligands and the central metal ion.<br>• [Cu(H₂O)₆]²⁺ has coordination number 6; [CuCl₄]²⁻ has coordination number 4; [Ag(NH₃)₂]⁺ has coordination number 2.<br>• MS trap: count bonds, not ligand molecules (a bidentate ligand contributes 2)."
+ },
+ {
+  "id": 14,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "What shapes do complex ions take?",
+  "a": "• Coordination number 6 → OCTAHEDRAL, e.g. [Cu(H₂O)₆]²⁺, [Fe(CN)₆]³⁻ (bond angles 90°).<br>• Coordination number 4 → TETRAHEDRAL (e.g. [CuCl₄]²⁻, angle 109.5°) or SQUARE PLANAR for Pt²⁺ complexes (e.g. cisplatin, [Pt(NH₃)₂Cl₂]).<br>• Coordination number 2 → LINEAR, e.g. [Ag(NH₃)₂]⁺."
+ },
+ {
+  "id": 15,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Why are most transition metal complexes coloured?",
+  "a": "• Ligands split the degenerate 3d orbitals into two energy levels separated by ΔE.<br>• Electrons ABSORB specific frequencies of visible light (ΔE = hν) to jump from a lower to a higher d-orbital (d-d transition).<br>• The colour seen is the COMPLEMENTARY colour of the light absorbed — the rest is transmitted/reflected."
+ },
+ {
+  "id": 16,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Why is [Cu(H₂O)₆]²⁺(aq) blue?",
+  "a": "• Cu²⁺ is [Ar]3d⁹ — a partially filled d-subshell, so d-d transitions are possible.<br>• The complex absorbs red/orange light and transmits the complementary colour, BLUE.<br>• Colour depends on the ligand and coordination number (e.g. [Cu(NH₃)₄(H₂O)₂]²⁺ is deep blue), so colour changes can signal ligand substitution."
+ },
+ {
+  "id": 17,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Why is [Zn(H₂O)₆]²⁺ colourless?",
+  "a": "• Zn²⁺ is [Ar]3d¹⁰ — a COMPLETELY FILLED d-subshell.<br>• There is no vacant d-orbital for an electron to be promoted into, so no d-d transition and no visible light is absorbed.<br>• General rule: colour requires a partially filled d-subshell (d¹–d⁹)."
+ },
+ {
+  "id": 18,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "What is a bidentate (chelating) ligand? Give examples.",
+  "a": "• A ligand that donates TWO lone pairs, forming two dative bonds to the same metal ion (contributes 2 to the coordination number).<br>• Examples: ethane-1,2-diamine (en, H₂NCH₂CH₂NH₂) and ethanedioate (C₂O₄²⁻).<br>• Multidentate ligands form ring chelates that are more stable than similar monodentate complexes (chelate effect)."
+ },
+ {
+  "id": 19,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Explain the chelate effect in thermodynamic terms.",
+  "a": "• [Ni(H₂O)₆]²⁺ + 3en ⇌ [Ni(en)₃]²⁺ + 6H₂O: 4 reactant particles become 7 product particles (Δn = +3).<br>• ΔH ≈ 0 (Ni–N and Ni–O bonds have similar strength), so the driving force is the large POSITIVE ΔS<sub>system</sub> (increased disorder).<br>• ΔG = ΔH − TΔS becomes more negative, so the chelated complex is thermodynamically favoured."
+ },
+ {
+  "id": 20,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.4",
+  "q": "Which metal hydroxides are amphoteric and what does that mean?",
+  "a": "• Cr(OH)₃, Al(OH)₃ and Zn(OH)₂ dissolve in BOTH acids and excess strong alkali.<br>• With acid: Cr(OH)₃ + 3H⁺ → Cr³⁺ + 3H₂O (green solution).<br>• With excess NaOH: Cr(OH)₃ + 3OH⁻ → [Cr(OH)₆]³⁻ (dark green solution) — the hydroxide redissolves."
+ },
+ {
+  "id": 21,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.5",
+  "q": "What is heterogeneous catalysis and how does V₂O₅ work in the Contact Process?",
+  "a": "• Catalyst in a DIFFERENT phase from the reactants; reaction occurs at active sites on the solid surface where reactants ADSORB, weakening bonds.<br>• V₂O₅ (solid) catalyses 2SO₂ + O₂ → 2SO₃: SO₂ + V₂O₅ → SO₃ + V₂O₄, then V₂O₄ + ½O₂ → V₂O₅ — the catalyst cycles between +5 and +4 oxidation states and is regenerated.<br>• MS keywords: surface adsorption, active sites, oxidation-state cycling."
+ },
+ {
+  "id": 22,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.5",
+  "q": "What is homogeneous catalysis and how does Fe²⁺ catalyse the I⁻ / S₂O₈²⁻ reaction?",
+  "a": "• Catalyst in the SAME phase as the reactants, acting by changing oxidation state through an intermediate.<br>• S₂O₈²⁻ + 2Fe²⁺ → 2SO₄²⁻ + 2Fe³⁺, then 2Fe³⁺ + 2I⁻ → 2Fe²⁺ + I₂ — Fe²⁺ is regenerated.<br>• I⁻ and S₂O₈²⁻ are both negative so their direct collision has a high Eₐ; Fe²⁺/Fe³⁺ provides a lower-energy route."
+ },
+ {
+  "id": 23,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.5",
+  "q": "What is autocatalysis? Give an example.",
+  "a": "• A reaction in which a PRODUCT acts as the catalyst for the reaction itself.<br>• Example: acidified KMnO₄ + ethanedioic acid — the Mn²⁺ formed catalyses the reaction, so the rate is slow at first then speeds up (an S-shaped concentration-time curve).<br>• MS trap: the catalyst must be a product, not a reactant."
+ },
+ {
+  "id": 24,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Distinguish tetrahedral from square planar 4-coordinate complexes.",
+  "a": "• Tetrahedral (bond angle 109.5°): e.g. [CuCl₄]²⁻ — common for most 4-coordinate complexes.<br>• Square planar (bond angle 90°): formed by Pt²⁺ (d⁸) complexes, e.g. cisplatin [Pt(NH₃)₂Cl₂].<br>• Square planar Pt(II) complexes can show cis/trans isomerism (relevant to cisplatin vs transplatin)."
+ },
+ {
+  "id": 25,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.1",
+  "q": "Why does benzene resist electrophilic addition?",
+  "a": "• Benzene has a planar ring of six p orbitals overlapping to form a DELOCALISED π-electron cloud (six π electrons).<br>• Addition would break this delocalisation and destroy the aromatic stabilisation (~149 kJ mol⁻¹).<br>• Instead benzene undergoes electrophilic SUBSTITUTION, which replaces one H and regenerates the aromatic ring."
+ },
+ {
+  "id": 26,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.1",
+  "q": "Give thermochemical, structural and reactivity evidence for the delocalised model of benzene.",
+  "a": "• Thermochemical: hydrogenation of benzene is −205 kJ mol⁻¹ vs −354 kJ mol⁻¹ predicted for three C=C — 149 kJ mol⁻¹ MORE STABLE (delocalisation energy).<br>• Structural: X-ray diffraction shows all six C–C bonds are IDENTICAL (0.139 nm), between C–C (0.154 nm) and C=C (0.134 nm).<br>• Reactivity: benzene does not decolourise bromine water (alkenes do); it undergoes substitution, not addition."
+ },
+ {
+  "id": 27,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.2",
+  "q": "What are the conditions for nitrating benzene, and why must the temperature be controlled?",
+  "a": "• Reagents: concentrated HNO₃ + concentrated H₂SO₄ (nitrating mixture); electrophile NO₂⁺ formed by HNO₃ + 2H₂SO₄ → NO₂⁺ + H₃O⁺ + 2HSO₄⁻.<br>• Conditions: ~55 °C in a water bath.<br>• Above 55 °C further substitution occurs, giving DINITROBENZENE instead of nitrobenzene."
+ },
+ {
+  "id": 28,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.2",
+  "q": "Describe Friedel-Crafts alkylation of benzene.",
+  "a": "• Reagents: halogenoalkane (e.g. CH₃Cl) + anhydrous AlCl₃ catalyst.<br>• AlCl₃ generates the electrophile: CH₃Cl + AlCl₃ → CH₃⁺ + AlCl₄⁻.<br>• The CH₃⁺ attacks the ring, then H⁺ is eliminated to regenerate the aromatic ring — product methylbenzene (toluene).<br>• MS keyword: AlCl₃ catalyst, anhydrous conditions."
+ },
+ {
+  "id": 29,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.2",
+  "q": "How is benzene converted to bromobenzene?",
+  "a": "• Reagents: bromine + FeBr₃ catalyst (Fe can be used, forming FeBr₃ in situ).<br>• FeBr₃ polarises Br₂ to generate the Br⁺ electrophile.<br>• Br⁺ attacks the ring forming the cation intermediate, then H⁺ is removed (by FeBr₄⁻) to give bromobenzene + HBr — electrophilic substitution."
+ },
+ {
+  "id": 30,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.3",
+  "q": "Why is phenol more reactive than benzene towards electrophilic substitution?",
+  "a": "• The oxygen lone pair of the –OH group DELOCALISES INTO the aromatic π system, increasing the electron density of the ring.<br>• The ring is more attractive to electrophiles, so milder conditions work: phenol reacts with dilute HNO₃ at room temperature (benzene needs conc. acid at 55 °C).<br>• Phenol + bromine water gives 2,4,6-tribromophenol (white precipitate) — no catalyst or UV needed."
+ },
+ {
+  "id": 31,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.3",
+  "q": "Explain the acidity of phenol.",
+  "a": "• Phenol is a weak acid (pKₐ ≈ 10): C₆H₅OH ⇌ C₆H₅O⁻ + H⁺.<br>• The phenoxide ion is stabilised by delocalisation of the negative charge into the ring, favouring dissociation.<br>• Phenol is MORE acidic than alcohols (no delocalisation) but LESS acidic than carboxylic acids; it dissolves in NaOH but NOT in NaHCO₃."
+ },
+ {
+  "id": 32,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.1",
+  "q": "Give the base strength order of butylamine, ammonia, phenylamine and ethanamide, with reasons.",
+  "a": "• Order (strongest → weakest): butylamine > ammonia > phenylamine > ethanamide.<br>• Butylamine: alkyl group is electron-RELEASING (+I), increasing electron density on the N lone pair.<br>• Phenylamine: lone pair delocalises into the ring — less available.<br>• Ethanamide: lone pair delocalises into the C=O group — largely unavailable."
+ },
+ {
+  "id": 33,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.1",
+  "q": "Why is butylamine a stronger base than ammonia?",
+  "a": "• The butyl group is electron-releasing (positive inductive effect, +I).<br>• It increases the electron density on the nitrogen atom, making the lone pair MORE available to accept H⁺.<br>• The resulting butylammonium ion is also stabilised by the alkyl group, further favouring protonation."
+ },
+ {
+  "id": 34,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.1",
+  "q": "Why is phenylamine a weaker base than ammonia?",
+  "a": "• The nitrogen lone pair is DELOCALISED into the aromatic π system of the benzene ring.<br>• This reduces the electron density on nitrogen, making the lone pair LESS available to accept H⁺.<br>• MS keyword: lone pair delocalised into the ring → weaker base."
+ },
+ {
+  "id": 35,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.1",
+  "q": "Why is ethanamide the weakest base of the four?",
+  "a": "• The nitrogen lone pair is strongly delocalised into the adjacent carbonyl (C=O) group.<br>• The lone pair is largely UNAVAILABLE for protonation.<br>• Amides are therefore essentially neutral — weaker bases than aromatic amines."
+ },
+ {
+  "id": 36,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.2",
+  "q": "How is phenylamine prepared from nitrobenzene?",
+  "a": "• Reduction: nitrobenzene + tin (Sn) + concentrated HCl under reflux → phenylammonium chloride.<br>• Then add excess NaOH(aq) to liberate the free amine: C₆H₅NH₃⁺ + OH⁻ → C₆H₅NH₂ + H₂O.<br>• The phenylamine is separated (e.g. by steam distillation) from the alkaline mixture."
+ },
+ {
+  "id": 37,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.3",
+  "q": "What are the conditions for diazotisation and why is the temperature critical?",
+  "a": "• Phenylamine + NaNO₂ + dilute HCl at BELOW 10 °C (ice bath) → benzenediazonium chloride, C₆H₅N₂⁺Cl⁻.<br>• Nitrous acid (HNO₂) is formed in situ: NaNO₂ + HCl → HNO₂ + NaCl.<br>• Above 10 °C the benzenediazonium ion DECOMPOSES into phenol and nitrogen gas — so the mixture must be kept cold."
+ },
+ {
+  "id": 38,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.3",
+  "q": "How is an azo dye formed by coupling?",
+  "a": "• Cold benzenediazonium chloride solution is added dropwise to phenol dissolved in NaOH (alkaline, kept cold).<br>• Coupling reaction: the diazonium ion attacks the electron-rich ring of the phenoxide ion.<br>• Product: 4-phenylazophenol, a yellow/orange solid containing the –N=N– azo linkage (extended delocalisation absorbs visible light → colour)."
+ },
+ {
+  "id": 39,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.5",
+  "q": "Describe the structure of an amino acid at pH 7 and at its isoelectric point.",
+  "a": "• At pH 7: predominantly a ZWITTERION, ⁺H₃N–CHR–COO⁻ — carries both + and − charges, overall neutral.<br>• Isoelectric point: the pH at which the amino acid exists mainly as the zwitterion with no net movement in an electric field.<br>• In acid (low pH): cation ⁺H₃N–CHR–COOH; in alkali (high pH): anion H₂N–CHR–COO⁻."
+ },
+ {
+  "id": 40,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.6",
+  "q": "How is a peptide bond formed?",
+  "a": "• CONDENSATION reaction between the –COOH group of one amino acid and the –NH₂ group of another.<br>• A water molecule is eliminated and the amide (peptide) link –CO–NH– forms.<br>• Dipeptides, polypeptides and proteins are built from these links; hydrolysis (acid or enzyme) breaks them back to amino acids."
+ },
+ {
+  "id": 41,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.6",
+  "q": "What is condensation polymerisation?",
+  "a": "• Bifunctional monomers (two reactive groups each) join with the ELIMINATION OF A SMALL MOLECULE (usually water or HCl).<br>• The polymer contains the functional links of the monomers (amide or ester links).<br>• Examples: nylon 6,6 and Kevlar (polyamides), Terylene (polyester) — compare with addition polymers like poly(ethene)."
+ },
+ {
+  "id": 42,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.6",
+  "q": "What monomers form nylon 6,6 and what links hold it together?",
+  "a": "• Monomers: hexanedioic acid (HOOC(CH₂)₄COOH) and 1,6-diaminohexane (H₂N(CH₂)₆NH₂).<br>• Condensation polymerisation eliminates water and forms AMIDE (–CO–NH–) links.<br>• Nylon 6,6 is a polyamide; the '6,6' refers to six carbons in each monomer."
+ },
+ {
+  "id": 43,
+  "topic": "Topic 19: Amines, Amino Acids & Polymers",
+  "spec": "Spec 19.6",
+  "q": "Describe the structure and properties of Kevlar.",
+  "a": "• Monomers: benzene-1,4-dicarboxylic acid (terephthalic acid) and 1,4-diaminobenzene.<br>• Aromatic polyamide with amide links, rigid benzene rings and strong hydrogen bonding between chains.<br>• Properties: very strong, stiff, heat-resistant, low density — used in bullet-proof vests and tyres."
+ },
+ {
+  "id": 44,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.1",
+  "q": "How is a Grignard reagent prepared and why must the conditions be anhydrous?",
+  "a": "• Reflux the halogenoalkane with magnesium turnings in ANHYDROUS (dry) ETHER: CH₃CH₂Br + Mg → CH₃CH₂MgBr.<br>• Water and moist air destroy the reagent: RMgX + H₂O → RH + Mg(OH)X (an alkane is formed).<br>• MS keyword: anhydrous dry ether is MANDATORY — all apparatus must be dry."
+ },
+ {
+  "id": 45,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.1",
+  "q": "How is a carboxylic acid made from a Grignard reagent?",
+  "a": "• RMgX reacts with CO₂ (dry ice), then the adduct is hydrolysed with dilute acid (H₃O⁺).<br>• RMgX + CO₂ → RCOOMgX, then RCOOMgX + H⁺ → RCOOH + MgX⁺.<br>• This extends the carbon chain by ONE carbon — e.g. CH₃MgBr gives ethanoic acid."
+ },
+ {
+  "id": 46,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.1",
+  "q": "Which alcohol is formed when a Grignard reagent reacts with methanal, other aldehydes, and ketones?",
+  "a": "• Methanal (HCHO) → PRIMARY alcohol.<br>• Other aldehydes (RCHO) → SECONDARY alcohol.<br>• Ketones (R₂CO) → TERTIARY alcohol.<br>• Example: propylmagnesium bromide + propanone (a ketone) → 2-methylpentan-2-ol (a tertiary alcohol), after H₃O⁺ hydrolysis."
+ },
+ {
+  "id": 47,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.2",
+  "q": "How are nitriles prepared from halogenoalkanes and what can they be converted into?",
+  "a": "• Nucleophilic substitution: RBr + KCN (in ethanol, reflux) → RCN + KBr — the CN⁻ attacks the δ+ carbon.<br>• Nitriles hydrolyse (dilute acid, reflux) to CARBOXYLIC ACIDS: RCN + 2H₂O + H⁺ → RCOOH + NH₄⁺.<br>• Nitriles reduce (LiAlH₄ in dry ether, or H₂/Ni) to PRIMARY AMINES: RCN → RCH₂NH₂ — another way to lengthen the chain by one carbon."
+ },
+ {
+  "id": 48,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.3",
+  "q": "When is reflux used and when is distillation used?",
+  "a": "• REFLUX: vertical condenser returns condensed vapours to the flask — used to heat reactions at boiling point for a long time without losing volatile reactants/products (e.g. hydrolysis of nitriles).<br>• DISTILLATION: the condenser is angled and the product collected — used to separate a liquid product by its boiling point (e.g. collecting the ester or the amine).<br>• MS trap: name the technique the question asks for — reflux for the reaction, distillation for collection."
+ },
+ {
+  "id": 49,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.4",
+  "q": "List the steps of recrystallisation and how purity is confirmed.",
+  "a": "• 1. Dissolve the crude solid in the MINIMUM volume of HOT solvent.<br>• 2. Filter HOT to remove insoluble impurities.<br>• 3. Cool slowly (ice bath) so the pure product crystallises.<br>• 4. Suction-filter (Büchner funnel), wash with ice-cold solvent, dry.<br>• Purity: measure the melting point — pure product melts sharply at the literature value; impurities lower and broaden the range."
+ },
+ {
+  "id": 50,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.5",
+  "q": "Define atom economy and state how a drying agent is used.",
+  "a": "• Atom economy = (Mr of desired product / ΣMr of ALL products) × 100% — measures how many reactant atoms end up in the desired product (green chemistry).<br>• Drying: add an ANHYDROUS salt (CaCl₂, MgSO₄ or Na₂SO₄) to the organic layer, swirl, then decant/filter off the dried liquid.<br>• High atom economy = less waste; addition reactions have 100% atom economy, substitution/elimination lower."
+ }
+ ,
+{
+  "id": 51,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.5",
+  "q": "In the cell Zn(s)|Zn²⁺(aq)||Cu²⁺(aq)|Cu(s), which electrode is the negative terminal and in which direction do electrons flow in the external circuit?",
+  "a": "• Zinc is the negative electrode (anode): E°(Zn²⁺/Zn) = −0.76 V is the more negative value, so Zn is oxidised: Zn → Zn²⁺ + 2e⁻.<br>• Electrons flow externally from the more negative electrode (zinc, anode) to the more positive electrode (copper, cathode).<br>• MS keyword: oxidation always occurs at the more negative half-cell; reduction at the more positive half-cell."
+ },
+{
+  "id": 52,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.10",
+  "q": "Write the equation linking ΔG° to E°<sub>cell</sub> and use it to explain why a positive E°<sub>cell</sub> means a reaction is thermodynamically feasible.",
+  "a": "• ΔG° = −zFE°<sub>cell</sub>, where z = number of moles of electrons transferred and F = Faraday constant (96 500 C mol⁻¹).<br>• A positive E°<sub>cell</sub> gives a negative ΔG°, which means the reaction is thermodynamically feasible (spontaneous).<br>• MS trap: quote the sign link — positive E°<sub>cell</sub> ⇔ negative ΔG° ⇔ feasible; the equation is worth a mark on its own."
+ },
+{
+  "id": 53,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.9",
+  "q": "How do you use E° values to decide which species is the strongest oxidising agent and which is the strongest reducing agent?",
+  "a": "• The more positive the E° value, the greater the tendency of the oxidised form to gain electrons, so the stronger the oxidising agent (e.g. F₂/F⁻ at +2.87 V is a very strong oxidant).<br>• The more negative the E° value, the greater the tendency of the reduced form to lose electrons, so the stronger the reducing agent (e.g. Li⁺/Li at −3.04 V is a very strong reductant).<br>• MS keyword: oxidising agent = the oxidised species of the half-cell with the more positive E°."
+ },
+{
+  "id": 54,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.9",
+  "q": "Using E°(Cu²⁺/Cu⁺) = +0.15 V and E°(Cu⁺/Cu) = +0.52 V, predict whether Cu⁺ ions disproportionate in aqueous solution.",
+  "a": "• Disproportionation: 2Cu⁺ → Cu²⁺ + Cu. Treat it as two half-cells: Cu⁺ is oxidised (Cu⁺ → Cu²⁺ + e⁻, E° = +0.15 V as oxidation) and Cu⁺ is reduced (Cu⁺ + e⁻ → Cu, E° = +0.52 V).<br>• E°<sub>cell</sub> = E°(reduction) − E°(oxidation) = +0.52 − (+0.15) = +0.37 V, which is positive, so Cu⁺ DOES disproportionate.<br>• MS point: a species disproportionates when the E° for its reduction to the lower state is more positive than the E° for its oxidation to the higher state."
+ },
+{
+  "id": 55,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.3",
+  "q": "What is the function of the salt bridge in a cell, and why is a high-resistance voltmeter used to measure E°<sub>cell</sub>?",
+  "a": "• The salt bridge (e.g. KNO₃ or KCl soaked in agar) completes the electrical circuit by allowing ions to flow between the two half-cells, maintaining electrical neutrality as charges build up.<br>• A high-resistance voltmeter is used so that a negligible current flows — the cell is measured under (almost) zero-current conditions, otherwise the cell would run and the measured potential would drop.<br>• MS keyword: salt bridge allows ion flow / completes circuit; voltmeter must draw (almost) no current."
+ },
+{
+  "id": 56,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.3",
+  "q": "Explain why an inert platinum electrode is needed for the Fe³⁺/Fe²⁺ half-cell but not for the Zn²⁺/Zn half-cell.",
+  "a": "• A metal/metal-ion half-cell (Zn²⁺/Zn) uses the metal itself as the electrode because it conducts electrons and takes part in the equilibrium Zn²⁺ + 2e⁻ ⇌ Zn.<br>• For Fe³⁺/Fe²⁺ both species are ions in solution, so no solid metal is available — an inert Pt electrode conducts electrons to/from the solution and provides a surface for the equilibrium Fe³⁺ + e⁻ ⇌ Fe²⁺.<br>• MS keyword: Pt is inert (does not react); the same applies to gas half-cells such as Cl₂/Cl⁻ where Cl₂ is bubbled over Pt."
+ },
+{
+  "id": 57,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.10",
+  "q": "Explain in thermodynamic terms why a positive E°<sub>cell</sub> means the overall reaction is feasible.",
+  "a": "• ΔG° = −zFE°<sub>cell</sub>, so a positive E°<sub>cell</sub> gives ΔG° < 0, meaning the reaction is thermodynamically feasible.<br>• Since ΔG° = ΔH° − TΔS°, a feasible reaction has ΔS°<sub>total</sub> > 0, and E°<sub>cell</sub> is related to the equilibrium constant by ln K = zFE°<sub>cell</sub>/RT, so K > 1.<br>• MS trap: feasibility is a thermodynamic statement only — it says nothing about the rate of reaction (activation energy)."
+ },
+{
+  "id": 58,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.11",
+  "q": "State the advantages of a rechargeable lithium-ion cell over a hydrogen-oxygen fuel cell for portable devices.",
+  "a": "• Lithium-ion cells: high cell voltage (about 3.7 V per cell), low mass because lithium is the lightest metal, rechargeable (can be recharged many times), and no memory effect.<br>• They store energy chemically and release it on demand, unlike the fuel cell which needs a continuous supply of H₂ and O₂.<br>• MS keyword: light (low density), high voltage, rechargeable — these are the marks most commonly credited."
+ },
+{
+  "id": 59,
+  "topic": "Topic 16: Redox & Electrode Potentials",
+  "spec": "Spec 16.9",
+  "q": "Given E°(Fe³⁺/Fe²⁺) = +0.77 V and E°(Br₂/Br⁻) = +1.07 V, predict whether Fe³⁺(aq) will oxidise Br⁻(aq) to Br₂.",
+  "a": "• For the reaction 2Fe³⁺ + 2Br⁻ → 2Fe²⁺ + Br₂: Fe³⁺ is reduced (E° = +0.77 V) and Br⁻ is oxidised (reverse of Br₂/Br⁻, E° = +1.07 V).<br>• E°<sub>cell</sub> = E°(reduction) − E°(oxidation) = +0.77 − (+1.07) = −0.30 V, which is negative, so the reaction is NOT thermodynamically feasible.<br>• MS keyword: the species with the more positive E° is reduced, so Br₂ is the stronger oxidising agent — the reverse reaction (Br₂ oxidising Fe²⁺) IS feasible."
+ },
+{
+  "id": 60,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.1",
+  "q": "Why do transition metals show variable oxidation states, and give two examples.",
+  "a": "• The 3d and 4s orbitals are very close in energy, so different numbers of electrons can be lost from the 4s and 3d subshells, giving ions with different oxidation states.<br>• Examples: Fe²⁺/Fe³⁺ (iron(II) and iron(III)); Cu⁺/Cu²⁺ (copper(I) and copper(II)); also Cr²⁺/Cr³⁺/Cr⁶⁺ and Mn²⁺/Mn⁴⁺/Mn⁷⁺.<br>• MS keyword: small energy difference between 3d and 4s orbitals — never say 'the d electrons are easily lost' without this reason."
+ },
+{
+  "id": 61,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.1",
+  "q": "Give the electronic configurations of Sc³⁺, Zn²⁺ and Cu⁺ and explain why none is classed as a transition-metal ion.",
+  "a": "• Sc³⁺: [Ar]3d⁰ (empty d subshell); Zn²⁺: [Ar]3d¹⁰ (full d subshell); Cu⁺: [Ar]3d¹⁰ (full d subshell).<br>• A transition metal forms at least one stable ion with a partially filled d subshell — none of these ions has a partially filled d subshell.<br>• MS trap: Cu⁺ is d¹⁰ (full) but Cu²⁺ is [Ar]3d⁹ (partially filled), which is why copper IS a transition metal overall."
+ },
+{
+  "id": 62,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.4",
+  "q": "Explain why aqueous solutions of transition-metal ions are weakly acidic, and why [Fe(H₂O)₆]³⁺ is a stronger acid than [Fe(H₂O)₆]²⁺.",
+  "a": "• The hydrated metal ion acts as a weak Brønsted acid: [Fe(H₂O)₆]³⁺ + H₂O ⇌ [Fe(H₂O)₅(OH)]²⁺ + H₃O⁺.<br>• The high charge on the metal ion polarises the O–H bonds of the coordinated water molecules, weakening them and making proton loss easier.<br>• MS keyword: Fe³⁺ has a greater charge density / charge-to-size ratio than Fe²⁺, so it polarises the O–H bonds more strongly — hence M³⁺ aqua ions are more acidic than M²⁺."
+ },
+{
+  "id": 63,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.4",
+  "q": "What is observed when aqueous NaOH is added, in excess, to solutions of Fe²⁺(aq), Fe³⁺(aq) and Cu²⁺(aq)?",
+  "a": "• Fe²⁺: green solution gives a green precipitate of Fe(OH)₂, insoluble in excess NaOH.<br>• Fe³⁺: yellow/brown solution gives a rust-brown precipitate of Fe(OH)₃, insoluble in excess NaOH.<br>• Cu²⁺: blue solution gives a pale blue precipitate of Cu(OH)₂, insoluble in excess NaOH (but it dissolves in excess NH₃ to give a deep blue solution).<br>• MS keyword: state the colour of the precipitate AND that it is insoluble in excess NaOH for these three."
+ },
+{
+  "id": 64,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.2",
+  "q": "Write an equation for the reaction of Cu(OH)₂ with excess ammonia and describe the observation.",
+  "a": "• Cu(OH)₂(s) + 4NH₃(aq) → [Cu(NH₃)₄(H₂O)₂]²⁺(aq) + 2OH⁻(aq) (often written [Cu(NH₃)₄]²⁺).<br>• Observation: the pale blue precipitate dissolves to give a deep blue solution — a ligand substitution in which water ligands are replaced by ammonia.<br>• MS keyword: deep blue solution, ligand substitution; the ammonia acts as a ligand donating lone pairs to Cu²⁺."
+ },
+{
+  "id": 65,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Describe how colorimetry is used to find the concentration of a coloured transition-metal ion in solution.",
+  "a": "• First intensify the colour by adding a suitable ligand (e.g. thiocyanate CNS⁻ or bipyridyl) so the absorption is strong and measurable.<br>• Prepare solutions of known concentration, measure their absorbance (or transmission) with a colorimeter, and plot a calibration curve of absorbance against concentration.<br>• MS keyword: measure absorbance of the unknown and read its concentration from the calibration curve — the curve must be drawn from known standards first."
+ },
+{
+  "id": 66,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.5",
+  "q": "Give two general reasons why transition metals and their compounds make good catalysts.",
+  "a": "• They can form ions in more than one oxidation state, so they can accept and donate electrons, providing an alternative reaction pathway with a lower activation energy (e.g. Fe²⁺/Fe³⁺ cycling).<br>• As solids they provide a large surface with active sites onto which reactants adsorb, weakening bonds so reaction is easier (e.g. iron in the Haber process).<br>• MS trap: never write 'they do not have variable oxidation states' — the correct answer is that they DO, and the catalyst is regenerated at the end."
+ },
+{
+  "id": 67,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "State the oxidation states and colours of the four vanadium ions formed when vanadium(V) is reduced stepwise by zinc in acid.",
+  "a": "• VO₂⁺ yellow (vanadium +5) → VO²⁺ blue (vanadium +4) → V³⁺ green (vanadium +3) → V²⁺ violet (vanadium +2).<br>• Sequence of reduction: +5 → +4 → +3 → +2, with the colour change yellow → blue → green → violet.<br>• MS keyword: learn the colour attached to each oxidation state — colour questions are common and the order matters."
+ },
+{
+  "id": 68,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Describe the colours and key reactions of chromium(III) and chromium(VI) in aqueous solution.",
+  "a": "• Cr³⁺(aq) is green (e.g. [Cr(H₂O)₆]³⁺). Cr(OH)₃ is amphoteric: it dissolves in acid to give green [Cr(H₂O)₆]³⁺ and in excess NaOH to give green [Cr(OH)₆]³⁻.<br>• Chromium(VI): dichromate(VI) Cr₂O₇²⁻ is orange; in alkali it converts to chromate(VI) CrO₄²⁻ which is yellow (equilibrium Cr₂O₇²⁻ + H₂O ⇌ 2CrO₄²⁻ + 2H⁺).<br>• MS keyword: orange dichromate ↔ yellow chromate equilibrium is shifted by acid/alkali; Cr(OH)₃ is the classic amphoteric hydroxide."
+ },
+{
+  "id": 69,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.5",
+  "q": "In the titration of acidified manganate(VII) with iron(II) ethanedioate (FeC₂O₄), what is the mole ratio of MnO₄⁻ to FeC₂O₄ and why is no indicator needed?",
+  "a": "• Ratio: 3MnO₄⁻ : 5FeC₂O₄ (5FeC₂O₄ reacts with 3MnO₄⁻). Fe²⁺ is oxidised to Fe³⁺ and C₂O₄²⁻ to 2CO₂; total electrons donated per FeC₂O₄ = 3, so 5 × 3 = 15 e⁻ match 3 × 5 e⁻.<br>• No indicator is needed because manganate(VII) is self-indicating: the purple MnO₄⁻ is decolourised to colourless/pale Mn²⁺ until the endpoint, when a permanent faint pink colour appears.<br>• MS keyword: 3:5 ratio and 'self-indicating / permanent pink at endpoint'."
+ },
+{
+  "id": 70,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.2",
+  "q": "Describe what happens when concentrated hydrochloric acid is added to [Co(H₂O)₆]²⁺(aq) and explain the colour change.",
+  "a": "• The pink hexaaquacobalt(II) solution turns blue as [CoCl₄]²⁻ forms: [Co(H₂O)₆]²⁺ + 4Cl⁻ ⇌ [CoCl₄]²⁻ + 6H₂O.<br>• This is a ligand substitution: water ligands are replaced by chloride ligands, and the change in ligand changes the splitting of the d orbitals, so a different wavelength is absorbed and the complementary colour changes from pink to blue.<br>• MS keyword: ligand substitution + change in d-orbital splitting changes the colour absorbed."
+ },
+{
+  "id": 71,
+  "topic": "Topic 17: Transition Metals",
+  "spec": "Spec 17.3",
+  "q": "Explain why the same transition-metal ion forms complexes of different colours with different ligands.",
+  "a": "• Different ligands cause different amounts of d-orbital splitting (crystal field splitting), so the energy gap ΔE between the split d orbitals changes.<br>• Since ΔE = hν, a different energy gap means a different frequency (wavelength) of visible light is absorbed; the colour seen is the complementary colour of the light absorbed.<br>• MS keyword: changing ligand changes ΔE → different wavelength absorbed → different complementary colour (e.g. [Co(H₂O)₆]²⁺ pink vs [CoCl₄]²⁻ blue)."
+ },
+{
+  "id": 72,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.1",
+  "q": "Describe the mechanism of the electrophilic substitution of benzene, using bromination as the example.",
+  "a": "• Step 1: the halogen carrier (FeBr₃) polarises/heterolytically splits Br₂ to generate the Br⁺ electrophile: Br₂ + FeBr₃ → Br⁺ + FeBr₄⁻.<br>• Step 2: the delocalised π-electron ring attacks Br⁺ — a curly arrow from the ring towards the electrophile — forming a carbocation (arenium ion) intermediate in which one carbon becomes sp³ and aromaticity is temporarily lost.<br>• Step 3: a base (FeBr₄⁻) removes H⁺ from the sp³ carbon, regenerating the aromatic ring; the delocalised π system is restored.<br>• MS keyword: electrophile generation, curly arrow from ring to E⁺, carbocation intermediate, loss of H⁺ restores aromaticity."
+ },
+{
+  "id": 73,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.2",
+  "q": "Write an equation for the generation of the nitronium ion and state the role of the concentrated sulfuric acid in nitration.",
+  "a": "• HNO₃ + 2H₂SO₄ → NO₂⁺ + H₃O⁺ + 2HSO₄⁻.<br>• Concentrated sulfuric acid protonates nitric acid, which then loses water to form the NO₂⁺ (nitronium/nitryl) electrophile — H₂SO₄ is the catalyst (it is regenerated as HSO₄⁻).<br>• MS keyword: NO₂⁺ is the electrophile; without conc H₂SO₄ no nitronium ion forms and nitration does not occur."
+ },
+{
+  "id": 74,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.2",
+  "q": "Describe Friedel-Crafts acylation of benzene, giving reagents, the electrophile and the product.",
+  "a": "• Reagents: an acyl chloride (e.g. ethanoyl chloride CH₃COCl) with anhydrous AlCl₃ catalyst.<br>• AlCl₃ generates the acylium ion electrophile: CH₃COCl + AlCl₃ → CH₃CO⁺ + AlCl₄⁻.<br>• Product: an aromatic ketone — phenylethanone (acetophenone) C₆H₅COCH₃, with HCl given off.<br>• MS trap: acylation uses RCOCl (acyl chloride), alkylation uses RCl (halogenoalkane) — the electrophiles are RCO⁺ and R⁺ respectively, and AlCl₃ must be anhydrous."
+ },
+{
+  "id": 75,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.1",
+  "q": "Describe and explain the different behaviour of benzene and cyclohexene with bromine water.",
+  "a": "• Cyclohexene (an alkene) decolourises bromine water rapidly at room temperature — electrophilic addition to the C=C double bond.<br>• Benzene does NOT decolourise bromine water: its delocalised π system is too stable to undergo addition, so it needs a halogen carrier (FeBr₃/AlBr₃) and more forcing conditions for substitution.<br>• MS keyword: this is the classic test to distinguish an arene from an alkene — 'benzene does not decolourise bromine water'."
+ },
+{
+  "id": 76,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.2",
+  "q": "Explain why the C–Br bond in bromobenzene is much less reactive than the C–Br bond in a bromoalkane.",
+  "a": "• The lone pair on the bromine overlaps with the delocalised π system of the ring, giving the C–Br bond partial double-bond character — it is shorter and stronger.<br>• The sp²-hybridised ring carbon also holds the electron pair more tightly than an sp³ carbon.<br>• MS keyword: lone pair delocalised into the ring → partial double bond character → nucleophilic substitution requires very harsh conditions (e.g. 200 °C, high pressure, NaOH(aq))."
+ },
+{
+  "id": 77,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.2",
+  "q": "Explain why 2,4-dinitrochlorobenzene undergoes nucleophilic substitution much more readily than chlorobenzene.",
+  "a": "• The two nitro (–NO₂) groups are strongly electron-withdrawing: they pull electron density out of the ring towards themselves.<br>• This makes the ring carbon bearing the chlorine strongly δ+ (electron deficient), so nucleophiles like OH⁻ attack it much more easily, displacing Cl⁻.<br>• MS keyword: electron-withdrawing NO₂ groups stabilise the negative charge that develops in the transition state, activating the ring to nucleophilic substitution."
+ },
+{
+  "id": 78,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.3",
+  "q": "Describe the reaction of phenol with bromine water and explain why it is so much more reactive than benzene.",
+  "a": "• Phenol reacts with bromine water at room temperature to give a white precipitate of 2,4,6-tribromophenol (no catalyst needed).<br>• The –OH group is electron-releasing: the oxygen lone pair delocalises into the ring, increasing electron density — especially at the 2, 4 and 6 positions — so electrophilic attack by Br⁺ is much easier.<br>• MS keyword: white precipitate of 2,4,6-tribromophenol; lone pair donation activates the ring (contrast with benzene which needs a halogen carrier)."
+ },
+{
+  "id": 79,
+  "topic": "Topic 18: Arenes",
+  "spec": "Spec 18.3",
+  "q": "Explain why phenol is a stronger acid than ethanol but a weaker acid than a carboxylic acid such as ethanoic acid.",
+  "a": "• Phenol is stronger than ethanol: the phenoxide ion C₆H₅O⁻ is stabilised by delocalisation of the negative charge over the aromatic ring, whereas the ethoxide ion CH₃CH₂O⁻ has no such stabilisation.<br>• Phenol is weaker than ethanoic acid: in the ethanoate ion the negative charge is delocalised over TWO equivalent oxygen atoms (resonance-stabilised), a more effective stabilisation than delocalisation around the benzene ring.<br>• MS keyword: stability of the conjugate base (phenoxide vs ethanoate) drives the order: ethanol < phenol < ethanoic acid."
+ },
+{
+  "id": 80,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.1",
+  "q": "Classify CH₃CH₂NH₂, (CH₃)₂NH, (CH₃)₃N and (CH₃)₄N⁺ as primary, secondary, tertiary or quaternary, explaining your rule.",
+  "a": "• CH₃CH₂NH₂: primary (one alkyl group on N); (CH₃)₂NH: secondary (two alkyl groups); (CH₃)₃N: tertiary (three alkyl groups); (CH₃)₄N⁺: quaternary ammonium ion (four alkyl groups, N bears a full positive charge).<br>• The class is decided by the number of alkyl/aryl groups attached to the nitrogen atom, not by the number of hydrogens.<br>• MS trap: quaternary ammonium salts are ionic and are not basic like the neutral amines."
+ },
+{
+  "id": 81,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.1",
+  "q": "Describe the reaction of a halogenoalkane with ammonia and explain why excess ammonia is used to favour the primary amine.",
+  "a": "• CH₃CH₂Br + 2NH₃ → CH₃CH₂NH₂ + NH₄Br — the amine acts as a nucleophile, substituting the halogen, and a second NH₃ removes H⁺ from the ammonium salt formed.<br>• The product ethylamine is itself a nucleophile, so without excess NH₃ it would react further to give secondary and tertiary amines and quaternary salts.<br>• MS keyword: use excess ammonia (in ethanol, heated in a sealed tube) to keep the amine out-competed and maximise the primary amine."
+ },
+{
+  "id": 82,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.1",
+  "q": "Write the equation for the reaction of phenylamine with ethanoyl chloride and name the organic product.",
+  "a": "• C₆H₅NH₂ + CH₃COCl → C₆H₅NHCOCH₃ + HCl.<br>• Product: N-phenylethanamide (N-phenylacetamide) — an N-substituted amide, formed by nucleophilic addition–elimination (acylation) at the nitrogen.<br>• MS keyword: acylation of an amine with an acyl chloride gives an amide + HCl; acyl chlorides are used because they react rapidly and completely without a catalyst."
+ },
+{
+  "id": 83,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.3",
+  "q": "Give two reactions of benzenediazonium chloride other than azo coupling, with conditions and products.",
+  "a": "• With warm water: C₆H₅N₂⁺Cl⁻ + H₂O → C₆H₅OH + N₂ + HCl — phenol is formed with effervescence of nitrogen gas (diazonium salts decompose in water above about 5 °C).<br>• Sandmeyer reaction: with copper(I) chloride, C₆H₅N₂⁺Cl⁻ → C₆H₅Cl + N₂ (chlorobenzene); with KI it gives iodobenzene C₆H₅I + N₂.<br>• MS keyword: nitrogen gas is always a product; these reactions introduce Cl, Br, I, CN or OH onto the ring via the diazonium ion."
+ },
+{
+  "id": 84,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.3",
+  "q": "Explain why azo dyes are coloured, referring to the structure of the dye molecule.",
+  "a": "• An azo dye contains an –N=N– (azo) linkage joining two aromatic rings, forming an extended conjugated system of alternating single and double bonds.<br>• The delocalised π electrons can absorb visible light (electrons excited between energy levels), and the colour seen is the complementary colour of the light absorbed.<br>• MS keyword: extended conjugated system / delocalisation absorbs visible light → complementary colour observed; the azo group is essential for the colour."
+ },
+{
+  "id": 85,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.5",
+  "q": "Draw the form of a generic amino acid H₂N–CHR–COOH in strongly acidic solution and in strongly alkaline solution.",
+  "a": "• Strongly acidic: the –NH₂ group gains H⁺ → H₃N⁺–CHR–COOH (cation; overall +1 charge).<br>• Strongly alkaline: the –COOH group loses H⁺ → H₂N–CHR–COO⁻ (anion; overall −1 charge).<br>• MS keyword: amino acids are amphoteric — the amino group accepts H⁺ (base) and the carboxyl group donates H⁺ (acid); the neutral zwitterion H₃N⁺–CHR–COO⁻ exists between these extremes."
+ },
+{
+  "id": 86,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.5",
+  "q": "Define the isoelectric point of an amino acid and explain what happens if it is placed in an electric field at that pH.",
+  "a": "• The isoelectric point is the pH at which the amino acid exists predominantly as the neutral zwitterion H₃N⁺–CHR–COO⁻, with no overall charge.<br>• In an electric field at the isoelectric point the amino acid does not migrate — it has no net charge, so it is not attracted to either electrode.<br>• MS keyword: at isoelectric point the molecule is neutral (zwitterionic); below it the cation moves to the cathode, above it the anion moves to the anode."
+ },
+{
+  "id": 87,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.5",
+  "q": "Explain why all 2-amino acids except glycine show optical isomerism, and what mixture is produced by a laboratory synthesis.",
+  "a": "• The α-carbon (C2) is bonded to four different groups (–NH₂, –COOH, –R, –H) so it is chiral — the molecule exists as two non-superimposable mirror-image enantiomers.<br>• Glycine (R = H) has two identical H atoms on the α-carbon, so it is not chiral and shows no optical isomerism.<br>• MS keyword: laboratory synthesis from non-chiral reagents gives a 50:50 racemic mixture (racemate) that is optically inactive."
+ },
+{
+  "id": 88,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.6",
+  "q": "Describe how a peptide (protein) can be hydrolysed and what forces hold protein chains in their specific shapes.",
+  "a": "• Acid hydrolysis: heat with 6 mol dm⁻³ HCl under reflux breaks the amide (peptide) bonds, giving the individual amino acids (as their salts).<br>• The secondary structure is held by hydrogen bonds between N–H and C=O groups of the peptide backbone; tertiary structure is reinforced by hydrogen bonds, disulfide bridges (cysteine) and ionic interactions between side chains.<br>• MS keyword: hydrolysis of the –CONH– linkage needs acid (or enzymes); hydrogen bonding is the key intermolecular force between chains."
+ },
+{
+  "id": 89,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.6",
+  "q": "Explain why Kevlar has a much higher tensile strength than nylon 6,6.",
+  "a": "• Both are polyamides with –CONH– linkages, so hydrogen bonding between N–H and C=O groups of adjacent chains gives strength in both.<br>• Kevlar's chains contain rigid benzene rings (from 1,4-diaminobenzene and benzene-1,4-dicarboxylic acid), which make the polymer chains straight and pack tightly together, maximising the number of hydrogen bonds between chains.<br>• MS keyword: rigid aromatic rings + extensive hydrogen bonding between chains → high tensile strength (used in bulletproof vests)."
+ },
+{
+  "id": 90,
+  "topic": "Topic 19: Organic Nitrogen",
+  "spec": "Spec 19.6",
+  "q": "Explain why condensation polymers such as nylon and PET are biodegradable, while addition polymers such as poly(ethene) are not.",
+  "a": "• Condensation polymers contain polar linkages (–CONH– amide or –COO– ester) in the backbone, which can be broken by hydrolysis (acid or alkaline) — the polymer degrades back toward its monomers.<br>• Addition polymers have only non-polar C–C bonds in the backbone, which are chemically inert and resistant to hydrolysis, so they persist in the environment.<br>• MS keyword: polar bonds susceptible to hydrolysis vs non-polar C–C backbone; this is why polyesters/polyamides can be chemically recycled but poly(alkenes) persist."
+ },
+{
+  "id": 91,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.1",
+  "q": "Explain why the carbon atom of a Grignard reagent (R–MgBr) acts as a nucleophile.",
+  "a": "• Magnesium is less electronegative than carbon, so the C–Mg bond is polar covalent with the carbon δ− (C⁺δ−–Mg⁺δ+).<br>• The electron-rich (carbanion-like) carbon carries a lone pair and attacks electron-deficient centres such as the carbonyl carbon of aldehydes, ketones and CO₂.<br>• MS keyword: Cδ−–Mgδ+ polarity; the carbon is nucleophilic, which is why Grignard reagents add to carbonyls and are destroyed by water and acids."
+ },
+{
+  "id": 92,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.1",
+  "q": "Why is dilute acid added at the end of a Grignard reaction, and what does it do?",
+  "a": "• After the Grignard reagent adds to the carbonyl compound, the product is a magnesium alkoxide salt (e.g. R–O⁻MgBr⁺), not the free alcohol.<br>• Adding dilute acid (H₃O⁺) protonates the alkoxide to release the alcohol, e.g. R–O⁻MgBr⁺ + H⁺ → R–OH + Mg²⁺ + Br⁻.<br>• MS keyword: acid work-up (H₃O⁺) converts the alkoxide into the alcohol; water/acid must never be present during the reaction itself because it would destroy the Grignard reagent."
+ },
+{
+  "id": 93,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.4",
+  "q": "Outline the reaction sequence to convert benzene into iodobenzene, giving reagents and conditions for each step.",
+  "a": "• Step 1: nitration — benzene + conc HNO₃/conc H₂SO₄ at 50–60 °C → nitrobenzene.<br>• Step 2: reduction — nitrobenzene + Sn and conc HCl (reflux), then NaOH(aq) → phenylamine.<br>• Step 3: diazotisation — phenylamine + NaNO₂ + dilute HCl below 10 °C → benzenediazonium chloride.<br>• Step 4: diazonium + KI (or Sandmeyer with CuCl for chlorobenzene) → iodobenzene + N₂.<br>• MS keyword: the diazonium route is how halogens (I, Cl, Br, CN) are put onto the ring — direct halogenation of benzene gives only bromo/chloro, not iodo."
+ },
+{
+  "id": 94,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.2",
+  "q": "Explain how a nitrile can extend a carbon chain by one carbon, and give two products it can be converted into.",
+  "a": "• React a halogenoalkane with KCN/NaCN in ethanol under reflux: CH₃CH₂Br + KCN → CH₃CH₂CN + KBr — the nitrile has one more carbon than the halogenoalkane.<br>• Hydrolysis (dilute acid or alkali, reflux) gives a carboxylic acid with the extended chain: CH₃CH₂CN → CH₃CH₂COOH.<br>• Reduction (e.g. LiAlH₄ in dry ether, or H₂/Ni) gives a primary amine with the extended chain: CH₃CH₂CN → CH₃CH₂CH₂NH₂.<br>• MS keyword: nitriles add one carbon — the classic chain-extension route to carboxylic acids and primary amines."
+ },
+{
+  "id": 95,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.5",
+  "q": "Calculate the atom economy for the formation of ethanol by hydration of ethene (C₂H₄ + H₂O → C₂H₅OH) and explain why addition reactions have 100% atom economy.",
+  "a": "• Atom economy = (molar mass of desired product ÷ total molar mass of all reactants) × 100%.<br>• For hydration: M(C₂H₅OH) = 46.0; total reactants = 28.0 + 18.0 = 46.0; atom economy = (46.0/46.0) × 100 = 100%.<br>• MS keyword: addition reactions incorporate ALL atoms of the reactants into the product, so atom economy is 100%; elimination and substitution reactions that form by-products have atom economy < 100%."
+ },
+{
+  "id": 96,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.4",
+  "q": "Give three reasons why the actual yield of an organic preparation is usually less than the theoretical yield.",
+  "a": "• Product is lost during purification — e.g. recrystallisation (some product stays dissolved in the cold solvent), filtration and transfer between vessels.<br>• Side reactions occur, so some reactant forms by-products instead of the desired product.<br>• The reaction may be reversible (equilibrium) and not go to completion, leaving unreacted starting material.<br>• MS keyword: percentage yield = (actual ÷ theoretical) × 100%; losses in recrystallisation/transfer and incomplete reaction are the credited reasons."
+ },
+{
+  "id": 97,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.3",
+  "q": "Why are flammable organic liquids heated with a water bath or electric heater rather than a naked flame, and what is the role of anti-bumping granules?",
+  "a": "• A naked flame is a fire/explosion hazard with flammable organic liquids (low flash point, flammable vapours) — a water bath, heating mantle or electric heater heats safely and evenly.<br>• Anti-bumping granules provide nucleation sites so the liquid boils smoothly instead of 'bumping' (sudden, violent boiling that can eject liquid or break the flask).<br>• MS keyword: safety — flammable organics must not be heated with a naked flame; anti-bumping granules ensure smooth boiling during reflux/distillation."
+ },
+{
+  "id": 98,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.4",
+  "q": "Describe how a separating funnel is used to wash an organic product, and explain why the funnel must be vented.",
+  "a": "• Add the wash solution (e.g. aqueous Na₂CO₃ to neutralise unreacted acid), stopper the funnel, invert it and shake, then vent by opening the tap to release built-up gas pressure; repeat shaking and venting, then allow the layers to separate.<br>• The aqueous layer is run off (and discarded) and the organic layer kept — decide which layer is which from densities (most halogenoalkanes are denser than water; ethers and alkenes are less dense).<br>• MS keyword: venting releases pressure from gases (e.g. CO₂ from carbonate + acid); keeping the wrong layer loses all subsequent marks."
+ },
+{
+  "id": 99,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.2",
+  "q": "Explain why ethanol is used as the solvent when a halogenoalkane reacts with KCN, rather than water.",
+  "a": "• In aqueous solution water competes as a nucleophile: OH⁻/H₂O substitutes the halogen giving the alcohol instead of the nitrile.<br>• Using ethanol (ethanolic KCN) favours nucleophilic substitution by CN⁻, so the nitrile is the main product.<br>• MS keyword: ethanolic CN⁻ → nitrile; aqueous conditions → alcohol (water competes); the same idea applies to ethanolic vs aqueous KOH (elimination vs substitution)."
+ },
+{
+  "id": 100,
+  "topic": "Topic 20: Organic Synthesis",
+  "spec": "Spec 20.3",
+  "q": "Describe the oxidation of a primary alcohol by acidified potassium dichromate(VI), including the colour change and how the product is controlled.",
+  "a": "• Acidified K₂Cr₂O₇ oxidises the primary alcohol; the orange dichromate(VI) is reduced to green Cr³⁺ as the alcohol is oxidised.<br>• Distilling off the aldehyde as it forms (low boiling point) gives the aldehyde; heating under reflux with excess oxidant gives the carboxylic acid (complete oxidation).<br>• MS keyword: orange → green colour change; distillation traps the aldehyde before further oxidation, reflux with excess oxidant gives the acid."
+ }
+ ];
 
-            // Transition Metals
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.1", q: "Define a 'transition metal'.", a: "• d-block element forming one or more stable ions with an incompletely filled d-orbital." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.1", q: "Why is Zinc (Zn) not a transition metal?", a: "• $\\text{Zn}^{2+}$ ion has a completely full $3d^{10}$ electron subshell." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.2", q: "Write full electron configuration for $\\text{Cu}^{2+}$.", a: "• $1s^2 2s^2 2p^6 3s^2 3p^6 3d^9$." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.4", q: "Define the term 'ligand'.", a: "• Atom, ion, or molecule donating a lone pair of electrons to a central metal ion to form a dative bond." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.8", q: "Explain why transition metal complexes are colored.", a: "• Ligands split 3d orbitals into different energy levels.\n• d-electrons absorb visible light ($\\Delta E = h\\nu$) to promote (d-d transition).\n• Complementary color is transmitted." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.9", q: "Why are $\\text{Sc}^{3+}$ and $\\text{Zn}^{2+}$ complexes colorless?", a: "• $\\text{Sc}^{3+}$ is $3d^0$ (no d-electrons to promote).\n• $\\text{Zn}^{2+}$ is $3d^{10}$ (no vacant d-orbitals for promotion)." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.10", q: "Define 'coordination number'.", a: "• Total number of dative covalent bonds formed between ligands and central metal ion." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.13", q: "State geometry and bond angle for 6-fold coordination.", a: "• Octahedral geometry with 90° bond angles." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.14", q: "Why does $[\\text{Cu}(\\text{H}_2\\text{O})_6]^{2+}$ form tetrahedral $[\\text{CuCl}_4]^{2-}$ with conc HCl?", a: "• $\\text{Cl}^-$ ligands are larger than $\\text{H}_2\\text{O}$, causing steric hindrance so only 4 $\\text{Cl}^-$ fit around $\\text{Cu}^{2+}$." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.15", q: "State geometry, bond angle, and medical use of cis-platin.", a: "• Square planar geometry (90°).\n• Anti-cancer drug." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.16", q: "Define a 'bidentate ligand' with an example.", a: "• Donates TWO lone pairs forming TWO dative bonds with one central ion (e.g. 1,2-diaminoethane)." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.18", q: "List colors of Vanadium in oxidation states +5, +4, +3, +2.", a: "• +5 ($\\text{VO}_2^+$): Yellow\n• +4 ($\\text{VO}^{2+}$): Blue\n• +3 ($\\text{V}^{3+}$): Green\n• +2 ($\\text{V}^{2+}$): Violet" },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.22", q: "Describe observation when NaOH(aq) is added dropwise and excess to $\\text{Cr}^{3+}$(aq).", a: "• Dropwise: Green ppt $\\text{Cr(OH)}_3$.\n• Excess: Dissolves to dark green solution $[\\text{Cr(OH)}_6]^{3-}$." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.22", q: "Describe observation when $\\text{NH}_3$(aq) is added dropwise and excess to $\\text{Cu}^{2+}$(aq).", a: "• Dropwise: Pale blue ppt $\\text{Cu(OH)}_2$.\n• Excess: Dissolves to deep blue solution $[\\text{Cu(NH}_3)_4(\\text{H}_2\\text{O})_2]^{2+}$." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.25", q: "Explain the 'chelate effect' in terms of entropy.", a: "• Multidentate ligand substitution increases total particle count in solution.\n• Positive system entropy ($\\Delta S_{\\text{system}} > 0$) drives high stability." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.27", q: "Outline heterogeneous catalysis mechanism.", a: "1. Adsorption of reactants onto catalyst surface.\n2. Reaction on surface.\n3. Desorption of products." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.28", q: "Name catalyst in Contact Process and write equations.", a: "• Vanadium(V) oxide ($\\text{V}_2\\text{O}_5$).\n• $\\text{SO}_2 + \\text{V}_2\\text{O}_5 \\rightarrow \\text{SO}_3 + \\text{V}_2\\text{O}_4$\n• $\\text{V}_2\\text{O}_4 + \\frac{1}{2}\\text{O}_2 \\rightarrow \\text{V}_2\\text{O}_5$" },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.31", q: "Why does $\\text{Fe}^{2+}$ act as homogeneous catalyst for $\\text{I}^-$ and $\\text{S}_2\\text{O}_8^{2-}$?", a: "• Avoids anion-anion repulsion. $\\text{Fe}^{2+}$ reduces $\\text{S}_2\\text{O}_8^{2-}$ to $\\text{SO}_4^{2-}$ forming $\\text{Fe}^{3+}$, then $\\text{Fe}^{3+}$ oxidises $\\text{I}^-$ to $\\text{I}_2$." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.32", q: "What is 'autocatalysis'? Give an example.", a: "• Reaction where a product acts as catalyst.\n• Example: $\\text{Mn}^{2+}$ in $\\text{MnO}_4^-/\\text{C}_2\\text{O}_4^{2-}$ reaction." },
-            { topic: "Topic 17: Transition Metals", spec: "Spec 17.21", q: "Write dichromate/chromate equilibrium equation.", a: "• $\\text{Cr}_2\\text{O}_7^{2-} + \\text{H}_2\\text{O} \\rightleftharpoons 2\\text{CrO}_4^{2-} + 2\\text{H}^+$ (Orange $\\rightleftharpoons$ Yellow)." },
-
-            // Arenes
-            { topic: "Topic 18: Arenes", spec: "Spec 18.1", q: "State thermochemical evidence supporting benzene delocalisation.", a: "• Experimental hydrogenation enthalpy = $-205\\text{ kJ mol}^{-1}$.\n• Kekulé prediction = $-354\\text{ kJ mol}^{-1}$.\n• Benzene is $149\\text{ kJ mol}^{-1}$ more stable." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.1", q: "State X-ray diffraction evidence for benzene.", a: "• All six C-C bonds equal length ($0.139\\text{ nm}$), intermediate between single ($0.154\\text{ nm}$) and double ($0.134\\text{ nm}$)." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.2", q: "Describe bonding and orbital overlap in benzene.", a: "• Planar hexagon of $sp^2$ carbons.\n• Sideways overlap of unhybridised p-orbitals forms delocalised $\\pi$-cloud above and below ring." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.3", q: "Why does benzene undergo substitution rather than addition?", a: "• Addition destroys stable delocalised $\\pi$-system; substitution preserves aromatic stability." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "State reagents and temp for benzene nitration.", a: "• Conc $\\text{HNO}_3$ + Conc $\\text{H}_2\\text{SO}_4$ at ~55°C." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "Write equation generating nitronium electrophile ($\\text{NO}_2^+$).", a: "• $\\text{HNO}_3 + 2\\text{H}_2\\text{SO}_4 \\rightarrow \\text{NO}_2^+ + \\text{H}_3\\text{O}^+ + 2\\text{HSO}_4^-$." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "State reagents for Friedel-Crafts acylation of benzene.", a: "• Acyl chloride ($\text{RCOCl}$) + anhydrous $\\text{AlCl}_3$ catalyst." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "Write equation generating electrophile in acylation.", a: "• $\\text{RCOCl} + \\text{AlCl}_3 \\rightarrow \\text{RCO}^+ + \\text{AlCl}_4^-$." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "Why does phenol react faster with bromine than benzene?", a: "• Oxygen lone pair delocalises into $\\pi$-ring, increasing electron density to polarise $\\text{Br}_2$ without catalyst." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "State observation when bromine water is added to phenol.", a: "• Orange bromine water decolourises; white ppt of 2,4,6-tribromophenol forms." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Write equation for regeneration of $\\text{AlCl}_3$ catalyst.", a: "• $\\text{AlCl}_4^- + \\text{H}^+ \\rightarrow \\text{AlCl}_3 + \\text{HCl}$." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Reagents for halogenation of benzene.", a: "• $\\text{Br}_2$ or $\\text{Cl}_2$ with $\\text{FeBr}_3/\\text{FeCl}_3$ or $\\text{AlCl}_3$ catalyst." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.1", q: "How many isomers exist for 1,2-dichlorobenzene?", a: "• Kekulé predicts 2 isomers; modern structure proves only 1 isomer exists." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "What is observed during complete combustion of benzene?", a: "• Very smoky yellow flame due to high C:H ratio." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "What does the horseshoe symbol in benzene intermediate represent?", a: "• Delocalised + charge spread over 5 carbons (C2-C6) with C1 being $sp^3$." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Reagents for benzene sulfonation.", a: "• Fuming sulfuric acid (or conc $\\text{H}_2\\text{SO}_4$ under reflux)." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "Why is phenol weakly acidic?", a: "• Phenoxide ion ($\\text{C}_6\\text{H}_5\\text{O}^-$) is stabilized by negative charge delocalisation into aromatic ring." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.6", q: "Does phenol react with $\\text{Na}_2\\text{CO}_3$?", a: "• NO! Phenol is too weakly acidic to react with carbonates." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.4", q: "Convert methylbenzene to benzoic acid.", a: "• Reflux with alkaline $\\text{KMnO}_4$, then acidify with HCl." },
-            { topic: "Topic 18: Arenes", spec: "Spec 18.5", q: "Role of $\\text{H}_2\\text{SO}_4$ in benzene nitration.", a: "• Catalyst and acid (protonates $\\text{HNO}_3$ to generate $\\text{NO}_2^+$)." },
-
-            // Organic Nitrogen
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.3", q: "Rank ammonia, butylamine, phenylamine, ethanamide in order of basicity.", a: "• Ethanamide < Phenylamine < Ammonia < Butylamine." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.3", q: "Why is butylamine a stronger base than ammonia?", a: "• Butyl group is electron-releasing (+I), increasing electron density on N lone pair." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.3", q: "Why is phenylamine a weaker base than ammonia?", a: "• N lone pair delocalises into benzene $\\pi$-ring, decreasing availability for $\\text{H}^+$." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.4", q: "Prepare ethylamine from bromoethane.", a: "• Heat bromoethane with EXCESS ethanolic ammonia under pressure." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.4", q: "Why use excess ammonia in 1° amine synthesis?", a: "• Prevents primary amine product from reacting further to form 2°/3° amines." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.5", q: "Reagents to reduce nitrobenzene to phenylamine.", a: "• Tin (Sn) + conc HCl under reflux, followed by NaOH(aq)." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.6", q: "Generate nitrous acid ($\\text{HNO}_2$) in situ.", a: "• Mix $\\text{NaNO}_2$ and dilute HCl at < 10°C." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.6", q: "Steps to prepare an azo dye from phenylamine.", a: "1. Phenylamine + $\\text{NaNO}_2$ + HCl at < 10°C $\\rightarrow$ benzenediazonium chloride.\n2. Couple with phenol in NaOH at < 10°C." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.7", q: "Equation for ethanoyl chloride + methylamine.", a: "• $\\text{CH}_3\\text{COCl} + 2\\text{CH}_3\\text{NH}_2 \\rightarrow \\text{CH}_3\\text{CONHCH}_3 + \\text{CH}_3\\text{NH}_3^+\\text{Cl}^-$." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.8", q: "Difference between addition and condensation polymerisation.", a: "• Addition: C=C monomers join with no loss of atoms.\n• Condensation: Bifunctional monomers join eliminating small molecule ($\\text{H}_2\\text{O}/\\text{HCl}$)." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.8", q: "Monomers for Nylon-6,6.", a: "• Hexane-1,6-dioic acid and hexane-1,6-diamine." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.10", q: "Why is poly(ethenol) water soluble?", a: "• Contains numerous -OH groups capable of forming hydrogen bonds with water." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Define a 'zwitterion'.", a: "• Dipolar ion containing both + and - charges within same molecule, net charge zero." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Structure of alanine at pH 1.", a: "• $^+\\text{H}_3\\text{N-CH(CH}_3\\text{)-COOH}$." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Structure of alanine at pH 13.", a: "• $\\text{H}_2\\text{N-CH(CH}_3\\text{)-COO}^-$." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Bond linking amino acids in proteins.", a: "• Peptide bond (amide link: -CONH-)." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.2", q: "Butylamine + $\\text{Cu}^{2+}$(aq) dropwise and excess.", a: "• Dropwise: Pale blue ppt $\\text{Cu(OH)}_2$.\n• Excess: Deep blue solution." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.4", q: "Reduce propanenitrile to propylamine.", a: "• $\\text{LiAlH}_4$ in dry ether, then dilute acid." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.8", q: "Linkage present in Kevlar.", a: "• Aromatic polyamide linkage." },
-            { topic: "Topic 19: Organic Nitrogen", spec: "Spec 19.11", q: "Why do amino acids have high melting points?", a: "• Solid zwitterions are held by strong ionic electrostatic forces in a crystal lattice." },
-
-            // Synthesis
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "How is a Grignard reagent prepared?", a: "• Reflux haloalkane with Mg turnings in ANHYDROUS DRY ETHER." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{CO}_2$ followed by acid work-up.", a: "• Ethanoic acid ($\\text{CH}_3\\text{COOH}$) (+1C)." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{methanal (HCHO)}$ followed by acid.", a: "• Ethanol (1° alcohol)." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{ethanal (CH}_3\\text{CHO)}$ followed by acid.", a: "• Propan-2-ol (2° alcohol)." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "$\\text{CH}_3\\text{MgBr} + \\text{propanone (CH}_3\\text{COCH}_3\\text{)}$ followed by acid.", a: "• 2-methylpropan-2-ol (3° alcohol)." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.2", q: "Why must glassware be dry for Grignard reactions?", a: "• Water destroys Grignard: $\\text{RMgX} + \\text{H}_2\\text{O} \\rightarrow \\text{RH} + \\text{Mg(OH)X}$." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.4", q: "Equation for aspirin preparation.", a: "• 2-hydroxybenzoic acid + ethanoic anhydride $\\rightarrow$ Aspirin + ethanoic acid." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.4", q: "Why is ethanoic anhydride preferred over ethanoyl chloride?", a: "• Safer rate, cheaper, forms harmless ethanoic acid (not toxic HCl gas)." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Outline 5 steps of recrystallisation.", a: "1. Dissolve in MINIMUM hot solvent.\n2. Filter hot.\n3. Cool in ice bath.\n4. Suction filter.\n5. Wash with ice-cold solvent & dry." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Why use minimum hot solvent in recrystallisation?", a: "• Produces a saturated solution so maximum crystals form upon cooling." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "How does melting point confirm product purity?", a: "• Pure product melts sharply at exact literature MP; impurities lower and broaden range." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.1", q: "Key IR band confirming ester group.", a: "• Strong sharp C=O peak at ~1735-1750 cm⁻¹ (no broad O-H peak)." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.1", q: "$m/z$ fragment characteristic of carboxylic acids.", a: "• $m/z = 45$ ([$\\text{COOH}$]⁺)." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.1", q: "Number of ¹³C NMR peaks for 1,4-dimethylbenzene.", a: "• 3 peaks." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.3", q: "How is percentage atom economy calculated?", a: "• $\\frac{\\text{Molar mass of desired product}}{\\text{Sum of molar masses of all products}} \\times 100\\%$." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Why add anti-bumping granules?", a: "• Provide nucleation sites for smooth boiling and prevent violent bumping." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Thermometer placement in distillation setup.", a: "• Level with the condenser side-arm entrance." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "Suitable drying agent for organic liquids.", a: "• Anhydrous $\\text{CaCl}_2$ or $\\text{Na}_2\\text{SO}_4$." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.5", q: "How do you know an organic liquid is dry?", a: "• Liquid turns clear and drying agent flows freely without clumping." },
-            { topic: "Topic 20: Synthesis", spec: "Spec 20.3", q: "Why prefer 3-step synthesis over 5-step?", a: "• Multiplying yields means fewer steps give higher overall yield and less waste." }
-        ];
-
-        // Ensure exactly 100 items by repeating/indexing cleanly
-        for (let i = 0; i < 100; i++) {
-            const item = baseCards[i % baseCards.length];
-            FLASHCARDS_DATA.push({
-                id: i + 1,
-                topic: item.topic,
-                spec: item.spec,
-                q: item.q + (i >= baseCards.length ? ` (Variant ${Math.floor(i / baseCards.length) + 1})` : ''),
-                a: item.a
-            });
-        }
-
-        const GLOSSARY_DATA = [
-            { term: "Transition Metal", cat: "redox_tm", def: "A d-block element forming one or more stable ions with incompletely filled d-orbitals." },
-            { term: "Standard Electrode Potential ($E^\\circ$)", cat: "redox_tm", def: "Emf of a half-cell compared with SHE under standard conditions (298 K, 100 kPa, 1.00 M)." },
-            { term: "Standard Hydrogen Electrode (SHE)", cat: "redox_tm", def: "Platinum electrode in 1.00 M $\\text{H}^+$(aq) with $\\text{H}_2$ gas at 100 kPa and 298 K, $E^\\circ = 0.00\\text{ V}$." },
-            { term: "Ligand", cat: "redox_tm", def: "Molecule or ion donating a lone pair of electrons to a central metal ion to form a dative bond." },
-            { term: "Complex Ion", cat: "redox_tm", def: "Central metal ion surrounded by ligands bonded via dative covalent bonds." },
-            { term: "Coordination Number", cat: "redox_tm", def: "Total number of dative covalent bonds formed between ligands and central metal ion." },
-            { term: "d-d Transition", cat: "redox_tm", def: "Excitation of an electron from lower to higher 3d orbital caused by visible light absorption." },
-            { term: "Bidentate Ligand", cat: "redox_tm", def: "Ligand donating two lone pairs forming two dative bonds with a single metal ion." },
-            { term: "Chelate Effect", cat: "redox_tm", def: "Enhanced stability of multidentate complexes due to positive system entropy change ($\\Delta S_{\\text{system}} > 0$)." },
-            { term: "Amphoteric Hydroxide", cat: "redox_tm", def: "Metal hydroxide reacting with both acids and strong bases to form soluble species." },
-            { term: "Heterogeneous Catalyst", cat: "redox_tm", def: "Catalyst in a different phase from reactants, acting via surface adsorption." },
-            { term: "Homogeneous Catalyst", cat: "redox_tm", def: "Catalyst in same phase as reactants, acting via intermediate oxidation state changes." },
-            { term: "Autocatalysis", cat: "redox_tm", def: "Reaction where a product species acts as catalyst for the reaction itself." },
-
-            { term: "Aromaticity (Delocalisation)", cat: "arenes_nitro", def: "Enhanced stability of planar cyclic systems containing a delocalised $\\pi$-electron cloud." },
-            { term: "Delocalisation Energy", cat: "arenes_nitro", def: "Extra stability of benzene ($149\\text{ kJ mol}^{-1}$) compared to theoretical cyclohexa-1,3,5-triene." },
-            { term: "Electrophilic Aromatic Substitution", cat: "arenes_nitro", def: "Mechanism where an electrophile replaces a ring hydrogen, preserving aromatic stability." },
-            { term: "Friedel-Crafts Reaction", cat: "arenes_nitro", def: "Electrophilic substitution attaching alkyl or acyl groups to benzene using $\\text{AlCl}_3$ catalyst." },
-            { term: "Phenol", cat: "arenes_nitro", def: "Aromatic compound containing a hydroxyl group (-OH) directly attached to benzene ring." },
-            { term: "Primary Amine", cat: "arenes_nitro", def: "Ammonia derivative containing an -$\\text{NH}_2$ group attached to one alkyl or aryl group." },
-            { term: "Basicity (Amines)", cat: "arenes_nitro", def: "Ability of an amine's nitrogen lone pair to accept a proton ($\\text{H}^+$)." },
-            { term: "Diazotisation", cat: "arenes_nitro", def: "Reaction of 1° aromatic amines with nitrous acid ($\\text{HNO}_2$) below 10°C to form diazonium salts." },
-            { term: "Azo Dye", cat: "arenes_nitro", def: "Colored compound containing an azo linkage (-N=N-) connecting two aromatic rings." },
-            { term: "Zwitterion", cat: "arenes_nitro", def: "Dipolar ion carrying both + and - charges with overall zero net charge." },
-            { term: "Isoelectric Point", cat: "arenes_nitro", def: "Specific pH at which an amino acid exists predominantly as a neutral zwitterion." },
-            { term: "Peptide Bond", cat: "arenes_nitro", def: "Amide linkage (-CONH-) formed between carboxyl and amino groups of amino acids." },
-            { term: "Condensation Polymerisation", cat: "arenes_nitro", def: "Polymerisation where bifunctional monomers link with elimination of small molecules." },
-
-            { term: "Grignard Reagent", cat: "synth_methods", def: "Organometallic compound (RMgX) formed by reacting haloalkane with Mg in dry ether." },
-            { term: "Recrystallisation", cat: "synth_methods", def: "Purification involving dissolving in min hot solvent, hot filtering, cooling, suction filtering." },
-            { term: "Refluxing", cat: "synth_methods", def: "Continual boiling and condensation in a vertical condenser to prevent volatile loss." },
-            { term: "Ethanoic Anhydride", cat: "synth_methods", def: "Safer acylating reagent (($\\text{CH}_3\\text{CO})_2\\text{O}$) used in aspirin synthesis instead of ethanoyl chloride." },
-            { term: "Atom Economy", cat: "synth_methods", def: "Ratio of desired product molar mass to total product molar mass as percentage." },
-            { term: "Melting Point Range", cat: "synth_methods", def: "Temperature span from start of melting to complete liquefaction; sharp range indicates purity." },
-            { term: "Suction Filtration", cat: "synth_methods", def: "Vacuum filtration using Büchner funnel and flask to separate purified solid crystals." },
-            { term: "Solvent Extraction", cat: "synth_methods", def: "Separating a solute using a separating funnel and an immiscible solvent." },
-            { term: "Drying Agent", cat: "synth_methods", def: "Anhydrous salt ($\\text{CaCl}_2$ or $\\text{Na}_2\\text{SO}_4$) added to organic liquids to absorb dissolved water." },
-            { term: "Chemical Shift ($\\delta$)", cat: "synth_methods", def: "Resonance frequency position in NMR measured in ppm relative to TMS standard at 0 ppm." }
-        ];
+         const GLOSSARY_DATA = [
+ {
+  "term": "Transition Metal",
+  "cat": "redox_tm",
+  "def": "A d-block element forming one or more stable ions with incompletely filled d-orbitals.",
+  "q": "Edexcel IAL MCQ: Which element is a d-block element but NOT classified as a transition metal?",
+  "options": [
+   "A: Iron (Fe)",
+   "B: Zinc (Zn)",
+   "C: Copper (Cu)",
+   "D: Nickel (Ni)"
+  ],
+  "ans": "Correct Answer: B. Explanation: Zn forms only Zn²⁺ with a completely filled 3d¹⁰ subshell, so no stable ion has an incompletely filled d-subshell; d-block elements like Zn and Hg are therefore not transition metals.",
+  "expl": [
+   "Wrong — Fe forms Fe²⁺ ([Ar]3d⁶) and Fe³⁺ ([Ar]3d⁵), both with incompletely filled d-subshells, so Fe IS a transition metal.",
+   "CORRECT — Zn forms only Zn²⁺ with a completely filled 3d¹⁰ subshell, so no stable ion has an incompletely filled d-subshell; d-block elements like Zn and Hg are therefore not transition metals.",
+   "Wrong — Cu forms Cu²⁺ ([Ar]3d⁹), an incompletely filled d-subshell, so Cu IS a transition metal.",
+   "Wrong — Ni forms Ni²⁺ ([Ar]3d⁸), an incompletely filled d-subshell, so Ni IS a transition metal."
+  ]
+ },
+ {
+  "term": "Standard Electrode Potential (<i>E</i>°)",
+  "cat": "redox_tm",
+  "def": "Emf of a half-cell compared with SHE under standard conditions (298 K, 100 kPa, 1.00 M).",
+  "q": "Edexcel IAL MCQ: Which set of conditions defines a STANDARD electrode potential?",
+  "options": [
+   "A: 273 K, 1 atm, 0.10 mol dm⁻³",
+   "B: 298 K, 100 kPa, 1.00 mol dm⁻³",
+   "C: 298 K, 1 atm, any concentration",
+   "D: 273 K, 100 kPa, 2.00 mol dm⁻³"
+  ],
+  "ans": "Correct Answer: B. Explanation: Standard conditions are temperature 298 K, gas pressure 100 kPa and ion concentration 1.00 mol dm⁻³, measured relative to the SHE.",
+  "expl": [
+   "Wrong — 273 K is not standard temperature (298 K is used) and 0.10 mol dm⁻³ is not the standard 1.00 mol dm⁻³ concentration.",
+   "CORRECT — Standard conditions are temperature 298 K, gas pressure 100 kPa and ion concentration 1.00 mol dm⁻³, measured relative to the SHE.",
+   "Wrong — The concentration must be fixed at 1.00 mol dm⁻³, not any concentration, for the value to be standard.",
+   "Wrong — 273 K is not standard temperature and 2.00 mol dm⁻³ is not the standard concentration."
+  ]
+ },
+ {
+  "term": "Standard Hydrogen Electrode (SHE)",
+  "cat": "redox_tm",
+  "def": "Platinum electrode in 1.00 M H⁺(aq) with H₂ gas at 100 kPa and 298 K, E° = 0.00 V.",
+  "q": "Edexcel IAL MCQ: What is the role of the platinum electrode in the standard hydrogen electrode?",
+  "options": [
+   "A: It reacts with H⁺ to supply electrons",
+   "B: It is an inert conductor providing a surface for the H₂/H⁺ equilibrium",
+   "C: It dissolves to form Pt²⁺ ions",
+   "D: It maintains the temperature at 298 K"
+  ],
+  "ans": "Correct Answer: B. Explanation: Platinum is inert; it conducts electrons and its porous (platinum-black) surface allows H₂ gas to adsorb and equilibrate with H⁺(aq).",
+  "expl": [
+   "Wrong — Platinum is inert and does not react with H⁺; the electrons come from the H₂/H⁺ half-reaction, not from the electrode dissolving or reacting.",
+   "CORRECT — Platinum is inert; it conducts electrons and its porous (platinum-black) surface allows H₂ gas to adsorb and equilibrate with H⁺(aq).",
+   "Wrong — Platinum is inert and does not dissolve; it only conducts and provides an adsorption surface.",
+   "Wrong — Temperature is controlled by the surroundings, not by the electrode material."
+  ]
+ },
+ {
+  "term": "Ligand",
+  "cat": "redox_tm",
+  "def": "Molecule or ion donating a lone pair of electrons to a central metal ion to form a dative bond.",
+  "q": "Edexcel IAL MCQ: Which species can act as a ligand towards a transition metal ion?",
+  "options": [
+   "A: CH₄",
+   "B: NH₃",
+   "C: NH₄⁺",
+   "D: Na⁺"
+  ],
+  "ans": "Correct Answer: B. Explanation: NH₃ has a lone pair on nitrogen that it can donate to the metal ion to form a dative (coordinate) covalent bond.",
+  "expl": [
+   "Wrong — CH₄ has no lone pair available for donation, so it cannot form a dative bond to a metal ion.",
+   "CORRECT — NH₃ has a lone pair on nitrogen that it can donate to the metal ion to form a dative (coordinate) covalent bond.",
+   "Wrong — NH₄⁺ has no lone pair — its lone pair was used to bond the fourth hydrogen, so it cannot act as a ligand.",
+   "Wrong — Na⁺ has no lone pair to donate; metal cations themselves accept lone pairs."
+  ]
+ },
+ {
+  "term": "Complex Ion",
+  "cat": "redox_tm",
+  "def": "Central metal ion surrounded by ligands bonded via dative covalent bonds.",
+  "q": "Edexcel IAL MCQ: What is the coordination number of the complex ion [Fe(CN)₆]³⁻?",
+  "options": [
+   "A: 2",
+   "B: 3",
+   "C: 4",
+   "D: 6"
+  ],
+  "ans": "Correct Answer: D. Explanation: Six cyanide ligands each donate one lone pair, forming six dative bonds to Fe³⁺, so the coordination number is 6.",
+  "expl": [
+   "Wrong — Coordination number counts dative bonds formed by ligands, not the oxidation state of the metal.",
+   "Wrong — Three is the charge on the complex ion, not the number of ligand bonds.",
+   "Wrong — Four would be the coordination number of a tetrahedral complex such as [CuCl₄]²⁻, not this octahedral one.",
+   "CORRECT — Six cyanide ligands each donate one lone pair, forming six dative bonds to Fe³⁺, so the coordination number is 6."
+  ]
+ },
+ {
+  "term": "Coordination Number",
+  "cat": "redox_tm",
+  "def": "Total number of dative covalent bonds formed between ligands and central metal ion.",
+  "q": "Edexcel IAL MCQ: What is the coordination number of the tetrahedral complex [CuCl₄]²⁻?",
+  "options": [
+   "A: 2",
+   "B: 4",
+   "C: 6",
+   "D: 8"
+  ],
+  "ans": "Correct Answer: B. Explanation: Four chloride ligands each donate one lone pair, giving four dative bonds in a tetrahedral arrangement.",
+  "expl": [
+   "Wrong — Two is the coordination number of a linear complex such as [Ag(NH₃)₂]⁺, not [CuCl₄]²⁻.",
+   "CORRECT — Four chloride ligands each donate one lone pair, giving four dative bonds in a tetrahedral arrangement.",
+   "Wrong — Six is the coordination number of an octahedral complex such as [Cu(H₂O)₆]²⁺.",
+   "Wrong — Eight would require eight ligands; the tetrachlorocuprate(II) ion has only four."
+  ]
+ },
+ {
+  "term": "d-d Transition",
+  "cat": "redox_tm",
+  "def": "Excitation of an electron from lower to higher 3d orbital caused by visible light absorption.",
+  "q": "Edexcel IAL MCQ: Why is the aqueous complex [Zn(H₂O)₆]²⁺ colourless?",
+  "options": [
+   "A: Zn²⁺ is [Ar]3d¹⁰ so no d-d transition is possible",
+   "B: Zn²⁺ absorbs all visible light equally",
+   "C: Water ligands are colourless",
+   "D: Zn²⁺ has no ligands attached"
+  ],
+  "ans": "Correct Answer: A. Explanation: Zn²⁺ has a completely filled 3d¹⁰ subshell with no vacant d orbitals, so electrons cannot be promoted between split d levels — no visible light is absorbed.",
+  "expl": [
+   "CORRECT — Zn²⁺ has a completely filled 3d¹⁰ subshell with no vacant d orbitals, so electrons cannot be promoted between split d levels — no visible light is absorbed.",
+   "Wrong — If all visible light were absorbed the solution would appear black, and Zn²⁺(aq) is colourless; the cause is the full d¹⁰ configuration.",
+   "Wrong — The ligand colour is irrelevant — colour arises from d-d transitions in the metal ion, and colourless ligands still give coloured complexes with partially filled d-shells.",
+   "Wrong — Zn²⁺(aq) exists as [Zn(H₂O)₆]²⁺ with six water ligands; the hexaaqua complex is colourless because of the d¹⁰ configuration."
+  ]
+ },
+ {
+  "term": "Bidentate Ligand",
+  "cat": "redox_tm",
+  "def": "Ligand donating two lone pairs forming two dative bonds with a single metal ion.",
+  "q": "Edexcel IAL MCQ: Which of the following is a bidentate ligand?",
+  "options": [
+   "A: Cl⁻",
+   "B: H₂O",
+   "C: C₂O₄²⁻ (ethanedioate)",
+   "D: NH₃"
+  ],
+  "ans": "Correct Answer: C. Explanation: Ethanedioate (oxalate) has two lone pairs on two different oxygen atoms and can form two dative bonds to the same metal ion.",
+  "expl": [
+   "Wrong — Chloride has only one lone pair available, so it is monodentate.",
+   "Wrong — Water has one lone pair on oxygen available for donation, so it is monodentate.",
+   "CORRECT — Ethanedioate (oxalate) has two lone pairs on two different oxygen atoms and can form two dative bonds to the same metal ion.",
+   "Wrong — Ammonia has one lone pair on nitrogen, so it is monodentate."
+  ]
+ },
+ {
+  "term": "Chelate Effect",
+  "cat": "redox_tm",
+  "def": "Enhanced stability of multidentate complexes due to positive system entropy change (ΔS<sub>system</sub> &gt; 0).",
+  "q": "Edexcel IAL MCQ: Why is [Ni(en)₃]²⁺ more stable than [Ni(H₂O)₆]²⁺?",
+  "options": [
+   "A: The Ni–N bonds are much stronger than Ni–O bonds",
+   "B: Fewer particles are formed, lowering disorder",
+   "C: The reaction has a strongly positive ΔS<sub>system</sub>",
+   "D: The complex is smaller in size"
+  ],
+  "ans": "Correct Answer: C. Explanation: Replacing 6 H₂O with 3 en turns 4 reactant particles into 7 product particles (Δn = +3); the increased disorder gives ΔS<sub>system</sub> > 0, so ΔG is more negative and the chelated complex is favoured.",
+  "expl": [
+   "Wrong — Ni–N and Ni–O bond enthalpies are similar, so ΔH ≈ 0; the stability comes from entropy, not from stronger bonds.",
+   "Wrong — More particles are produced (4 → 7), which INCREASES disorder — the opposite of this statement.",
+   "CORRECT — Replacing 6 H₂O with 3 en turns 4 reactant particles into 7 product particles (Δn = +3); the increased disorder gives ΔS<sub>system</sub> > 0, so ΔG is more negative and the chelated complex is favoured.",
+   "Wrong — Complex size is not a thermodynamic factor in complex stability."
+  ]
+ },
+ {
+  "term": "Amphoteric Hydroxide",
+  "cat": "redox_tm",
+  "def": "Metal hydroxide reacting with both acids and strong bases to form soluble species.",
+  "q": "Edexcel IAL MCQ: Which hydroxide is amphoteric, dissolving in both acid and excess NaOH?",
+  "options": [
+   "A: Mg(OH)₂",
+   "B: Ca(OH)₂",
+   "C: Fe(OH)₃",
+   "D: Cr(OH)₃"
+  ],
+  "ans": "Correct Answer: D. Explanation: Cr(OH)₃ dissolves in acid to give [Cr(H₂O)₆]³⁺ and in excess alkali to give [Cr(OH)₆]³⁻ (chromate(III)) — it is amphoteric, like Al(OH)₃ and Zn(OH)₂.",
+  "expl": [
+   "Wrong — Mg(OH)₂ dissolves in acid but is insoluble in excess NaOH — it is a basic, not amphoteric, hydroxide.",
+   "Wrong — Ca(OH)₂ is a basic hydroxide; it does not dissolve in excess alkali.",
+   "Wrong — Fe(OH)₃ dissolves in acid but not in excess NaOH — it is basic, not amphoteric.",
+   "CORRECT — Cr(OH)₃ dissolves in acid to give [Cr(H₂O)₆]³⁺ and in excess alkali to give [Cr(OH)₆]³⁻ (chromate(III)) — it is amphoteric, like Al(OH)₃ and Zn(OH)₂."
+  ]
+ },
+ {
+  "term": "Heterogeneous Catalyst",
+  "cat": "redox_tm",
+  "def": "Catalyst in a different phase from reactants, acting via surface adsorption.",
+  "q": "Edexcel IAL MCQ: How does V₂O₅ catalyse the Contact Process (SO₂ + ½O₂ → SO₃)?",
+  "options": [
+   "A: SO₂ and O₂ adsorb onto the surface and V is cycled between +5 and +4 oxidation states",
+   "B: It dissolves in the SO₂ gas",
+   "C: It lowers the temperature needed below 100 °C",
+   "D: It reacts permanently to form V₂O₄"
+  ],
+  "ans": "Correct Answer: A. Explanation: V₂O₅ is a solid catalyst in a different phase from the gaseous reactants; SO₂ and O₂ adsorb on the surface, V₂O₅ is reduced to V₂O₄ by SO₂, then re-oxidised by O₂ back to V₂O₅ (oxidation-state cycling).",
+  "expl": [
+   "CORRECT — V₂O₅ is a solid catalyst in a different phase from the gaseous reactants; SO₂ and O₂ adsorb on the surface, V₂O₅ is reduced to V₂O₄ by SO₂, then re-oxidised by O₂ back to V₂O₅ (oxidation-state cycling).",
+   "Wrong — V₂O₅ is a solid and cannot dissolve in a gas; heterogeneous catalysis works by surface adsorption.",
+   "Wrong — The catalyst provides an alternative route with lower activation energy; it does not change the reaction temperature requirement of the process.",
+   "Wrong — The catalyst is regenerated at the end (V₂O₅ is re-formed by O₂), so it is not permanently consumed."
+  ]
+ },
+ {
+  "term": "Homogeneous Catalyst",
+  "cat": "redox_tm",
+  "def": "Catalyst in same phase as reactants, acting via intermediate oxidation state changes.",
+  "q": "Edexcel IAL MCQ: How does Fe²⁺ catalyse the reaction between I⁻ and S₂O₈²⁻?",
+  "options": [
+   "A: Fe²⁺ is oxidised to Fe³⁺ by S₂O₈²⁻, then Fe³⁺ oxidises I⁻ back to Fe²⁺",
+   "B: Fe²⁺ blocks the I⁻ ions",
+   "C: Fe²⁺ provides a surface for adsorption",
+   "D: Fe²⁺ is converted permanently to Fe³⁺"
+  ],
+  "ans": "Correct Answer: A. Explanation: S₂O₈²⁻ oxidises Fe²⁺ to Fe³⁺ (Fe²⁺ acts as reductant with a lower activation energy than I⁻), then Fe³⁺ oxidises I⁻ to I₂ and is regenerated as Fe²⁺ — the catalyst cycles between two oxidation states.",
+  "expl": [
+   "CORRECT — S₂O₈²⁻ oxidises Fe²⁺ to Fe³⁺ (Fe²⁺ acts as reductant with a lower activation energy than I⁻), then Fe³⁺ oxidises I⁻ to I₂ and is regenerated as Fe²⁺ — the catalyst cycles between two oxidation states.",
+   "Wrong — Blocking iodide would stop the reaction, not catalyse it; the catalyst must provide an alternative pathway.",
+   "Wrong — Surface adsorption is the mechanism of heterogeneous catalysis; Fe²⁺ is in the same aqueous phase as the reactants.",
+   "Wrong — A catalyst is regenerated — Fe²⁺ is re-formed when Fe³⁺ oxidises I⁻, so it is not permanently converted."
+  ]
+ },
+ {
+  "term": "Autocatalysis",
+  "cat": "redox_tm",
+  "def": "Reaction where a product species acts as catalyst for the reaction itself.",
+  "q": "Edexcel IAL MCQ: The reaction between acidified manganate(VII) and ethanedioic acid is autocatalysed. Which species is the catalyst?",
+  "options": [
+   "A: MnO₄⁻",
+   "B: Mn²⁺",
+   "C: CO₂",
+   "D: H₂SO₄"
+  ],
+  "ans": "Correct Answer: B. Explanation: Mn²⁺ is a product of the reduction of MnO₄⁻ and it catalyses the reaction, so the rate is slow at first and speeds up as Mn²⁺ accumulates.",
+  "expl": [
+   "Wrong — MnO₄⁻ is a reactant, not the catalyst; the catalyst must be a product of the reaction.",
+   "CORRECT — Mn²⁺ is a product of the reduction of MnO₄⁻ and it catalyses the reaction, so the rate is slow at first and speeds up as Mn²⁺ accumulates.",
+   "Wrong — CO₂ is a product but does not catalyse this redox reaction.",
+   "Wrong — H₂SO₄ provides the acid but is not the autocatalyst — it is present from the start and is not formed by the reaction."
+  ]
+ },
+ {
+  "term": "Aromaticity (Delocalisation)",
+  "cat": "arenes_nitro",
+  "def": "Enhanced stability of planar cyclic systems containing a delocalised π-electron cloud.",
+  "q": "Edexcel IAL MCQ: Which feature accounts for the enhanced stability of benzene?",
+  "options": [
+   "A: Three localised C=C double bonds",
+   "B: A planar ring of six p orbitals overlapping to form a delocalised π-electron cloud",
+   "C: Strong C–H bonds",
+   "D: The presence of hydrogen atoms"
+  ],
+  "ans": "Correct Answer: B. Explanation: In benzene the six p orbitals overlap above and below the planar ring, giving a delocalised π system that stabilises the molecule by about 149 kJ mol⁻¹.",
+  "expl": [
+   "Wrong — If the double bonds were localised (Kekulé model), benzene would behave like cyclohexatriene — the delocalised model is what gives extra stability.",
+   "CORRECT — In benzene the six p orbitals overlap above and below the planar ring, giving a delocalised π system that stabilises the molecule by about 149 kJ mol⁻¹.",
+   "Wrong — C–H bonds are present in all hydrocarbons and do not explain aromatic stabilisation.",
+   "Wrong — Hydrogen atoms are present in non-aromatic compounds too; they do not create aromatic stability."
+  ]
+ },
+ {
+  "term": "Delocalisation Energy",
+  "cat": "arenes_nitro",
+  "def": "Extra stability of benzene (149 kJ mol⁻¹) compared to theoretical cyclohexa-1,3,5-triene.",
+  "q": "Edexcel IAL MCQ: Benzene hydrogenates to cyclohexane with ΔH = −205 kJ mol⁻¹. Cyclohexene hydrogenation is −118 kJ mol⁻¹. What is the delocalisation energy of benzene?",
+  "options": [
+   "A: 118 kJ mol⁻¹",
+   "B: 205 kJ mol⁻¹",
+   "C: 149 kJ mol⁻¹",
+   "D: 354 kJ mol⁻¹"
+  ],
+  "ans": "Correct Answer: C. Explanation: Predicted ΔH for three localised double bonds = 3 × (−118) = −354 kJ mol⁻¹; delocalisation energy = 354 − 205 = 149 kJ mol⁻¹.",
+  "expl": [
+   "Wrong — 118 kJ mol⁻¹ is the hydrogenation enthalpy of one C=C bond in cyclohexene, not the stabilisation of benzene.",
+   "Wrong — 205 kJ mol⁻¹ is the measured hydrogenation enthalpy of benzene itself, not the extra stabilisation.",
+   "CORRECT — Predicted ΔH for three localised double bonds = 3 × (−118) = −354 kJ mol⁻¹; delocalisation energy = 354 − 205 = 149 kJ mol⁻¹.",
+   "Wrong — 354 kJ mol⁻¹ is the value predicted for three isolated double bonds (Kekulé), before subtracting the experimental −205 kJ mol⁻¹."
+  ]
+ },
+ {
+  "term": "Electrophilic Aromatic Substitution",
+  "cat": "arenes_nitro",
+  "def": "Mechanism where an electrophile replaces a ring hydrogen, preserving aromatic stability.",
+  "q": "Edexcel IAL MCQ: Why does benzene undergo electrophilic substitution rather than electrophilic addition?",
+  "options": [
+   "A: Addition would destroy the delocalised π system and lose aromatic stability",
+   "B: Benzene has no π electrons",
+   "C: The ring is too small for addition",
+   "D: Substitution produces more stable products by enthalpy alone"
+  ],
+  "ans": "Correct Answer: A. Explanation: Addition would break the delocalised π system and destroy the aromatic stabilisation (≈149 kJ mol⁻¹); substitution replaces one H atom and regenerates the aromatic ring.",
+  "expl": [
+   "CORRECT — Addition would break the delocalised π system and destroy the aromatic stabilisation (≈149 kJ mol⁻¹); substitution replaces one H atom and regenerates the aromatic ring.",
+   "Wrong — Benzene has a delocalised π-electron cloud containing six π electrons — it is electron-rich and attracts electrophiles.",
+   "Wrong — Ring size is irrelevant; the driving force is preservation of the delocalised system through substitution.",
+   "Wrong — Enthalpy arguments are not the reason — the key is that substitution regenerates the stabilised aromatic ring, whereas addition would not."
+  ]
+ },
+ {
+  "term": "Friedel-Crafts Reaction",
+  "cat": "arenes_nitro",
+  "def": "Electrophilic substitution attaching alkyl or acyl groups to benzene using AlCl₃ catalyst.",
+  "q": "Edexcel IAL MCQ: Which reagent and catalyst are used to form methylbenzene from benzene?",
+  "options": [
+   "A: CH₃Cl with AlCl₃ catalyst",
+   "B: CH₃OH with NaOH",
+   "C: CH₄ with FeBr₃",
+   "D: CH₃COOH with H₂SO₄"
+  ],
+  "ans": "Correct Answer: A. Explanation: In Friedel-Crafts alkylation, chloromethane reacts with benzene using anhydrous AlCl₃, which generates the CH₃⁺ electrophile.",
+  "expl": [
+   "CORRECT — In Friedel-Crafts alkylation, chloromethane reacts with benzene using anhydrous AlCl₃, which generates the CH₃⁺ electrophile.",
+   "Wrong — NaOH would not generate an electrophile; Friedel-Crafts alkylation needs a Lewis-acid catalyst such as AlCl₃.",
+   "Wrong — Methane is unreactive and FeBr₃ is the catalyst for bromination, not alkylation.",
+   "Wrong — Acetic acid does not alkylate benzene; Friedel-Crafts reactions use halogenoalkanes or acyl chlorides."
+  ]
+ },
+ {
+  "term": "Phenol",
+  "cat": "arenes_nitro",
+  "def": "Aromatic compound containing a hydroxyl group (-OH) directly attached to benzene ring.",
+  "q": "Edexcel IAL MCQ: Why is phenol more reactive than benzene towards electrophilic substitution?",
+  "options": [
+   "A: The –OH group withdraws electrons from the ring",
+   "B: The oxygen lone pair delocalises into the ring, increasing its electron density",
+   "C: Phenol is a strong acid",
+   "D: Phenol has no delocalised electrons"
+  ],
+  "ans": "Correct Answer: B. Explanation: The lone pair on the phenolic oxygen donates into the π system (delocalisation), increasing electron density on the ring, so electrophiles attack more readily — phenol reacts with dilute HNO₃ at room temperature.",
+  "expl": [
+   "Wrong — The –OH group is electron-releasing (activating) via lone-pair donation, not electron-withdrawing.",
+   "CORRECT — The lone pair on the phenolic oxygen donates into the π system (delocalisation), increasing electron density on the ring, so electrophiles attack more readily — phenol reacts with dilute HNO₃ at room temperature.",
+   "Wrong — Phenol is only a weak acid (pKₐ ≈ 10); acidity and electrophilic reactivity are different properties.",
+   "Wrong — Phenol has a delocalised π system — that is why it is aromatic and undergoes electrophilic substitution."
+  ]
+ },
+ {
+  "term": "Primary Amine",
+  "cat": "arenes_nitro",
+  "def": "Ammonia derivative containing an -NH₂ group attached to one alkyl or aryl group.",
+  "q": "Edexcel IAL MCQ: Which compound is a primary amine?",
+  "options": [
+   "A: (CH₃)₂NH",
+   "B: CH₃CH₂NH₂",
+   "C: (CH₃)₃N",
+   "D: CH₃CONH₂"
+  ],
+  "ans": "Correct Answer: B. Explanation: Ethylamine has one alkyl group attached to the nitrogen (RNH₂), which defines a primary amine.",
+  "expl": [
+   "Wrong — (CH₃)₂NH has two alkyl groups on nitrogen — it is a secondary amine.",
+   "CORRECT — Ethylamine has one alkyl group attached to the nitrogen (RNH₂), which defines a primary amine.",
+   "Wrong — (CH₃)₃N has three alkyl groups on nitrogen — it is a tertiary amine.",
+   "Wrong — CH₃CONH₂ is an amide: the nitrogen is attached to a carbonyl group, not an alkyl group."
+  ]
+ },
+ {
+  "term": "Basicity (Amines)",
+  "cat": "arenes_nitro",
+  "def": "Ability of an amine's nitrogen lone pair to accept a proton (H⁺).",
+  "q": "Edexcel IAL MCQ: Which compound is the STRONGEST base?",
+  "options": [
+   "A: Ethanamide",
+   "B: Phenylamine",
+   "C: Ammonia",
+   "D: Butylamine"
+  ],
+  "ans": "Correct Answer: D. Explanation: Basicity order is ethanamide < phenylamine < ammonia < butylamine: the alkyl group is electron-releasing (+I effect), increasing electron density on the nitrogen lone pair so it accepts H⁺ most readily.",
+  "expl": [
+   "Wrong — Ethanamide is the weakest base — the lone pair is delocalised into the C=O group and largely unavailable.",
+   "Wrong — Phenylamine is weaker than ammonia — the lone pair delocalises into the ring, reducing availability.",
+   "Wrong — Ammonia is a weaker base than butylamine because it lacks the electron-releasing alkyl group.",
+   "CORRECT — Basicity order is ethanamide < phenylamine < ammonia < butylamine: the alkyl group is electron-releasing (+I effect), increasing electron density on the nitrogen lone pair so it accepts H⁺ most readily."
+  ]
+ },
+ {
+  "term": "Diazotisation",
+  "cat": "arenes_nitro",
+  "def": "Reaction of 1° aromatic amines with nitrous acid (HNO₂) below 10°C to form diazonium salts.",
+  "q": "Edexcel IAL MCQ: What are the correct conditions for diazotising phenylamine?",
+  "options": [
+   "A: Reflux with conc HNO₃ at 100 °C",
+   "B: NaNO₂ and dilute HCl at below 10 °C",
+   "C: Warm with NaOH solution",
+   "D: React with Br₂ water at room temperature"
+  ],
+  "ans": "Correct Answer: B. Explanation: Nitrous acid (formed in situ from NaNO₂ + dilute HCl) reacts with phenylamine below 10 °C to give benzenediazonium chloride; the low temperature prevents decomposition of the diazonium ion.",
+  "expl": [
+   "Wrong — Conc HNO₃ would nitrate the ring, and refluxing would decompose the diazonium salt — diazotisation needs cold nitrous acid.",
+   "CORRECT — Nitrous acid (formed in situ from NaNO₂ + dilute HCl) reacts with phenylamine below 10 °C to give benzenediazonium chloride; the low temperature prevents decomposition of the diazonium ion.",
+   "Wrong — NaOH would deprotonate the amine and no nitrosating species is formed — diazotisation needs nitrous acid.",
+   "Wrong — Bromine water brominates the ring; it does not form a diazonium salt."
+  ]
+ },
+ {
+  "term": "Azo Dye",
+  "cat": "arenes_nitro",
+  "def": "Colored compound containing an azo linkage (-N=N-) connecting two aromatic rings.",
+  "q": "Edexcel IAL MCQ: Which functional group is responsible for the colour of an azo dye?",
+  "options": [
+   "A: –N=N– (azo linkage)",
+   "B: –NH₂",
+   "C: –CONH–",
+   "D: –OH"
+  ],
+  "ans": "Correct Answer: A. Explanation: The azo linkage –N=N– connects two aromatic rings and its extended delocalised system absorbs visible light, giving the dye its colour.",
+  "expl": [
+   "CORRECT — The azo linkage –N=N– connects two aromatic rings and its extended delocalised system absorbs visible light, giving the dye its colour.",
+   "Wrong — An amino group alone does not give the extended conjugation responsible for dye colour.",
+   "Wrong — –CONH– is an amide/peptide linkage and is not the chromophore of an azo dye.",
+   "Wrong — –OH is present in many colourless compounds; the azo linkage is the chromophore."
+  ]
+ },
+ {
+  "term": "Zwitterion",
+  "cat": "arenes_nitro",
+  "def": "Dipolar ion carrying both + and - charges with overall zero net charge.",
+  "q": "Edexcel IAL MCQ: In aqueous solution at pH 7, glycine, H₂NCH₂COOH, exists mainly as which species?",
+  "options": [
+   "A: H₂NCH₂COO⁻",
+   "B: H₃N⁺CH₂COOH",
+   "C: ⁺H₃NCH₂COO⁻",
+   "D: H₂NCH₂COOH"
+  ],
+  "ans": "Correct Answer: C. Explanation: At neutral pH the –COOH donates H⁺ to the –NH₂, giving the zwitterion ⁺H₃N–CH₂–COO⁻, which carries both + and − charges with no overall charge.",
+  "expl": [
+   "Wrong — H₂NCH₂COO⁻ would be the form in alkaline solution where the acid group is deprotonated but the amine is not protonated.",
+   "Wrong — H₃N⁺CH₂COOH would be the form in acidic solution where the amine is protonated but the acid group is not deprotonated.",
+   "CORRECT — At neutral pH the –COOH donates H⁺ to the –NH₂, giving the zwitterion ⁺H₃N–CH₂–COO⁻, which carries both + and − charges with no overall charge.",
+   "Wrong — H₂NCH₂COOH is the un-ionised molecule, which is not the dominant form in water at pH 7."
+  ]
+ },
+ {
+  "term": "Isoelectric Point",
+  "cat": "arenes_nitro",
+  "def": "Specific pH at which an amino acid exists predominantly as a neutral zwitterion.",
+  "q": "Edexcel IAL MCQ: At its isoelectric point, an amino acid in solution...",
+  "options": [
+   "A: exists mainly as the neutral zwitterion",
+   "B: exists mainly as a cation",
+   "C: exists mainly as an anion",
+   "D: has no charged groups at all"
+  ],
+  "ans": "Correct Answer: A. Explanation: At the isoelectric point the concentration of the zwitterion is at a maximum and the amino acid has no net overall charge, so it does not migrate in an electric field.",
+  "expl": [
+   "CORRECT — At the isoelectric point the concentration of the zwitterion is at a maximum and the amino acid has no net overall charge, so it does not migrate in an electric field.",
+   "Wrong — A cation (positive species) dominates at low pH, below the isoelectric point.",
+   "Wrong — An anion (negative species) dominates at high pH, above the isoelectric point.",
+   "Wrong — The zwitterion still carries + and − charges (on different groups) — it has overall zero charge, not zero charged groups."
+  ]
+ },
+ {
+  "term": "Peptide Bond",
+  "cat": "arenes_nitro",
+  "def": "Amide linkage (-CONH-) formed between carboxyl and amino groups of amino acids.",
+  "q": "Edexcel IAL MCQ: How is a peptide bond formed between two amino acids?",
+  "options": [
+   "A: Condensation between the –COOH of one amino acid and the –NH₂ of another",
+   "B: Addition of water across a double bond",
+   "C: Oxidation of an –OH group",
+   "D: Reaction of two –COOH groups"
+  ],
+  "ans": "Correct Answer: A. Explanation: A condensation reaction joins the carboxyl group of one amino acid to the amino group of another, eliminating a water molecule and forming the amide (–CONH–) peptide link.",
+  "expl": [
+   "CORRECT — A condensation reaction joins the carboxyl group of one amino acid to the amino group of another, eliminating a water molecule and forming the amide (–CONH–) peptide link.",
+   "Wrong — Peptide formation releases a water molecule (condensation) — it does not add water.",
+   "Wrong — Amino acids have no double bond to add water across; the link is between –COOH and –NH₂.",
+   "Wrong — Two carboxyl groups do not join to form a peptide bond; the link requires an amino group."
+  ]
+ },
+ {
+  "term": "Condensation Polymerisation",
+  "cat": "arenes_nitro",
+  "def": "Polymerisation where bifunctional monomers link with elimination of small molecules.",
+  "q": "Edexcel IAL MCQ: Which polymer is produced by condensation polymerisation?",
+  "options": [
+   "A: Poly(ethene)",
+   "B: Poly(chloroethene) (PVC)",
+   "C: Nylon 6,6",
+   "D: Poly(propene)"
+  ],
+  "ans": "Correct Answer: C. Explanation: Nylon 6,6 forms when hexanedioic acid and 1,6-diaminohexane link with elimination of water — a condensation polymer; Kevlar and polyesters are also condensation polymers.",
+  "expl": [
+   "Wrong — Poly(ethene) is made by addition polymerisation of the C=C double bond with no small molecule eliminated.",
+   "Wrong — PVC is an addition polymer of chloroethene — no molecule is eliminated during propagation.",
+   "CORRECT — Nylon 6,6 forms when hexanedioic acid and 1,6-diaminohexane link with elimination of water — a condensation polymer; Kevlar and polyesters are also condensation polymers.",
+   "Wrong — Poly(propene) is an addition polymer of propene; condensation polymerisation requires two functional groups per monomer."
+  ]
+ },
+ {
+  "term": "Grignard Reagent",
+  "cat": "synth_methods",
+  "def": "Organometallic compound (RMgX) formed by reacting haloalkane with Mg in dry ether.",
+  "q": "Edexcel IAL MCQ: Why must Grignard reagents be prepared in ANHYDROUS (dry) ether?",
+  "options": [
+   "A: Water reacts violently with RMgX to form an alkane, destroying the reagent",
+   "B: Ether is needed to cool the reaction",
+   "C: Water is needed to dissolve the magnesium",
+   "D: Ether prevents the haloalkane from boiling"
+  ],
+  "ans": "Correct Answer: A. Explanation: Water and moist air destroy Grignard reagents: RMgX + H₂O → RH + Mg(OH)X, so all apparatus and solvents must be dry and anhydrous ether is used as the solvent.",
+  "expl": [
+   "CORRECT — Water and moist air destroy Grignard reagents: RMgX + H₂O → RH + Mg(OH)X, so all apparatus and solvents must be dry and anhydrous ether is used as the solvent.",
+   "Wrong — Ether is the solvent, not a coolant; the reason for dryness is the water sensitivity of RMgX.",
+   "Wrong — Water would destroy the reagent — Grignard preparations must exclude water entirely.",
+   "Wrong — Ether is a low-boiling solvent used because it is inert and dry; the haloalkane is refluxed, not prevented from boiling."
+  ]
+ },
+ {
+  "term": "Recrystallisation",
+  "cat": "synth_methods",
+  "def": "Purification involving dissolving in min hot solvent, hot filtering, cooling, suction filtering.",
+  "q": "Edexcel IAL MCQ: What is the correct order of steps in recrystallisation?",
+  "options": [
+   "A: Cool, dissolve, filter, dry",
+   "B: Dissolve in minimum hot solvent, filter hot, cool to crystallise, suction filter, wash, dry",
+   "C: Suction filter, dissolve, heat, dry",
+   "D: Boil dry, add cold water, filter"
+  ],
+  "ans": "Correct Answer: B. Explanation: The crude solid is dissolved in the minimum volume of hot solvent, hot-filtered to remove insoluble impurities, cooled so the pure product crystallises, then collected by suction filtration, washed with ice-cold solvent and dried.",
+  "expl": [
+   "Wrong — Cooling before dissolving would not remove impurities — the solid must first be dissolved in hot solvent.",
+   "CORRECT — The crude solid is dissolved in the minimum volume of hot solvent, hot-filtered to remove insoluble impurities, cooled so the pure product crystallises, then collected by suction filtration, washed with ice-cold solvent and dried.",
+   "Wrong — Suction filtration is the final collection step, after crystallisation, not the first step.",
+   "Wrong — Boiling dry would decompose or lose product; the correct route uses minimum hot solvent and controlled cooling."
+  ]
+ },
+ {
+  "term": "Refluxing",
+  "cat": "synth_methods",
+  "def": "Continual boiling and condensation in a vertical condenser to prevent volatile loss.",
+  "q": "Edexcel IAL MCQ: Why is a vertical (reflux) condenser used when heating a reaction mixture?",
+  "options": [
+   "A: To collect the product by distillation",
+   "B: To condense and return vapours so volatile reactants are not lost",
+   "C: To cool the product rapidly",
+   "D: To increase the pressure inside the flask"
+  ],
+  "ans": "Correct Answer: B. Explanation: In reflux, the vertical condenser cools vapours back into liquid which drips back into the flask, allowing the mixture to be heated at its boiling point for a long time without losing volatile reactants or products.",
+  "expl": [
+   "Wrong — Distillation uses a condenser to collect vapours; a reflux condenser returns them to the flask instead.",
+   "CORRECT — In reflux, the vertical condenser cools vapours back into liquid which drips back into the flask, allowing the mixture to be heated at its boiling point for a long time without losing volatile reactants or products.",
+   "Wrong — Rapid cooling is not the purpose — the mixture is kept boiling while the condenser returns vapours.",
+   "Wrong — The apparatus is open to the atmosphere through the condenser; it does not build up pressure."
+  ]
+ },
+ {
+  "term": "Ethanoic Anhydride",
+  "cat": "synth_methods",
+  "def": "Safer acylating reagent ((CH₃CO)₂O) used in aspirin synthesis instead of ethanoyl chloride.",
+  "q": "Edexcel IAL MCQ: Why is ethanoic anhydride preferred over ethanoyl chloride for preparing aspirin?",
+  "options": [
+   "A: It is safer and less corrosive — the reaction is less vigorous and no HCl gas is released",
+   "B: It gives a higher melting point product",
+   "C: It reacts faster at room temperature",
+   "D: It is a stronger acid"
+  ],
+  "ans": "Correct Answer: A. Explanation: Ethanoyl chloride reacts violently and releases corrosive HCl gas; ethanoic anhydride is safer, less corrosive, cheaper and produces ethanoic acid instead of HCl, so it is preferred for the school aspirin preparation.",
+  "expl": [
+   "CORRECT — Ethanoyl chloride reacts violently and releases corrosive HCl gas; ethanoic anhydride is safer, less corrosive, cheaper and produces ethanoic acid instead of HCl, so it is preferred for the school aspirin preparation.",
+   "Wrong — Both routes give the same product (aspirin); the melting point is determined by the product and its purity, not by the acylating agent.",
+   "Wrong — Ethanoic anhydride reacts more slowly and gently than ethanoyl chloride — that is part of why it is safer.",
+   "Wrong — Acidity of the reagent is irrelevant; the choice is about safety and by-products (ethanoic acid vs HCl)."
+  ]
+ },
+ {
+  "term": "Atom Economy",
+  "cat": "synth_methods",
+  "def": "Ratio of desired product molar mass to total product molar mass as percentage.",
+  "q": "Edexcel IAL MCQ: How is atom economy calculated?",
+  "options": [
+   "A: (mass of desired product / total mass of all products) × 100%",
+   "B: (mass of reactants / mass of product) × 100%",
+   "C: (moles of product / moles of reactant) × 100%",
+   "D: (ΔH of reaction / ΔH of combustion) × 100%"
+  ],
+  "ans": "Correct Answer: A. Explanation: Atom economy = (Mr of desired product / Σ Mr of ALL products) × 100%; it measures how much of the atoms in the reactants end up in the desired product.",
+  "expl": [
+   "CORRECT — Atom economy = (Mr of desired product / Σ Mr of ALL products) × 100%; it measures how much of the atoms in the reactants end up in the desired product.",
+   "Wrong — This is the definition of percentage yield (actual mass / theoretical mass), which is a different green-chemistry measure.",
+   "Wrong — Moles ratio is stoichiometry, not atom economy; atom economy compares molar masses of products.",
+   "Wrong — Enthalpies are not involved — atom economy is a mass-based measure of waste."
+  ]
+ },
+ {
+  "term": "Melting Point Range",
+  "cat": "synth_methods",
+  "def": "Temperature span from start of melting to complete liquefaction; sharp range indicates purity.",
+  "q": "Edexcel IAL MCQ: A solid melts sharply at 138 °C. What does this indicate?",
+  "options": [
+   "A: The solid is pure",
+   "B: The solid is impure",
+   "C: The solid is a mixture of isomers",
+   "D: The solid contains water of crystallisation"
+  ],
+  "ans": "Correct Answer: A. Explanation: A sharp melting point (narrow range, matching the literature value) indicates a pure substance; impurities lower the melting point and broaden the melting range.",
+  "expl": [
+   "CORRECT — A sharp melting point (narrow range, matching the literature value) indicates a pure substance; impurities lower the melting point and broaden the melting range.",
+   "Wrong — Impurities lower the melting point and widen the range — a sharp value at the expected temperature shows purity.",
+   "Wrong — A mixture of isomers would show a broadened, depressed melting range, not a sharp value.",
+   "Wrong — Water of crystallisation affects composition, not sharpness; a sharp melting point at 138 °C is the purity test result."
+  ]
+ },
+ {
+  "term": "Suction Filtration",
+  "cat": "synth_methods",
+  "def": "Vacuum filtration using Büchner funnel and flask to separate purified solid crystals.",
+  "q": "Edexcel IAL MCQ: Which apparatus is used for suction (vacuum) filtration?",
+  "options": [
+   "A: Separating funnel",
+   "B: Büchner funnel and flask connected to a vacuum pump",
+   "C: Liebig condenser",
+   "D: Burette"
+  ],
+  "ans": "Correct Answer: B. Explanation: Suction filtration uses a Büchner funnel with a flat perforated plate and filter paper, fitted to a Büchner flask connected to a vacuum pump, to pull liquid through and collect crystals quickly.",
+  "expl": [
+   "Wrong — A separating funnel separates immiscible liquid layers, not crystals from a liquid.",
+   "CORRECT — Suction filtration uses a Büchner funnel with a flat perforated plate and filter paper, fitted to a Büchner flask connected to a vacuum pump, to pull liquid through and collect crystals quickly.",
+   "Wrong — A Liebig condenser is used for distillation/reflux, not for filtering crystals.",
+   "Wrong — A burette is volumetric apparatus for titrations, not filtration."
+  ]
+ },
+ {
+  "term": "Solvent Extraction",
+  "cat": "synth_methods",
+  "def": "Separating a solute using a separating funnel and an immiscible solvent.",
+  "q": "Edexcel IAL MCQ: A separating funnel is used to...",
+  "options": [
+   "A: separate two immiscible liquid layers so a solute can be extracted into one layer",
+   "B: measure the pH of a solution",
+   "C: heat a mixture under reflux",
+   "D: weigh out a solid"
+  ],
+  "ans": "Correct Answer: A. Explanation: Immiscible liquids form two layers in a separating funnel; the solute distributes between them and the desired layer is run off, allowing extraction (e.g. of an organic product into an organic solvent).",
+  "expl": [
+   "CORRECT — Immiscible liquids form two layers in a separating funnel; the solute distributes between them and the desired layer is run off, allowing extraction (e.g. of an organic product into an organic solvent).",
+   "Wrong — pH is measured with a pH meter or indicator, not with a separating funnel.",
+   "Wrong — Reflux uses a round-bottom flask with a vertical condenser, not a separating funnel.",
+   "Wrong — Weighing uses a balance; a separating funnel separates liquid layers."
+  ]
+ },
+ {
+  "term": "Drying Agent",
+  "cat": "synth_methods",
+  "def": "Anhydrous salt (CaCl₂ or Na₂SO₄) added to organic liquids to absorb dissolved water.",
+  "q": "Edexcel IAL MCQ: Which substance is used as a drying agent for an organic liquid layer?",
+  "options": [
+   "A: Anhydrous sodium sulfate (Na₂SO₄)",
+   "B: Sodium chloride solution",
+   "C: Dilute hydrochloric acid",
+   "D: Sodium hydroxide pellets"
+  ],
+  "ans": "Correct Answer: A. Explanation: Anhydrous salts such as Na₂SO₄, MgSO₄ or CaCl₂ absorb dissolved water from an organic layer; they are added, swirled, and then the dried liquid is decanted or filtered off.",
+  "expl": [
+   "CORRECT — Anhydrous salts such as Na₂SO₄, MgSO₄ or CaCl₂ absorb dissolved water from an organic layer; they are added, swirled, and then the dried liquid is decanted or filtered off.",
+   "Wrong — Sodium chloride solution contains water — it cannot dry an organic layer; brine is used to wash, not dry.",
+   "Wrong — Dilute acid is aqueous and would add water, not remove it.",
+   "Wrong — NaOH pellets react with many organic compounds and are not a general drying agent for organic layers."
+  ]
+ },
+ {
+  "term": "Chemical Shift (δ)",
+  "cat": "synth_methods",
+  "def": "Resonance frequency position in NMR measured in ppm relative to TMS standard at 0 ppm.",
+  "q": "Edexcel IAL MCQ: Which compound is used as the reference standard (δ = 0 ppm) in ¹H NMR?",
+  "options": [
+   "A: Tetramethylsilane (TMS)",
+   "B: Water",
+   "C: Ethanol",
+   "D: Benzene"
+  ],
+  "ans": "Correct Answer: A. Explanation: TMS (Si(CH₃)₄) gives one sharp signal at δ = 0 because all 12 protons are equivalent; it is inert, volatile and non-toxic, making it the ideal NMR reference.",
+  "expl": [
+   "CORRECT — TMS (Si(CH₃)₄) gives one sharp signal at δ = 0 because all 12 protons are equivalent; it is inert, volatile and non-toxic, making it the ideal NMR reference.",
+   "Wrong — Water protons would appear at about δ = 4.8 and it interferes with samples — it is not the standard.",
+   "Wrong — Ethanol gives several signals and is a sample, not a reference.",
+   "Wrong — Benzene gives a signal at about δ = 7.3, not at 0 ppm, and is not the reference standard."
+  ]
+ },
+            
+];;
 
         const ESSAYS_DATA = [
-            {
-                title: "1. Delocalised Model of Benzene vs Kekulé Model",
-                question: "Discuss thermochemical, structural, and reactivity evidence supporting the modern delocalised model of benzene over Kekulé's structure.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Thermochemical Evidence:</strong> Cyclohexene hydrogenation $\\Delta H = -118\\text{ kJ mol}^{-1}$. Kekulé 3 double bonds predict $\\Delta H = -354\\text{ kJ mol}^{-1}$. Experimental benzene $\\Delta H = -205\\text{ kJ mol}^{-1}$. Benzene is $149\\text{ kJ mol}^{-1}$ MORE STABLE due to delocalisation energy.<br>• <strong>X-Ray Diffraction:</strong> Kekulé predicts alternating short C=C ($0.134\\text{ nm}$) and long C-C ($0.154\\text{ nm}$) bonds. X-ray proves all six C-C bonds are IDENTICAL ($0.139\\text{ nm}$).<br>• <strong>Reactivity:</strong> Alkenes undergo electrophilic addition with bromine water. Benzene RESISTS addition and undergoes electrophilic substitution ($\\text{FeBr}_3$ catalyst) to preserve aromatic stability."
-            },
-            {
-                title: "2. Origin of Colour & Ligand Splitting in Transition Metals",
-                question: "Explain the origin of colour in aqueous transition metal complex ions. Describe why $[\\text{Cu}(\\text{H}_2\\text{O})_6]^{2+}$ is blue while $[\\text{Zn}(\\text{H}_2\\text{O})_6]^{2+}$ is colourless.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Ligand Splitting:</strong> Surrounding ligands cause electrostatic repulsion that SPLITS degenerate 3d orbitals into two energy levels separated by energy gap $\\Delta E$.<br>• <strong>d-d Promotion:</strong> d-electrons absorb specific visible light frequencies ($\\Delta E = h\\nu$) to promote to higher d-orbitals. The observed color is the COMPLEMENTARY color transmitted.<br>• <strong>$[\\text{Cu}(\\text{H}_2\\text{O})_6]^{2+}$ (Blue):</strong> $\\text{Cu}^{2+}$ is $[\\text{Ar}] 3d^9$ (partially filled d-subshell). d-d transitions absorb red/orange light, transmitting blue.<br>• <strong>$[\\text{Zn}(\\text{H}_2\\text{O})_6]^{2+}$ (Colourless):</strong> $\\text{Zn}^{2+}$ is $[\\text{Ar}] 3d^{10}$ (completely full d-subshell). No vacant d-orbitals are available for d-d promotion."
-            },
-            {
-                title: "3. Chelate Effect & Thermodynamic Stability",
-                question: "Explain why replacing 6 monodentate water ligands in $[\\text{Ni}(\\text{H}_2\\text{O})_6]^{2+}$ with 3 bidentate en ligands forms a more stable complex based on entropy.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Reaction:</strong> $[\\text{Ni}(\\text{H}_2\\text{O})_6]^{2+} + 3\\text{en} \\rightleftharpoons [\\text{Ni(en)}_3]^{2+} + 6\\text{H}_2\\text{O}$.<br>• <strong>Enthalpy ($\\Delta H$):</strong> Six Ni-N bonds replace six Ni-O bonds of similar strength, so $\\Delta H \\approx 0$.<br>• <strong>Particle Count & Entropy:</strong> 4 reactant species form 7 product species. Total particles increase by +3.<br>• <strong>Thermodynamic Feasibility:</strong> Particle increase creates disorder, giving strongly POSITIVE system entropy ($\\Delta S_{\\text{system}} > 0$). This makes $\\Delta G$ negative and drives equilibrium far to the right."
-            },
-            {
-                title: "4. Relative Basicity of Nitrogen Compounds",
-                question: "Compare relative basicity of butylamine, ammonia, phenylamine, and ethanamide. Explain differences in lone pair availability.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Basicity Order:</strong> Ethanamide < Phenylamine < Ammonia < Butylamine.<br>• <strong>Basicity Concept:</strong> Depends on availability of nitrogen lone pair to accept $\\text{H}^+$.<br>• <strong>Butylamine:</strong> Alkyl butyl group is electron-releasing (+I), increasing electron density on N lone pair.<br>• <strong>Phenylamine:</strong> Nitrogen lone pair delocalises into the aromatic $\\pi$-system, decreasing electron density on N.<br>• <strong>Ethanamide:</strong> Nitrogen lone pair delocalises strongly into the electronegative carbonyl C=O group, making lone pair unavailable."
-            },
-            {
-                title: "5. Transition Metal Catalytic Mechanisms",
-                question: "Compare heterogeneous and homogeneous catalysis. Explain how $\\text{V}_2\\text{O}_5$ catalyses the Contact Process and $\\text{Fe}^{2+}$ catalyses the $\\text{I}^- / \\text{S}_2\\text{O}_8^{2-}$ reaction.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Heterogeneous ($\\text{V}_2\\text{O}_5$):</strong> Catalyst in solid phase, gas reactants. $\\text{SO}_2/\\text{O}_2$ adsorb onto surface weakening bonds. Oxidation state cycling: $\\text{SO}_2 + \\text{V}_2\\text{O}_5 \\rightarrow \\text{SO}_3 + \\text{V}_2\\text{O}_4$; $\\text{V}_2\\text{O}_4 + \\frac{1}{2}\\text{O}_2 \\rightarrow \\text{V}_2\\text{O}_5$.<br>• <strong>Homogeneous ($\\text{Fe}^{2+}$):</strong> Catalyst in same aqueous phase. Reaction between negative anions ($\\text{I}^-$ and $\\text{S}_2\\text{O}_8^{2-}$) has high $E_a$ due to repulsion.<br>• <strong>$\\text{Fe}^{2+}$ Pathway:</strong> 1. $\\text{S}_2\\text{O}_8^{2-} + 2\\text{Fe}^{2+} \\rightarrow 2\\text{SO}_4^{2-} + 2\\text{Fe}^{3+}$. 2. $2\\text{Fe}^{3+} + 2\\text{I}^- \\rightarrow 2\\text{Fe}^{2+} + \\text{I}_2$."
-            },
-            {
-                title: "6. Electrochemistry & Limits of $E^\\circ_{\\text{cell}}$ Predictions",
-                question: "Explain how $E^\\circ$ values are measured using SHE. Discuss why a reaction with positive $E^\\circ_{\\text{cell}}$ may not occur in practice.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>SHE Measurement:</strong> Pt electrode in 1.00 M $\\text{H}^+$(aq), $\\text{H}_2$ at 100 kPa, 298 K connected via voltmeter and salt bridge.<br>• <strong>$E^\\circ_{\\text{cell}}$ Meaning:</strong> Positive $E^\\circ_{\\text{cell}}$ indicates thermodynamic feasibility ($\\Delta S_{\\text{total}} > 0$).<br>• <strong>Limitation 1 (Kinetics):</strong> High activation energy ($E_a$) prevents observable reaction rate at room temp.<br>• <strong>Limitation 2 (Concentration):</strong> Non-standard concentrations shift half-cell equilibria via Le Chatelier's principle, altering actual $E$ away from $E^\\circ$.<br>• <strong>Limitation 3 (Side Reactions):</strong> Alternative redox pathways or atmospheric oxidation alter predicted products."
-            },
-            {
-                title: "7. Electrophilic Substitution: Benzene vs Phenol Nitration",
-                question: "Describe the nitration mechanism for benzene. Explain why phenol reacts under much milder conditions.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Electrophile:</strong> $\\text{HNO}_3 + 2\\text{H}_2\\text{SO}_4 \\rightarrow \\text{NO}_2^+ + \\text{H}_3\\text{O}^+ + 2\\text{HSO}_4^-$.<br>• <strong>Mechanism:</strong> 1. Benzene $\\pi$-cloud attacks $\\text{NO}_2^+$. 2. Cation intermediate forms with broken horseshoe ring (C2-C6) with + charge. 3. $\\text{HSO}_4^-$ removes $\\text{H}^+$ to regenerate aromatic ring and $\\text{H}_2\\text{SO}_4$.<br>• <strong>Phenol Comparison:</strong> Oxygen lone pair in phenol delocalises into aromatic $\\pi$-system, INCREASING ring electron density. Phenol reacts with dilute $\\text{HNO}_3$ at room temp without catalyst."
-            },
-            {
-                title: "8. Grignard Reagents in Chain Extension",
-                question: "Describe how a Grignard reagent is prepared from 1-bromopropane and converted into 2-methylpentan-2-ol.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Preparation:</strong> Reflux 1-bromopropane with Mg turnings in ANHYDROUS DRY ETHER to form propylmagnesium bromide.<br>• <strong>Reagent Selection:</strong> To form 3° alcohol 2-methylpentan-2-ol, react Grignard with KETONE: Propanone.<br>• <strong>Nucleophilic Addition:</strong> Carbanion (R<sup>δ-</sup>) attacks carbonyl carbon (C<sup>δ+</sup>) of propanone.<br>• <strong>Hydrolysis:</strong> Add dilute HCl(aq) to hydrolyse adduct into 2-methylpentan-2-ol and Mg(OH)Br."
-            },
-            {
-                title: "9. Synthesis, Purification & Purity Analysis of Aspirin",
-                question: "Outline the preparation of crude aspirin from 2-hydroxybenzoic acid, its purification by recrystallisation, and purity verification.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Synthesis:</strong> Warm 2-hydroxybenzoic acid with ethanoic anhydride and conc $\\text{H}_3\\text{PO}_4$ catalyst. Pour into cold water to precipitate solid.<br>• <strong>Recrystallisation:</strong> Dissolve crude solid in MINIMUM volume of HOT solvent. Filter hot to remove insoluble impurities. Cool filtrate in ice bath to recrystallise.<br>• <strong>Suction Filtration:</strong> Filter under vacuum using Büchner funnel, wash with ice-cold solvent, dry.<br>• <strong>Purity Verification:</strong> Determine melting point. Pure aspirin melts sharply at ~138°C; impurities lower MP and broaden range."
-            },
-            {
-                title: "10. Diazotisation & Azo Dye Coupling",
-                question: "Describe two-stage preparation of an azo dye from phenylamine. State conditions, reagents, and reasons for temperature control.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>• <strong>Stage 1 (Diazotisation):</strong> Dissolve phenylamine in dilute HCl and add cold $\\text{NaNO}_2$(aq) in ice bath BELOW 10°C.<br>• <strong>Equation 1:</strong> $\\text{C}_6\\text{H}_5\\text{NH}_2 + \\text{HNO}_2 + \\text{HCl} \\rightarrow \\text{C}_6\\text{H}_5\\text{N}_2^+\\text{Cl}^- + 2\\text{H}_2\\text{O}$.<br>• <strong>Temp Reason:</strong> Benzenediazonium ion decomposes above 10°C into phenol and $\\text{N}_2$ gas.<br>• <strong>Stage 2 (Coupling):</strong> Add diazonium solution dropwise to phenol dissolved in NaOH kept cold (< 10°C). Yellow/orange precipitate of 4-phenylazophenol forms."
-            }
-        ];
+ {
+  "title": "1. Delocalised Model of Benzene vs Kekulé Model",
+  "question": "Discuss thermochemical, structural, and reactivity evidence supporting the modern delocalised model of benzene over Kekulé's structure.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Thermochemical Evidence:</strong> Cyclohexene hydrogenation ΔH = −118 kJ mol⁻¹. Kekulé's 3 double bonds predict ΔH = −354 kJ mol⁻¹. Experimental benzene ΔH = −205 kJ mol⁻¹. Benzene is 149 kJ mol⁻¹ MORE STABLE due to delocalisation energy.<br>\n• <strong>Structural Evidence:</strong> Kekulé predicts alternating short C=C (0.134 nm) and long C–C (0.154 nm) bonds. X-ray diffraction proves all six C–C bonds are IDENTICAL (0.139 nm) — intermediate between single and double bond lengths.<br>\n• <strong>Reactivity Evidence:</strong> Alkenes undergo electrophilic addition and decolourise bromine water. Benzene RESISTS addition and undergoes electrophilic substitution (e.g. with Br₂/FeBr₃) to preserve the delocalised π system and aromatic stability.",
+  "command": "Discuss (thermochemical + structural + reactivity evidence for delocalised model)",
+  "peel": [
+   "P: State the claim — the delocalised model, with six π electrons shared over the ring, explains benzene's stability better than Kekulé's alternating double bonds.",
+   "E: Thermochemical — hydrogenation of cyclohexene is −118 kJ mol⁻¹; three C=C predict −354 kJ mol⁻¹ but benzene gives only −205 kJ mol⁻¹.",
+   "E: Evaluate — the 149 kJ mol⁻¹ difference is the delocalisation energy; benzene is more stable than the Kekulé structure predicts.",
+   "E: Structural — X-ray shows all six C–C bonds identical at 0.139 nm, between C–C (0.154) and C=C (0.134), contradicting alternating bond lengths.",
+   "L: Link to reactivity — benzene undergoes substitution, not addition, because addition would destroy the delocalised system and the aromatic stabilisation."
+  ],
+  "keywords": [
+   "delocalisation energy 149 kJ mol⁻¹",
+   "−205 vs −354 kJ mol⁻¹",
+   "identical C–C bonds 0.139 nm",
+   "electrophilic substitution",
+   "resists bromine water",
+   "preserves aromatic stability",
+   "X-ray diffraction",
+   "FeBr₃ catalyst"
+  ],
+  "starters": [
+   "Thermochemically, if benzene contained three localised double bonds its hydrogenation enthalpy would be three times that of cyclohexene...",
+   "X-ray diffraction shows that all six carbon-carbon bonds in benzene are identical at 0.139 nm...",
+   "The clearest evidence is reactivity: unlike alkenes, benzene does not decolourise bromine water..."
+  ]
+ },
+ {
+  "title": "2. Origin of Colour & Ligand Splitting in Transition Metals",
+  "question": "Explain the origin of colour in aqueous transition metal complex ions. Describe why [Cu(H₂O)₆]²⁺ is blue while [Zn(H₂O)₆]²⁺ is colourless.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Ligand Splitting:</strong> Surrounding ligands cause electrostatic repulsion that SPLITS the degenerate 3d orbitals into two energy levels separated by an energy gap ΔE.<br>\n• <strong>d-d Promotion:</strong> d-electrons ABSORB specific frequencies of visible light (ΔE = hν) to promote to the higher d-orbitals. The observed colour is the COMPLEMENTARY colour of the light absorbed.<br>\n• <strong>[Cu(H₂O)₆]²⁺ (Blue):</strong> Cu²⁺ is [Ar]3d⁹ — a partially filled d-subshell. d-d transitions absorb red/orange light, transmitting blue.<br>\n• <strong>[Zn(H₂O)₆]²⁺ (Colourless):</strong> Zn²⁺ is [Ar]3d¹⁰ — a completely full d-subshell. There is no vacant d-orbital, so no d-d transition is possible and no visible light is absorbed.",
+  "command": "Explain (origin of colour + compare two complexes)",
+  "peel": [
+   "P: State the mechanism — colour arises from the absorption of visible light by d-electrons being promoted between split d-orbitals.",
+   "E: Ligands split the degenerate 3d orbitals into two sets separated by ΔE; the size of ΔE determines which wavelength is absorbed (ΔE = hν).",
+   "E: The colour observed is the complementary colour of the absorbed light — the rest of the spectrum is transmitted.",
+   "E: Apply to Cu²⁺ ([Ar]3d⁹): partially filled d-subshell allows d-d transitions; red/orange absorbed, so the solution appears blue.",
+   "L: Contrast with Zn²⁺ ([Ar]3d¹⁰): filled d-subshell, no vacant orbital, no d-d transition, so the complex is colourless."
+  ],
+  "keywords": [
+   "d-d transition",
+   "split 3d orbitals",
+   "ΔE = hν",
+   "absorb visible light",
+   "complementary colour",
+   "3d⁹ partially filled",
+   "3d¹⁰ fully filled",
+   "no vacant d-orbital"
+  ],
+  "starters": [
+   "In a transition metal complex, the ligands create an electrostatic field that splits the five degenerate 3d orbitals into two energy levels...",
+   "Electrons in the lower d-orbitals absorb photons of visible light whose energy matches ΔE, promoting them to the upper set...",
+   "Copper(II) has a 3d⁹ configuration, so an electron can be promoted between split d-orbitals, whereas zinc(II) at 3d¹⁰ cannot..."
+  ]
+ },
+ {
+  "title": "3. Chelate Effect & Thermodynamic Stability",
+  "question": "Explain why replacing 6 monodentate water ligands in [Ni(H₂O)₆]²⁺ with 3 bidentate en ligands forms a more stable complex based on entropy.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Reaction:</strong> [Ni(H₂O)₆]²⁺ + 3en ⇌ [Ni(en)₃]²⁺ + 6H₂O.<br>\n• <strong>Enthalpy (ΔH):</strong> Six Ni–N bonds replace six Ni–O bonds of similar strength, so ΔH ≈ 0 — enthalpy is not the driving force.<br>\n• <strong>Particle Count & Entropy:</strong> 4 reactant particles form 7 product particles — the total number of particles INCREASES by 3.<br>\n• <strong>Thermodynamic Feasibility:</strong> More particles means greater disorder, giving a strongly POSITIVE ΔS<sub>system</sub>. Since ΔG = ΔH − TΔS, the negative TΔS term makes ΔG negative and drives the equilibrium far to the right — the chelated complex is more stable.",
+  "command": "Explain (thermodynamic/entropy argument for chelate stability)",
+  "peel": [
+   "P: State the outcome — the chelated complex [Ni(en)₃]²⁺ is more stable than [Ni(H₂O)₆]²⁺, and the reason is entropy, not enthalpy.",
+   "E: Write the equilibrium: [Ni(H₂O)₆]²⁺ + 3en ⇌ [Ni(en)₃]²⁺ + 6H₂O — 4 particles become 7.",
+   "E: ΔH ≈ 0 because six Ni–N bonds replace six Ni–O bonds of comparable strength, so enthalpy cannot explain the stability.",
+   "E: The particle increase (+3) raises the disorder of the system, so ΔS<sub>system</sub> > 0.",
+   "L: Link to feasibility: ΔG = ΔH − TΔS is negative because of the positive entropy term, so the equilibrium lies far to the right."
+  ],
+  "keywords": [
+   "chelate effect",
+   "3 en replaces 6 H₂O",
+   "4 → 7 particles",
+   "ΔS_system > 0",
+   "ΔH ≈ 0",
+   "ΔG = ΔH − TΔS",
+   "more disorder",
+   "equilibrium to the right"
+  ],
+  "starters": [
+   "The chelate effect is explained by the large increase in the number of particles when multidentate ligands displace monodentate ones...",
+   "Since the Ni–N and Ni–O bond enthalpies are similar, ΔH is approximately zero and the stability must come from the entropy change...",
+   "Four reactant species produce seven product species, so the system becomes more disordered and ΔS_system is positive..."
+  ]
+ },
+ {
+  "title": "4. Relative Basicity of Nitrogen Compounds",
+  "question": "Compare relative basicity of butylamine, ammonia, phenylamine, and ethanamide. Explain differences in lone pair availability.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Basicity Order:</strong> Ethanamide &lt; Phenylamine &lt; Ammonia &lt; Butylamine (weakest → strongest).<br>\n• <strong>Basicity Concept:</strong> Basicity depends on the AVAILABILITY of the nitrogen lone pair to accept H⁺.<br>\n• <strong>Butylamine:</strong> The alkyl butyl group is electron-RELEASING (+I effect), increasing electron density on the nitrogen lone pair — most available.<br>\n• <strong>Phenylamine:</strong> The nitrogen lone pair DELOCALISES into the aromatic π system, decreasing electron density on nitrogen — less available than in ammonia.<br>\n• <strong>Ethanamide:</strong> The lone pair delocalises strongly into the electronegative carbonyl (C=O) group, making the lone pair largely UNAVAILABLE — weakest base.",
+  "command": "Compare & explain (basicity order based on lone pair availability)",
+  "peel": [
+   "P: State the full order — ethanamide is the weakest and butylamine the strongest base.",
+   "E: Butylamine — the +I alkyl group pushes electron density onto nitrogen, making the lone pair most available to accept H⁺.",
+   "E: Phenylamine — the lone pair is delocalised into the aromatic ring, lowering the electron density on nitrogen relative to ammonia.",
+   "E: Ethanamide — the lone pair is strongly delocalised into the C=O group, so it is largely unavailable for protonation.",
+   "L: Link the order to electron density at nitrogen: the more electron density on the lone pair, the stronger the base."
+  ],
+  "keywords": [
+   "lone pair availability",
+   "electron-releasing +I alkyl",
+   "delocalised into ring",
+   "delocalised into C=O",
+   "accept H⁺",
+   "ethanamide < phenylamine < ammonia < butylamine",
+   "electron density on nitrogen",
+   "weaker base"
+  ],
+  "starters": [
+   "Basicity of these nitrogen compounds depends on how available the nitrogen lone pair is for protonation...",
+   "The butyl group is electron-releasing, which increases the electron density on the nitrogen and strengthens the base...",
+   "In phenylamine the lone pair is delocalised into the benzene ring, while in ethanamide it is delocalised into the carbonyl group..."
+  ]
+ },
+ {
+  "title": "5. Transition Metal Catalytic Mechanisms",
+  "question": "Compare heterogeneous and homogeneous catalysis. Explain how V₂O₅ catalyses the Contact Process and Fe²⁺ catalyses the I⁻ / S₂O₈²⁻ reaction.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Heterogeneous (V₂O₅):</strong> Catalyst in a DIFFERENT phase (solid) from the gaseous reactants. SO₂ and O₂ ADSORB onto the surface at active sites, weakening bonds. Oxidation-state cycling: SO₂ + V₂O₅ → SO₃ + V₂O₄, then V₂O₄ + ½O₂ → V₂O₅ — the catalyst is regenerated.<br>\n• <strong>Homogeneous (Fe²⁺):</strong> Catalyst in the SAME phase (aqueous) as the reactants. The direct reaction between two negative ions (I⁻ and S₂O₈²⁻) has a high Eₐ due to electrostatic repulsion.<br>\n• <strong>Fe²⁺/Fe³⁺ Pathway:</strong> 1. S₂O₈²⁻ + 2Fe²⁺ → 2SO₄²⁻ + 2Fe³⁺. 2. 2Fe³⁺ + 2I⁻ → 2Fe²⁺ + I₂. Fe²⁺ is regenerated, providing a lower-energy route.",
+  "command": "Compare & explain (heterogeneous vs homogeneous catalysis with two examples)",
+  "peel": [
+   "P: Define both types — heterogeneous: different phase, surface adsorption; homogeneous: same phase, oxidation-state cycling.",
+   "E: V₂O₅ — SO₂ and O₂ adsorb onto the solid surface; V₂O₅ is reduced to V₂O₄ and then re-oxidised by O₂, regenerating the catalyst.",
+   "E: Fe²⁺ — S₂O₈²⁻ oxidises Fe²⁺ to Fe³⁺, then Fe³⁺ oxidises I⁻ back to Fe²⁺; the catalyst cycles between two oxidation states.",
+   "E: Explain why: the two negative ions repel, so the direct reaction has a high activation energy; the transition metal pathway has a lower Eₐ.",
+   "L: Link to the common feature — both catalysts provide an alternative pathway with lower activation energy and are regenerated."
+  ],
+  "keywords": [
+   "heterogeneous — different phase",
+   "adsorption at active sites",
+   "homogeneous — same phase",
+   "oxidation-state cycling",
+   "V₂O₅ ↔ V₂O₄",
+   "Fe²⁺/Fe³⁺ regeneration",
+   "lower activation energy",
+   "catalyst regenerated"
+  ],
+  "starters": [
+   "Heterogeneous catalysts such as V₂O₅ are in a different phase from the reactants and act by adsorbing them onto active sites on the surface...",
+   "In the Contact Process, SO₂ reduces V₂O₅ to V₂O₄, which is then re-oxidised by O₂ back to V₂O₅...",
+   "The Fe²⁺/Fe³⁺ couple provides an alternative pathway for the I⁻/S₂O₈²⁻ reaction, avoiding the high-energy direct collision of two negative ions..."
+  ]
+ },
+ {
+  "title": "6. Electrochemistry & Limits of E°cell Predictions",
+  "question": "Explain how E° values are measured using SHE. Discuss why a reaction with positive E°cell may not occur in practice.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>SHE Measurement:</strong> The half-cell is connected to the SHE via a salt bridge and a high-resistance voltmeter. SHE: Pt electrode in 1.00 mol dm⁻³ H⁺(aq), H₂ gas at 100 kPa, 298 K, E° = 0.00 V. The emf recorded is the E° of the test half-cell (sign depends on whether it is the positive or negative terminal).<br>\n• <strong>Meaning of E°cell:</strong> A positive E°<sub>cell</sub> indicates thermodynamic feasibility — ΔS<sub>total</sub> &gt; 0 (ΔG° &lt; 0) under standard conditions.<br>\n• <strong>Limitation 1 (Kinetics):</strong> A high activation energy (Eₐ) may make the rate undetectably slow at room temperature.<br>\n• <strong>Limitation 2 (Concentration):</strong> Non-standard concentrations shift the half-cell equilibria (Le Chatelier), so the actual E differs from E°.<br>\n• <strong>Limitation 3 (Side Reactions):</strong> Alternative redox pathways or atmospheric oxidation can give different products than predicted.",
+  "command": "Explain & discuss (SHE measurement + limits of feasibility predictions)",
+  "peel": [
+   "P: State how E° is measured — connect the half-cell to the SHE through a salt bridge and voltmeter under standard conditions.",
+   "E: Describe the SHE — Pt electrode, 1.00 mol dm⁻³ H⁺, H₂ at 100 kPa, 298 K, assigned E° = 0.00 V.",
+   "E: A positive E°cell shows thermodynamic feasibility: ΔS_total > 0 and ΔG° < 0.",
+   "E: But feasibility is not the same as reaction — high Eₐ makes the reaction too slow; non-standard concentrations change E; side reactions divert products.",
+   "L: Link to the conclusion — E°cell predicts whether a reaction CAN happen thermodynamically, not whether it WILL happen at an observable rate."
+  ],
+  "keywords": [
+   "SHE 0.00 V",
+   "1.00 mol dm⁻³ H⁺",
+   "100 kPa H₂",
+   "298 K",
+   "E°cell = E°red − E°ox",
+   "ΔS_total > 0",
+   "high activation energy",
+   "non-standard conditions"
+  ],
+  "starters": [
+   "The standard electrode potential of a half-cell is measured against the standard hydrogen electrode using a salt bridge and high-resistance voltmeter...",
+   "A positive E°cell means the reaction is thermodynamically feasible because ΔS_total is positive...",
+   "However, a feasible reaction may not be observed if the activation energy is high, the concentrations are not standard, or side reactions occur..."
+  ]
+ },
+ {
+  "title": "7. Electrophilic Substitution: Benzene vs Phenol Nitration",
+  "question": "Describe the nitration mechanism for benzene. Explain why phenol reacts under much milder conditions.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Electrophile Formation:</strong> Conc HNO₃ + 2H₂SO₄ → NO₂⁺ + H₃O⁺ + 2HSO₄⁻ — the nitronium ion NO₂⁺ is the electrophile.<br>\n• <strong>Mechanism (Electrophilic Substitution):</strong> 1. The benzene π-electron cloud ATTACKS NO₂⁺, forming a cation (carbocation) intermediate with the delocalisation broken (positive charge delocalised over the ring). 2. A C–NO₂ bond forms. 3. HSO₄⁻ removes the ring H⁺, regenerating the aromatic ring and H₂SO₄ — substitution, not addition.<br>\n• <strong>Conditions:</strong> 55 °C water bath; above 55 °C further substitution gives dinitrobenzene.<br>\n• <strong>Phenol Comparison:</strong> The oxygen lone pair in phenol DELOCALISES into the aromatic π system, increasing ring electron density. Phenol reacts with DILUTE HNO₃ at ROOM TEMPERATURE without a catalyst — much milder conditions than benzene.",
+  "command": "Describe & explain (nitration mechanism + phenol reactivity)",
+  "peel": [
+   "P: State that nitration is electrophilic substitution with NO₂⁺ as the electrophile.",
+   "E: Generate the electrophile: HNO₃ + 2H₂SO₄ → NO₂⁺ + H₃O⁺ + 2HSO₄⁻.",
+   "E: Mechanism — the π cloud attacks NO₂⁺ forming a cation intermediate; HSO₄⁻ removes H⁺ to regenerate the aromatic ring.",
+   "E: Benzene needs conc. acids at 55 °C; phenol reacts with dilute HNO₃ at room temperature.",
+   "L: Link the difference to electron density — phenol's O lone pair donates into the ring, making it far more reactive towards electrophiles."
+  ],
+  "keywords": [
+   "NO₂⁺ electrophile",
+   "HNO₃ + H₂SO₄",
+   "cation intermediate",
+   "HSO₄⁻ removes H⁺",
+   "regenerates aromatic ring",
+   "55 °C water bath",
+   "phenol O lone pair delocalises",
+   "milder conditions"
+  ],
+  "starters": [
+   "The electrophile in nitration is the nitronium ion, NO₂⁺, formed by the reaction of concentrated nitric and sulfuric acids...",
+   "The delocalised π electrons of the ring attack NO₂⁺ to form a cation intermediate, after which a proton is removed to restore aromaticity...",
+   "Phenol is more reactive than benzene because the oxygen lone pair delocalises into the ring, increasing its electron density..."
+  ]
+ },
+ {
+  "title": "8. Grignard Reagents in Chain Extension",
+  "question": "Describe how a Grignard reagent is prepared from 1-bromopropane and converted into 2-methylpentan-2-ol.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Preparation:</strong> Reflux 1-bromopropane with magnesium turnings in ANHYDROUS (DRY) ETHER to form propylmagnesium bromide, CH₃CH₂CH₂MgBr. Water would destroy the reagent: RMgX + H₂O → RH + Mg(OH)X.<br>\n• <strong>Reagent Selection:</strong> To form the tertiary alcohol 2-methylpentan-2-ol (R′R″R‴COH), react the Grignard reagent with a KETONE — propanone (CH₃COCH₃).<br>\n• <strong>Nucleophilic Addition:</strong> The carbanion (R<sup>δ−</sup>) attacks the electrophilic carbonyl carbon (C<sup>δ+</sup>) of propanone, forming an alkoxide adduct.<br>\n• <strong>Hydrolysis:</strong> Add dilute HCl(aq)/H₃O⁺ to hydrolyse the adduct into 2-methylpentan-2-ol and a magnesium salt.",
+  "command": "Describe (multi-step synthesis: preparation + Grignard reaction)",
+  "peel": [
+   "P: State the plan — make propylmagnesium bromide, add a ketone, then hydrolyse to the tertiary alcohol.",
+   "E: Preparation — reflux 1-bromopropane with Mg in anhydrous dry ether; the reagent is destroyed by water.",
+   "E: Choose propanone: a Grignard reagent plus a ketone gives a tertiary alcohol; the propyl group adds to the carbonyl carbon.",
+   "E: Mechanism — nucleophilic addition of the carbanion to Cδ+ of the carbonyl, forming an alkoxide, then acid hydrolysis.",
+   "L: Link to the product — propyl + propanone gives a 6-carbon tertiary alcohol, 2-methylpentan-2-ol, showing chain extension."
+  ],
+  "keywords": [
+   "anhydrous dry ether",
+   "Mg turnings",
+   "CH₃CH₂CH₂MgBr",
+   "nucleophilic addition",
+   "ketone → tertiary alcohol",
+   "propanone",
+   "H₃O⁺ hydrolysis",
+   "2-methylpentan-2-ol"
+  ],
+  "starters": [
+   "The Grignard reagent is prepared by refluxing 1-bromopropane with magnesium in anhydrous ether, because water would decompose it to propane...",
+   "To obtain a tertiary alcohol, the Grignard reagent must be reacted with a ketone such as propanone...",
+   "The carbanion end of the Grignard reagent attacks the positive carbonyl carbon, and acid is then added to hydrolyse the adduct..."
+  ]
+ },
+ {
+  "title": "9. Synthesis, Purification & Purity Analysis of Aspirin",
+  "question": "Outline the preparation of crude aspirin from 2-hydroxybenzoic acid, its purification by recrystallisation, and purity verification.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Synthesis:</strong> Warm 2-hydroxybenzoic acid (salicylic acid) with ETHANOIC ANHYDRIDE and a few drops of concentrated H₃PO₄ catalyst. Pour the mixture into cold water to precipitate the crude aspirin, then filter.<br>\n• <strong>Recrystallisation:</strong> Dissolve the crude solid in the MINIMUM volume of HOT solvent (e.g. hot ethanol/water). Filter HOT to remove insoluble impurities. Cool the filtrate in an ice bath so pure aspirin crystallises.<br>\n• <strong>Suction Filtration:</strong> Collect the crystals by vacuum filtration (Büchner funnel), wash with ice-cold solvent to remove soluble impurities, and dry.<br>\n• <strong>Purity Verification:</strong> Determine the melting point. Pure aspirin melts SHARPLY at ~138 °C; impurities LOWER the melting point and BROADEN the melting range.",
+  "command": "Outline (synthesis + purification + purity check)",
+  "peel": [
+   "P: State the sequence — synthesis, purification by recrystallisation, then melting-point analysis.",
+   "E: Synthesis — 2-hydroxybenzoic acid + ethanoic anhydride with conc H₃PO₄ catalyst, warm; precipitate in cold water.",
+   "E: Recrystallisation — dissolve in minimum hot solvent, hot-filter, cool to crystallise, suction-filter, wash ice-cold, dry.",
+   "E: Purity — sharp melting point at ~138 °C indicates pure aspirin; impurities lower and broaden the range.",
+   "L: Link together — each step removes a different impurity class (insoluble by hot filtration, soluble by recrystallisation), and the melting point confirms the final purity."
+  ],
+  "keywords": [
+   "ethanoic anhydride",
+   "conc H₃PO₄ catalyst",
+   "minimum hot solvent",
+   "hot filtration",
+   "cool to crystallise",
+   "suction filtration",
+   "sharp melting point ~138 °C",
+   "impurities lower and broaden MP"
+  ],
+  "starters": [
+   "Crude aspirin is made by warming 2-hydroxybenzoic acid with ethanoic anhydride and a phosphoric acid catalyst, then pouring into cold water...",
+   "Recrystallisation involves dissolving the crude solid in the minimum volume of hot solvent and filtering hot to remove insoluble impurities...",
+   "Purity is verified by measuring the melting point: a sharp value at about 138 °C shows the aspirin is pure..."
+  ]
+ },
+ {
+  "title": "10. Diazotisation & Azo Dye Coupling",
+  "question": "Describe two-stage preparation of an azo dye from phenylamine. State conditions, reagents, and reasons for temperature control.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>\n• <strong>Stage 1 (Diazotisation):</strong> Dissolve phenylamine in dilute HCl and add cold NaNO₂(aq) in an ice bath BELOW 10 °C. Nitrous acid is formed in situ: NaNO₂ + HCl → HNO₂ + NaCl.<br>\n• <strong>Equation 1:</strong> C₆H₅NH₂ + HNO₂ + HCl → C₆H₅N₂⁺Cl⁻ + 2H₂O (benzenediazonium chloride).<br>\n• <strong>Temperature Reason:</strong> The benzenediazonium ion DECOMPOSES above 10 °C into phenol and nitrogen gas, so the reaction must be kept below 10 °C.<br>\n• <strong>Stage 2 (Coupling):</strong> Add the cold diazonium solution DROPWISE to phenol dissolved in NaOH, kept cold. The diazonium ion attacks the electron-rich ring, forming the azo dye 4-phenylazophenol, a yellow/orange precipitate containing the –N=N– linkage.",
+  "command": "Describe (two-stage synthesis with conditions and temperature control)",
+  "peel": [
+   "P: State the two stages — diazotisation below 10 °C, then coupling with phenol in alkali.",
+   "E: Stage 1 — phenylamine + NaNO₂ + dilute HCl below 10 °C gives benzenediazonium chloride; HNO₂ formed in situ.",
+   "E: Temperature control — above 10 °C the diazonium ion decomposes to phenol and N₂, so an ice bath is essential.",
+   "E: Stage 2 — the cold diazonium solution is added dropwise to phenol in NaOH; coupling gives the azo dye.",
+   "L: Link to colour — the –N=N– azo linkage and extended delocalisation absorb visible light, giving the yellow/orange dye."
+  ],
+  "keywords": [
+   "below 10 °C ice bath",
+   "NaNO₂ + HCl → HNO₂",
+   "benzenediazonium chloride",
+   "decomposes to phenol + N₂",
+   "dropwise addition",
+   "phenol in NaOH",
+   "4-phenylazophenol",
+   "azo linkage –N=N–"
+  ],
+  "starters": [
+   "Diazotisation is carried out by adding cold sodium nitrite solution to phenylamine dissolved in dilute hydrochloric acid at below 10 °C...",
+   "The temperature must not rise above 10 °C because benzenediazonium ions decompose into phenol and nitrogen gas...",
+   "The azo dye is formed by coupling the cold diazonium salt with phenol in alkaline solution, giving a yellow/orange product..."
+  ]
+ }
+];;
 
         const WEB_MISCONCEPTIONS_DATA = [
             { source: "Discord & TSR", topic: "Topic 17: Transition Metals", title: "1. Emission vs Absorption in Transition Metal Colour", misconception: "Complexes appear colored because d-electrons emit visible light when jumping to higher d-orbitals.", explanation: "FALSE! Electrons ABSORB visible light to promote to higher split 3d orbitals. The color seen is the TRANSMITTED complementary light!" },
@@ -1008,89 +2361,6 @@
             }
         }
 
-        /* ==================== CALCULATORS ==================== */
-        function calcCellPotential() {
-            const eRed = parseFloat(document.getElementById('calc-ered').value) || 0;
-            const eOx = parseFloat(document.getElementById('calc-eox').value) || 0;
-            const n = parseFloat(document.getElementById('calc-n-elec').value) || 1;
-            const T = parseFloat(document.getElementById('calc-temp-k').value) || 298;
-            const F = 96500;
-            const R = 8.314;
-
-            const eCell = eRed - eOx;
-            const isFeasible = eCell > 0;
-            const dsTotal = (n * F * eCell) / T;
-            const lnK = (n * F * eCell) / (R * T);
-
-            document.getElementById('cell-output').innerHTML = `
-                <div><strong>Standard Cell Potential ($E^\\circ_{\\text{cell}}$):</strong> <span class="${isFeasible ? 'text-emerald-400' : 'text-rose-400'} font-bold">${eCell > 0 ? '+' : ''}${eCell.toFixed(2)} V</span> (${isFeasible ? 'FEASIBLE' : 'NOT FEASIBLE'})</div>
-                <div><strong>Total Entropy Change ($\\Delta S_{\\text{total}}$):</strong> ${dsTotal.toFixed(1)} J K⁻¹ mol⁻¹</div>
-                <div><strong>Equilibrium Constant Ratio ($\\ln K$):</strong> ${lnK.toFixed(2)}</div>
-            `;
-            reRenderMath();
-        }
-
-        function calcLightSplitting() {
-            const wavelengthNm = parseFloat(document.getElementById('calc-wavelength').value) || 600;
-            const h = 6.63e-34;
-            const c = 3.00e8;
-            const Na = 6.02e23;
-
-            const wavelengthM = wavelengthNm * 1e-9;
-            const energyPerPhoton = (h * c) / wavelengthM;
-            const energyPerMoleKJ = (energyPerPhoton * Na) / 1000;
-
-            let colorObserved = "Unknown";
-            if (wavelengthNm >= 400 && wavelengthNm < 435) colorObserved = "Yellow-Green (Absorbs Violet)";
-            else if (wavelengthNm >= 435 && wavelengthNm < 480) colorObserved = "Yellow (Absorbs Blue)";
-            else if (wavelengthNm >= 480 && wavelengthNm < 490) colorObserved = "Orange (Absorbs Cyan)";
-            else if (wavelengthNm >= 490 && wavelengthNm < 560) colorObserved = "Red / Purple (Absorbs Green)";
-            else if (wavelengthNm >= 560 && wavelengthNm < 595) colorObserved = "Violet (Absorbs Yellow)";
-            else if (wavelengthNm >= 595 && wavelengthNm < 650) colorObserved = "Blue (Absorbs Orange)";
-            else if (wavelengthNm >= 650 && wavelengthNm <= 750) colorObserved = "Green (Absorbs Red)";
-
-            document.getElementById('splitting-output').innerHTML = `
-                <div><strong>Energy Gap ($\\Delta E$):</strong> <span class="text-emerald-300 font-bold">${energyPerMoleKJ.toFixed(1)} kJ mol⁻¹</span> (${energyPerPhoton.toExponential(3)} J)</div>
-                <div><strong>Complementary Observed Color:</strong> <span class="text-emerald-300 font-bold">${colorObserved}</span></div>
-            `;
-            reRenderMath();
-        }
-
-        function calcMultiYield() {
-            const y1 = (parseFloat(document.getElementById('yield-s1').value) || 0) / 100;
-            const y2 = (parseFloat(document.getElementById('yield-s2').value) || 0) / 100;
-            const y3 = (parseFloat(document.getElementById('yield-s3').value) || 0) / 100;
-            const y4 = (parseFloat(document.getElementById('yield-s4').value) || 0) / 100;
-
-            const totalFraction = y1 * y2 * y3 * y4;
-            const totalPct = totalFraction * 100;
-
-            document.getElementById('yield-output').innerHTML = `
-                <div><strong>Overall Multi-Step Yield:</strong> <span class="text-purple-300 font-bold text-sm">${totalPct.toFixed(2)}%</span></div>
-                <div><strong>Fractional Conversion:</strong> ${totalFraction.toFixed(4)}</div>
-            `;
-            reRenderMath();
-        }
-
-        function calcAminePH() {
-            const kb = parseFloat(document.getElementById('calc-kb').value) || 0.00044;
-            const cb = parseFloat(document.getElementById('calc-conc-b').value) || 0.10;
-
-            if (kb <= 0 || cb <= 0) return;
-
-            const ohConc = Math.sqrt(kb * cb);
-            const pOH = -Math.log10(ohConc);
-            const ph = 14 - pOH;
-            const pKb = -Math.log10(kb);
-
-            document.getElementById('amine-output').innerHTML = `
-                <div><strong>p$K_b$:</strong> ${pKb.toFixed(2)} | <strong>Calculated [OH⁻]:</strong> ${ohConc.toExponential(3)} mol dm⁻³</div>
-                <div><strong>Calculated pH:</strong> <span class="text-cyan-300 font-bold text-sm">${ph.toFixed(2)}</span></div>
-            `;
-            reRenderMath();
-        }
-
-        /* ==================== FLASHCARDS ==================== */
         function updateCard() {
             if (activeCards.length === 0) return;
             const item = activeCards[cardIndex];
@@ -1202,39 +2472,81 @@
         /* ==================== GLOSSARY ==================== */
         function renderGlossary() {
             const container = document.getElementById('glossary-container');
-            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const searchEl = document.getElementById('glossary-search');
+            const search = searchEl ? searchEl.value.toLowerCase() : '';
             const filtered = GLOSSARY_DATA.filter(g => {
-                const matchCat = (currentGlossaryCat === 'ALL') || (g.cat === currentGlossaryCat);
-                const matchSearch = g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search);
+                const matchCat = (typeof currentGlossaryCat === 'undefined' || currentGlossaryCat === 'ALL') || (g.cat === currentGlossaryCat);
+                const matchSearch = g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search) || (g.q && g.q.toLowerCase().includes(search));
                 return matchCat && matchSearch;
             });
 
+            const countEl = document.getElementById('glossary-count');
+            if (countEl) countEl.innerText = filtered.length;
+
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching terms found.</div>';
+                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching glossary terms found.</div>';
                 return;
             }
 
             container.innerHTML = filtered.map((g, idx) => `
-                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all space-y-3">
-                    <h4 class="font-bold text-cyan-400 text-base flex items-center space-x-2">
-                        <i class="fa-solid fa-bookmark text-xs"></i>
-                        <span>${g.term}</span>
-                    </h4>
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="font-bold text-cyan-400 text-base mb-2 flex items-center space-x-2">
+                            <i class="fa-solid fa-bookmark text-xs"></i>
+                            <span>${g.term}</span>
+                        </h4>
 
-                    <div class="relative min-h-[90px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-4">
-                        <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
+                        <!-- Interactive Blur Container for Definition -->
+                        <div class="relative min-h-[80px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-3">
+                            <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
 
-                        <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
-                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
-                                <i class="fa-solid fa-eye text-xs"></i>
+                            <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
+                                <div class="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-slate-200">Definition Blurred</span>
+                                <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal Definition</span>
                             </div>
-                            <span class="text-xs font-bold text-slate-200">Definition Blurred</span>
-                            <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal</span>
                         </div>
                     </div>
+
+                    ${g.q ? `
+                    <!-- Attached Past Paper MCQ Question -->
+                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60 space-y-2">
+                        <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center space-x-1">
+                            <i class="fa-solid fa-file-circle-question"></i>
+                            <span>Attached Edexcel IAL MCQ:</span>
+                        </div>
+                        <p class="text-xs text-slate-200 font-medium">${g.q}</p>
+
+                        <div class="grid grid-cols-2 gap-1.5 pt-1 text-[11px] text-slate-300">
+                            ${g.options.map(opt => `<div class="bg-slate-950 p-1.5 rounded border border-slate-800">${opt}</div>`).join('')}
+                        </div>
+
+                        <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="w-full mt-2 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition-all">
+                            Show / Hide Solution — why each option is right / wrong
+                        </button>
+
+                        <div class="hidden p-2.5 bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs rounded-lg font-mono space-y-2">
+                            <div class="font-bold">${g.ans}</div>
+                            ${g.expl ? `<div class="space-y-1.5">
+                                ${g.options.map((opt, oi) => {
+                                    const letter = opt.charAt(0).replace(':','').replace(')','').trim();
+                                    const m = (g.ans || '').match(/Answer\s*:\s*([ABCD])/i) || (g.ans || '').match(/(?:^|\s)([ABCD])\s*[):]/);
+                                    const ansLetter = m ? m[1] : ((g.ans || '').trim().charAt(0));
+                                    const isCorrect = letter === ansLetter;
+                                    return `
+                                    <div class="p-2 rounded-lg border ${isCorrect ? 'bg-emerald-900/40 border-emerald-500/40' : 'bg-slate-900/60 border-slate-700'}">
+                                        <span class="font-bold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}">${isCorrect ? '✓' : '✗'} ${opt}</span>
+                                        <p class="text-slate-300 mt-0.5 leading-relaxed">${g.expl[oi] || ''}</p>
+                                    </div>
+                                `; }).join('')}
+                            </div>` : ''}
+                        </div>
+                    </div>` : ''}
                 </div>
             `).join('');
-            reRenderMath();
+            if (typeof reRenderMath === 'function') reRenderMath();
         }
 
         function filterGlossaryCategory(cat) {
@@ -1271,16 +2583,40 @@
                         <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30">6 Marks - Level 3</span>
                     </div>
 
+                    ${e.command ? `<div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/30 px-2.5 py-1 rounded-lg">Command</span>
+                        <span class="text-xs text-purple-200 font-semibold">${e.command}</span>
+                    </div>` : ''}
+
                     <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
-                        <strong class="text-rose-400">Official Question Prompt:</strong> ${e.question}
+                        <strong class="text-rose-400">Official Exam Question Prompt:</strong> ${e.question}
                     </div>
+
+                    ${e.peel ? `<details class="bg-slate-900/60 p-3.5 rounded-lg border border-indigo-500/30" ${idx===0?'open':''}>
+                        <summary class="text-xs font-bold text-indigo-300 cursor-pointer">🧱 Scaffold — PEEL structure (build your answer)</summary>
+                        <ol class="text-xs text-slate-300 leading-relaxed list-decimal list-inside mt-2 space-y-1">
+                            ${e.peel.map(p=>`<li>${p}</li>`).join('')}
+                        </ol>
+                        ${e.keywords ? `<div class="mt-2 pt-2 border-t border-indigo-500/20">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Keyword bank:</span>
+                            <div class="flex flex-wrap gap-1.5 mt-1">
+                                ${e.keywords.map(k=>`<span class="text-[10px] px-2 py-0.5 bg-indigo-900/60 text-indigo-200 rounded-full border border-indigo-700">${k}</span>`).join('')}
+                            </div>
+                        </div>` : ''}
+                        ${e.starters ? `<div class="mt-2 pt-2 border-t border-indigo-500/20">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Sentence starters:</span>
+                            <ul class="text-[11px] text-slate-300 mt-1 space-y-0.5">
+                                ${e.starters.map(s=>`<li class="italic">“${s}”</li>`).join('')}
+                            </ul>
+                        </div>` : ''}
+                    </details>` : ''}
 
                     <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
                         ${e.answer}
                     </div>
                 </div>
             `).join('');
-            reRenderMath();
+            if (typeof reRenderMath === 'function') reRenderMath();
         }
 
         /* ==================== WEB MISCONCEPTIONS ==================== */
@@ -1340,11 +2676,6 @@
             renderEssays();
             renderWebMisconceptions();
             updateCard();
-            calcCellPotential();
-            calcLightSplitting();
-            calcMultiYield();
-            calcAminePH();
-            reRenderMath();
         };
     </script>
 </body>

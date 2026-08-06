@@ -141,11 +141,8 @@
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
                     <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
                 </button>
-                <button onclick="switchTab('calculators')" id="tab-calculators" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
-                    <i class="fa-solid fa-calculator text-emerald-400 text-xs"></i> <span>Practical Solvers</span>
-                </button>
-                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
-                    <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (50)</span>
+                <button                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
+                    <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (100)</span>
                 </button>
                 <button onclick="switchTab('glossary')" id="tab-glossary" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
                     <i class="fa-solid fa-book-bookmark text-cyan-400 text-xs"></i> <span>Practical Glossary (35)</span>
@@ -199,105 +196,7 @@
             <div id="pitfalls-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
         </section>
 
-        <!-- TAB 3: INTERACTIVE PRACTICAL CALCULATORS -->
-        <section id="view-calculators" class="tab-view space-y-6 hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- Calculator 1 -->
-                <div class="glass-panel p-6 rounded-2xl border border-sky-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-sky-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-chart-line"></i> <span>Arrhenius Activation Energy ($E_a$) Solver</span>
-                    </h3>
-                    <p class="text-xs text-slate-300">Calculates $E_a$ ($\text{kJ mol}^{-1}$) from graph gradient or two temperature points ($\ln k = -\frac{E_a}{R}\frac{1}{T} + \ln A$).</p>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Graph Gradient ($m$ in K)</label>
-                            <input type="number" id="calc-gradient" value="-6500" step="any" oninput="calcArrhenius()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Gas Constant ($R$ in $\text{J K}^{-1}\text{mol}^{-1}$)</label>
-                            <input type="number" id="calc-r-const" value="8.314" step="any" readonly class="w-full bg-slate-950 border border-slate-800 text-slate-400 rounded p-2">
-                        </div>
-                    </div>
-                    <div id="arrhenius-output" class="p-4 bg-sky-950/40 border border-sky-500/30 rounded-xl font-mono text-xs text-sky-300 space-y-1"></div>
-                </div>
-
-                <!-- Calculator 2 -->
-                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-emerald-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-scale-balanced"></i> <span>Apparatus Uncertainty & Total Error Solver</span>
-                    </h3>
-                    <p class="text-xs text-slate-300">Calculate percentage uncertainty for titrations, temperature readings, and mass measurements.</p>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Uncertainty per Reading ($\pm$)</label>
-                            <input type="number" id="calc-unc-val" value="0.05" step="any" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Number of Readings Taken</label>
-                            <input type="number" id="calc-readings-num" value="2" min="1" max="5" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-slate-300 font-semibold mb-1">Measured Value (e.g. Titre $\text{cm}^3$, $\Delta T$ K, Mass g)</label>
-                            <input type="number" id="calc-measured-val" value="23.50" step="any" oninput="calcUncertainty()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                        </div>
-                    </div>
-                    <div id="uncertainty-output" class="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl font-mono text-xs text-emerald-300 space-y-1"></div>
-                </div>
-
-                <!-- Calculator 3 -->
-                <div class="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-purple-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-recycle"></i> <span>Recrystallisation Recovery & % Yield Solver</span>
-                    </h3>
-                    <div class="grid grid-cols-3 gap-2 text-xs">
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Theoretical (g)</label>
-                            <input type="number" id="calc-theo-mass" value="5.00" step="any" oninput="calcRecrystYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Crude Solid (g)</label>
-                            <input type="number" id="calc-crude-mass" value="4.20" step="any" oninput="calcRecrystYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Pure Crystals (g)</label>
-                            <input type="number" id="calc-pure-mass" value="3.15" step="any" oninput="calcRecrystYield()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
-                        </div>
-                    </div>
-                    <div id="recryst-output" class="p-4 bg-purple-950/40 border border-purple-500/30 rounded-xl font-mono text-xs text-purple-300 space-y-1"></div>
-                </div>
-
-                <!-- Calculator 4 -->
-                <div class="glass-panel p-6 rounded-2xl border border-cyan-500/20 space-y-4">
-                    <h3 class="text-lg font-bold text-cyan-400 flex items-center space-x-2">
-                        <i class="fa-solid fa-vial"></i> <span>Back Titration / Moles Analysis</span>
-                    </h3>
-                    <p class="text-xs text-slate-300">Determines purity of an insoluble carbonate ($\text{MCO}_3$) reacted with excess acid and back-titrated with $\text{NaOH}$.</p>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Excess Acid Vol ($\text{cm}^3$)</label>
-                            <input type="number" id="tit-acid-vol" value="50.0" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">Acid Conc ($\text{mol dm}^{-3}$)</label>
-                            <input type="number" id="tit-acid-conc" value="1.00" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">$\text{NaOH}$ Titre ($\text{cm}^3$)</label>
-                            <input type="number" id="tit-naoh-vol" value="23.40" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
-                        </div>
-                        <div>
-                            <label class="block text-slate-300 font-semibold mb-1">$\text{NaOH}$ Conc ($\text{mol dm}^{-3}$)</label>
-                            <input type="number" id="tit-naoh-conc" value="0.50" step="any" oninput="calcBackTitration()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded p-2">
-                        </div>
-                    </div>
-                    <div id="back-titration-output" class="p-4 bg-cyan-950/40 border border-cyan-500/30 rounded-xl font-mono text-xs text-cyan-300 space-y-1"></div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- TAB 4: 50 3D FLASHCARDS -->
+ 50 3D FLASHCARDS -->
         <section id="view-quiz" class="tab-view space-y-6 hidden">
             <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center space-x-2">
@@ -538,152 +437,1664 @@
 
         // 50 Flashcards Array
         const FLASHCARDS_DATA = [
-            { id: 1, topic: "Inorganic Qual", spec: "CP1", q: "Describe color change when excess NaOH is added to Cr³⁺(aq).", a: "• Green solution forms green ppt Cr(OH)₃ dropwise.\n• Redissolves in excess NaOH to form dark green solution [Cr(OH)₆]³⁻." },
-            { id: 2, topic: "Inorganic Qual", spec: "CP1", q: "Describe color change when excess NH₃ is added to Cu²⁺(aq).", a: "• Pale blue solution forms blue ppt Cu(OH)₂ dropwise.\n• Redissolves in excess NH₃ to deep blue solution [Cu(NH₃)₄(H₂O)₂]²⁺." },
-            { id: 3, topic: "Inorganic Qual", spec: "CP1", q: "What observation confirms Fe²⁺(aq) with NaOH(aq)?", a: "• Green precipitate Fe(OH)₂ forms.\n• Turns red-brown at surface/standing due to oxidation to Fe(OH)₃." },
-            { id: 4, topic: "Inorganic Qual", spec: "CP1", q: "Why add dilute HNO₃ before adding AgNO₃(aq) for halide testing?", a: "• Reacts with and removes carbonate (CO₃²⁻) or sulfite (SO₃²⁻) ions that would form false positive white precipitates." },
-            { id: 5, topic: "Inorganic Qual", spec: "CP1", q: "How do you distinguish AgCl, AgBr, and AgI using ammonia?", a: "• AgCl dissolves in dilute NH₃.\n• AgBr dissolves in CONCENTRATED NH₃.\n• AgI is INSOLUBLE in concentrated NH₃." },
-            { id: 6, topic: "Inorganic Qual", spec: "CP1", q: "State reagents and observation for testing sulfate ions (SO₄²⁻).", a: "• Add dilute HCl followed by BaCl₂(aq).\n• Formation of a white precipitate (BaSO₄)." },
-            { id: 7, topic: "Inorganic Qual", spec: "CP1", q: "Flame test observation for Barium ions (Ba²⁺).", a: "• Apple-green / green flame." },
-            { id: 8, topic: "Inorganic Qual", spec: "CP1", q: "Flame test observation for Calcium ions (Ca²⁺).", a: "• Brick-red / orange-red flame." },
-            { id: 9, topic: "Inorganic Qual", spec: "CP1", q: "Flame test observation for Lithium (Li⁺) and Sodium (Na⁺).", a: "• Li⁺ = Crimson red flame.\n• Na⁺ = Persistent yellow flame." },
-            { id: 10, topic: "Inorganic Qual", spec: "CP1", q: "Observation when Fe³⁺(aq) reacts with KI(aq).", a: "• Solution turns dark brown due to formation of iodine (I₂).\n• Fe³⁺ reduced to Fe²⁺." },
-
-            { id: 11, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for carbonyl group (C=O).", a: "• 2,4-dinitrophenylhydrazine (2,4-DNPH).\n• Formation of yellow / orange / red precipitate." },
-            { id: 12, topic: "Organic Qual", spec: "CP2", q: "How do you identify specific carbonyl compound after 2,4-DNPH test?", a: "• Filter and recrystallise hydrazone derivative.\n• Measure its melting point and compare with literature values." },
-            { id: 13, topic: "Organic Qual", spec: "CP2", q: "Tollens' reagent formula and observation with aldehydes.", a: "• Ammoniacal silver nitrate [Ag(NH₃)₂]⁺.\n• Formation of a silver mirror on tube walls (Ag⁺ reduced to Ag)." },
-            { id: 14, topic: "Organic Qual", spec: "CP2", q: "Fehling's solution observation with aldehydes.", a: "• Blue solution turns to brick-red precipitate (Cu₂O)." },
-            { id: 15, topic: "Organic Qual", spec: "CP2", q: "Reagents and observation for Iodoform test.", a: "• Iodine (I₂) and aqueous NaOH (or NaOI).\n• Pale yellow precipitate with antiseptic smell (CHI₃)." },
-            { id: 16, topic: "Organic Qual", spec: "CP2", q: "What functional groups give a positive iodoform test?", a: "• Methyl ketones (CH₃C=O) or secondary methyl alcohols (CH₃CH(OH)-) and ethanol." },
-            { id: 17, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for carboxylic acid.", a: "• Aqueous Na₂CO₃ or NaHCO₃.\n• Effervescence (CO₂ gas turns limewater cloudy)." },
-            { id: 18, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for -OH group in alcohols.", a: "• Add solid PCl₅ at room temperature.\n• Steamy / misty fumes of HCl gas (turns damp blue litmus paper red)." },
-            { id: 19, topic: "Organic Qual", spec: "CP2", q: "Reagent and observation to test for Phenol.", a: "• Add bromine water (Br₂(aq)).\n• Orange solution decolourises and forms a white ppt (2,4,6-tribromophenol)." },
-            { id: 20, topic: "Organic Qual", spec: "CP2", q: "Why doesn't phenol react with NaHCO₃?", a: "• Phenol is a weak acid, not strong enough to liberate CO₂ from carbonates." },
-
-            { id: 21, topic: "Kinetics & Titrations", spec: "CP3", q: "What is 'quenching' in kinetics titration experiments?", a: "• Rapidly stopping or slowing down a reaction in a sample aliquot at a known time.\n• Done by adding cold water, ice, or neutralising reagent (e.g. NaHCO₃)." },
-            { id: 22, topic: "Kinetics & Titrations", spec: "CP3", q: "In iodine clock reaction, what is the role of sodium thiosulfate?", a: "• Acts as a scavenger reacting with produced iodine.\n• Delays starch blue-black color change until fixed amount of iodine is produced." },
-            { id: 23, topic: "Kinetics & Titrations", spec: "CP3", q: "Why must thiosulfate concentration be small and limiting in clock reactions?", a: "• Ensures only a tiny initial fraction of reaction occurs so rate equals initial rate." },
-            { id: 24, topic: "Kinetics & Titrations", spec: "CP3", q: "State Arrhenius equation linear form and gradient definition.", a: "• ln k = -Ea / R * (1/T) + ln A.\n• Plot ln k vs 1/T: Gradient m = -Ea / R." },
-            { id: 25, topic: "Kinetics & Titrations", spec: "CP3", q: "Color change at endpoint of KMnO₄ titration with Fe²⁺ in acid.", a: "• Colourless to permanent faint pink (KMnO₄ acts as self-indicator)." },
-            { id: 26, topic: "Kinetics & Titrations", spec: "CP3", q: "Why does MnO₄⁻ / C₂O₄²⁻ titration need initial heating?", a: "• Reaction is slow initially due to anion-anion repulsion; heating produces Mn²⁺ autocatalyst." },
-            { id: 27, topic: "Kinetics & Titrations", spec: "CP3", q: "Choosing indicator for weak acid - strong base titration.", a: "• Phenolphthalein (pH range 8.3–10.0 matches vertical pH equivalence jump)." },
-            { id: 28, topic: "Kinetics & Titrations", spec: "CP3", q: "Choosing indicator for strong acid - weak base titration.", a: "• Methyl orange (pH range 3.1–4.4 matches vertical pH equivalence jump)." },
-            { id: 29, topic: "Kinetics & Titrations", spec: "CP3", q: "What is a 'concordant' titration result?", a: "• Titres within 0.10 cm³ (or 0.20 cm³) of each other." },
-            { id: 30, topic: "Kinetics & Titrations", spec: "CP3", q: "Formula for calculating percentage uncertainty.", a: "• % Uncertainty = (Total Uncertainty / Measured Value) * 100." },
-
-            { id: 31, topic: "Prep & Purification", spec: "CP4", q: "State purpose of heating under reflux.", a: "• Allows prolonged heating of volatile liquid mixtures without losing reactants or products." },
-            { id: 32, topic: "Prep & Purification", spec: "CP4", q: "Why add anti-bumping granules during heating?", a: "• Provide nucleation sites for smooth bubble formation, preventing violent bumping." },
-            { id: 33, topic: "Prep & Purification", spec: "CP4", q: "Outline step 1 of recrystallisation: Solvent selection & dissolution.", a: "• Dissolve crude solid in MINIMUM volume of HOT solvent." },
-            { id: 34, topic: "Prep & Purification", spec: "CP4", q: "Why use MINIMUM volume of hot solvent in recrystallisation?", a: "• Creates a saturated solution so maximum yield of crystals forms upon cooling." },
-            { id: 35, topic: "Prep & Purification", spec: "CP4", q: "Purpose of HOT filtration during recrystallisation.", a: "• Removes insoluble impurities while keeping desired product dissolved in hot filtrate." },
-            { id: 36, topic: "Prep & Purification", spec: "CP4", q: "Purpose of washing crystals with ICE-COLD solvent during suction filtration.", a: "• Removes soluble surface impurities without dissolving pure product crystals." },
-            { id: 37, topic: "Prep & Purification", spec: "CP4", q: "How does an impurity affect melting point of an organic solid?", a: "• Lowers melting point and broadens the melting temperature range." },
-            { id: 38, topic: "Prep & Purification", spec: "CP4", q: "How is steam distillation used in organic purification?", a: "• Distils water-immiscible organic compounds with high boiling points at temperatures below 100°C." },
-            { id: 39, topic: "Prep & Purification", spec: "CP4", q: "What is 'salting out' in solvent extraction?", a: "• Adding NaCl to aqueous layer to decrease organic solute solubility and force it into organic layer." },
-            { id: 40, topic: "Prep & Purification", spec: "CP4", q: "Common drying agents for organic liquid products.", a: "• Anhydrous MgSO₄, CaCl₂, or Na₂SO₄." },
-
-            { id: 41, topic: "Apparatus & Safety", spec: "CP5", q: "How do you know an organic liquid is completely dry after adding MgSO₄?", a: "• Liquid turns clear and solid powder flows freely without clumping." },
-            { id: 42, topic: "Apparatus & Safety", spec: "CP5", q: "Safe method for heating flammable organic liquids (e.g. ether, ethanol).", a: "• Use electric heating mantle or hot water bath (NO open flames!)." },
-            { id: 43, topic: "Apparatus & Safety", spec: "CP5", q: "Hazard control when handling toxic phenylamine or conc HNO₃.", a: "• Work in a fume cupboard with gloves and safety goggles." },
-            { id: 44, topic: "Apparatus & Safety", spec: "CP5", q: "Why venting is necessary when using a separating funnel?", a: "• Inverting and opening tap releases built-up pressure from volatile solvent vapors / CO₂." },
-            { id: 45, topic: "Apparatus & Safety", spec: "CP5", q: "Function of salt bridge in electrochemical cell.", a: "• Allows ion flow to complete circuit while preventing solution mixing (e.g. KNO₃ paper)." },
-            { id: 46, topic: "Apparatus & Safety", spec: "CP5", q: "Why ice-water bath is better than ice cubes alone for cooling?", a: "• Ice-water mixture provides maximum thermal contact surface area with flask." },
-            { id: 47, topic: "Apparatus & Safety", spec: "CP5", q: "Uncertainty of volumetric pipette vs measuring cylinder.", a: "• Volumetric pipette has much lower percentage uncertainty (high precision)." },
-            { id: 48, topic: "Apparatus & Safety", spec: "CP5", q: "How to heat a solid sample to constant mass.", a: "• Heat, cool in desiccator, weigh; repeat until two consecutive masses match within 0.01 g." },
-            { id: 49, topic: "Apparatus & Safety", spec: "CP5", q: "Why use thin-walled capillary tube for melting point determination?", a: "• Ensures rapid and even heat transfer to sample." },
-            { id: 50, topic: "Apparatus & Safety", spec: "CP5", q: "Why rate of heating must be slow (< 1 °C/min) near melting point?", a: "• Prevents thermal lag so thermometer reads true sample melting temperature." }
-        ];
+ {
+  "id": 1,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Describe color change when excess NaOH is added to Cr³⁺(aq).",
+  "a": "• Green solution forms green ppt Cr(OH)₃ dropwise.\n• REDISSOLVES in excess NaOH → dark green solution [Cr(OH)₆]³⁻.\n• Key contrast: Fe²⁺ green ppt is INSOLUBLE in excess NaOH — same colour, different behaviour (Jan 2026 Q1a trap)."
+ },
+ {
+  "id": 2,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Describe color change when excess NH₃ is added to Cu²⁺(aq).",
+  "a": "• Pale blue solution forms blue ppt Cu(OH)₂ dropwise.\n• REDISSOLVES in excess NH₃ → deep blue solution [Cu(NH₃)₄(H₂O)₂]²⁺ (ligand exchange: H₂O replaced by NH₃).\n• Cu(OH)₂ does NOT dissolve in excess NaOH — only in excess NH₃."
+ },
+ {
+  "id": 3,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "What observation confirms Fe²⁺(aq) with NaOH(aq)?",
+  "a": "• Green precipitate Fe(OH)₂ forms.\n• Turns red-brown at surface/standing due to AIR OXIDATION to Fe(OH)₃.\n• Compare: Fe³⁺ gives red-brown ppt Fe(OH)₃ directly, insoluble in excess alkali."
+ },
+ {
+  "id": 4,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Why add dilute HNO₃ before adding AgNO₃(aq) for halide testing?",
+  "a": "• Dilute HNO₃ removes carbonate (CO₃²⁻) and sulfite (SO₃²⁻) ions that would give false-positive white precipitates with Ag⁺.\n• NEVER use HCl — it would add Cl⁻ and give a false white AgCl ppt (Pitfall #3).\n• Then AgNO₃(aq): Cl⁻ white, Br⁻ cream, I⁻ yellow ppt."
+ },
+ {
+  "id": 5,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "How do you distinguish AgCl, AgBr, and AgI using ammonia?",
+  "a": "• AgCl dissolves in DILUTE NH₃.\n• AgBr dissolves in CONCENTRATED NH₃ only (not dilute).\n• AgI is INSOLUBLE in concentrated NH₃.\n• Precipitate colours: Cl⁻ white, Br⁻ cream, I⁻ yellow (Golden Rule; Oct 2025 Q2)."
+ },
+ {
+  "id": 6,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "State reagents and observation for testing sulfate ions (SO₄²⁻).",
+  "a": "• Add dilute HCl first (removes CO₃²⁻/SO₃²⁻ false positives), then BaCl₂(aq).\n• White precipitate of BaSO₄ confirms SO₄²⁻.\n• Confirm: white ppt is INSOLUBLE in excess dilute acid (Oct 2025 Q2b(ii))."
+ },
+ {
+  "id": 7,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Flame test observation for Barium ions (Ba²⁺).",
+  "a": "• Apple-green / pale green flame.\n• Flame test: clean nichrome wire dipped in conc. HCl, then in sample, held in blue Bunsen flame (non-luminous)."
+ },
+ {
+  "id": 8,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Flame test observation for Calcium ions (Ca²⁺).",
+  "a": "• Brick-red / orange-red flame.\n• Flame tests are for metal cations; Ca²⁺ gives brick-red, distinguish from Li⁺ (crimson) and Sr²⁺ (red)."
+ },
+ {
+  "id": 9,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Flame test observation for Lithium (Li⁺) and Sodium (Na⁺).",
+  "a": "• Li⁺ = CRIMSON red flame.\n• Na⁺ = persistent YELLOW flame (very intense — masks other colours).\n• K⁺ = lilac, Ba²⁺ = apple-green, Ca²⁺ = brick-red."
+ },
+ {
+  "id": 10,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Observation when Fe³⁺(aq) reacts with KI(aq).",
+  "a": "• Solution turns dark brown due to formation of iodine (I₂) — 2Fe³⁺ + 2I⁻ → 2Fe²⁺ + I₂.\n• Fe³⁺ reduced to Fe²⁺; if starch added, blue-black complex confirms I₂.\n• Classic redox qualitative test distinguishing Fe³⁺ from Fe²⁺."
+ },
+ {
+  "id": 11,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Reagent and observation to test for carbonyl group (C=O).",
+  "a": "• 2,4-dinitrophenylhydrazine (2,4-DNPH, Brady's reagent).\n• Yellow/orange/red precipitate (hydrazone) with aldehydes AND ketones.\n• Note: carboxylic acids and esters do NOT react (Oct 2025 trap 1)."
+ },
+ {
+  "id": 12,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "How do you identify specific carbonyl compound after 2,4-DNPH test?",
+  "a": "• Filter and RECRYSTALLISE the hydrazone derivative (purify).\n• Measure its sharp melting point and compare with literature values for known hydrazones.\n• This identifies the SPECIFIC carbonyl compound — 2,4-DNPH alone only confirms a C=O group."
+ },
+ {
+  "id": 13,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Tollens' reagent formula and observation with aldehydes.",
+  "a": "• Ammoniacal silver nitrate [Ag(NH₃)₂]⁺ (Tollens' reagent).\n• Aldehyde: silver MIRROR on tube walls — Ag⁺ reduced to Ag, aldehyde oxidised to carboxylate.\n• Ketones: no reaction — distinguishes aldehyde from ketone (Jan 2026 Q1a(ii))."
+ },
+ {
+  "id": 14,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Fehling's solution observation with aldehydes.",
+  "a": "• Fehling's solution (blue Cu²⁺ in alkaline tartrate).\n• Aldehyde + heat: blue → BRICK-RED precipitate of Cu₂O.\n• Ketones do not react (stays blue) — another aldehyde/ketone distinguisher."
+ },
+ {
+  "id": 15,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Reagents and observation for Iodoform test.",
+  "a": "• Iodine (I₂) + aqueous NaOH (or KI + NaOCl).\n• Pale yellow precipitate CHI₃ (iodoform) with antiseptic smell.\n• Positive for methyl ketones (CH₃CO–) and CH₃CH(OH)– alcohols (butan-2-ol, ethanol)."
+ },
+ {
+  "id": 16,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "What functional groups give a positive iodoform test?",
+  "a": "• Methyl ketones: CH₃CO–R (e.g. propanone, pentan-3-one? NO — pentan-3-one has no CH₃CO group).\n• Secondary methyl alcohols: CH₃CH(OH)–R (e.g. butan-2-ol).\n• Ethanol also positive (oxidised to ethanal then CH₃CO–).\n• Propan-1-ol and 2,2-dimethylpropan-1-ol are NEGATIVE (Jan 2026 Q1b)."
+ },
+ {
+  "id": 17,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Reagent and observation to test for carboxylic acid.",
+  "a": "• Aqueous Na₂CO₃ or NaHCO₃.\n• Effervescence — CO₂ gas evolved, turns limewater milky/cloudy.\n• Phenol does NOT react with NaHCO₃ (too weak an acid) — distinguishes acids from phenols."
+ },
+ {
+  "id": 18,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Reagent and observation to test for -OH group in alcohols.",
+  "a": "• Add solid PCl₅ at room temperature.\n• Steamy/misty fumes of HCl (turns damp blue litmus red).\n• Note: water also reacts with PCl₅ → dry sample needed; exam accepts PCl₅ for R–OH."
+ },
+ {
+  "id": 19,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Reagent and observation to test for Phenol.",
+  "a": "• Add bromine water Br₂(aq) — orange solution decolourises.\n• White precipitate of 2,4,6-tribromophenol forms.\n• Distinguishes phenol from alcohols (alcohols do not decolourise Br₂ water)."
+ },
+ {
+  "id": 20,
+  "topic": "Organic Qual",
+  "spec": "CP2",
+  "q": "Why doesn't phenol react with NaHCO₃?",
+  "a": "• Phenol is a very weak acid (Ka ≈ 10⁻¹⁰) — not acidic enough to liberate CO₂ from NaHCO₃/Na₂CO₃.\n• Carboxylic acids (Ka ≈ 10⁻⁵) DO give effervescence with NaHCO₃.\n• So NaHCO₃ test distinguishes RCOOH from phenol."
+ },
+ {
+  "id": 21,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "What is 'quenching' in kinetics titration experiments?",
+  "a": "• Rapidly stopping/slowing the reaction in an aliquot at a known time.\n• Methods: sudden cooling (ice), dilution, or adding a reagent that removes a reactant (e.g. NaHCO₃ neutralises acid).\n• Allows titration/analysis of the aliquot at that exact moment (Golden Rule para 244)."
+ },
+ {
+  "id": 22,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "In iodine clock reaction, what is the role of sodium thiosulfate?",
+  "a": "• Na₂S₂O₃ scavenges I₂ as fast as it forms: I₂ + 2S₂O₃²⁻ → 2I⁻ + S₄O₆²⁻ (tetrathionate).\n• Delays the blue-black starch–I₂ colour until ALL thiosulfate is consumed.\n• Time t to the colour change ∝ 1/initial rate; thiosulfate must be in small, limiting amount.\n• CONTRAST — direct I₂–S₂O₃²⁻ redox titration: add starch ONLY when the solution is pale straw-yellow; starch added too early binds irreversibly to the high [I₂] and the blue-black colour never clears (Pitfall #4)."
+ },
+ {
+  "id": 23,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "Why must thiosulfate concentration be small and limiting in clock reactions?",
+  "a": "• Only a tiny fixed amount of I₂ is consumed by the limiting S₂O₃²⁻.\n• So only a small initial fraction of the main reaction occurs — reactant concentrations stay effectively constant.\n• Therefore rate ∝ 1/t is a valid INITIAL rate (Oct 2025 Q3b: reject \"1/t directly proportional to rate\")."
+ },
+ {
+  "id": 24,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "State Arrhenius equation linear form and gradient definition.",
+  "a": "• ln k = −(Eₐ/R)(1/T) + ln A.\n• Plot ln k (or ln rate / ln(1/t)) vs 1/T (K⁻¹).\n• Gradient = −Eₐ/R ⇒ Eₐ = −gradient × R = −gradient × 8.314 J mol⁻¹ K⁻¹.\n• Intercept = ln A. Convert to kJ mol⁻¹ by ÷1000 (Oct 2025 Q3c)."
+ },
+ {
+  "id": 25,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "Color change at endpoint of KMnO₄ titration with Fe²⁺ in acid.",
+  "a": "• Colourless → first permanent FAINT PINK.\n• KMnO₄ is its own indicator (self-indicator): purple MnO₄⁻ decolourised to pale pink Mn²⁺ below end-point.\n• No added indicator needed (Golden Rule: purple to colourless)."
+ },
+ {
+  "id": 26,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "Why does MnO₄⁻ / C₂O₄²⁻ titration need initial heating?",
+  "a": "• MnO₄⁻/C₂O₄²⁻ reaction is slow at first (anion–anion repulsion).\n• Initial warming supplies activation energy and generates Mn²⁺.\n• Mn²⁺ AUTOCATALYSES the reaction (Mn²⁺/Mn³⁺ redox cycle) — rate speeds up after the first few drops (Golden Rule: autocatalysis by Mn²⁺)."
+ },
+ {
+  "id": 27,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "Choosing indicator for weak acid - strong base titration.",
+  "a": "• Phenolphthalein — colourless → pink over pH 8.3–10.0.\n• Weak acid–strong base equivalence point is alkaline (~pH 9) — falls inside phenolphthalein range.\n• Methyl orange would change before the vertical region (wrong)."
+ },
+ {
+  "id": 28,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "Choosing indicator for strong acid - weak base titration.",
+  "a": "• Methyl orange — red → yellow over pH 3.1–4.4.\n• Strong acid–weak base equivalence point is acidic (~pH 5) — falls inside methyl orange range.\n• The vertical part of the curve spans the acidic region (Oct 2025 Q1b context)."
+ },
+ {
+  "id": 29,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "What is a 'concordant' titration result?",
+  "a": "• Titres within 0.10 cm³ (or 0.20 cm³) of each other.\n• Only concordant titres are averaged for the mean titre.\n• Outliers are repeated/discarded — improves reliability and precision."
+ },
+ {
+  "id": 30,
+  "topic": "Kinetics & Titrations",
+  "spec": "CP3",
+  "q": "Formula for calculating percentage uncertainty.",
+  "a": "• % uncertainty = (total absolute uncertainty ÷ measured value) × 100.\n• Burette: ±0.05 cm³ per reading, TWO readings → ±0.10 cm³ total.\n• Pipette (single delivery): one tolerance only, e.g. ±0.06 cm³ on 25.0 cm³ → 0.24%.\n• Choose apparatus with the smallest % uncertainty (pipette over measuring cylinder)."
+ },
+ {
+  "id": 31,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "State purpose of heating under reflux.",
+  "a": "• Allows PROLONGED heating of volatile liquid mixtures at boiling temperature.\n• Vapour condenses in the vertical condenser and RETURNS to the flask — no loss of reactants/products (Jan 2026 Q2a(ii): both \"condenses\" AND \"returns\" needed).\n• Used for esterification, nitrobenzene reduction, etc."
+ },
+ {
+  "id": 32,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "Why add anti-bumping granules during heating?",
+  "a": "• Porous CaCO₃/silicon carbide chips trap air pockets = NUCLEATION SITES.\n• Bubbles form smoothly and evenly → no superheating, no violent \"bumping\".\n• Add BEFORE heating; never add to a hot liquid (shock boiling)."
+ },
+ {
+  "id": 33,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "Outline step 1 of recrystallisation: Solvent selection & dissolution.",
+  "a": "• Step 1: choose a solvent in which the product dissolves when HOT but has LOW solubility when COLD, and which does NOT react with the product (Jan 2026 Q3b(i) criteria).\n• Dissolve crude solid in the MINIMUM volume of hot solvent.\n• (Hot filtration and cooling follow.)"
+ },
+ {
+  "id": 34,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "Why use MINIMUM volume of hot solvent in recrystallisation?",
+  "a": "• Minimum hot solvent → SATURATED hot solution.\n• On cooling, maximum mass of product crystallises out (yield maximised).\n• Excess solvent would keep more product dissolved in the cold mother liquor → lower yield (Jan 2026 Q3b)."
+ },
+ {
+  "id": 35,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "Purpose of HOT filtration during recrystallisation.",
+  "a": "• Removes INSOLUBLE impurities (e.g. dust, unreacted solids) while product stays dissolved in the hot filtrate.\n• Use FLUTED filter paper + PRE-HEATED funnel so the solution does not cool and crystallise on the paper.\n• Soluble impurities are removed later by crystallisation + washing."
+ },
+ {
+  "id": 36,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "Purpose of washing crystals with ICE-COLD solvent during suction filtration.",
+  "a": "• Removes soluble impurities adhering to crystal surfaces.\n• ICE-COLD: cold solvent has low solubility for the product → crystals do NOT redissolve (yield preserved).\n• Warm solvent would dissolve the product and destroy yield (Pitfall #5 / Jan 2026 Q3b(iii))."
+ },
+ {
+  "id": 37,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "How does an impurity affect melting point of an organic solid?",
+  "a": "• Impurities LOWER the melting point and BROADEN the melting range.\n• Impurities disrupt the crystal lattice — less energy needed to melt, melting over a range.\n• Sharp range (±1 °C) near literature value ⇒ pure product (Jan 2026 Q3b(iv))."
+ },
+ {
+  "id": 38,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "How is steam distillation used in organic purification?",
+  "a": "• Steam distillation co-distils water-immiscible high-boiling organics BELOW 100 °C.\n• Both liquids contribute vapour pressure → mixture boils below 100 °C.\n• Prevents thermal decomposition of heat-sensitive compounds (e.g. phenylamine, bp 184 °C)."
+ },
+ {
+  "id": 39,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "What is 'salting out' in solvent extraction?",
+  "a": "• Add NaCl to the aqueous layer.\n• Ions hydrate strongly, decreasing the organic product's aqueous solubility.\n• Product partitions more into the organic layer → higher extraction yield (Jan 2026 Q4d: salting out)."
+ },
+ {
+  "id": 40,
+  "topic": "Prep & Purification",
+  "spec": "CP4",
+  "q": "Common drying agents for organic liquid products.",
+  "a": "• Anhydrous MgSO₄, CaCl₂, Na₂SO₄.\n• Added to the ORGANIC layer to absorb dissolved water.\n• Liquid becomes clear and powder flows freely → dry; then decant/filter off the solid (Golden Rule)."
+ },
+ {
+  "id": 41,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "How do you know an organic liquid is completely dry after adding MgSO₄?",
+  "a": "• Liquid turns CLEAR and the MgSO₄ powder FLOWS FREELY without clumping.\n• Clumping = water still present (wet powder sticks to flask walls).\n• Then decant/filter to remove the drying agent before distillation."
+ },
+ {
+  "id": 42,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Safe method for heating flammable organic liquids (e.g. ether, ethanol).",
+  "a": "• Use an ELECTRIC HEATING MANTLE or hot WATER BATH.\n• NO open flames — ether/ethanol vapours are highly flammable.\n• Also: work in fume cupboard for volatile/toxic organics (Jan 2026 Q4g: water bath for ether)."
+ },
+ {
+  "id": 43,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Hazard control when handling toxic phenylamine or conc HNO₃.",
+  "a": "• Work in a FUME CUPBOARD (examiner's required precaution — Oct 2025 Q2d(ii)).\n• Wear gloves and safety goggles.\n• Phenylamine: toxic; conc. HNO₃: toxic + OXIDISING (never call it \"flammable\" — Oct 2025 trap 5)."
+ },
+ {
+  "id": 44,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Why venting is necessary when using a separating funnel?",
+  "a": "• Volatile solvent vapours / CO₂ build pressure inside the funnel.\n• Invert and open the tap periodically (pointing away from face) to release pressure.\n• Prevents stopper ejection / spray of hazardous liquids."
+ },
+ {
+  "id": 45,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Function of salt bridge in electrochemical cell.",
+  "a": "• Allows ion flow to complete the circuit while preventing solutions mixing.\n• Filter paper soaked in saturated KNO₃(aq) (or KCl/NaNO₃) — Oct 2025 Q2e(ii): reject liquid KNO₃.\n• Ions migrate to balance charge as Zn²⁺ forms and Cu²⁺ is discharged."
+ },
+ {
+  "id": 46,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Why ice-water bath is better than ice cubes alone for cooling?",
+  "a": "• Ice–water mixture gives maximum thermal CONTACT with the flask (more surface area than ice cubes).\n• Maintains a more CONSTANT low temperature (Golden Rule: ice-water > ice cubes).\n• Critical for diazotisation (< 5–10 °C) and slow crystallisation."
+ },
+ {
+  "id": 47,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Uncertainty of volumetric pipette vs measuring cylinder.",
+  "a": "• Volumetric pipette: single calibrated delivery, tolerance ±0.06 cm³ → 0.24% on 25.0 cm³.\n• Measuring cylinder: much larger tolerance (±0.5 cm³) → bigger % uncertainty.\n• Use pipette/burette for accurate quantitative work; cylinder only for rough volumes (Jan 2026 Q2b(i))."
+ },
+ {
+  "id": 48,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "How to heat a solid sample to constant mass.",
+  "a": "• Heat the solid (crucible) → cool in a DESICCATOR → weigh.\n• Repeat until two consecutive masses agree within 0.01 g (constant mass).\n• Confirms all water/volatiles removed — basis of gravimetric analysis."
+ },
+ {
+  "id": 49,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Why use thin-walled capillary tube for melting point determination?",
+  "a": "• Thin walls → rapid, even heat transfer from bath/block to sample.\n• Sample and thermometer reach the same temperature quickly.\n• Combined with slow heating, gives accurate, sharp melting point readings."
+ },
+ {
+  "id": 50,
+  "topic": "Apparatus & Safety",
+  "spec": "CP5",
+  "q": "Why rate of heating must be slow (< 1 °C/min) near melting point?",
+  "a": "• Slow heating (< 1 °C/min) near the melting point prevents THERMAL LAG.\n• Without it the block/thermometer reads hotter than the sample → recorded MP too high and range too broad.\n• Heat fast initially, slow near expected MP (e.g. 122 °C for benzoic acid)."
+ }
+,
+{
+  "id": 51,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Outline the steps for preparing a standard solution of sodium carbonate from the solid.",
+  "a": "• Weigh the required mass of anhydrous Na₂CO₃ accurately on a balance (weighing boat, weigh by difference).\n• Transfer to a beaker, add distilled water and stir until fully dissolved.\n• Pour QUANTITATIVELY into a volumetric flask (e.g. 250.0 cm³), rinsing the beaker and stirring rod into the flask.\n• Make up to the mark with distilled water (meniscus on the line), stopper and INVERT several times to mix."
+ },
+{
+  "id": 52,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why must the beaker and stirring rod be rinsed into the volumetric flask when preparing a standard solution?",
+  "a": "• To ensure QUANTITATIVE transfer — every last crystal of solute reaches the flask.\n• Solute left behind would make the real concentration lower than calculated (systematic error).\n• Rinse several times with distilled water and add the washings to the flask."
+ },
+{
+  "id": 53,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why is anhydrous sodium carbonate used as a primary standard rather than sodium hydroxide?",
+  "a": "• Na₂CO₃ is obtained pure and dry with a known exact formula mass (Mᵣ = 106.0).\n• NaOH is NOT a primary standard: it absorbs moisture and CO₂ from the air, so its mass and concentration are unreliable.\n• Primary standard = high purity, stable, non-hygroscopic, reacts exactly as weighed."
+ },
+{
+  "id": 54,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "How should a burette be read to minimise error?",
+  "a": "• Read the bottom of the MENISCUS at EYE LEVEL to avoid parallax error.\n• Burette graduations give ±0.05 cm³ per reading; record to 2 decimal places (e.g. 24.35 cm³).\n• Two readings per titration (start and end) → total uncertainty ±0.10 cm³ per titre."
+ },
+{
+  "id": 55,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why are the burette and pipette rinsed with the solution they will contain before use?",
+  "a": "• To remove distilled water/contaminants left from cleaning.\n• Residual water would DILUTE the solution, changing its concentration and giving a false titre.\n• The conical flask may contain distilled water — it only holds a fixed number of moles of analyte."
+ },
+{
+  "id": 56,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why is a white tile placed under the conical flask during a titration?",
+  "a": "• Provides a white background so the indicator COLOUR CHANGE at the end-point is seen clearly and precisely.\n• Makes end-point detection reproducible between runs.\n• Essential for faint changes such as the pale pink of phenolphthalein."
+ },
+{
+  "id": 57,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why is the conical flask swirled continuously during a titration?",
+  "a": "• To MIX the reactants thoroughly so the colour change is uniform and the end-point is sharp.\n• Prevents a local excess of titrant in the drop zone giving a premature false end-point.\n• Swirl with one hand while controlling the tap with the other."
+ },
+{
+  "id": 58,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why is a rough (trial) titration carried out before the accurate titrations?",
+  "a": "• To estimate the end-point volume so accurate runs can add titrant quickly at first, then DROPWISE near the end-point.\n• Saves time and avoids overshooting the end-point.\n• The rough titre is discarded; only CONCORDANT titres (within 0.10 cm³) are averaged."
+ },
+{
+  "id": 59,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why is dilute sulfuric acid used instead of hydrochloric acid in KMnO₄ titrations?",
+  "a": "• HCl would be OXIDISED by MnO₄⁻ to chlorine — extra KMnO₄ consumed → titre too high.\n• H₂SO₄ supplies H⁺ for MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O without being oxidised itself.\n• Sulfate ions do not interfere with the redox reaction."
+ },
+{
+  "id": 60,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Describe how the iron(II) content of an iron tablet is found by titration.",
+  "a": "• Crush the tablet and dissolve it in dilute H₂SO₄ (acidified solution).\n• Titrate with standard KMnO₄(aq) — end-point: FIRST PERMANENT FAINT PINK (KMnO₄ is a self-indicator).\n• 5Fe²⁺ + MnO₄⁻ + 8H⁺ → 5Fe³⁺ + Mn²⁺ + 4H₂O, so n(Fe²⁺) = 5 × n(MnO₄⁻)."
+ },
+{
+  "id": 61,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "Why must the conical flask NOT be rinsed with the solution measured out by the pipette?",
+  "a": "• Rinsing ADDS extra moles of analyte — the titre would be too high and the concentration overestimated.\n• The pipette delivers a fixed, known volume; the flask is rinsed with DISTILLED WATER only.\n• Extra water in the flask is harmless — it does not change the number of moles of analyte."
+ },
+{
+  "id": 62,
+  "topic": "Volumetric Analysis",
+  "spec": "CP3",
+  "q": "In a direct titration of iodine with sodium thiosulfate, why is starch added only near the end-point?",
+  "a": "• Add starch when the solution is PALE YELLOW/straw-coloured — most of the I₂ has been consumed.\n• Starch forms an intense blue-black starch–iodine complex; added too early at high [I₂] it binds irreversibly and the colour never clears.\n• Near the end-point starch signals the last traces of I₂: blue-black → COLOURLESS (sharp end-point)."
+ },
+{
+  "id": 63,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "Describe the apparatus used to measure the enthalpy change of neutralisation and why it is chosen.",
+  "a": "• Polystyrene (expanded foam) CUPS with a LID — good insulation, minimises heat loss to the surroundings.\n• Thermometer (reading to 0.1 °C or better) plus continuous stirring.\n• The cup has a low heat capacity, so negligible heat is absorbed by the apparatus itself."
+ },
+{
+  "id": 64,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "Why is the temperature recorded at regular intervals and the cooling section extrapolated back?",
+  "a": "• Heat is lost to the surroundings during the reaction, so the OBSERVED ΔT is too small.\n• Plotting temperature vs time and extrapolating the cooling line back to the mixing time gives the TRUE maximum temperature rise — extrapolation CORRECTS FOR HEAT LOSS.\n• Same principle as thermometric titration: two best-fit lines intersect at the corrected ΔT."
+ },
+{
+  "id": 65,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "Why is a large excess of one reactant used in enthalpy experiments?",
+  "a": "• Ensures the other reactant reacts COMPLETELY (limiting reagent is fully consumed).\n• A larger temperature rise gives a SMALLER percentage uncertainty in ΔT.\n• Keeps the temperature change large enough to measure accurately (several °C)."
+ },
+{
+  "id": 66,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "Describe how the enthalpy of combustion of an alcohol is measured in the laboratory.",
+  "a": "• A copper calorimeter holds a known volume/mass of water; a thermometer records the temperature rise.\n• The spirit burner is weighed BEFORE and AFTER burning — the mass difference is the mass of fuel burned.\n• q = mcΔT (m = mass of water, c = 4.18 J g⁻¹ K⁻¹); ΔH = −q ÷ moles of fuel; use a draught shield and lid."
+ },
+{
+  "id": 67,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "Why is a draught shield (or lid) used in enthalpy of combustion experiments?",
+  "a": "• Reduces heat loss by CONVECTION/draughts and from the open top of the calorimeter.\n• The measured ΔT is then closer to the true value, so the experimental ΔH is less inaccurate.\n• Measured values are still less exothermic than theoretical due to heat loss, incomplete combustion and evaporation of water."
+ },
+{
+  "id": 68,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "How can the reliability and precision of an enthalpy experiment be improved?",
+  "a": "• Repeat the experiment and calculate the MEAN ΔH, discarding anomalous results.\n• Use a thermometer reading to 0.1 °C and ensure a large ΔT to reduce percentage uncertainty.\n• Minimise heat loss with insulation (polystyrene cup + lid), a draught shield and continuous stirring."
+ },
+{
+  "id": 69,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "Why must the mixture be stirred continuously while measuring the temperature change?",
+  "a": "• Ensures the temperature is UNIFORM throughout the mixture — the thermometer records the true mean temperature.\n• Prevents local hot/cold regions that would give an inaccurate maximum temperature.\n• Speeds up thermal equilibrium after each addition of reagent."
+ },
+{
+  "id": 70,
+  "topic": "Enthalpy & Thermochemistry",
+  "spec": "CP6",
+  "q": "Why is the enthalpy of combustion measured in the lab always less exothermic than the theoretical value?",
+  "a": "• HEAT LOSS to the surroundings (apparatus, draughts, open top) — the water never receives all the heat.\n• INCOMPLETE COMBUSTION of the fuel (soot/CO formed, not all CO₂).\n• EVAPORATION of water from the calorimeter and of the volatile alcohol itself removes heat."
+ },
+{
+  "id": 71,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "Why is a gas syringe used to measure the rate of a reaction that produces a gas?",
+  "a": "• It measures the VOLUME of gas evolved at measured time intervals — continuous monitoring of the reaction.\n• Gives accurate, precise volumes without the reaction mixture being disturbed.\n• Plot volume vs time; the gradient at t = 0 or initial gradient gives the INITIAL RATE."
+ },
+{
+  "id": 72,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "Why is a cotton wool plug placed in the neck of the flask in the mass-loss method?",
+  "a": "• The plug allows the gas (e.g. CO₂) to ESCAPE so the mass falls, while preventing SPRAY or droplets of liquid leaving the flask.\n• Losing liquid would remove reactant/product and give a false, too-large mass loss.\n• The balance records mass at intervals; rate = gradient of mass vs time graph."
+ },
+{
+  "id": 73,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "When varying the concentration of one reactant, why is the total volume kept constant with distilled water?",
+  "a": "• Only ONE variable changes at a time — the concentrations of all other reactants stay constant (fair test).\n• Changing total volume would change the concentration of every species and confuse the order determination.\n• Water is added so each run has the same total volume but a different concentration of the reactant studied."
+ },
+{
+  "id": 74,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "Why is the INITIAL rate measured rather than a later rate?",
+  "a": "• At t = 0 the initial concentrations of the reactants are KNOWN EXACTLY from the volumes mixed.\n• Products (which can catalyse or interfere) have not yet formed — the rate reflects only the reactants.\n• Later, concentrations change and the reverse reaction becomes significant, complicating the analysis."
+ },
+{
+  "id": 75,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "Why must the temperature be kept constant (e.g. thermostatted water bath) in a rates experiment?",
+  "a": "• Rate varies strongly with temperature (more particles exceed the activation energy).\n• If T changes, any change in rate could be due to temperature rather than the variable being studied.\n• Use a water bath set to the same temperature for all runs to ensure a fair comparison."
+ },
+{
+  "id": 76,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "In the disappearing-cross method (Na₂S₂O₃ + HCl), why is the time to obscurity used to find the initial rate?",
+  "a": "• The reaction produces a fine precipitate of SULFUR which makes the solution cloudy, hiding a cross drawn under the flask.\n• The time t for the cross to disappear is INVERSELY PROPORTIONAL to the initial rate: rate ∝ 1/t.\n• The same fixed amount of sulfur is needed each run, so t measures the same extent of reaction."
+ },
+{
+  "id": 77,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "Why is a large excess of one reactant used when studying the order with respect to another?",
+  "a": "• The excess reactant's concentration stays effectively CONSTANT during the reaction (PSEUDO-first-order conditions).\n• The rate then depends only on the concentration of the reactant being varied.\n• Also keeps the reaction slow enough to time conveniently."
+ },
+{
+  "id": 78,
+  "topic": "Rates Experiments",
+  "spec": "CP7",
+  "q": "How is the order of reaction deduced from graphs of rate against concentration?",
+  "a": "• ZERO order: rate is CONSTANT — horizontal line (rate does not depend on concentration).\n• FIRST order: rate ∝ [A] — straight line THROUGH THE ORIGIN.\n• SECOND order: rate ∝ [A]² — upward CURVE; confirm with a straight line through the origin for rate vs [A]² (or log–log plot)."
+ },
+{
+  "id": 79,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why is the thermometer bulb placed at the side arm (junction with the condenser) in distillation?",
+  "a": "• The thermometer measures the temperature of the VAPOUR distilling over, not the boiling liquid.\r• The vapour temperature equals the boiling point of the distillate — it identifies the fraction being collected.\n• Placing it in the liquid would give the mixture's temperature, which is not the distillate's boiling point."
+ },
+{
+  "id": 80,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why is the distillate collected over a narrow temperature range?",
+  "a": "• A PURE liquid boils at a constant temperature, so a narrow range (e.g. ±1–2 °C) indicates a pure fraction.\n• Impurities make the boiling point rise during distillation — a wide range shows a mixture.\n• Changing the receiving flask when the temperature leaves the range separates the pure product from impurities."
+ },
+{
+  "id": 81,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why does cooling water enter the condenser at the BOTTOM and leave at the top?",
+  "a": "• The jacket fills completely with water, so the whole vapour path is cooled efficiently.\n• Counter-current flow keeps the coldest water near the outlet, maintaining the steepest temperature gradient.\n• Air pockets would leave parts of the condenser hot and vapour would escape uncondensed (loss of product)."
+ },
+{
+  "id": 82,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why is a pencil line used for the baseline in TLC rather than ink?",
+  "a": "• Ink DISSOLVES in the solvent and would RUN UP the plate, contaminating the spots and producing false spots.\n• Pencil (graphite) is insoluble in the solvent and stays in place.\n• Also mark each spot's identity in pencil beside the origin."
+ },
+{
+  "id": 83,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why must the solvent level in the TLC tank be BELOW the spotted baseline?",
+  "a": "• If the solvent covers the spots, the samples DISSOLVE and wash off into the solvent reservoir — they never separate.\n• The solvent must rise through the plate by capillary action and carry the components from the origin.\n• The plate is removed when the solvent front is near the top, before it runs off the plate."
+ },
+{
+  "id": 84,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why is the TLC tank covered (lid on) during development?",
+  "a": "• The atmosphere becomes SATURATED with solvent vapour, so the solvent front rises EVENLY and does not evaporate.\n• Evaporation of solvent from the plate would slow or distort the solvent front and give uneven Rf values.\n• Lining the tank with filter paper soaked in solvent helps maintain the saturated atmosphere."
+ },
+{
+  "id": 85,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "How are COLOURLESS spots revealed on a developed TLC plate?",
+  "a": "• View under a UV LAMP (many compounds fluoresce or quench fluorescence).\n• Place the plate in IODINE VAPOUR — spots appear brown.\n• Spray with a locating agent/visualising reagent (e.g. ninhydrin for amino compounds, acidic KMnO₄)."
+ },
+{
+  "id": 86,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why are known reference compounds run on the SAME TLC plate as the sample?",
+  "a": "• Rf values must be compared under IDENTICAL conditions (same plate, same solvent, same tank).\n• Rf depends on the solvent system, plate and temperature — a literature value alone is not reliable.\n• Matching Rf of a sample spot with a known compound spot identifies the component."
+ },
+{
+  "id": 87,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why is the organic layer washed with aqueous sodium hydrogencarbonate (or water) in a separating funnel?",
+  "a": "• The wash removes ACIDIC impurities (e.g. excess acid catalyst) by neutralisation — CO₂ is produced, so vent the funnel.\n• Water washes out water-soluble impurities (salts, acids) from the organic layer.\n• The organic product, being insoluble in water, stays in the organic layer — improving purity."
+ },
+{
+  "id": 88,
+  "topic": "Organic Prep & Purification",
+  "spec": "CP4",
+  "q": "Why is the actual yield of an organic preparation less than the theoretical yield?",
+  "a": "• LOSSES during transfer between vessels (solution left on glassware, in the separating funnel, on filter paper).\n• INCOMPLETE reaction — the reaction reaches equilibrium or does not go to completion.\n• SIDE reactions and losses during purification (recrystallisation leaves product in the mother liquor; distillation leaves residue)."
+ },
+{
+  "id": 89,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Describe the test for the ammonium ion, NH₄⁺.",
+  "a": "• Add aqueous NaOH and WARM the mixture gently.\n• Ammonia gas is evolved: NH₄⁺ + OH⁻ → NH₃ + H₂O.\n• Test the gas with DAMP RED LITMUS — it turns BLUE (ammonia is alkaline); a sharp pungent smell also confirms it."
+ },
+{
+  "id": 90,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Describe the test for carbonate ions, CO₃²⁻.",
+  "a": "• Add DILUTE ACID (e.g. HCl) to the solid/solution — effervescence (bubbles) of carbon dioxide.\n• Pass the gas into LIMEWATER — it turns MILKY/cloudy (white ppt of CaCO₃).\n• CO₃²⁻ + 2H⁺ → CO₂ + H₂O; the limewater test confirms the gas is CO₂."
+ },
+{
+  "id": 91,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "How is Fe³⁺ confirmed with potassium thiocyanate?",
+  "a": "• Add a few drops of KSCN (potassium thiocyanate) solution.\n• A BLOOD-RED solution forms due to the [Fe(SCN)]²⁺ complex ion.\n• Fe²⁺ gives NO colour with thiocyanate — a sensitive test that distinguishes Fe³⁺ from Fe²⁺."
+ },
+{
+  "id": 92,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "Describe the behaviour of Al³⁺(aq) with NaOH(aq) and with NH₃(aq).",
+  "a": "• White ppt of Al(OH)₃ forms dropwise with both.\n• The ppt DISSOLVES in EXCESS NaOH → colourless [Al(OH)₄]⁻ (aluminate) — amphoteric behaviour.\n• It does NOT dissolve in excess NH₃ — contrast with Zn²⁺ which dissolves in both excess NaOH and excess NH₃."
+ },
+{
+  "id": 93,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "How is the presence of WATER in a liquid tested?",
+  "a": "• Add ANHYDROUS COPPER(II) SULFATE (white) — turns BLUE if water is present (forms the blue pentahydrate).\n• Alternatively use COBALT CHLORIDE paper — BLUE paper turns PINK in the presence of water.\n• Reversible colour changes: heating the blue CuSO₄·5H₂O drives off water and restores the white colour."
+ },
+{
+  "id": 94,
+  "topic": "Inorganic Qual",
+  "spec": "CP1",
+  "q": "What is observed when excess NaOH(aq) is added to Cu²⁺(aq)?",
+  "a": "• A BLUE precipitate of Cu(OH)₂ forms.\n• It is INSOLUBLE in excess NaOH (stays as the blue ppt) — contrast with excess NH₃ which dissolves it to a deep blue solution.\n• This insolubility in excess NaOH distinguishes Cu(OH)₂ from amphoteric hydroxides such as Al(OH)₃ and Zn(OH)₂."
+ },
+{
+  "id": 95,
+  "topic": "Colorimetry & Spectroscopy",
+  "spec": "CP8",
+  "q": "Why is a colorimeter used to follow reactions involving coloured species (e.g. iodine)?",
+  "a": "• The ABSORBANCE (or intensity of colour) of the solution is PROPORTIONAL to the concentration of the coloured species (Beer–Lambert).\n• Absorbance can be recorded at time intervals or continuously, giving concentration vs time data for rates.\n• It is quick, non-destructive and more accurate than matching colours by eye."
+ },
+{
+  "id": 96,
+  "topic": "Colorimetry & Spectroscopy",
+  "spec": "CP8",
+  "q": "Why is a filter of the COMPLEMENTARY colour of the solution used in a colorimeter?",
+  "a": "• The complementary colour is the one the solution ABSORBS MOST STRONGLY — maximum absorption and maximum sensitivity.\n• A filter transmits only its own colour, so the detector measures the absorbed complementary light.\n• E.g. a blue solution absorbs orange light — use an orange filter for the largest absorbance change."
+ },
+{
+  "id": 97,
+  "topic": "Colorimetry & Spectroscopy",
+  "spec": "CP8",
+  "q": "Describe how a calibration curve is used in colorimetry.",
+  "a": "• Prepare solutions of KNOWN concentration and measure their absorbance with the colorimeter.\n• Plot a calibration curve of ABSORBANCE vs CONCENTRATION (straight line through the origin for Beer–Lambert).\n• Measure the absorbance of the unknown solution and read its concentration from the graph."
+ },
+{
+  "id": 98,
+  "topic": "Colorimetry & Spectroscopy",
+  "spec": "CP8",
+  "q": "Why is the colorimeter zeroed using a BLANK (reference) solution?",
+  "a": "• The blank (pure solvent, e.g. distilled water) is placed in the cuvette and the reading set to ZERO.\n• This corrects for absorption by the solvent, the cuvette and any stray reflections.\n• All subsequent absorbance readings then measure ONLY the coloured species of interest."
+ },
+{
+  "id": 99,
+  "topic": "Colorimetry & Spectroscopy",
+  "spec": "CP8",
+  "q": "How should the cuvette be handled to give reliable colorimeter readings?",
+  "a": "• Handle the cuvette by the RIBBED (frosted) sides — fingerprints on the clear faces absorb/scatter light and give false readings.\n• WIPE the clear faces with a lens tissue before each reading.\n• Insert the cuvette in the SAME orientation each time (scratches affect the path) so the path length is constant."
+ },
+{
+  "id": 100,
+  "topic": "Colorimetry & Spectroscopy",
+  "spec": "CP8",
+  "q": "State the Beer–Lambert relationship and why readings are only reliable within a certain range.",
+  "a": "• Beer–Lambert: ABSORBANCE ∝ concentration × path length (A = εcl).\n• The straight-line (linear) relationship holds only at LOW to MODERATE concentrations — dilute solutions first.\n• At high concentration the calibration curve flattens (deviation), so the unknown must fall within the linear range of the curve."
+ }
+ ];;
 
         const GLOSSARY_DATA = [
-            { term: "Recrystallisation", cat: "prep_purification", def: "Purification technique dissolving crude solid in minimum hot solvent, hot filtering, cooling, suction filtering, and washing." },
-            { term: "Refluxing", cat: "prep_purification", def: "Continual boiling and condensation in a vertical condenser to react volatile liquids without vapor loss." },
-            { term: "Steam Distillation", cat: "prep_purification", def: "Co-distillation of water-immiscible organic liquids at temperatures below 100°C to prevent thermal decomposition." },
-            { term: "Salting Out", cat: "prep_purification", def: "Adding an ionic salt (NaCl) to aqueous layer to decrease solubility of organic product and force it into organic solvent." },
-            { term: "Quenching", cat: "kinetics_titration", def: "Rapidly stopping or slowing a chemical reaction aliquot by sudden cooling, dilution, or neutralisation." },
-            { term: "Clock Reaction", cat: "kinetics_titration", def: "Reaction where a sudden visible color change occurs after a time delay proportional to initial rate." },
-            { term: "Arrhenius Equation", cat: "kinetics_titration", def: "Mathematical relationship $\\ln k = -\\frac{E_a}{RT} + \\ln A$ linking rate constant $k$, activation energy $E_a$, and temperature $T$." },
-            { term: "Suction Filtration", cat: "prep_purification", def: "Vacuum filtration using Büchner funnel and flask to rapidly separate solid crystals from liquid." },
-            { term: "Melting Point Range", cat: "prep_purification", def: "Temperature span from initial melting onset to complete liquefaction; sharp range ($\pm 1{^\circ}\\text{C}$) indicates high purity." },
-            { term: "2,4-DNPH", cat: "qual_analysis", def: "Reagent (Brady's reagent) giving yellow/orange/red hydrazone precipitate with aldehydes and ketones." },
-            { term: "Tollens' Reagent", cat: "qual_analysis", def: "Ammoniacal silver nitrate solution $[\\text{Ag(NH}_3)_2]^+$ forming silver mirror with aldehydes." },
-            { term: "Iodoform Test", cat: "qual_analysis", def: "Reaction with $\\text{I}_2/\\text{NaOH}$ forming pale yellow $\\text{CHI}_3$ precipitate with methyl ketones or secondary methyl alcohols." },
-            { term: "Concordant Titres", cat: "kinetics_titration", def: "Burette readings within $0.10\\text{ cm}^3$ (or $0.20\\text{ cm}^3$) of each other, used to calculate mean titre." },
-            { term: "Percentage Uncertainty", cat: "kinetics_titration", def: "Ratio of apparatus tolerance uncertainty to measured value multiplied by 100." },
-            { term: "Drying Agent", cat: "prep_purification", def: "Anhydrous salt ($\\text{MgSO}_4, \\text{CaCl}_2$) added to organic liquids to absorb dissolved water traces." },
-            { term: "Separating Funnel", cat: "prep_purification", def: "Glass apparatus used to separate immiscible liquid phases based on density differences." },
-            { term: "Thermal Lag", cat: "prep_purification", def: "Temperature gap between heating block and sample caused by heating too quickly in melting point apparatus." },
-            { term: "Fluted Filter Paper", cat: "prep_purification", def: "Folded filter paper increasing surface area for rapid hot filtration during recrystallisation." },
-            { term: "Back Titration", cat: "kinetics_titration", def: "Technique where excess known reagent reacts with sample, and unreacted excess is titrated." },
-            { term: "Self-Indicator", cat: "kinetics_titration", def: "Titration reactant changing color at end-point without added indicator (e.g. $\\text{KMnO}_4$)." },
-            { term: "Amphoteric Hydroxide", cat: "qual_analysis", def: "Metal hydroxide dissolving in both acids and strong bases (e.g. $\\text{Cr(OH)}_3, \\text{Zn(OH)}_2$)." },
-            { term: "Desiccator", cat: "prep_purification", def: "Sealed enclosure containing drying agent (silica gel) used to dry solid samples without heat." },
-            { term: "Anti-Bumping Granules", cat: "prep_purification", def: "Small calcium carbonate or silicon carbide stones providing nucleation sites for smooth boiling." },
-            { term: "Ligand Exchange", cat: "qual_analysis", def: "Substitution of one set of complex ion ligands by another, accompanied by color change." },
-            { term: "Gravimetric Analysis", cat: "kinetics_titration", def: "Quantitative determination of analyte mass by precipitation, filtration, and heating to constant mass." },
-            { term: "Azo Dye", cat: "qual_analysis", def: "Brightly colored compound containing $-N=N-$ linkage formed by coupling diazonium salt with phenol/naphthol." },
-            { term: "Diazotisation", cat: "qual_analysis", def: "Reaction of 1° aromatic amine with $\\text{HNO}_2$ ($< 10{^\circ}\\text{C}$) forming benzenediazonium ion." },
-            { term: "Retention Factor ($R_f$)", cat: "qual_analysis", def: "Ratio of distance travelled by compound to distance travelled by solvent front in chromatography." },
-            { term: "Mobile Phase", cat: "qual_analysis", def: "Liquid or gas solvent carrying chemical components through chromatography column/plate." },
-            { term: "Stationary Phase", cat: "qual_analysis", def: "Solid or liquid film bound to solid support that selectively adsorbs mixture components." },
-            { term: "Chemical Shift ($\\delta$)", cat: "qual_analysis", def: "NMR resonance position relative to tetramethylsilane (TMS) standard at $0\\text{ ppm}$." },
-            { term: "Integration Trace", cat: "qual_analysis", def: "Area under $^1\\text{H}$ NMR peak proportional to number of hydrogen atoms in that environment." },
-            { term: "Spin-Spin Splitting", cat: "qual_analysis", def: "Division of $^1\\text{H}$ NMR signal into $n+1$ peaks caused by $n$ adjacent non-equivalent protons." },
-            { term: "Molecular Ion Peak ($M^+$)", cat: "qual_analysis", def: "Mass spectrum peak with highest $m/z$ corresponding to unfragmented ionized molecule mass." },
-            { term: "Fume Cupboard", cat: "prep_purification", def: "Ventilated lab enclosure removing hazardous, toxic, or volatile fumes safely." }
-        ];
+ {
+  "term": "Recrystallisation",
+  "cat": "prep_purification",
+  "def": "Purification technique dissolving crude solid in minimum hot solvent, hot filtering, cooling, suction filtering, and washing.",
+  "q": "Which sequence lists the correct order of steps in recrystallisation?",
+  "options": [
+   "A: Dissolve in minimum hot solvent → hot filter → cool slowly → suction filter → wash with ice-cold solvent",
+   "B: Dissolve in cold solvent → cool → filter → evaporate to dryness",
+   "C: Reflux → distil → collect distillate → dry with anhydrous MgSO₄",
+   "D: Hot filter first → then dissolve in cold solvent → evaporate to dryness"
+  ],
+  "ans": "Correct Answer: A. Recrystallisation purifies a solid by dissolving it in the minimum volume of hot solvent, hot filtering to remove insoluble impurities, cooling slowly so the pure product crystallises while soluble impurities stay dissolved, then suction filtering and washing the crystals with ice-cold solvent.",
+  "expl": [
+   "CORRECT — this is the full exam-accepted sequence: dissolve in minimum hot solvent, hot filtration (removes insoluble impurities), slow cooling (pure crystals form; soluble impurities stay in solution), suction filtration, ice-cold wash (removes surface impurities without dissolving product).",
+   "Cold solvent cannot dissolve the crude solid — the whole point is that the product dissolves when hot but crystallises when cold; evaporating to dryness would also re-deposit all soluble impurities.",
+   "This is the work-up for a liquid organic product (reflux → distillation → drying), not recrystallisation of a solid.",
+   "Hot filtration must come AFTER dissolution (you cannot filter a solid that has not been dissolved), and cold solvent would not dissolve the crude solid at all."
+  ]
+ },
+ {
+  "term": "Refluxing",
+  "cat": "prep_purification",
+  "def": "Continual boiling and condensation in a vertical condenser to react volatile liquids without vapor loss.",
+  "q": "Why is heating under reflux used for reactions such as esterification?",
+  "options": [
+   "A: Vapours condense in the vertical condenser and return to the flask, so volatile reactants are not lost during prolonged heating",
+   "B: It allows gaseous products to escape as they form",
+   "C: It increases the pressure inside the flask to speed up the reaction",
+   "D: It removes the water produced in the reaction from the flask"
+  ],
+  "ans": "Correct Answer: A. A reflux condenser is mounted vertically: vapour rises, condenses on the cool walls and drips back into the boiling mixture. This allows prolonged heating at the boiling temperature without losing volatile reactants or products (Jan 2026 MS: must state BOTH condensation AND return).",
+  "expl": [
+   "CORRECT — vapour condenses (cold water in the jacket) and the liquid returns to the reaction flask, preventing loss of volatile reactants/products; this is the examiner keyword pair \"condenses + returns\".",
+   "Reflux is a closed cycling system — the condenser stops vapours escaping, so gases do NOT leave the flask.",
+   "The apparatus is open to the air at the top (never stoppered — a sealed system would build up dangerous pressure); reflux does not pressurise the flask.",
+   "Water is not removed by reflux; if water removal is needed, a Dean–Stark trap or drying agent is used instead."
+  ]
+ },
+ {
+  "term": "Steam Distillation",
+  "cat": "prep_purification",
+  "def": "Co-distillation of water-immiscible organic liquids at temperatures below 100°C to prevent thermal decomposition.",
+  "q": "Why is steam distillation used to isolate compounds such as phenylamine?",
+  "options": [
+   "A: Water-immiscible high-boiling compounds co-distil with steam below 100 °C, avoiding thermal decomposition",
+   "B: It boils off the water first so the pure compound remains behind",
+   "C: Steam chemically decomposes all impurities into gases",
+   "D: It allows the compound to react with steam to form a cleaner product"
+  ],
+  "ans": "Correct Answer: A. Steam distillation co-distils water-immiscible organic liquids at temperatures below 100 °C. Phenylamine boils at 184 °C but is carried over with steam before it decomposes or chars — ideal for high-boiling, heat-sensitive, water-immiscible compounds.",
+  "expl": [
+   "CORRECT — the mixture of water + immiscible organic liquid boils below 100 °C (both liquids contribute vapour pressure), so the organic compound distils at a temperature far below its own boiling point without decomposing.",
+   "The steam carries the organic compound OVER with the distillate — the compound is collected in the receiving flask, it does not stay behind.",
+   "Steam is a physical carrier, not a chemical reagent; impurities are not decomposed by steam.",
+   "No reaction with steam occurs — the organic compound is physically co-distilled and then separated from the water layer (e.g. in a separating funnel)."
+  ]
+ },
+ {
+  "term": "Salting Out",
+  "cat": "prep_purification",
+  "def": "Adding an ionic salt (NaCl) to aqueous layer to decrease solubility of organic product and force it into organic solvent.",
+  "q": "What is the effect of adding NaCl (\"salting out\") during solvent extraction?",
+  "options": [
+   "A: It decreases the solubility of the organic product in the aqueous layer, forcing it into the organic layer and increasing yield",
+   "B: It increases the solubility of the organic product in water",
+   "C: It reacts with the organic product to form a salt",
+   "D: It removes water by a chemical reaction with the salt"
+  ],
+  "ans": "Correct Answer: A. Adding an ionic salt such as NaCl to the aqueous layer reduces the solubility of the organic product in water (the ions compete for water molecules), so more product transfers into the organic solvent layer — increasing the extracted yield (Jan 2026 Q4d MS).",
+  "expl": [
+   "CORRECT — dissolved ions hydrate strongly, \"stealing\" water from the organic molecules, so the organic products aqueous solubility drops and it partitions more strongly into the organic layer.",
+   "Salting out DECREASES aqueous solubility — the opposite of this statement.",
+   "NaCl is unreactive toward most organic products (esters, amines, phenols at this level); it is a physical salting-out agent, not a reactant.",
+   "NaCl does not remove water chemically — drying agents such as anhydrous MgSO₄ do that later, on the organic layer."
+  ]
+ },
+ {
+  "term": "Drying Agent",
+  "cat": "prep_purification",
+  "def": "Anhydrous salt ($\\text{MgSO}_4, \\text{CaCl}_2$) added to organic liquids to absorb dissolved water traces.",
+  "q": "How do you know an organic liquid is completely dry after adding anhydrous MgSO₄?",
+  "options": [
+   "A: The liquid becomes clear and the MgSO₄ powder flows freely without clumping",
+   "B: Effervescence stops when the liquid is dry",
+   "C: Two separate layers form in the flask",
+   "D: The colour of the liquid changes to colourless"
+  ],
+  "ans": "Correct Answer: A. Anhydrous MgSO₄ absorbs dissolved water. Wet MgSO₄ clumps together; dry MgSO₄ remains a free-flowing powder. When the liquid is clear and the solid no longer clumps, the organic layer is dry — then decant or filter off the drying agent.",
+  "expl": [
+   "CORRECT — free-flowing powder + clear liquid is the standard \"dry\" test; any remaining water makes the granules clump/stick to the flask wall.",
+   "Effervescence is irrelevant — drying agents remove dissolved water, they do not evolve gas.",
+   "Two layers indicate immiscible liquids (e.g. aqueous + organic), not dryness.",
+   "Colour change is not a reliable dryness test — clarity plus free-flowing powder is the accepted criterion."
+  ]
+ },
+ {
+  "term": "Suction Filtration",
+  "cat": "prep_purification",
+  "def": "Vacuum filtration using Büchner funnel and flask to rapidly separate solid crystals from liquid.",
+  "q": "Which apparatus is used for suction filtration?",
+  "options": [
+   "A: Büchner funnel + Büchner (filter) flask connected to a vacuum pump/water aspirator",
+   "B: A separating funnel and a conical flask",
+   "C: A Thiele tube with a capillary tube",
+   "D: A round-bottom flask with a reflux condenser"
+  ],
+  "ans": "Correct Answer: A. Suction (vacuum) filtration uses a Büchner funnel (with flat filter paper forming a seal) seated on a Büchner flask, whose side arm connects to a vacuum pump or water aspirator. Reduced pressure pulls the liquid through quickly, separating and partially drying the crystals.",
+  "expl": [
+   "CORRECT — Büchner funnel + Büchner flask + vacuum source; the filter paper must lie flat to give a good seal (Golden Rule: suction filtration = reduced pressure, rapid separation).",
+   "A separating funnel separates immiscible LIQUID layers — it cannot filter a solid.",
+   "A Thiele tube with capillary tube is melting-point apparatus, not filtration.",
+   "A reflux setup heats a mixture — it does not separate solid crystals from liquid."
+  ]
+ },
+ {
+  "term": "Melting Point Range",
+  "cat": "prep_purification",
+  "def": "Temperature span from initial melting onset to complete liquefaction; sharp range ($\\pm 1^{\\circ}\\text{C}$) indicates high purity.",
+  "q": "A sharp melting point (range within ±1 °C) indicates that a solid is…",
+  "options": [
+   "A: Pure",
+   "B: Impure",
+   "C: Hydrated",
+   "D: A mixture of isomers"
+  ],
+  "ans": "Correct Answer: A. A pure solid melts over a sharp, narrow temperature range (e.g. 121.5–122.5 °C for benzoic acid). Impurities lower the melting point and broaden the range because they disrupt the crystal lattice. Sharp melting point = high purity (Jan 2026 Q3b(iv) MS: \"pure = sharp melting temperature / narrow range\").",
+  "expl": [
+   "CORRECT — a narrow range (≈1 °C) around the literature value is the standard purity check for recrystallised solids.",
+   "An impure solid melts LOWER and over a WIDER range — this is the opposite of a sharp range.",
+   "Hydration affects mass/water content, not the sharpness of the melting range.",
+   "Isomer mixtures behave like any impure solid — broad, depressed melting range, not sharp."
+  ]
+ },
+ {
+  "term": "Fluted Filter Paper",
+  "cat": "prep_purification",
+  "def": "Folded filter paper increasing surface area for rapid hot filtration during recrystallisation.",
+  "q": "Why is fluted (pleated) filter paper used in hot filtration during recrystallisation?",
+  "options": [
+   "A: The pleats increase surface area so filtration is fast and the solution stays hot",
+   "B: It removes soluble impurities from the solution",
+   "C: It prevents the product from crystallising on cooling",
+   "D: It absorbs water from the filtrate"
+  ],
+  "ans": "Correct Answer: A. Folding filter paper into flutes (pleats) greatly increases its surface area, so the hot solution filters rapidly before it cools and the product crystallises on the paper. A pre-heated funnel is also used to keep the solution hot.",
+  "expl": [
+   "CORRECT — large surface area = rapid filtration; the pre-heated funnel plus fluted paper keeps the product dissolved so it passes through as filtrate.",
+   "Soluble impurities are removed later by crystallisation + washing — fluted paper is a physical fast-filtration aid.",
+   "Crystallisation on cooling is the desired NEXT step; fluted paper does not prevent it (and it certainly cannot keep the solution hot by itself).",
+   "Water absorption is the job of a drying agent (MgSO₄) — not filter paper."
+  ]
+ },
+ {
+  "term": "Separating Funnel",
+  "cat": "prep_purification",
+  "def": "Glass apparatus used to separate immiscible liquid phases based on density differences.",
+  "q": "How is the lower layer removed when separating two immiscible liquids in a separating funnel?",
+  "options": [
+   "A: Open the tap to drain the lower layer into a beaker, then collect the upper layer separately",
+   "B: Pour the whole mixture out through the top",
+   "C: Evaporate the lower layer with gentle heating",
+   "D: Add more solvent until only one layer remains"
+  ],
+  "ans": "Correct Answer: A. The denser liquid forms the lower layer. With the stopper open (to allow air in), the tap is opened to drain the lower layer into a beaker until the interface reaches the tap, then the tap is closed and the upper layer is poured out through the top into a separate container.",
+  "expl": [
+   "CORRECT — drain the lower layer through the tap, close the tap at the interface, then pour the upper layer from the top; vent pressure by inverting and opening the tap periodically.",
+   "Pouring everything out mixes the layers again — the whole point is to collect each layer separately.",
+   "Evaporation destroys volatile organic products and would leave impurities — layers are separated physically.",
+   "The liquids are immiscible; adding solvent cannot merge them — it only changes the volume."
+  ]
+ },
+ {
+  "term": "Thermal Lag",
+  "cat": "prep_purification",
+  "def": "Temperature gap between heating block and sample caused by heating too quickly in melting point apparatus.",
+  "q": "Thermal lag in melting-point determination is caused by…",
+  "options": [
+   "A: Heating too quickly, so the sample temperature lags behind the thermometer / heating block reading",
+   "B: Using an impure sample",
+   "C: Packing too much sample into the capillary",
+   "D: Using a thin-walled capillary tube"
+  ],
+  "ans": "Correct Answer: A. If the heating rate is too fast (above ~1 °C/min near the melting point), the thermometer (or block) reads hotter than the sample actually is, so the recorded melting point is too high and the range appears broad. Slow heating eliminates this lag.",
+  "expl": [
+   "CORRECT — slow heating (< 1 °C min⁻¹ near the melting point) lets sample and thermometer reach the same temperature, so the recorded melting point is true (FC50 principle).",
+   "Impurity lowers and broadens the melting range — it is a sample problem, not a thermal-lag problem.",
+   "Overpacking makes observation harder but does not itself create thermal lag.",
+   "Thin-walled capillary ensures RAPID, even heat transfer — it reduces lag, not causes it."
+  ]
+ },
+ {
+  "term": "Anti-Bumping Granules",
+  "cat": "prep_purification",
+  "def": "Small calcium carbonate or silicon carbide stones providing nucleation sites for smooth boiling.",
+  "q": "What is the purpose of anti-bumping granules when heating a liquid?",
+  "options": [
+   "A: They provide nucleation sites so the liquid boils smoothly instead of \"bumping\" violently",
+   "B: They catalyse the reaction taking place",
+   "C: They absorb water produced in the reaction",
+   "D: They raise the boiling point of the liquid"
+  ],
+  "ans": "Correct Answer: A. Anti-bumping granules (porous calcium carbonate / silicon carbide chips) trap tiny air pockets that act as nucleation sites for bubble formation, so boiling is smooth and even. Without them, superheated liquid can erupt violently (\"bumping\"), splashing hot liquid out of the flask.",
+  "expl": [
+   "CORRECT — the pores release fine streams of bubbles, preventing superheating and violent, erratic boiling.",
+   "Granules are chemically inert in the reactions used here — they are not catalysts.",
+   "Absorbing water is the job of a drying agent (e.g. MgSO₄), not anti-bumping granules.",
+   "They do not change the boiling point — they only make boiling smooth and safe."
+  ]
+ },
+ {
+  "term": "Desiccator",
+  "cat": "prep_purification",
+  "def": "Sealed enclosure containing drying agent (silica gel) used to dry solid samples without heat.",
+  "q": "What is a desiccator used for?",
+  "options": [
+   "A: Drying solid samples by storage in a sealed enclosure over a drying agent (e.g. silica gel), without heating",
+   "B: Heating a solid to constant mass",
+   "C: Cooling a reaction mixture under reflux",
+   "D: Storing volatile organic solvents safely"
+  ],
+  "ans": "Correct Answer: A. A desiccator is a sealed glass enclosure containing a desiccant (silica gel / anhydrous CaCl₂). Solids (e.g. crystals after recrystallisation, or crucibles after heating) are stored inside so they cool and dry without re-absorbing moisture from the air — essential before accurate weighing.",
+  "expl": [
+   "CORRECT — used in gravimetric analysis and crystal drying: cool in the desiccator, weigh, repeat until constant mass; the desiccant keeps the enclosed air dry.",
+   "Heating to constant mass happens in a crucible over a Bunsen / oven — the desiccator is for cooling and DRY storage, not heating.",
+   "Reflux is a heating/condensing apparatus — unrelated to dry storage.",
+   "Volatile solvents are stored in sealed bottles, not desiccators."
+  ]
+ },
+ {
+  "term": "Fume Cupboard",
+  "cat": "prep_purification",
+  "def": "Ventilated lab enclosure removing hazardous, toxic, or volatile fumes safely.",
+  "q": "In which situation MUST work be carried out in a fume cupboard?",
+  "options": [
+   "A: Handling toxic or volatile substances such as phenylamine, concentrated HNO₃, or diazonium salts",
+   "B: Any titration involving a colour change",
+   "C: Weighing out sodium chloride for a standard solution",
+   "D: Heating water in a beaker"
+  ],
+  "ans": "Correct Answer: A. A fume cupboard is a ventilated enclosure that removes hazardous, toxic or volatile fumes. Oct 2025 MS (Q2d): for toxic/oxidising reagents the required precaution is \"fume cupboard\" — gloves/goggles/ventilated room alone are NOT accepted for this specific mark.",
+  "expl": [
+   "CORRECT — phenylamine is toxic, concentrated HNO₃ is toxic + oxidising, and diazonium salts decompose dangerously; the examiner requires fume cupboard for these.",
+   "Titrations with indicators are routine bench work — no fume cupboard needed.",
+   "Weighing NaCl is harmless bench work.",
+   "Heating water produces no hazardous fumes — bench top is fine."
+  ]
+ },
+ {
+  "term": "Quenching",
+  "cat": "kinetics_titration",
+  "def": "Rapidly stopping or slowing a chemical reaction aliquot by sudden cooling, dilution, or neutralisation.",
+  "q": "Why is a sample from a kinetics reaction mixture sometimes quenched?",
+  "options": [
+   "A: To stop the reaction at a chosen time so the concentration can be measured accurately",
+   "B: To speed up the reaction so the experiment finishes sooner",
+   "C: To remove the catalyst from the reaction mixture",
+   "D: To precipitate the product out of solution"
+  ],
+  "ans": "Correct Answer: A. Quenching rapidly stops (or greatly slows) the reaction in an aliquot at a known time — by sudden cooling, dilution, or adding a reagent that removes a reactant. The aliquot can then be titrated/analysed without further reaction, giving the concentration at that exact time (Golden Rule para 244).",
+  "expl": [
+   "CORRECT — the reaction is frozen at time t, so analysis of the aliquot reflects the composition at that moment, allowing rate = change in concentration ÷ time to be measured.",
+   "Quenching SLOWS or stops the reaction — it never speeds it up.",
+   "Catalysts are not removed by quenching; the reaction is stopped by cooling/dilution/neutralisation of a reactant.",
+   "Precipitation is not the purpose — quenching preserves the mixture for quantitative analysis."
+  ]
+ },
+ {
+  "term": "Clock Reaction",
+  "cat": "kinetics_titration",
+  "def": "Reaction where a sudden visible color change occurs after a time delay proportional to initial rate.",
+  "q": "In a clock reaction, the time taken for the sudden colour change is…",
+  "options": [
+   "A: Inversely proportional to the initial rate of reaction",
+   "B: Directly proportional to the initial rate",
+   "C: Independent of the concentrations of the reactants",
+   "D: Equal to the half-life of the reaction"
+  ],
+  "ans": "Correct Answer: A. Time t to the visible change (e.g. blue-black with starch) is inversely proportional to the initial rate: rate ∝ 1/t. A fast reaction gives a short time. This only holds when the scavenger (e.g. thiosulfate) is in small limiting amount so reactant concentrations stay effectively constant (Oct 2025 trap: reject \"1/t directly proportional to rate\").",
+  "expl": [
+   "CORRECT — initial rate ∝ 1/t; the smaller the time, the greater the rate. This relationship underpins the whole clock-reaction method.",
+   "It is INVERSE, not direct — doubling the rate halves the time.",
+   "The time depends strongly on reactant concentrations (that is how order is deduced) — it is not independent.",
+   "The clock time is the time to consume a fixed small amount of a scavenger — it is not the half-life of the main reaction."
+  ]
+ },
+ {
+  "term": "Arrhenius Equation",
+  "cat": "kinetics_titration",
+  "def": "Mathematical relationship $\\ln k = -\\frac{E_a}{RT} + \\ln A$ linking rate constant $k$, activation energy $E_a$, and temperature $T$.",
+  "q": "For the Arrhenius equation ln k = −Eₐ/RT + ln A, the gradient of a plot of ln k against 1/T is…",
+  "options": [
+   "A: −Eₐ/R",
+   "B: +Eₐ/R",
+   "C: −Eₐ",
+   "D: ln A"
+  ],
+  "ans": "Correct Answer: A. Comparing ln k = −(Eₐ/R)(1/T) + ln A with y = mx + c: plotting ln k (y) against 1/T (x) gives a straight line with gradient −Eₐ/R and intercept ln A. So Eₐ = −gradient × R. In clock experiments ln(1/t) is plotted instead of ln k (same gradient relationship).",
+  "expl": [
+   "CORRECT — gradient = −Eₐ/R (J mol⁻¹ K⁻¹ ÷ K⁻¹ = J mol⁻¹); Eₐ = −gradient × R = −gradient × 8.314 J mol⁻¹ K⁻¹.",
+   "The gradient is NEGATIVE — a positive gradient would imply Eₐ < 0, which is physically impossible for a rate constant.",
+   "Eₐ alone has the wrong units — the gradient is Eₐ/R, not Eₐ.",
+   "ln A is the INTERCEPT (value of ln k when 1/T = 0), not the gradient."
+  ]
+ },
+ {
+  "term": "Concordant Titres",
+  "cat": "kinetics_titration",
+  "def": "Burette readings within $0.10\\text{ cm}^3$ (or $0.20\\text{ cm}^3$) of each other, used to calculate mean titre.",
+  "q": "What are concordant titres?",
+  "options": [
+   "A: Titre readings that are within 0.10 cm³ (or 0.20 cm³) of each other, used to calculate the mean",
+   "B: The first two titre readings taken in any titration",
+   "C: Titre readings that differ by more than 1.00 cm³ from each other",
+   "D: The titre obtained using the indicator, before any colour change"
+  ],
+  "ans": "Correct Answer: A. Concordant titres are repeat burette readings agreeing within 0.10 cm³ (some mark schemes accept 0.20 cm³). Only concordant results are averaged to calculate the mean titre used in mole calculations — widely spread readings are discarded.",
+  "expl": [
+   "CORRECT — agreement within 0.10–0.20 cm³ shows the titration was reproducible; the mean of concordant titres is used for calculations.",
+   "The first two readings may be rough practice runs — concordance is about agreement, not position in the sequence.",
+   "Readings differing by > 1.00 cm³ are the OPPOSITE of concordant and would be repeated.",
+   "The titre at the endpoint is just one reading — concordance requires multiple agreeing readings."
+  ]
+ },
+ {
+  "term": "Percentage Uncertainty",
+  "cat": "kinetics_titration",
+  "def": "Ratio of apparatus tolerance uncertainty to measured value multiplied by 100.",
+  "q": "A 25.0 cm³ volumetric pipette has a tolerance of ±0.06 cm³. What is the percentage uncertainty in one pipette delivery?",
+  "options": [
+   "A: (0.06 ÷ 25.0) × 100 = 0.24%",
+   "B: (25.0 ÷ 0.06) × 100 = 41 700%",
+   "C: 0.06 × 25.0 = 1.5%",
+   "D: 100 ÷ 0.06 = 1670%"
+  ],
+  "ans": "Correct Answer: A. Percentage uncertainty = (absolute uncertainty ÷ measured value) × 100 = (0.06/25.0) × 100 = 0.24%. For apparatus with two readings (burette: ±0.05 cm³ per reading), total uncertainty = sum of both readings (±0.10 cm³).",
+  "expl": [
+   "CORRECT — % uncertainty = (0.06/25.0) × 100 = 0.24%; the pipette is a single-delivery apparatus so only one tolerance term applies.",
+   "This inverts the ratio — dividing the measured value by the uncertainty gives a meaningless huge number.",
+   "Multiplying tolerance by volume is not the definition of percentage uncertainty.",
+   "This ignores the measured value entirely — the formula always divides by the measured value."
+  ]
+ },
+ {
+  "term": "Back Titration",
+  "cat": "kinetics_titration",
+  "def": "Technique where excess known reagent reacts with sample, and unreacted excess is titrated.",
+  "q": "When is a back titration the appropriate technique?",
+  "options": [
+   "A: When the reaction with the analyte is slow, or the analyte is insoluble, so excess reagent is added and the unreacted excess is titrated",
+   "B: When the indicator is not available",
+   "C: When the analyte is a strong acid",
+   "D: When only an approximate concentration is needed"
+  ],
+  "ans": "Correct Answer: A. Back titration: add a known EXCESS of reagent to the sample, let the (slow/insoluble) reaction go to completion, then titrate the unreacted excess with a standard solution. Moles reacted with sample = initial moles − moles unreacted. Used for CaCO₃ in limestone, aspirin purity, etc.",
+  "expl": [
+   "CORRECT — the classic use is for slow reactions or insoluble solids (e.g. CaCO₃ + HCl): the excess HCl is measured by titrating with NaOH, and the difference gives the HCl that reacted with the sample.",
+   "Indicator availability is irrelevant — back titration is chosen for chemical reasons (slow/insoluble), not convenience.",
+   "Strong acids are titrated directly; back titration is used for the SAMPLE, whatever it is.",
+   "Back titration is actually MORE accurate than a direct one — it is used for precise quantitative analysis, not approximations."
+  ]
+ },
+ {
+  "term": "Self-Indicator",
+  "cat": "kinetics_titration",
+  "def": "Titration reactant changing color at end-point without added indicator (e.g. $\\text{KMnO}_4$).",
+  "q": "In a KMnO₄ redox titration, the end-point is detected because…",
+  "options": [
+   "A: The first permanent faint pink colour appears, as excess MnO₄⁻ acts as its own indicator",
+   "B: A starch–iodine complex turns blue-black",
+   "C: The solution suddenly becomes colourless",
+   "D: A white precipitate forms"
+  ],
+  "ans": "Correct Answer: A. KMnO₄ is a self-indicator: the purple MnO₄⁻ is decolourised by the reducing agent (Fe²⁺, C₂O₄²⁻, H₂O₂) until the equivalence point; the first drop of excess KMnO₄ gives a permanent faint pink colour. No added indicator is needed (Golden Rule: \"KMnO4 acts as self-indicator, purple to colorless\").",
+  "expl": [
+   "CORRECT — in acid, MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O (pink/purple → colourless Mn²⁺); the end-point is the first permanent pink from unreacted KMnO₄.",
+   "Starch is used in IODINE/thiosulfate titrations, not KMnO₄ titrations.",
+   "The solution is colourless DURING the titration; the end-point is the APPEARANCE of pink, not disappearance.",
+   "A white precipitate signals a qualitative test (e.g. AgCl, BaSO₄), not a KMnO₄ end-point."
+  ]
+ },
+ {
+  "term": "Gravimetric Analysis",
+  "cat": "kinetics_titration",
+  "def": "Quantitative determination of analyte mass by precipitation, filtration, and heating to constant mass.",
+  "q": "Which steps describe gravimetric analysis?",
+  "options": [
+   "A: Precipitate the analyte, filter, wash, heat to constant mass, then weigh to find the amount",
+   "B: Measure the volume of gas evolved and convert to moles",
+   "C: Compare the colour of the solution with standards",
+   "D: Titrate the analyte against a standard solution"
+  ],
+  "ans": "Correct Answer: A. Gravimetric analysis determines the amount of analyte by mass: convert it to a pure precipitate (e.g. BaSO₄), filter and wash, heat to constant mass (heat → cool in desiccator → weigh, repeat until two consecutive masses agree within 0.01 g), then weigh and calculate moles/mass of analyte.",
+  "expl": [
+   "CORRECT — mass-based determination: precipitation → filtration → washing → heating to constant mass → weighing → stoichiometric calculation.",
+   "Measuring gas volume is a VOLUMETRIC (gasometric) method, not gravimetric.",
+   "Colour comparison is colorimetric analysis.",
+   "Titration is volumetric analysis — gravimetric means \"by weighing\"."
+  ]
+ },
+ {
+  "term": "2,4-DNPH",
+  "cat": "qual_analysis",
+  "def": "Reagent (Brady's reagent) giving yellow/orange/red hydrazone precipitate with aldehydes and ketones.",
+  "q": "Which functional groups give a positive test with 2,4-dinitrophenylhydrazine (Brady’s reagent)?",
+  "options": [
+   "A: Aldehydes and ketones",
+   "B: Carboxylic acids and esters",
+   "C: Alcohols and phenols",
+   "D: Primary amines"
+  ],
+  "ans": "Correct Answer: A. 2,4-DNPH reacts with the C=O group of aldehydes AND ketones to form an orange/yellow/red hydrazone precipitate. Carboxylic acids and esters do NOT react (Oct 2025 trap 1). The test confirms a carbonyl group but does NOT distinguish aldehyde from ketone — Tollens/Fehling/dichromate do that.",
+  "expl": [
+   "CORRECT — both aldehydes and ketones give a yellow/orange/red hydrazone precipitate; the purified derivative’s melting point can then identify the specific carbonyl compound.",
+   "Acids and esters do not react with 2,4-DNPH — this is a classic trap (Oct 2025 Q1a).",
+   "Alcohols and phenols lack a carbonyl group — no reaction.",
+   "Amines do not give hydrazones; 2,4-DNPH is specific to C=O compounds."
+  ]
+ },
+ {
+  "term": "Tollens' Reagent",
+  "cat": "qual_analysis",
+  "def": "Ammoniacal silver nitrate solution $[\\text{Ag(NH}_3)_2]^+$ forming silver mirror with aldehydes.",
+  "q": "What is observed when Tollens’ reagent is warmed with an aldehyde?",
+  "options": [
+   "A: A silver mirror forms on the inside of the test tube",
+   "B: A brick-red precipitate forms",
+   "C: A pale yellow precipitate forms",
+   "D: Effervescence occurs and the solution turns green"
+  ],
+  "ans": "Correct Answer: A. Tollens' reagent is ammoniacal silver nitrate, [Ag(NH₃)₂]⁺. An aldehyde reduces Ag⁺ to metallic silver, which deposits as a silver mirror on the tube walls (the aldehyde is oxidised to a carboxylate). Ketones do not react — so Tollens' distinguishes aldehydes from ketones.",
+  "expl": [
+   "CORRECT — RCHO + 2[Ag(NH₃)₂]⁺ + 3OH⁻ → RCOO⁻ + 2Ag(s) + 4NH₃ + 2H₂O; the silver mirror is the positive test for an aldehyde.",
+   "A brick-red Cu₂O precipitate is the Fehling’s/Benedict’s observation, not Tollens’.",
+   "A pale yellow precipitate is the iodoform (CHI₃) or AgI result — not Tollens’.",
+   "Green colour is acidified dichromate being reduced (Cr³⁺) — a different test."
+  ]
+ },
+ {
+  "term": "Iodoform Test",
+  "cat": "qual_analysis",
+  "def": "Reaction with $\\text{I}_2/\\text{NaOH}$ forming pale yellow $\\text{CHI}_3$ precipitate with methyl ketones or secondary methyl alcohols.",
+  "q": "Which compound gives a positive iodoform test?",
+  "options": [
+   "A: Butan-2-ol, CH₃CH(OH)CH₂CH₃",
+   "B: Propan-1-ol, CH₃CH₂CH₂OH",
+   "C: 2,2-dimethylpropan-1-ol, (CH₃)₃CCH₂OH",
+   "D: Propanal, CH₃CH₂CHO"
+  ],
+  "ans": "Correct Answer: A. The iodoform test (I₂ + NaOH) is positive for compounds containing the CH₃CO– group (methyl ketones) or the CH₃CH(OH)– group (secondary methyl alcohols), plus ethanol. Butan-2-ol has CH₃CH(OH)– → pale yellow CHI₃ crystals + antiseptic smell. Propan-1-ol, 2,2-dimethylpropan-1-ol and propanal give no reaction (Jan 2026 Q1b).",
+  "expl": [
+   "CORRECT — butan-2-ol contains CH₃CH(OH)–, which is oxidised by I₂/NaOH to a methyl ketone and then gives pale yellow CHI₃ crystals with an antiseptic smell.",
+   "Propan-1-ol is a primary alcohol without the CH₃CH(OH)– pattern — negative.",
+   "The –OH is on a carbon bearing no CH₃ group (it is a primary alcohol, (CH₃)₃CCH₂OH) — negative (Jan 2026 trap).",
+   "Propanal is an aldehyde, not a methyl ketone — negative iodoform."
+  ]
+ },
+ {
+  "term": "Ligand Exchange",
+  "cat": "qual_analysis",
+  "def": "Substitution of one set of complex ion ligands by another, accompanied by color change.",
+  "q": "When excess aqueous ammonia is added to Cu²⁺(aq), the deep blue colour forms because…",
+  "options": [
+   "A: Water ligands are substituted by NH₃ ligands, forming [Cu(NH₃)₄(H₂O)₂]²⁺",
+   "B: Cu²⁺ is oxidised to Cu³⁺ by ammonia",
+   "C: Copper(II) oxide dissolves in the ammonia",
+   "D: The solution is simply diluted by the added ammonia"
+  ],
+  "ans": "Correct Answer: A. Dropwise NH₃ first precipitates blue Cu(OH)₂. Excess NH₃ then undergoes ligand exchange: four H₂O ligands are replaced by NH₃ to give the deep blue tetraammine complex [Cu(NH₃)₄(H₂O)₂]²⁺. The colour change pale blue → blue ppt → deep blue solution is the classic Cu²⁺ confirmatory sequence.",
+  "expl": [
+   "CORRECT — ligand substitution: [Cu(H₂O)₆]²⁺ (pale blue) → Cu(OH)₂ (blue ppt) → [Cu(NH₃)₄(H₂O)₂]²⁺ (deep blue); NH₃ is a stronger ligand than H₂O.",
+   "No redox occurs — copper stays as Cu²⁺; ammonia is not an oxidising agent here.",
+   "CuO is a black solid formed on heating copper salts — not relevant to this test.",
+   "Dilution would make the colour PALER, not deep blue — the colour is due to the new complex, not dilution."
+  ]
+ },
+ {
+  "term": "Amphoteric Hydroxide",
+  "cat": "qual_analysis",
+  "def": "Metal hydroxide dissolving in both acids and strong bases (e.g. $\\text{Cr(OH)}_3, \\text{Zn(OH)}_2$).",
+  "q": "Which hydroxide dissolves in excess NaOH AND in excess NH₃?",
+  "options": [
+   "A: Zn(OH)₂",
+   "B: Fe(OH)₂",
+   "C: Cu(OH)₂",
+   "D: Fe(OH)₃"
+  ],
+  "ans": "Correct Answer: A. Zn(OH)₂ is amphoteric: it dissolves in excess NaOH forming [Zn(OH)₄]²⁻ AND in excess NH₃ forming [Zn(NH₃)₄]²⁺. Cr(OH)₃ dissolves in excess NaOH ([Cr(OH)₆]³⁻) but not in NH₃. Fe(OH)₂, Fe(OH)₃ and Cu(OH)₂ are insoluble in excess NaOH.",
+  "expl": [
+   "CORRECT — zinc hydroxide redissolves in BOTH excess NaOH → [Zn(OH)₄]²⁻ (colourless) and excess NH₃ → [Zn(NH₃)₄]²⁺ (colourless); the classic \"amphoteric + complexation\" double behaviour.",
+   "Fe(OH)₂ is a green precipitate insoluble in excess NaOH (it only turns red-brown on standing in air).",
+   "Cu(OH)₂ is insoluble in excess NaOH — it only dissolves in excess NH₃.",
+   "Fe(OH)₃ is a red-brown precipitate insoluble in excess NaOH and NH₃."
+  ]
+ },
+ {
+  "term": "Azo Dye",
+  "cat": "qual_analysis",
+  "def": "Brightly colored compound containing $-N=N-$ linkage formed by coupling diazonium salt with phenol/naphthol.",
+  "q": "Which linkage is characteristic of an azo dye?",
+  "options": [
+   "A: −N=N− (azo group) between two aromatic rings",
+   "B: −N−N− single bond between two alkyl groups",
+   "C: −C=N− imine linkage",
+   "D: −N≡N− nitrogen–nitrogen triple bond"
+  ],
+  "ans": "Correct Answer: A. An azo dye contains the −N=N− (azo) chromophore connecting two aromatic rings, e.g. diazonium salt + phenol/naphthol coupling gives an intensely coloured compound such as orange/red dyes. The extended conjugation of the −N=N− group is responsible for the strong colour.",
+  "expl": [
+   "CORRECT — azo dyes are brightly coloured because the −N=N− group links aromatic rings and extends conjugation, e.g. benzenediazonium chloride + phenol → orange azo dye.",
+   "A single N–N bond is a hydrazine-type linkage — not chromophoric and not an azo dye.",
+   "−C=N− is an imine/oxime-type linkage — not the azo chromophore.",
+   "−N≡N− is dinitrogen (N₂ gas) — the nitrogen atoms are not bonded to carbon at all."
+  ]
+ },
+ {
+  "term": "Diazotisation",
+  "cat": "qual_analysis",
+  "def": "Reaction of 1° aromatic amine with $\\text{HNO}_2$ ($< 10^{\\circ}\\text{C}$) forming benzenediazonium ion.",
+  "q": "Why must diazotisation be carried out below about 10 °C?",
+  "options": [
+   "A: Benzenediazonium salts decompose above this temperature (to phenol + N₂)",
+   "B: Nitrous acid only forms below 10 °C",
+   "C: The coupling reaction needs cold phenol",
+   "D: NaNO₂ decomposes below 10 °C"
+  ],
+  "ans": "Correct Answer: A. Benzenediazonium chloride is stable only when cold: C₆H₅N₂⁺ + H₂O → C₆H₅OH + N₂ + H⁺ occurs readily above ~5–10 °C. The mixture is kept in an ice bath, NaNO₂ is added slowly/dropwise, and the temperature is monitored with a thermometer (Jan 2026 Q3a: ice bath + dropwise NaNO₂ + check T < 10 °C).",
+  "expl": [
+   "CORRECT — above ~10 °C the diazonium ion decomposes to phenol with nitrogen gas evolved, ruining the yield of the azo dye; hence ice bath + dropwise NaNO₂ + thermometer check.",
+   "Nitrous acid is generated in situ at 0–10 °C — but that is because the diazonium salt must stay cold, not because HNO₂ cannot exist warm.",
+   "Coupling is also done cold, but the PRIMARY reason for low temperature is the instability of the diazonium salt itself.",
+   "NaNO₂ is a stable solid — it does not decompose below 10 °C."
+  ]
+ },
+ {
+  "term": "Retention Factor ($R_f$)",
+  "cat": "qual_analysis",
+  "def": "Ratio of distance travelled by compound to distance travelled by solvent front in chromatography.",
+  "q": "How is the retention factor (R_f) calculated in chromatography?",
+  "options": [
+   "A: R_f = distance moved by the compound ÷ distance moved by the solvent front",
+   "B: R_f = distance moved by the solvent front ÷ distance moved by the compound",
+   "C: R_f = distance moved by the compound × distance moved by the solvent front",
+   "D: R_f = distance moved by the compound − distance moved by the solvent front"
+  ],
+  "ans": "Correct Answer: A. R_f = distance travelled by the component ÷ distance travelled by the solvent front (both measured from the origin/baseline). R_f is a characteristic value for a compound in a given solvent system (0 ≤ R_f ≤ 1), used to help identify components by comparison with known samples run on the same plate.",
+  "expl": [
+   "CORRECT — R_f = d(compound)/d(solvent front); comparing R_f values of sample spots with authentic compounds run on the SAME plate identifies components.",
+   "Inverting the ratio gives values > 1 and destroys the meaning of R_f.",
+   "R_f is a ratio, not a product — multiplying gives no useful quantity.",
+   "Subtraction gives a distance, not a dimensionless ratio."
+  ]
+ },
+ {
+  "term": "Mobile Phase",
+  "cat": "qual_analysis",
+  "def": "Liquid or gas solvent carrying chemical components through chromatography column/plate.",
+  "q": "What is the mobile phase in chromatography?",
+  "options": [
+   "A: The liquid or gas solvent that carries the components through the stationary phase",
+   "B: The solid adsorbent coating the plate or packed in the column",
+   "C: The paper or glass support holding the stationary phase",
+   "D: The coloured spot of sample applied at the baseline"
+  ],
+  "ans": "Correct Answer: A. The mobile phase is the moving solvent (liquid in TLC/paper chromatography, gas in GC) that travels through the stationary phase and carries the mixture components with it. Components partition between mobile and stationary phases according to their affinity, separating them.",
+  "expl": [
+   "CORRECT — the mobile phase moves; components with higher affinity for it travel further (higher R_f).",
+   "The solid adsorbent (silica/alumina) is the STATIONARY phase — it stays fixed.",
+   "The support (paper, glass plate) is just the physical backing, not the mobile phase.",
+   "The sample spot is the analyte — it is carried by the mobile phase, not the phase itself."
+  ]
+ },
+ {
+  "term": "Stationary Phase",
+  "cat": "qual_analysis",
+  "def": "Solid or liquid film bound to solid support that selectively adsorbs mixture components.",
+  "q": "What is the stationary phase in thin-layer chromatography?",
+  "options": [
+   "A: The thin layer of silica gel (or alumina) coated on the plate",
+   "B: The solvent that rises up the plate",
+   "C: The developing tank atmosphere",
+   "D: The dye used to visualise the spots"
+  ],
+  "ans": "Correct Answer: A. In TLC the stationary phase is the thin layer of silica gel (or alumina) bonded to the glass/plastic plate. Components adsorb onto it to different extents — those adsorbing more strongly move more slowly (lower R_f). The solvent (mobile phase) rises by capillary action.",
+  "expl": [
+   "CORRECT — silica gel/alumina is the polar adsorbent that selectively retains components; stronger adsorption = slower movement = smaller R_f.",
+   "The rising solvent is the MOBILE phase, not the stationary phase.",
+   "The tank atmosphere is saturated solvent vapour — it is not a phase in the separation.",
+   "Visualising dyes (e.g. iodine, ninhydrin) reveal spots after development — they are not the stationary phase."
+  ]
+ },
+ {
+  "term": "Chemical Shift ($\\delta$)",
+  "cat": "qual_analysis",
+  "def": "NMR resonance position relative to tetramethylsilane (TMS) standard at $0\\text{ ppm}$.",
+  "q": "In NMR spectroscopy, chemical shift (δ) is measured relative to…",
+  "options": [
+   "A: Tetramethylsilane (TMS), defined as δ = 0 ppm",
+   "B: The solvent front on the chromatogram",
+   "C: The molecular ion peak in the mass spectrum",
+   "D: Pure water at δ = 0 ppm"
+  ],
+  "ans": "Correct Answer: A. Chemical shift (δ, in ppm) is the resonance position of a nucleus relative to tetramethylsilane (TMS), which is assigned δ = 0. TMS is used because it is inert, volatile, gives a single sharp peak, and its 12 equivalent protons are more shielded than almost all others.",
+  "expl": [
+   "CORRECT — TMS (Si(CH₃)₄) is the internal reference at 0 ppm; more deshielded protons appear downfield at higher δ.",
+   "The solvent front is a chromatography concept — irrelevant to NMR.",
+   "The M⁺ peak is a mass-spectrometry feature, not an NMR reference.",
+   "Water is not the reference (and its peak would interfere); TMS is the accepted standard."
+  ]
+ },
+ {
+  "term": "Integration Trace",
+  "cat": "qual_analysis",
+  "def": "Area under $^1\\text{H}$ NMR peak proportional to number of hydrogen atoms in that environment.",
+  "q": "The area under a peak in a ¹H NMR spectrum (the integration trace) is proportional to…",
+  "options": [
+   "A: The number of hydrogen atoms in that environment",
+   "B: The chemical shift of those protons",
+   "C: The number of adjacent non-equivalent protons",
+   "D: The molecular mass of the compound"
+  ],
+  "ans": "Correct Answer: A. The integration trace (area under each signal) is proportional to the relative number of protons (H atoms) giving that signal. E.g. in pentan-3-one the CH₃ and CH₂ signals integrate in a 3:2 ratio matching the 6 H and 4 H environments (Oct 2025 Q1e).",
+  "expl": [
+   "CORRECT — integration ratio = H ratio; e.g. ethanol shows 3:2:1 for CH₃:CH₂:OH, allowing the proton count per environment to be assigned.",
+   "Chemical shift tells you the electronic environment, not the number of protons.",
+   "The number of adjacent protons controls SPLITTING (n+1), not the integration area.",
+   "Integration is a relative ratio within one spectrum — it does not give molecular mass (that is the M⁺ peak)."
+  ]
+ },
+ {
+  "term": "Spin-Spin Splitting",
+  "cat": "qual_analysis",
+  "def": "Division of $^1\\text{H}$ NMR signal into $n+1$ peaks caused by $n$ adjacent non-equivalent protons.",
+  "q": "A proton with n equivalent neighbouring (non-equivalent) protons appears as…",
+  "options": [
+   "A: n + 1 peaks",
+   "B: n peaks",
+   "C: 2n peaks",
+   "D: n − 1 peaks"
+  ],
+  "ans": "Correct Answer: A. The n+1 rule: a signal is split into n+1 peaks by n equivalent protons on adjacent carbon atoms. E.g. in pentan-3-one, CH₃ (next to CH₂, n = 2) is a triplet; CH₂ (next to CH₃, n = 3) is a quartet (Oct 2025 Q1e). Splitting reveals neighbouring proton environments.",
+  "expl": [
+   "CORRECT — n+1 rule: CH₃ next to a CH₂ gives 3 peaks (triplet); CH₂ next to CH₃ gives 4 peaks (quartet); this is how neighbouring environments are identified.",
+   "n peaks would be the n−1 rule — wrong; the correct relationship is n+1.",
+   "2n is the multiplicity for coupling to n equivalent nuclei in some other contexts — not the n+1 rule used for ¹H NMR.",
+   "n−1 underestimates the splitting — the rule is n+1."
+  ]
+ },
+ {
+  "term": "Molecular Ion Peak ($M^+$)",
+  "cat": "qual_analysis",
+  "def": "Mass spectrum peak with highest $m/z$ corresponding to unfragmented ionized molecule mass.",
+  "q": "What does the molecular ion peak (M⁺) in a mass spectrum represent?",
+  "options": [
+   "A: The unfragmented molecule with the highest m/z, giving the relative molecular mass",
+   "B: The most abundant fragment ion (the base peak)",
+   "C: The doubly charged ion, M²⁺",
+   "D: The loss of a methyl group, M − 15"
+  ],
+  "ans": "Correct Answer: A. The molecular ion M⁺ is the ionised whole molecule (one electron removed) and appears at the highest m/z value (except for isotope peaks). Its m/z equals the relative molecular mass, M_r — used to identify the compound. Fragmentation peaks at lower m/z give structural information.",
+  "expl": [
+   "CORRECT — M⁺ has m/z = M_r (e.g. m/z = 46 for ethanol); the highest m/z peak (ignoring M+1 isotope peaks) gives the molecular mass.",
+   "The base peak is the most ABUNDANT fragment — it is usually NOT the molecular ion.",
+   "M²⁺ would appear at m/z = M/2 — not the molecular ion peak.",
+   "M−15 (loss of CH₃) is a fragmentation peak, not the molecular ion."
+  ]
+ }
+];;
 
         const ESSAYS_DATA = [
-            {
-                title: "1. Complete Recrystallisation Procedure for Impure Solid",
-                question: "Describe step-by-step how to purify a $5.0\\text{ g}$ sample of crude impure aspirin by recrystallisation. State purpose of each step.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Dissolution:</strong> Dissolve crude aspirin in the MINIMUM volume of HOT ethanol/water solvent. <em>(Purpose: Creates a saturated solution so maximum yield crystallises upon cooling.)</em><br>2. <strong>Hot Filtration:</strong> Filter hot solution through fluted filter paper using pre-heated funnel. <em>(Purpose: Removes insoluble solid impurities while keeping product dissolved in filtrate.)</em><br>3. <strong>Crystallisation:</strong> Allow filtrate to cool slowly to room temperature, then place in ice bath. <em>(Purpose: Solute recrystallises into pure lattice while soluble impurities remain dissolved.)</em><br>4. <strong>Suction Filtration:</strong> Collect pure crystals using Büchner funnel and vacuum pump. <em>(Purpose: Rapidly separates liquid filtrate from crystals and dries solid.)</em><br>5. <strong>Washing:</strong> Wash crystals on funnel with ICE-COLD solvent. <em>(Purpose: Removes soluble impurities from crystal surfaces without redissolving product.)</em><br>6. <strong>Drying:</strong> Dry crystals in desiccator or press between filter papers."
-            },
-            {
-                title: "2. Kinetics Investigation: Determining Activation Energy ($E_a$)",
-                question: "Describe an experimental procedure to determine activation energy ($E_a$) for reaction between thiosulfate and acid using clock reaction method.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Procedure:</strong> Measure fixed volumes of $\\text{Na}_2\\text{S}_2\\text{O}_3$ and $\\text{HCl}$ into separate tubes using volumetric pipettes. Place in water bath at temperature $T_1$.<br>2. <strong>Measurement:</strong> Mix reactants, start stopwatch simultaneously, and record time $t$ for solution to turn opaque (cross disappears).<br>3. <strong>Temperature Range:</strong> Repeat procedure at 5 different temperatures (e.g. 20°C, 30°C, 40°C, 50°C, 60°C).<br>4. <strong>Data Processing:</strong> Calculate rate proportional to $\\frac{1}{t}$. Convert temperatures to Kelvin ($T = {^\circ}\text{C} + 273.15$).<br>5. <strong>Plotting:</strong> Plot graph of $\\ln(1/t)$ on y-axis against $\\frac{1}{T}$ in $\\text{K}^{-1}$ on x-axis.<br>6. <strong>Calculation:</strong> Measure gradient $m = \\frac{\\Delta y}{\\Delta x}$. Calculate $E_a = -m \\times R = -m \\times 8.314\\text{ J K}^{-1}\\text{mol}^{-1}$. Divide by 1000 for $\\text{kJ mol}^{-1}$."
-            },
-            {
-                title: "3. Qualitative Analysis Scheme: 4 Unlabeled Organic Liquids",
-                question: "Devise a scheme of simple test-tube experiments to identify 4 unlabeled bottles containing: propan-1-ol, propanone, propanoic acid, and propanoyl chloride.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Test 1 (Water Test):</strong> Add a few drops of water to a sample from each bottle.<br>• <em>Observation:</em> Propanoyl chloride reacts vigorously producing steamy/misty fumes of $\\text{HCl}$ (turns damp blue litmus red). Bottle identified.<br>2. <strong>Test 2 (Carbonate Test):</strong> Add $\\text{NaHCO}_3$(aq) to remaining 3 liquids.<br>• <em>Observation:</em> Propanoic acid produces effervescence ($\\text{CO}_2$ gas turns limewater cloudy). Bottle identified.<br>3. <strong>Test 3 (Dichromate Oxidation):</strong> Add acidified $\\text{K}_2\\text{Cr}_2\\text{O}_7$ and warm in water bath.<br>• <em>Observation:</em> Propan-1-ol changes solution from orange to green. Bottle identified.<br>4. <strong>Test 4 (Confirmation):</strong> Propanone shows no change with dichromate, but gives yellow ppt with 2,4-DNPH."
-            },
-            {
-                title: "4. Preparation & Purification of Phenylamine / Azo Dye",
-                question: "Outline experimental steps to reduce nitrobenzene to phenylamine and convert it into an azo dye at low temperature.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Reduction:</strong> Reflux nitrobenzene with Tin (Sn) and concentrated $\\text{HCl}$ in fume cupboard.<br>2. <strong>Liberation:</strong> Add excess $\\text{NaOH}$(aq) to alkaline pH to liberate free phenylamine from phenylammonium salt.<br>3. <strong>Steam Distillation & Extraction:</strong> Steam distil mixture to collect oily phenylamine-water emulsion. Extract with solvent in separating funnel and dry with $\\text{MgSO}_4$.<br>4. <strong>Diazotisation:</strong> Dissolve phenylamine in dilute $\\text{HCl}$, cool below 10°C in ice bath, add cold $\\text{NaNO}_2$(aq) to form benzenediazonium chloride.<br>5. <strong>Coupling:</strong> Add diazonium solution dropwise to phenol dissolved in cold $\\text{NaOH}$ (< 10°C).<br>6. <strong>Observation:</strong> Orange/red precipitate of azo dye forms instantly."
-            },
-            {
-                title: "5. Thermometric / Redox Titration Analysis & Error Reduction",
-                question: "Explain how to perform a thermometric titration between $\\text{NaOH}$ and $\\text{HCl}$ to find stoichiometry, including methods to reduce thermal errors.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Setup:</strong> Place known volume of $\\text{HCl}$ (e.g. $25.0\\text{ cm}^3$) in an expanded polystyrene cup placed inside a glass beaker for insulation.<br>2. <strong>Baseline Temp:</strong> Record initial temperature of acid every minute for 3 minutes to ensure thermal equilibrium.<br>3. <strong>Addition:</strong> At minute 4, add $2.0\\text{ cm}^3$ portion of $\\text{NaOH}$ from burette, stir continuously, and record temperature at minute 5.<br>4. <strong>Serial Additions:</strong> Continue adding $2.0\\text{ cm}^3$ portions up to $30.0\\text{ cm}^3$, recording temp every minute.<br>5. <strong>Plotting & Extrapolation:</strong> Plot temperature vs volume. Draw two best-fit straight lines (temperature rise and cooling curve) and extrapolate to intersection.<br>6. <strong>Equivalence Point:</strong> Intersection point gives exact volume for neutralisation and maximum temperature change $\\Delta T$, accounting for heat loss."
-            },
-            {
-                title: "6. Inorganic Unknown Identification Scheme",
-                question: "Solid X is a green hydrated inorganic salt. Describe tests to identify cation and anion if X is iron(II) sulfate.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Dissolution:</strong> Dissolve solid X in distilled water to form a pale green aqueous solution.<br>2. <strong>Cation Test ($\\text{Fe}^{2+}$):</strong> Add dropwise $\\text{NaOH}$(aq) to $2\\text{ cm}^3$ solution.<br>• <em>Observation:</em> Green precipitate $\\text{Fe(OH)}_2$ forms. On standing in air, top layer turns red-brown due to oxidation to $\\text{Fe(OH)}_3$.<br>3. <strong>Anion Test ($\\text{SO}_4^{2-}$):</strong> Acidify $2\\text{ cm}^3$ solution with dilute $\\text{HCl}$, then add $\\text{BaCl}_2$(aq).<br>• <em>Observation:</em> White precipitate of barium sulfate ($\\text{BaSO}_4$) forms.<br>4. <strong>Water of Crystallisation:</strong> Heat weighed sample of X in crucible to constant mass to confirm hydrated salt status."
-            },
-            {
-                title: "7. Iodine Clock Kinetics Analysis",
-                question: "Explain how an iodine clock reaction (persulfate + iodide) determines reaction order with respect to $\\text{I}^-$.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Setup:</strong> Mix fixed volumes of $\\text{S}_2\\text{O}_8^{2-}$, starch indicator, and fixed small volume of limiting $\\text{Na}_2\\text{S}_2\\text{O}_3$.<br>2. <strong>Variable Concentration:</strong> Add specific volume of $\\text{KI}$ solution and distilled water so total volume remains constant.<br>3. <strong>Timing:</strong> Start timing on mixing and record time $t$ when solution suddenly turns blue-black.<br>4. <strong>Repeat Runs:</strong> Perform 5 runs varying $[\\text{I}^-]$ while keeping $[\\text{S}_2\\text{O}_8^{2-}]$ constant.<br>5. <strong>Rate Calculation:</strong> Calculate initial rate $\\propto \\frac{1}{t}$. Plot rate against $[\\text{I}^-]$.<br>6. <strong>Deduction:</strong> Straight line through origin indicates 1st order with respect to $\\text{I}^-$."
-            },
-            {
-                title: "8. Steam Distillation & Separating Funnel Extraction",
-                question: "Describe how steam distillation isolates phenylamine from reaction mixture, followed by solvent extraction with ether.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Steam Distillation:</strong> Pass steam through reaction flask containing phenylamine mixture. Collect cloudy distillate containing water and phenylamine.<br>2. <strong>Separating Funnel:</strong> Transfer distillate to separating funnel, add diethyl ether solvent. Invert and vent pressure tap periodically.<br>3. <strong>Salting Out:</strong> Add $\\text{NaCl}$ to aqueous layer to reduce phenylamine solubility in water and push it into ether layer.<br>4. <strong>Phase Separation:</strong> Allow layers to settle. Drain lower aqueous layer; run upper organic ether layer into flask.<br>5. <strong>Drying:</strong> Add anhydrous $\\text{MgSO}_4$ until solution turns clear.<br>6. <strong>Evaporation:</strong> Distil off low boiling ether ($35{^\circ}\\text{C}$) using warm water bath to isolate pure phenylamine liquid."
-            },
-            {
-                title: "9. Melting Point Determination & Purity Assessment",
-                question: "Explain how to determine melting point of benzoic acid using capillary tube apparatus and interpret purity.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Sample Prep:</strong> Ensure benzoic acid sample is completely dry. Crush into fine powder using mortar and pestle.<br>2. <strong>Packing:</strong> Press open end of thin-walled glass capillary tube into powder, tap down closed end until 2-3 mm depth is packed.<br>3. <strong>Apparatus:</strong> Insert capillary into melting point apparatus (e.g. Thiele tube or digital block).<br>4. <strong>Heating Control:</strong> Heat rapidly initially, then slow heating rate to $< 1{^\circ}\\text{C}$ per minute near expected MP ($122{^\circ}\\text{C}$).<br>5. <strong>Recording:</strong> Record temperature $T_1$ at initial liquid drop appearance and $T_2$ at complete liquefaction.<br>6. <strong>Purity Interpretation:</strong> Pure sample melts sharply ($121.5-122.5{^\circ}\\text{C}$). Impure sample melts over broad range at lower temp."
-            },
-            {
-                title: "10. Back Titration: Calcium Carbonate Purity",
-                question: "Outline steps to determine mass percentage of $\\text{CaCO}_3$ in an impure limestone sample using back titration with $\\text{HCl}$ and $\\text{NaOH}$.",
-                answer: "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Reaction:</strong> Weigh accurately $1.20\\text{ g}$ crushed limestone into beaker. Add excess $50.0\\text{ cm}^3$ of $1.00\\text{ mol dm}^{-3}\\text{ HCl}$.<br>2. <strong>Transfer:</strong> After effervescence ceases, quantitatively transfer mixture to $250.0\\text{ cm}^3$ volumetric flask and dilute to mark.<br>3. <strong>Titration:</strong> Pipette $25.0\\text{ cm}^3$ aliquots into conical flask, add phenolphthalein, titrate with $0.100\\text{ mol dm}^{-3}\\text{ NaOH}$ to pink endpoint.<br>4. <strong>Calculations:</strong> Calculate moles of $\\text{NaOH} = C \\times V$. Multiply by 10 to find unreacted excess $\\text{HCl}$ in total flask.<br>5. <strong>Reacted Acid:</strong> Moles $\\text{HCl}$ reacted with $\\text{CaCO}_3 = \\text{Total initial } \\text{HCl} - \\text{Unreacted excess } \\text{HCl}$.<br>6. <strong>Purity %:</strong> Moles $\\text{CaCO}_3 = \\frac{1}{2} \\text{Moles HCl reacted}$. Calculate mass $\\text{CaCO}_3 = n \\times 100.1\\text{ g mol}^{-1}$ and divide by sample mass $\\times 100\\%$."
-            }
-        ];
+ {
+  "title": "1. Complete Recrystallisation Procedure for Impure Solid",
+  "question": "Describe step-by-step how to purify a $5.0\\text{ g}$ sample of crude impure aspirin by recrystallisation. State purpose of each step.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Dissolution:</strong> Dissolve crude aspirin in the MINIMUM volume of HOT ethanol/water solvent. <em>(Purpose: Creates a saturated solution so maximum yield crystallises upon cooling.)</em><br>2. <strong>Hot Filtration:</strong> Filter hot solution through fluted filter paper using pre-heated funnel. <em>(Purpose: Removes insoluble solid impurities while keeping product dissolved in filtrate.)</em><br>3. <strong>Crystallisation:</strong> Allow filtrate to cool slowly to room temperature, then place in ice bath. <em>(Purpose: Solute recrystallises into pure lattice while soluble impurities remain dissolved.)</em><br>4. <strong>Suction Filtration:</strong> Collect pure crystals using Büchner funnel and vacuum pump. <em>(Purpose: Rapidly separates liquid filtrate from crystals and dries solid.)</em><br>5. <strong>Washing:</strong> Wash crystals on funnel with ICE-COLD solvent. <em>(Purpose: Removes soluble impurities from crystal surfaces without redissolving product.)</em><br>6. <strong>Drying:</strong> Dry crystals in desiccator or press between filter papers.",
+  "command": "Describe step-by-step (procedure) + state purpose of each step — 6 marks, Level 3.",
+  "peel": [
+   "P: Recrystallisation purifies a solid by exploiting the difference in solubility of product vs impurities in a hot vs cold solvent.",
+   "E: Each step has a precise function — dissolution, hot filtration, cooling, suction filtration, washing, drying.",
+   "E: Yield vs purity trade-off: minimum hot solvent maximises yield; ice-cold wash preserves yield while removing surface impurities.",
+   "L: A sharp melting point (±1 °C) near the literature value confirms the product is pure."
+  ],
+  "keywords": [
+   "minimum volume",
+   "hot solvent",
+   "fluted filter paper",
+   "pre-heated funnel",
+   "insoluble impurities",
+   "cool slowly",
+   "ice-cold wash",
+   "sharp melting point"
+  ],
+  "starters": [
+   "First, dissolve the crude aspirin in the minimum volume of hot solvent…",
+   "The purpose of hot filtration is to remove insoluble impurities while keeping the product in solution…",
+   "The crystals are washed with ice-cold solvent so that soluble impurities are removed without…"
+  ]
+ },
+ {
+  "title": "2. Kinetics Investigation: Determining Activation Energy ($E_a$)",
+  "question": "Describe an experimental procedure to determine activation energy ($E_a$) for reaction between thiosulfate and acid using clock reaction method.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Procedure:</strong> Measure fixed volumes of $\\text{Na}_2\\text{S}_2\\text{O}_3$ and $\\text{HCl}$ into separate tubes using volumetric pipettes. Place in water bath at temperature $T_1$.<br>2. <strong>Measurement:</strong> Mix reactants, start stopwatch simultaneously, and record time $t$ for solution to turn opaque (cross disappears).<br>3. <strong>Temperature Range:</strong> Repeat procedure at 5 different temperatures (e.g. 20°C, 30°C, 40°C, 50°C, 60°C).<br>4. <strong>Data Processing:</strong> Calculate rate proportional to $\\frac{1}{t}$. Convert temperatures to Kelvin ($T = \\theta + 273.15$, where $\\theta$ is in $^{\\circ}\\text{C}$)..<br>5. <strong>Plotting:</strong> Plot graph of $\\ln(1/t)$ on y-axis against $\\frac{1}{T}$ in $\\text{K}^{-1}$ on x-axis.<br>6. <strong>Calculation:</strong> Measure gradient $m = \\frac{\\Delta y}{\\Delta x}$. Calculate $E_a = -m \\times R = -m \\times 8.314\\text{ J K}^{-1}\\text{mol}^{-1}$. Divide by 1000 for $\\text{kJ mol}^{-1}$.",
+  "command": "Describe an experimental procedure (method) to determine Eₐ — 6 marks, Level 3.",
+  "peel": [
+   "P: Eₐ is found from the temperature dependence of the rate constant via the Arrhenius equation.",
+   "E: Use the thiosulfate–acid clock: rate ∝ 1/t, so the time to the visual change measures the initial rate.",
+   "E: Repeat at several temperatures, convert to Kelvin, plot ln(1/t) against 1/T.",
+   "E: The gradient of the line of best fit equals −Eₐ/R, so Eₐ = −gradient × R.",
+   "L: Keeping concentrations constant (same volumes) is essential so that 1/t truly reflects the rate constant change."
+  ],
+  "keywords": [
+   "Na₂S₂O₃ + HCl",
+   "clock reaction",
+   "rate ∝ 1/t",
+   "water bath",
+   "Kelvin",
+   "ln(1/t) vs 1/T",
+   "gradient = −Eₐ/R",
+   "R = 8.314 J mol⁻¹ K⁻¹"
+  ],
+  "starters": [
+   "Measure fixed volumes of sodium thiosulfate and hydrochloric acid using volumetric pipettes…",
+   "The time taken for the cross to disappear is inversely proportional to the initial rate…",
+   "A graph of ln(1/t) against 1/T gives a straight line whose gradient is −Eₐ/R…"
+  ]
+ },
+ {
+  "title": "3. Qualitative Analysis Scheme: 4 Unlabeled Organic Liquids",
+  "question": "Devise a scheme of simple test-tube experiments to identify 4 unlabeled bottles containing: propan-1-ol, propanone, propanoic acid, and propanoyl chloride.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Test 1 (Water Test):</strong> Add a few drops of water to a sample from each bottle.<br>• <em>Observation:</em> Propanoyl chloride reacts vigorously producing steamy/misty fumes of $\\text{HCl}$ (turns damp blue litmus red). Bottle identified.<br>2. <strong>Test 2 (Carbonate Test):</strong> Add $\\text{NaHCO}_3$(aq) to remaining 3 liquids.<br>• <em>Observation:</em> Propanoic acid produces effervescence ($\\text{CO}_2$ gas turns limewater cloudy). Bottle identified.<br>3. <strong>Test 3 (Dichromate Oxidation):</strong> Add acidified $\\text{K}_2\\text{Cr}_2\\text{O}_7$ and warm in water bath.<br>• <em>Observation:</em> Propan-1-ol changes solution from orange to green. Bottle identified.<br>4. <strong>Test 4 (Confirmation):</strong> Propanone shows no change with dichromate, but gives yellow ppt with 2,4-DNPH.",
+  "command": "Devise a scheme of test-tube experiments to identify 4 unlabelled liquids — 6 marks, Level 3.",
+  "peel": [
+   "P: A logical scheme eliminates candidates one at a time using characteristic functional-group tests.",
+   "E: Propanoyl chloride reacts vigorously with water (hydrolysis) giving steamy HCl fumes — identifies it first.",
+   "E: Propanoic acid gives effervescence with NaHCO₃ (CO₂) — acids are stronger than phenols/alcohols.",
+   "E: Propan-1-ol reduces acidified dichromate (orange → green); propanone does not, but both give 2,4-DNPH ppt.",
+   "L: Order matters — run the most distinctive test first, and never reuse a test already used."
+  ],
+  "keywords": [
+   "propanoyl chloride + H₂O",
+   "steamy HCl fumes",
+   "NaHCO₃ effervescence",
+   "CO₂ limewater",
+   "acidified K₂Cr₂O₇ orange→green",
+   "2,4-DNPH yellow ppt",
+   "aldehyde vs ketone",
+   "don't reuse tests"
+  ],
+  "starters": [
+   "Add a few drops of water to a sample from each bottle — propanoyl chloride reacts vigorously…",
+   "To the remaining three liquids add aqueous sodium hydrogencarbonate…",
+   "Warm a sample of each remaining liquid with acidified potassium dichromate…"
+  ]
+ },
+ {
+  "title": "4. Preparation & Purification of Phenylamine / Azo Dye",
+  "question": "Outline experimental steps to reduce nitrobenzene to phenylamine and convert it into an azo dye at low temperature.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Reduction:</strong> Reflux nitrobenzene with Tin (Sn) and concentrated $\\text{HCl}$ in fume cupboard.<br>2. <strong>Liberation:</strong> Add excess $\\text{NaOH}$(aq) to alkaline pH to liberate free phenylamine from phenylammonium salt.<br>3. <strong>Steam Distillation & Extraction:</strong> Steam distil mixture to collect oily phenylamine-water emulsion. Extract with solvent in separating funnel and dry with $\\text{MgSO}_4$.<br>4. <strong>Diazotisation:</strong> Dissolve phenylamine in dilute $\\text{HCl}$, cool below 10°C in ice bath, add cold $\\text{NaNO}_2$(aq) to form benzenediazonium chloride.<br>5. <strong>Coupling:</strong> Add diazonium solution dropwise to phenol dissolved in cold $\\text{NaOH}$ (< 10°C).<br>6. <strong>Observation:</strong> Orange/red precipitate of azo dye forms instantly.",
+  "command": "Outline experimental steps for reduction of nitrobenzene to phenylamine and conversion to an azo dye at low temperature — 6 marks, Level 3.",
+  "peel": [
+   "P: Two-stage synthesis: reduction of nitrobenzene, then diazotisation and coupling to form the dye.",
+   "E: Reflux nitrobenzene with Sn + conc. HCl, then liberate the free amine with excess NaOH.",
+   "E: Isolate phenylamine by steam distillation, extract with solvent, dry the organic layer.",
+   "E: Diazotise below 10 °C (ice bath, dropwise NaNO₂) — the diazonium salt decomposes to phenol + N₂ if warmed.",
+   "E: Couple with phenol in cold NaOH — the orange/red azo dye precipitates immediately.",
+   "L: Temperature control is the critical safety/yield factor throughout the diazonium chemistry."
+  ],
+  "keywords": [
+   "reflux",
+   "Sn + conc. HCl",
+   "excess NaOH",
+   "steam distillation",
+   "diazotisation",
+   "NaNO₂",
+   "< 10 °C ice bath",
+   "azo coupling −N=N−"
+  ],
+  "starters": [
+   "First, reflux nitrobenzene with tin and concentrated hydrochloric acid in a fume cupboard…",
+   "The diazonium salt is prepared by adding sodium nitrite dropwise to a cooled (< 10 °C) solution…",
+   "Coupling with phenol in cold sodium hydroxide solution gives an orange azo dye precipitate…"
+  ]
+ },
+ {
+  "title": "5. Thermometric / Redox Titration Analysis & Error Reduction",
+  "question": "Explain how to perform a thermometric titration between $\\text{NaOH}$ and $\\text{HCl}$ to find stoichiometry, including methods to reduce thermal errors.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Setup:</strong> Place known volume of $\\text{HCl}$ (e.g. $25.0\\text{ cm}^3$) in an expanded polystyrene cup placed inside a glass beaker for insulation.<br>2. <strong>Baseline Temp:</strong> Record initial temperature of acid every minute for 3 minutes to ensure thermal equilibrium.<br>3. <strong>Addition:</strong> At minute 4, add $2.0\\text{ cm}^3$ portion of $\\text{NaOH}$ from burette, stir continuously, and record temperature at minute 5.<br>4. <strong>Serial Additions:</strong> Continue adding $2.0\\text{ cm}^3$ portions up to $30.0\\text{ cm}^3$, recording temp every minute.<br>5. <strong>Plotting & Extrapolation:</strong> Plot temperature vs volume. Draw two best-fit straight lines (temperature rise and cooling curve) and extrapolate to intersection.<br>6. <strong>Equivalence Point:</strong> Intersection point gives exact volume for neutralisation and maximum temperature change $\\Delta T$, accounting for heat loss.",
+  "command": "Explain how to perform a thermometric titration and how to reduce thermal errors — 6 marks, Level 3.",
+  "peel": [
+   "P: Enthalpy change of neutralisation produces a temperature rise whose maximum (extrapolated) marks the equivalence point.",
+   "E: Insulate the reaction vessel (polystyrene cup in a beaker) to minimise heat loss.",
+   "E: Record temperature vs volume of NaOH added, stirring continuously, in small equal portions.",
+   "E: Plot temperature against volume; draw two best-fit lines (rising and cooling) and extrapolate to their intersection.",
+   "E: The intersection gives the equivalence volume and the true ΔT corrected for heat loss.",
+   "L: Extrapolation of the cooling section corrects the systematic error from heat exchange with the surroundings."
+  ],
+  "keywords": [
+   "polystyrene cup",
+   "insulation",
+   "stir continuously",
+   "small portions",
+   "temperature vs volume",
+   "best-fit lines",
+   "extrapolate intersection",
+   "heat-loss correction"
+  ],
+  "starters": [
+   "Place a known volume of hydrochloric acid in an insulated polystyrene cup…",
+   "Add sodium hydroxide in small, equal portions from a burette, recording the temperature after each addition…",
+   "To correct for heat loss, extrapolate the cooling section of the graph back to the point of addition…"
+  ]
+ },
+ {
+  "title": "6. Inorganic Unknown Identification Scheme",
+  "question": "Solid X is a green hydrated inorganic salt. Describe tests to identify cation and anion if X is iron(II) sulfate.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Dissolution:</strong> Dissolve solid X in distilled water to form a pale green aqueous solution.<br>2. <strong>Cation Test ($\\text{Fe}^{2+}$):</strong> Add dropwise $\\text{NaOH}$(aq) to $2\\text{ cm}^3$ solution.<br>• <em>Observation:</em> Green precipitate $\\text{Fe(OH)}_2$ forms. On standing in air, top layer turns red-brown due to oxidation to $\\text{Fe(OH)}_3$.<br>3. <strong>Anion Test ($\\text{SO}_4^{2-}$):</strong> Acidify $2\\text{ cm}^3$ solution with dilute $\\text{HCl}$, then add $\\text{BaCl}_2$(aq).<br>• <em>Observation:</em> White precipitate of barium sulfate ($\\text{BaSO}_4$) forms.<br>4. <strong>Water of Crystallisation:</strong> Heat weighed sample of X in crucible to constant mass to confirm hydrated salt status.",
+  "command": "Describe tests to identify the cation and anion of a green hydrated salt (iron(II) sulfate) — 6 marks, Level 3.",
+  "peel": [
+   "P: The green colour of the solution (from the hydrated Fe²⁺ ion) narrows the possibilities before any test.",
+   "E: Cation: NaOH(aq) dropwise → green ppt Fe(OH)₂ that turns red-brown on standing (oxidation to Fe(OH)₃).",
+   "E: Anion: acidify with dilute HCl, add BaCl₂(aq) → white ppt BaSO₄, insoluble in excess acid.",
+   "E: Water of crystallisation: heat to constant mass and compare mass loss with the formula FeSO₄·7H₂O.",
+   "L: Combine colour, cation test and anion test for an unambiguous identification."
+  ],
+  "keywords": [
+   "pale green solution",
+   "NaOH dropwise",
+   "green ppt Fe(OH)₂",
+   "red-brown on standing",
+   "oxidation Fe(OH)₃",
+   "dilute HCl + BaCl₂",
+   "white BaSO₄ ppt",
+   "constant mass"
+  ],
+  "starters": [
+   "Dissolve a little of the solid in distilled water to give a pale green solution…",
+   "Add sodium hydroxide solution dropwise to a portion of the solution…",
+   "To test for sulfate, acidify a second portion with dilute hydrochloric acid and add barium chloride…"
+  ]
+ },
+ {
+  "title": "7. Iodine Clock Kinetics Analysis",
+  "question": "Explain how an iodine clock reaction (persulfate + iodide) determines reaction order with respect to $\\text{I}^-$.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Setup:</strong> Mix fixed volumes of $\\text{S}_2\\text{O}_8^{2-}$, starch indicator, and fixed small volume of limiting $\\text{Na}_2\\text{S}_2\\text{O}_3$.<br>2. <strong>Variable Concentration:</strong> Add specific volume of $\\text{KI}$ solution and distilled water so total volume remains constant.<br>3. <strong>Timing:</strong> Start timing on mixing and record time $t$ when solution suddenly turns blue-black.<br>4. <strong>Repeat Runs:</strong> Perform 5 runs varying $[\\text{I}^-]$ while keeping $[\\text{S}_2\\text{O}_8^{2-}]$ constant.<br>5. <strong>Rate Calculation:</strong> Calculate initial rate $\\propto \\frac{1}{t}$. Plot rate against $[\\text{I}^-]$.<br>6. <strong>Deduction:</strong> Straight line through origin indicates 1st order with respect to $\\text{I}^-$.",
+  "command": "Explain how an iodine clock reaction determines the order with respect to I⁻ — 6 marks, Level 3.",
+  "peel": [
+   "P: Order is found by measuring how the initial rate changes when [I⁻] is varied at constant everything else.",
+   "E: The persulfate–iodide clock uses a fixed small amount of thiosulfate scavenger + starch to time a fixed extent of reaction.",
+   "E: Vary [I⁻] while keeping [S₂O₈²⁻] constant — water makes up the volume so total volume (and hence concentrations) stays controlled.",
+   "E: Rate ∝ 1/t; plot rate vs [I⁻] (or log–log for the order).",
+   "E: A straight line through the origin ⇒ first order; a curve ⇒ use log rate vs log [I⁻] to find the order.",
+   "L: The scavenger must be consumed quickly so only a tiny initial fraction of reaction occurs."
+  ],
+  "keywords": [
+   "persulfate S₂O₈²⁻",
+   "thiosulfate scavenger",
+   "starch",
+   "blue-black",
+   "constant total volume",
+   "vary [I⁻]",
+   "rate ∝ 1/t",
+   "straight line through origin"
+  ],
+  "starters": [
+   "Mix fixed volumes of persulfate, starch and a small fixed volume of thiosulfate…",
+   "Repeat with different volumes of potassium iodide, topping up with water so the total volume is constant…",
+   "Since rate is proportional to 1/t, a plot of 1/t against [I⁻] that is a straight line through the origin…"
+  ]
+ },
+ {
+  "title": "8. Steam Distillation & Separating Funnel Extraction",
+  "question": "Describe how steam distillation isolates phenylamine from reaction mixture, followed by solvent extraction with ether.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Steam Distillation:</strong> Pass steam through reaction flask containing phenylamine mixture. Collect cloudy distillate containing water and phenylamine.<br>2. <strong>Separating Funnel:</strong> Transfer distillate to separating funnel, add diethyl ether solvent. Invert and vent pressure tap periodically.<br>3. <strong>Salting Out:</strong> Add $\\text{NaCl}$ to aqueous layer to reduce phenylamine solubility in water and push it into ether layer.<br>4. <strong>Phase Separation:</strong> Allow layers to settle. Drain lower aqueous layer; run upper organic ether layer into flask.<br>5. <strong>Drying:</strong> Add anhydrous $\\text{MgSO}_4$ until solution turns clear.<br>6. <strong>Evaporation:</strong> Distil off low boiling ether ($35^{\\circ}\\text{C}$) using warm water bath to isolate pure phenylamine liquid.",
+  "command": "Describe how steam distillation isolates phenylamine, followed by solvent extraction with ether — 6 marks, Level 3.",
+  "peel": [
+   "P: Steam distillation separates the high-boiling amine from involatile impurities below 100 °C.",
+   "E: Steam carries phenylamine over as a cloudy distillate (immiscible oil-in-water emulsion).",
+   "E: Extract with ether in a separating funnel — vent periodically to release vapour pressure.",
+   "E: Salting out with NaCl pushes more phenylamine into the ether layer, increasing yield.",
+   "E: Dry the ether layer with anhydrous MgSO₄ until the liquid is clear and the powder flows freely.",
+   "L: Remove the low-boiling ether by distillation on a warm water bath to leave pure phenylamine."
+  ],
+  "keywords": [
+   "steam distillation",
+   "cloudy distillate",
+   "separating funnel",
+   "vent pressure",
+   "ether extraction",
+   "salting out NaCl",
+   "anhydrous MgSO₄",
+   "distil off ether (35 °C)"
+  ],
+  "starters": [
+   "Pass steam through the reaction mixture so that phenylamine distils over below 100 °C…",
+   "Transfer the distillate to a separating funnel and add diethyl ether, inverting and venting the tap…",
+   "Dry the ether layer with anhydrous magnesium sulfate until it is clear and the powder flows freely…"
+  ]
+ },
+ {
+  "title": "9. Melting Point Determination & Purity Assessment",
+  "question": "Explain how to determine melting point of benzoic acid using capillary tube apparatus and interpret purity.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Sample Prep:</strong> Ensure benzoic acid sample is completely dry. Crush into fine powder using mortar and pestle.<br>2. <strong>Packing:</strong> Press open end of thin-walled glass capillary tube into powder, tap down closed end until 2-3 mm depth is packed.<br>3. <strong>Apparatus:</strong> Insert capillary into melting point apparatus (e.g. Thiele tube or digital block).<br>4. <strong>Heating Control:</strong> Heat rapidly initially, then slow heating rate to $< 1^{\\circ}\\text{C}$ per minute near expected MP ($122^{\\circ}\\text{C}$).<br>5. <strong>Recording:</strong> Record temperature $T_1$ at initial liquid drop appearance and $T_2$ at complete liquefaction.<br>6. <strong>Purity Interpretation:</strong> Pure sample melts sharply ($121.5-122.5^{\\circ}\\text{C}$). Impure sample melts over broad range at lower temp.",
+  "command": "Explain how to determine the melting point of benzoic acid using a capillary tube apparatus and interpret purity — 6 marks, Level 3.",
+  "peel": [
+   "P: Melting point is a physical property used to identify a solid and judge its purity.",
+   "E: Dry and crush the sample, pack 2–3 mm into a thin-walled capillary tube.",
+   "E: Heat in a Thiele tube / digital block — fast initially, then < 1 °C min⁻¹ near the expected MP (122 °C).",
+   "E: Record T₁ (first liquid appears) and T₂ (completely melted); the range is T₂ − T₁.",
+   "E: Pure benzoic acid melts sharply at 121.5–122.5 °C; impurities depress and broaden the range.",
+   "L: Compare with the literature value; a sharp match confirms purity after recrystallisation."
+  ],
+  "keywords": [
+   "dry + crush",
+   "thin-walled capillary",
+   "2–3 mm depth",
+   "Thiele tube",
+   "< 1 °C min⁻¹",
+   "thermal lag",
+   "T₁ onset / T₂ complete",
+   "sharp range ±1 °C = pure"
+  ],
+  "starters": [
+   "Grind the dried benzoic acid to a fine powder and pack it into a thin-walled capillary tube…",
+   "Heat slowly near the expected melting point of 122 °C to avoid thermal lag…",
+   "A sharp melting range of 121.5–122.5 °C indicates the sample is pure…"
+  ]
+ },
+ {
+  "title": "10. Back Titration: Calcium Carbonate Purity",
+  "question": "Outline steps to determine mass percentage of $\\text{CaCO}_3$ in an impure limestone sample using back titration with $\\text{HCl}$ and $\\text{NaOH}$.",
+  "answer": "<strong>Model Answer (6 Marks / Level 3):</strong><br>1. <strong>Reaction:</strong> Weigh accurately $1.20\\text{ g}$ crushed limestone into beaker. Add excess $50.0\\text{ cm}^3$ of $1.00\\text{ mol dm}^{-3}\\text{ HCl}$.<br>2. <strong>Transfer:</strong> After effervescence ceases, quantitatively transfer mixture to $250.0\\text{ cm}^3$ volumetric flask and dilute to mark.<br>3. <strong>Titration:</strong> Pipette $25.0\\text{ cm}^3$ aliquots into conical flask, add phenolphthalein, titrate with $0.100\\text{ mol dm}^{-3}\\text{ NaOH}$ to pink endpoint.<br>4. <strong>Calculations:</strong> Calculate moles of $\\text{NaOH} = C \\times V$. Multiply by 10 to find unreacted excess $\\text{HCl}$ in total flask.<br>5. <strong>Reacted Acid:</strong> Moles $\\text{HCl}$ reacted with $\\text{CaCO}_3 = \\text{Total initial } \\text{HCl} - \\text{Unreacted excess } \\text{HCl}$.<br>6. <strong>Purity %:</strong> Moles $\\text{CaCO}_3 = \\frac{1}{2} \\text{Moles HCl reacted}$. Calculate mass $\\text{CaCO}_3 = n \\times 100.1\\text{ g mol}^{-1}$ and divide by sample mass $\\times 100\\%$.",
+  "command": "Outline steps to determine the mass percentage of CaCO₃ in limestone by back titration — 6 marks, Level 3.",
+  "peel": [
+   "P: Back titration is needed because CaCO₃ is a slow-reacting, insoluble solid — the excess reagent method.",
+   "E: Add a known excess of HCl to a weighed sample; the acid reacts with CaCO₃ until it is all consumed.",
+   "E: Transfer quantitatively to a volumetric flask and make up to the mark — dilutes to a measurable concentration.",
+   "E: Titrate aliquots of the excess HCl with standard NaOH; moles reacted with CaCO₃ = initial − unreacted.",
+   "E: Stoichiometry: CaCO₃ + 2HCl → CaCl₂ + CO₂ + H₂O, so n(CaCO₃) = ½ n(HCl reacted).",
+   "L: Mass CaCO₃ = n × 100.1 g mol⁻¹; % = (mass CaCO₃ ÷ sample mass) × 100."
+  ],
+  "keywords": [
+   "known excess HCl",
+   "quantitative transfer",
+   "volumetric flask 250 cm³",
+   "aliquot 25.0 cm³ pipette",
+   "NaOH titre",
+   "phenolphthalein",
+   "n(CaCO₃) = ½ n(HCl)",
+   "% = mass/mass × 100"
+  ],
+  "starters": [
+   "Weigh the crushed limestone accurately and add a known excess of hydrochloric acid…",
+   "Transfer the mixture quantitatively to a volumetric flask and make up to the mark with distilled water…",
+   "Moles of HCl that reacted with the limestone equal the initial moles minus the moles of unreacted excess…"
+  ]
+ }
+];;
 
         const WEB_MISCONCEPTIONS_DATA = [
             { source: "Paper 6 Examiner Report", topic: "Practical Apparatus", title: "1. Water Direction in Distillation Condenser", misconception: "Running cooling water into top of condenser and out the bottom.", explanation: "FALSE! Water must enter at the BOTTOM and exit at the TOP to keep the cooling jacket full and prevent air pockets!" },
@@ -905,75 +2316,6 @@
             }
         }
 
-        /* ==================== CALCULATORS ==================== */
-        function calcArrhenius() {
-            const gradient = parseFloat(document.getElementById('calc-gradient').value) || 0;
-            const R = 8.314;
-
-            const eaJ = -gradient * R;
-            const eaKJ = eaJ / 1000;
-
-            document.getElementById('arrhenius-output').innerHTML = `
-                <div><strong>Activation Energy ($E_a$):</strong> <span class="${eaKJ > 0 ? 'text-emerald-400' : 'text-rose-400'} font-bold">${eaKJ.toFixed(2)} kJ mol⁻¹</span></div>
-                <div><strong>In Joules:</strong> ${eaJ.toFixed(1)} J mol⁻¹</div>
-                <div><strong>Formula:</strong> $E_a = -\text{gradient} \times R = -(${gradient}) \times 8.314$</div>
-            `;
-            reRenderMath();
-        }
-
-        function calcUncertainty() {
-            const uncVal = parseFloat(document.getElementById('calc-unc-val').value) || 0;
-            const numReadings = parseInt(document.getElementById('calc-readings-num').value) || 1;
-            const measuredVal = parseFloat(document.getElementById('calc-measured-val').value) || 1;
-
-            const totalUnc = uncVal * numReadings;
-            const pctUnc = (totalUnc / measuredVal) * 100;
-
-            document.getElementById('uncertainty-output').innerHTML = `
-                <div><strong>Total Apparatus Uncertainty:</strong> $\pm ${totalUnc.toFixed(3)}$</div>
-                <div><strong>Percentage Uncertainty:</strong> <span class="text-emerald-300 font-bold">${pctUnc.toFixed(2)}%</span></div>
-                <div><strong>Calculation:</strong> $\\frac{${numReadings} \\times ${uncVal}}{${measuredVal}} \\times 100\\%$</div>
-            `;
-            reRenderMath();
-        }
-
-        function calcRecrystYield() {
-            const theo = parseFloat(document.getElementById('calc-theo-mass').value) || 1;
-            const crude = parseFloat(document.getElementById('calc-crude-mass').value) || 0;
-            const pure = parseFloat(document.getElementById('calc-pure-mass').value) || 0;
-
-            const overallYieldPct = (pure / theo) * 100;
-            const recoveryPct = crude > 0 ? (pure / crude) * 100 : 0;
-
-            document.getElementById('recryst-output').innerHTML = `
-                <div><strong>Overall Percentage Yield:</strong> <span class="text-purple-300 font-bold">${overallYieldPct.toFixed(2)}%</span></div>
-                <div><strong>Recrystallisation Recovery:</strong> <span class="text-purple-300 font-bold">${recoveryPct.toFixed(2)}%</span></div>
-            `;
-            reRenderMath();
-        }
-
-        function calcBackTitration() {
-            const vAcid = (parseFloat(document.getElementById('tit-acid-vol').value) || 0) / 1000;
-            const cAcid = parseFloat(document.getElementById('tit-acid-conc').value) || 0;
-            const vNaoh = (parseFloat(document.getElementById('tit-naoh-vol').value) || 0) / 1000;
-            const cNaoh = parseFloat(document.getElementById('tit-naoh-conc').value) || 0;
-
-            const molesAcidTotal = vAcid * cAcid;
-            const molesNaoh = vNaoh * cNaoh;
-            const molesAcidReacted = molesAcidTotal - molesNaoh;
-            const molesCarb = molesAcidReacted / 2; // CaCO3 + 2HCl -> CaCl2 + H2O + CO2
-            const massCarb = molesCarb * 100.1;
-
-            document.getElementById('back-titration-output').innerHTML = `
-                <div><strong>Total Acid Added:</strong> ${molesAcidTotal.toFixed(4)} mol</div>
-                <div><strong>Unreacted Excess Acid (NaOH titration):</strong> ${molesNaoh.toFixed(4)} mol</div>
-                <div><strong>Acid Reacted with Carbonate:</strong> ${molesAcidReacted.toFixed(4)} mol</div>
-                <div><strong>Calculated Pure $\\text{CaCO}_3$ Mass:</strong> <span class="text-cyan-300 font-bold">${massCarb.toFixed(3)} g</span></div>
-            `;
-            reRenderMath();
-        }
-
-        /* ==================== FLASHCARDS ==================== */
         function updateCard() {
             if (activeCards.length === 0) return;
             const item = activeCards[cardIndex];
@@ -1085,39 +2427,81 @@
         /* ==================== GLOSSARY ==================== */
         function renderGlossary() {
             const container = document.getElementById('glossary-container');
-            const search = document.getElementById('glossary-search').value.toLowerCase();
+            const searchEl = document.getElementById('glossary-search');
+            const search = searchEl ? searchEl.value.toLowerCase() : '';
             const filtered = GLOSSARY_DATA.filter(g => {
-                const matchCat = (currentGlossaryCat === 'ALL') || (g.cat === currentGlossaryCat);
-                const matchSearch = g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search);
+                const matchCat = (typeof currentGlossaryCat === 'undefined' || currentGlossaryCat === 'ALL') || (g.cat === currentGlossaryCat);
+                const matchSearch = g.term.toLowerCase().includes(search) || g.def.toLowerCase().includes(search) || (g.q && g.q.toLowerCase().includes(search));
                 return matchCat && matchSearch;
             });
 
+            const countEl = document.getElementById('glossary-count');
+            if (countEl) countEl.innerText = filtered.length;
+
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching terms found.</div>';
+                container.innerHTML = '<div class="p-8 text-center text-slate-400 glass-panel rounded-2xl col-span-2">No matching glossary terms found.</div>';
                 return;
             }
 
             container.innerHTML = filtered.map((g, idx) => `
-                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all space-y-3">
-                    <h4 class="font-bold text-cyan-400 text-base flex items-center space-x-2">
-                        <i class="fa-solid fa-bookmark text-xs"></i>
-                        <span>${g.term}</span>
-                    </h4>
+                <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/30 transition-all flex flex-col justify-between space-y-4">
+                    <div>
+                        <h4 class="font-bold text-cyan-400 text-base mb-2 flex items-center space-x-2">
+                            <i class="fa-solid fa-bookmark text-xs"></i>
+                            <span>${g.term}</span>
+                        </h4>
 
-                    <div class="relative min-h-[90px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-4">
-                        <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
+                        <!-- Interactive Blur Container for Definition -->
+                        <div class="relative min-h-[80px] rounded-xl overflow-hidden border border-emerald-500/30 bg-slate-900/80 p-3">
+                            <div class="text-xs text-slate-200 leading-relaxed font-normal">${g.def}</div>
 
-                        <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
-                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
-                                <i class="fa-solid fa-eye text-xs"></i>
+                            <div id="gloss-blur-${idx}" onclick="toggleGlossaryBlur(${idx})" class="absolute inset-0 backdrop-blur-md bg-slate-950/90 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-slate-950/80 transition-all duration-300">
+                                <div class="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-1 shadow-lg animate-bounce">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                </div>
+                                <span class="text-[11px] font-bold text-slate-200">Definition Blurred</span>
+                                <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal Definition</span>
                             </div>
-                            <span class="text-xs font-bold text-slate-200">Definition Blurred</span>
-                            <span class="text-[10px] text-emerald-400 font-semibold mt-0.5 px-2.5 py-0.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">Click to Reveal</span>
                         </div>
                     </div>
+
+                    ${g.q ? `
+                    <!-- Attached Past Paper MCQ Question -->
+                    <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-700/60 space-y-2">
+                        <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide flex items-center space-x-1">
+                            <i class="fa-solid fa-file-circle-question"></i>
+                            <span>Attached Edexcel IAL MCQ:</span>
+                        </div>
+                        <p class="text-xs text-slate-200 font-medium">${g.q}</p>
+
+                        <div class="grid grid-cols-2 gap-1.5 pt-1 text-[11px] text-slate-300">
+                            ${g.options.map(opt => `<div class="bg-slate-950 p-1.5 rounded border border-slate-800">${opt}</div>`).join('')}
+                        </div>
+
+                        <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="w-full mt-2 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition-all">
+                            Show / Hide Solution — why each option is right / wrong
+                        </button>
+
+                        <div class="hidden p-2.5 bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs rounded-lg font-mono space-y-2">
+                            <div class="font-bold">${g.ans}</div>
+                            ${g.expl ? `<div class="space-y-1.5">
+                                ${g.options.map((opt, oi) => {
+                                    const letter = opt.charAt(0).replace(':','').replace(')','').trim();
+                                    const m = (g.ans || '').match(/Answer\s*:\s*([ABCD])/i) || (g.ans || '').match(/(?:^|\s)([ABCD])\s*[):]/);
+                                    const ansLetter = m ? m[1] : ((g.ans || '').trim().charAt(0));
+                                    const isCorrect = letter === ansLetter;
+                                    return `
+                                    <div class="p-2 rounded-lg border ${isCorrect ? 'bg-emerald-900/40 border-emerald-500/40' : 'bg-slate-900/60 border-slate-700'}">
+                                        <span class="font-bold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}">${isCorrect ? '✓' : '✗'} ${opt}</span>
+                                        <p class="text-slate-300 mt-0.5 leading-relaxed">${g.expl[oi] || ''}</p>
+                                    </div>
+                                `; }).join('')}
+                            </div>` : ''}
+                        </div>
+                    </div>` : ''}
                 </div>
             `).join('');
-            reRenderMath();
+            if (typeof reRenderMath === 'function') reRenderMath();
         }
 
         function filterGlossaryCategory(cat) {
@@ -1154,16 +2538,40 @@
                         <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30">6 Marks - Level 3</span>
                     </div>
 
+                    ${e.command ? `<div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/30 px-2.5 py-1 rounded-lg">Command</span>
+                        <span class="text-xs text-purple-200 font-semibold">${e.command}</span>
+                    </div>` : ''}
+
                     <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-slate-300">
-                        <strong class="text-rose-400">Official Question Prompt:</strong> ${e.question}
+                        <strong class="text-rose-400">Official Exam Question Prompt:</strong> ${e.question}
                     </div>
+
+                    ${e.peel ? `<details class="bg-slate-900/60 p-3.5 rounded-lg border border-indigo-500/30" ${idx===0?'open':''}>
+                        <summary class="text-xs font-bold text-indigo-300 cursor-pointer">🧱 Scaffold — PEEL structure (build your answer)</summary>
+                        <ol class="text-xs text-slate-300 leading-relaxed list-decimal list-inside mt-2 space-y-1">
+                            ${e.peel.map(p=>`<li>${p}</li>`).join('')}
+                        </ol>
+                        ${e.keywords ? `<div class="mt-2 pt-2 border-t border-indigo-500/20">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Keyword bank:</span>
+                            <div class="flex flex-wrap gap-1.5 mt-1">
+                                ${e.keywords.map(k=>`<span class="text-[10px] px-2 py-0.5 bg-indigo-900/60 text-indigo-200 rounded-full border border-indigo-700">${k}</span>`).join('')}
+                            </div>
+                        </div>` : ''}
+                        ${e.starters ? `<div class="mt-2 pt-2 border-t border-indigo-500/20">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">Sentence starters:</span>
+                            <ul class="text-[11px] text-slate-300 mt-1 space-y-0.5">
+                                ${e.starters.map(s=>`<li class="italic">“${s}”</li>`).join('')}
+                            </ul>
+                        </div>` : ''}
+                    </details>` : ''}
 
                     <div class="text-xs text-slate-200 leading-relaxed p-4 bg-emerald-950/10 border border-emerald-500/20 rounded-xl space-y-2">
                         ${e.answer}
                     </div>
                 </div>
             `).join('');
-            reRenderMath();
+            if (typeof reRenderMath === 'function') reRenderMath();
         }
 
         /* ==================== LAB MISCONCEPTIONS ==================== */
@@ -1223,11 +2631,6 @@
             renderEssays();
             renderWebMisconceptions();
             updateCard();
-            calcArrhenius();
-            calcUncertainty();
-            calcRecrystYield();
-            calcBackTitration();
-            reRenderMath();
         };
     </script>
 </body>
