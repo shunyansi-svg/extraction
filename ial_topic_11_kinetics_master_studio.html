@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IAL Chemistry Topic 11: Kinetics II Master Studio</title>
+    <!-- wiki-pull sources: entities/wch14-2025oct-question-bank.md, wch14-2026jan-question-bank.md, wch14-2026jun-question-bank.md, concepts/wch14-examiner-insights.md (PEF Jan 2020), concepts/reaction-kinetics-a2.md, rates-and-catalysts.md, golden-rule Paper 4; apple-lab 2026-08-11 -->
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,45 +14,488 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="safeInitKaTeX()"></script>
 
+    
+    
     <style>
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        :root {
+            --bg: #0c1118;
+            --surface: #161d28;
+            --accent: #3dd6c6;
+            --accent-ink: #06201c;
+            --text: #eef2f7;
+            --muted: #8b95a8;
+            --line: rgba(255, 255, 255, 0.08);
+            --spring: cubic-bezier(0.32, 0.72, 0.22, 1);
+            --frost: blur(20px) saturate(1.7);
+            --font: -apple-system, "SF Pro Text", "Segoe UI", "PingFang HK", "Noto Sans HK", system-ui, sans-serif;
+            --font-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Consolas, monospace;
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+            --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+                    font-family: var(--font);
+                    color: var(--text);
+                    background:
+                        radial-gradient(1400px 620px at 80% -14%, rgba(61, 214, 198, 0.10), transparent 60%),
+                        radial-gradient(1000px 500px at 4% 116%, rgba(70, 130, 210, 0.08), transparent 60%),
+                        linear-gradient(178deg, #0d131c 0%, #0a0e15 55%, #080c12 100%);
+                    background-attachment: fixed;
+                    min-height: 100dvh;
+                    overflow-x: hidden;
+                }
+
+                /*
+                 * Ambient energy field — the signature of this page.
+                 * Slow-drifting teal/blue aurora behind a soft vignette, so the
+                 * background reads as one living surface (kinetics = energy in motion)
+                 * instead of flat colour with floating cards. GPU-only: blobs animate
+                 * transform; the radial gradients are authored as soft falloffs (no
+                 * filter blur needed). Purely decorative, aria-hidden, and fully
+                 * disabled under prefers-reduced-motion.
+                 */
+                .ambient {
+                    position: fixed;
+                    inset: 0;
+                    z-index: 0;
+                    pointer-events: none;
+                    overflow: hidden;
+                }
+                .ambient .blob {
+                    position: absolute;
+                    border-radius: 50%;
+                    will-change: transform;
+                }
+                .ambient .blob--teal {
+                    width: 46vmax; height: 46vmax;
+                    left: -8vmax; top: -14vmax;
+                    background: radial-gradient(circle at 32% 34%, rgba(61, 214, 198, 0.16), rgba(61, 214, 198, 0.05) 46%, transparent 72%);
+                    animation: driftA 26s ease-in-out infinite alternate;
+                }
+                .ambient .blob--blue {
+                    width: 42vmax; height: 42vmax;
+                    right: -10vmax; top: 8vmax;
+                    background: radial-gradient(circle at 60% 40%, rgba(70, 130, 210, 0.14), rgba(70, 130, 210, 0.04) 48%, transparent 74%);
+                    animation: driftB 32s ease-in-out infinite alternate;
+                }
+                .ambient .blob--deep {
+                    width: 38vmax; height: 38vmax;
+                    left: 28vmax; bottom: -16vmax;
+                    background: radial-gradient(circle at 50% 30%, rgba(90, 150, 220, 0.10), rgba(90, 150, 220, 0.03) 50%, transparent 76%);
+                    animation: driftC 38s ease-in-out infinite alternate;
+                }
+                .ambient .vignette {
+                    position: absolute;
+                    inset: 0;
+                    background:
+                        radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(4, 7, 12, 0.55) 100%);
+                }
+                @keyframes driftA {
+                    from { transform: translate3d(0, 0, 0) scale(1); }
+                    to   { transform: translate3d(9vmax, 7vmax, 0) scale(1.08); }
+                }
+                @keyframes driftB {
+                    from { transform: translate3d(0, 0, 0) scale(1); }
+                    to   { transform: translate3d(-8vmax, 6vmax, 0) scale(1.1); }
+                }
+                @keyframes driftC {
+                    from { transform: translate3d(0, 0, 0) scale(1); }
+                    to   { transform: translate3d(6vmax, -7vmax, 0) scale(1.06); }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .ambient .blob { animation: none !important; }
+                }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 180px 180px;
+        }
+        .skip-link {
+            position: absolute; left: -9999px; top: 0; z-index: 100;
+            background: var(--accent); color: var(--accent-ink);
+            padding: 0.55rem 1rem; border-radius: 0 0 0.6rem 0;
+            font-weight: 700; font-size: 0.75rem;
+        }
+        .skip-link:focus { left: 0; }
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
         .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #121820; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3a4556; border-radius: 3px; }
+
+        /* Blur quiz — keep behaviour; teal wash on reveal */
         .blur-answer {
             filter: blur(6px);
-            transition: filter 0.25s ease, background-color 0.25s ease;
+            transition: filter 0.25s var(--spring), background-color 0.25s ease;
             user-select: none;
             cursor: pointer;
         }
         .blur-answer:hover, .blur-answer.revealed {
             filter: blur(0px);
             user-select: auto;
-            background-color: rgba(14, 165, 233, 0.2) !important;
+            background-color: color-mix(in srgb, var(--accent) 18%, transparent) !important;
         }
-        .ambient-bg {
+
+        .ambient-bg { background: transparent !important; }
+
+        /* Lift content above the ambient field; keep header/nav sticky chrome on top */
+        main { position: relative; z-index: 1; }
+        header.lab-chrome, nav.lab-chrome, footer.lab-chrome { position: sticky; z-index: 40; }
+        nav.lab-chrome { z-index: 30; }
+
+        /* Cohesive surface: cards share the page's teal glow so the background
+           and content read as one material. Hairline + inset highlight + a soft
+           ambient-tinted top edge on every chrome panel. */
+        main .bg-slate-900.border.border-slate-800.rounded-xl,
+        main .bg-slate-900.border.border-slate-800.rounded-lg,
+        main .bg-slate-950.border.border-slate-800.rounded-xl,
+        main .bg-slate-950.border.border-slate-800.rounded-lg,
+        main details.bg-slate-950\/60,
+        main details[class*="bg-slate-950"] {
             background:
-                radial-gradient(1200px 500px at 80% -10%, rgba(14,165,233,0.10), transparent 60%),
-                radial-gradient(900px 420px at 8% 108%, rgba(16,185,129,0.08), transparent 60%),
-                #020617;
+                linear-gradient(180deg, rgba(61, 214, 198, 0.045), transparent 34%),
+                color-mix(in srgb, var(--surface) 90%, transparent) !important;
+            border-color: color-mix(in srgb, var(--line) 70%, rgba(61, 214, 198, 0.10)) !important;
+            box-shadow: var(--inset-top), var(--shadow-md);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
         }
-        details > summary::-webkit-details-marker { display: none; }
+
+        /* Inner cards: same teal-tinted hairline, no heavy re-stack */
+        main .bg-slate-950.border.border-slate-800.rounded-xl.p-5,
+        main .bg-slate-950.border.border-slate-800.rounded-lg.p-5 {
+            background:
+                linear-gradient(180deg, rgba(61, 214, 198, 0.035), transparent 26%),
+                color-mix(in srgb, var(--surface) 78%, #000) !important;
+            border-color: color-mix(in srgb, var(--line) 75%, transparent) !important;
+            box-shadow: var(--inset-top);
+        }
+
+        /* Tab content fades/slides in on switch — orchestrated, not scattered */
+        main > section {
+            animation: tabIn 0.34s var(--spring) both;
+        }
+        @keyframes tabIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .visible-onload { animation: none; }
+
+        /* Sticky chrome */
+        header.lab-chrome, nav.lab-chrome, footer.lab-chrome {
+            background: color-mix(in srgb, var(--surface) 88%, transparent);
+            border-color: var(--line) !important;
+            box-shadow: var(--inset-top), 0 8px 28px rgba(0,0,0,0.25);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        header.lab-chrome { z-index: 40; }
+        nav.lab-chrome { z-index: 30; }
+
+        /* Primary nav — Apple floating segmented control */
+                nav.lab-chrome {
+                    background: transparent;
+                    border-bottom: none;
+                    box-shadow: none;
+                    backdrop-filter: none;
+                    -webkit-backdrop-filter: none;
+                    padding: 0.6rem 1rem 0.4rem;
+                }
+                nav.lab-chrome > div {
+                    max-width: 100%;
+                    width: fit-content;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 0.25rem;
+                    padding: 0.3rem;
+                    background: color-mix(in srgb, var(--surface) 82%, transparent);
+                    border: 1px solid var(--line);
+                    border-radius: 9999px;
+                    box-shadow: var(--inset-top), 0 10px 30px rgba(0,0,0,0.35);
+                    backdrop-filter: var(--frost);
+                    -webkit-backdrop-filter: var(--frost);
+                }
+                .tab-btn {
+                    transition: color 0.2s var(--spring), background-color 0.2s var(--spring),
+                                box-shadow 0.2s var(--spring), transform 0.15s var(--spring);
+                    min-height: 40px;
+                    border-radius: 9999px;
+                    border: none;
+                    white-space: nowrap;
+                }
+                .tab-btn:active { transform: scale(0.96); }
+                .tab-btn-active {
+                    color: var(--accent-ink) !important;
+                    font-weight: 700 !important;
+                    background: var(--accent) !important;
+                    box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 30%, transparent);
+                }
+                .tab-btn-idle {
+                    color: var(--muted) !important;
+                    font-weight: 500 !important;
+                    background: transparent !important;
+                    box-shadow: none;
+                }
+                .tab-btn-idle:hover { color: var(--accent) !important; }
+
+        /* Frosted lab panels — chrome shells only (Tailwind slate panels) */
+        main .bg-slate-900.border.border-slate-800.rounded-xl,
+        main .bg-slate-900.border.border-slate-800.rounded-lg,
+        main .bg-slate-950.border.border-slate-800.rounded-xl,
+        main .bg-slate-950.border.border-slate-800.rounded-lg,
+        main details.bg-slate-950\/60,
+        main details[class*="bg-slate-950"] {
+            background: color-mix(in srgb, var(--surface) 90%, transparent) !important;
+            border-color: var(--line) !important;
+            box-shadow: var(--inset-top), var(--shadow-md);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        /* Nested darker wells */
+        main .bg-slate-950:not(.blur-answer),
+        main .bg-slate-900\/80,
+        main .bg-slate-900\/50 {
+            background: color-mix(in srgb, var(--surface) 78%, #000) !important;
+            border-color: var(--line);
+        }
+        main .border-slate-800,
+        main .border-slate-700,
+        main .divide-slate-800 > :not([hidden]) ~ :not([hidden]),
+        main .border-b.border-slate-800,
+        main .border-t.border-slate-800 {
+            border-color: var(--line) !important;
+        }
+        main .divide-slate-800\/80 > :not([hidden]) ~ :not([hidden]) {
+            border-color: var(--line) !important;
+        }
+
+        /* Soft-map sky-as-chrome → accent (not amber/rose pedagogy) */
+        main .text-sky-400:not(.katex *),
+        header .text-sky-400,
+        header .text-sky-300,
+        nav .text-sky-400 {
+            color: var(--accent) !important;
+        }
+        main .border-sky-800,
+        main .border-sky-500,
+        header .border-sky-800 {
+            border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+        }
+        main .bg-sky-950,
+        main .bg-sky-950\/40,
+        main .bg-sky-950\/60,
+        main .bg-sky-950\/70,
+        header .bg-sky-950 {
+            background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important;
+        }
+        main .text-sky-300 {
+            color: color-mix(in srgb, var(--accent) 85%, white) !important;
+        }
+        /* Engine primary action fills (sky/emerald/amber/violet/rose solid buttons) → pill accent */
+        main button.bg-sky-600,
+        main button.bg-emerald-600,
+        main button.bg-amber-600,
+        main button.bg-violet-600,
+        main button.bg-rose-600,
+        main button[class*="bg-sky-600"],
+        main button[class*="bg-emerald-600"],
+        main button[class*="bg-amber-600"],
+        main button[class*="bg-violet-600"],
+        main button[class*="bg-rose-600"] {
+            background: var(--accent) !important;
+            color: var(--accent-ink) !important;
+            border-radius: 9999px !important;
+            border: none !important;
+            box-shadow: var(--inset-top), 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+            font-weight: 700 !important;
+            transition: transform 0.15s var(--spring), filter 0.15s ease, background 0.15s ease;
+        }
+        main button.bg-sky-600:hover,
+        main button.bg-emerald-600:hover,
+        main button.bg-amber-600:hover,
+        main button.bg-violet-600:hover,
+        main button.bg-rose-600:hover {
+            filter: brightness(1.06);
+        }
+        main button.bg-sky-600:active,
+        main button.bg-emerald-600:active,
+        main button.bg-amber-600:active,
+        main button.bg-violet-600:active,
+        main button.bg-rose-600:active {
+            transform: scale(0.97);
+        }
+        /* Mode chip inactive shells */
+        main button.bg-slate-900.border.border-slate-800 {
+            border-radius: 9999px !important;
+            border-color: var(--line) !important;
+            background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+            min-height: 40px;
+            transition: transform 0.15s var(--spring), color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+        main button.bg-slate-900.border.border-slate-800:active {
+            transform: scale(0.97);
+        }
+        main button.bg-slate-900.border.border-slate-800:hover {
+            color: var(--accent) !important;
+            border-color: color-mix(in srgb, var(--accent) 45%, transparent) !important;
+        }
+
+        /* Lab mode-chip classes used by JS switchers */
+        .lab-chip-active {
+            background: var(--accent) !important;
+            color: var(--accent-ink) !important;
+            border-radius: 9999px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            box-shadow: var(--inset-top), 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+            transition: transform 0.15s var(--spring), filter 0.15s ease;
+            min-height: 40px;
+        }
+        .lab-chip-active:active { transform: scale(0.97); }
+        .lab-chip-idle {
+            background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+            color: var(--muted) !important;
+            border: 1px solid var(--line) !important;
+            border-radius: 9999px !important;
+            font-weight: 500 !important;
+            transition: transform 0.15s var(--spring), color 0.15s ease, border-color 0.15s ease;
+            min-height: 40px;
+        }
+        .lab-chip-idle:hover {
+            color: var(--accent) !important;
+            border-color: color-mix(in srgb, var(--accent) 45%, transparent) !important;
+        }
+        .lab-chip-idle:active { transform: scale(0.97); }
+
+        /* Selects / inputs */
+        main select, main input[type="number"], main input[type="text"] {
+            background: color-mix(in srgb, var(--surface) 92%, #000) !important;
+            border-color: var(--line) !important;
+            color: var(--text) !important;
+            border-radius: 0.75rem !important;
+            font-variant-numeric: tabular-nums;
+        }
+        main select:focus, main input:focus {
+            border-color: color-mix(in srgb, var(--accent) 55%, transparent) !important;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+        }
+
+        /* Hint / goals soft wash — keep amber watch-outs & rose tips semantic */
+        main .bg-sky-950\/40.border.border-sky-900\/50 {
+            background: color-mix(in srgb, var(--accent) 10%, var(--surface)) !important;
+            border-color: color-mix(in srgb, var(--accent) 28%, transparent) !important;
+        }
+
+        /* Data tables */
+        main table { font-variant-numeric: tabular-nums; }
+        main thead { background: color-mix(in srgb, var(--surface) 95%, #000) !important; }
+        main .font-mono, main [class*="font-mono"] {
+            font-family: var(--font-mono);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Jump chips in Final Review */
+        main a.px-2\.5.py-1.rounded-lg {
+            border-radius: 9999px !important;
+            transition: transform 0.15s var(--spring), background 0.15s ease;
+        }
+        main a.px-2\.5.py-1.rounded-lg:active { transform: scale(0.97); }
+
+        /* Spec badges stay mono; soft surface */
+        main .text-\[10px\].font-mono {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Arrhenius / SVG containers */
+        main #arrhenius-plot, main svg {
+            border-radius: 0.75rem;
+        }
+
+        /* Pedagogy freeze: amber watch-outs + rose examiner keep hue */
+        main .bg-amber-950\/40,
+        main .bg-amber-950\/60,
+        main .border-amber-800\/60,
+        main .border-amber-800,
+        main .text-amber-200,
+        main .text-amber-300,
+        main .text-amber-400,
+        main .bg-rose-950\/30,
+        main .bg-rose-950\/60,
+        main .border-rose-900\/40,
+        main .text-rose-300,
+        main .text-rose-200 {
+            /* leave Tailwind classes — do not override pedagogy colours */
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+                    *, *::before, *::after {
+                        animation-duration: 0.01ms !important;
+                        animation-iteration-count: 1 !important;
+                        transition-duration: 0.01ms !important;
+                        scroll-behavior: auto !important;
+                    }
+                    .tab-btn:active,
+                    .lab-chip-active:active,
+                    .lab-chip-idle:active,
+                    main button:active {
+                        transform: none !important;
+                    }
+                    main > section { animation: none !important; }
+                }
+        @media (prefers-reduced-transparency: reduce) {
+            header.lab-chrome, nav.lab-chrome, footer.lab-chrome,
+            main .bg-slate-900.border.border-slate-800.rounded-xl,
+            main .bg-slate-950.border.border-slate-800.rounded-xl,
+            main details[class*="bg-slate-950"] {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: var(--surface) !important;
+            }
+            body::before { display: none; }
+        }
     </style>
+
+
 </head>
 <body class="ambient-bg text-slate-100 min-h-screen flex flex-col">
+    <div class="ambient" aria-hidden="true">
+        <div class="blob blob--teal"></div>
+        <div class="blob blob--blue"></div>
+        <div class="blob blob--deep"></div>
+        <div class="vignette"></div>
+    </div>
+    <a class="skip-link" href="#main-content">Skip to content</a>
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
+    <header class="lab-chrome border-b sticky top-0 z-40 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-3">
-                <div class="bg-sky-500/20 p-2 rounded-lg border border-sky-500/30">
-                    <span class="text-2xl">⏱️</span>
-                </div>
-                <div>
-                    <h1 class="text-lg font-extrabold tracking-tight text-sky-400">IAL Chemistry Topic 11: Kinetics II — Master Studio</h1>
-                    <p class="text-xs text-slate-400">WCH14 · Rate equations, orders, mechanisms, $E_a$ &amp; catalysis (Spec 11.1 – 11.13)</p>
-                </div>
-            </div>
+                            <div class="p-2 rounded-lg border" style="background:color-mix(in srgb,var(--accent) 15%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="13" r="8"></circle>
+                                    <path d="M12 9v4l2.5 2.5"></path>
+                                    <path d="M9 2h6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 class="text-lg font-extrabold tracking-tight" style="color:var(--accent)">IAL Chemistry Topic 11: Kinetics II — Master Studio</h1>
+                                <p class="text-xs text-slate-400">WCH14 · Rate equations, orders, mechanisms, $E_a$ &amp; catalysis (Spec 11.1 – 11.13)</p>
+                            </div>
+                        </div>
             <div class="flex items-center gap-2">
                 <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-sky-950 text-sky-300 border border-sky-800">Edexcel Spec 11.1 – 11.13</span>
                 <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800">Unit 4 · Paper 4</span>
@@ -60,21 +504,21 @@
     </header>
 
     <!-- Navigation Bar (flex-wrap, short labels) -->
-    <nav class="bg-slate-900/90 border-b border-slate-800 sticky top-[57px] z-30 backdrop-blur-md">
+        <nav class="lab-chrome sticky top-[57px] z-30" aria-label="Studio sections" style="background:transparent;border-bottom:none;box-shadow:none;backdrop-filter:none">
         <div class="max-w-7xl mx-auto px-2 flex flex-wrap">
-            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-sky-400 font-bold border-b-2 border-sky-400 bg-sky-950/40 transition">1. Syllabus</button>
-            <button onclick="switchTab('rateeq')" id="btn-rateeq" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition">2. Rate Eq &amp; Order</button>
-            <button onclick="switchTab('graphs')" id="btn-graphs" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition">3. Graphs &amp; t½</button>
-            <button onclick="switchTab('mech')" id="btn-mech" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition">4. Mechanisms &amp; RDS</button>
-            <button onclick="switchTab('methods')" id="btn-methods" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition">5. Methods &amp; Practicals</button>
-            <button onclick="switchTab('catalysis')" id="btn-catalysis" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition">6. Catalysis</button>
-            <button onclick="switchTab('solver')" id="btn-solver" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition">7. Eₐ Solver</button>
-            <button onclick="switchTab('review')" id="btn-review" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition">8. Final Review</button>
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">1. Syllabus</button>
+            <button onclick="switchTab('rateeq')" id="btn-rateeq" class="tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">2. Rate Eq &amp; Order</button>
+            <button onclick="switchTab('graphs')" id="btn-graphs" class="tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">3. Graphs &amp; t½</button>
+            <button onclick="switchTab('mech')" id="btn-mech" class="tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">4. Mechanisms &amp; RDS</button>
+            <button onclick="switchTab('methods')" id="btn-methods" class="tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">5. Methods &amp; Practicals</button>
+            <button onclick="switchTab('catalysis')" id="btn-catalysis" class="tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">6. Catalysis</button>
+            <button onclick="switchTab('solver')" id="btn-solver" class="tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">7. Ea Solver</button>
+            <button onclick="switchTab('review')" id="btn-review" class="tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs">8. Final Review</button>
         </div>
     </nav>
 
     <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+    <main id="main-content" class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
 
         <!-- ==================== TAB 1: SYLLABUS MASTER OVERVIEW ==================== -->
         <section id="tab-syllabus" class="space-y-6">
@@ -96,7 +540,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">1. Rate of Reaction &amp; the Rate Equation</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Define <b>rate of reaction</b> as the change in concentration of a reactant or product per unit time ($\text{mol dm}^{-3}\text{ s}^{-1}$).</li>
                                     <li>Write the general rate equation $\text{rate} = k[A]^m[B]^n$ where $m$ and $n$ are $0$, $1$ or $2$.</li>
@@ -107,8 +551,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">The most common error is deducing order from balancing numbers. For $2\text{NO} + \text{O}_2 \rightarrow 2\text{NO}_2$ the orders are <b>not</b> automatically 2 and 1 — they come from data. Always write "determined experimentally".</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Orders come from <b>experiment only</b> — never balancing numbers ($2\text{NO}+\text{O}_2$ matching is coincidence). Always write "determined experimentally". Derive $k$ units by rearranging; process numbers and units separately (wiki: reaction-kinetics-a2). Paper pattern: WCH14 rate stems (Jun 2026 Q16; Jan 2026 Q13).</p>
                         </div>
                     </div>
 
@@ -121,7 +565,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">2. Half-life, Rate-Determining Step, $E_a$ &amp; Catalysts</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Define <b>half-life</b> ($t_{1/2}$) as the time for the concentration of a reactant to fall to half its initial value.</li>
                                     <li>Define the <b>rate-determining step</b> as the slowest step in a reaction mechanism.</li>
@@ -132,8 +576,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">A catalyst <b>lowers $E_a$</b> — it never "provides energy" or "increases collision frequency". Raising temperature does <b>not</b> lower $E_a$; it increases the fraction of molecules with $E \ge E_a$.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Catalyst <b>lowers $E_a$</b> via an alternative pathway — never "provides energy" alone. Raising $T$ does <b>not</b> lower $E_a$. Do not confuse rate constant $k$ with equilibrium constant $K$ when justifying temperature effects (WCH14 PEF Jan 2020 Q18 — k vs K).</p>
                         </div>
                     </div>
 
@@ -146,7 +590,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">3. Half-life Calculations &amp; Identifying First Order</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Read $t_{1/2}$ from a concentration–time graph: time to drop from $[A]_0 \rightarrow \tfrac{1}{2}[A]_0$, then $\tfrac{1}{2} \rightarrow \tfrac{1}{4}[A]_0$.</li>
                                     <li>Identify a <b>constant half-life</b> as the signature of a <b>first-order</b> reaction.</li>
@@ -157,8 +601,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">$t_{1/2} = 0.693/k$ applies <b>only to first order</b>. Measure at least two successive half-lives on the graph to prove they are constant before claiming first order.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">$t_{1/2}=0.693/k$ is <b>first order only</b>. Prove constant $t_{1/2}$ with ≥2 successive half-lives. Second order: successive $t_{1/2}$ lengthens — do not eye-ball decay as first order.</p>
                         </div>
                     </div>
 
@@ -171,7 +615,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">4. Selecting &amp; Justifying a Method to Follow Rate</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 6 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">6 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li><b>Titration:</b> withdraw timed samples, quench, titrate (e.g. $\text{I}_2$ with standard thiosulfate) — for reactions in solution.</li>
                                     <li><b>Colorimetry:</b> follow a coloured species ($\text{I}_2$, $\text{MnO}_4^-$, $\text{NO}_2$) — absorbance $\propto$ concentration.</li>
@@ -183,8 +627,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">You must <b>justify</b>, not just name. E.g. colorimetry works for $\text{I}_2$ because it is coloured, but not for a colourless system. Mass change fails for $\text{H}_2$ (too light) — use a gas syringe instead.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Justify, do not only name. Colorimetry needs a coloured species; mass loss fails for light $\text{H}_2$ (use gas syringe). State the property measured and why it tracks concentration.</p>
                         </div>
                     </div>
 
@@ -197,7 +641,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">5. Initial-Rate Method &amp; Continuous Monitoring</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Initial-rate method: run separate experiments varying the initial concentration of <b>one</b> reagent while keeping others constant.</li>
                                     <li>Understand that a <b>clock reaction</b> is an acceptable approximation of the initial-rate method.</li>
@@ -208,8 +652,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">In the initial-rate method only <b>one</b> concentration changes per set of runs — everything else (temperature, other reagents, total volume) must be constant. State "keep temperature constant" for full marks.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Vary <b>one</b> concentration; keep $T$, other reagents and total volume constant. Clock: $1/t$ ≈ initial rate only if thiosulfate is small &amp; constant (WCH14 Oct 2025 Q11 iodine-clock pattern).</p>
                         </div>
                     </div>
 
@@ -222,7 +666,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">6. Deducing Order from Graphs &amp; Initial Rates</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 6 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">6 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Concentration–time: zero order = straight line; first order = constant $t_{1/2}$; second order = $t_{1/2}$ increases.</li>
                                     <li>Rate–concentration: zero order = horizontal line; first order = straight line through origin; second order = upward curve (parabola).</li>
@@ -234,8 +678,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">A rate–concentration graph for second order is a <b>curve through the origin</b>, not a straight line. When comparing experiments, pick two runs where only the target reactant changes.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Rate–$[A]$: horizontal = 0th; line through origin = 1st; curve through origin = 2nd. Arrhenius: $\ln k$ vs $1/T$ (not swapped); $\ln k$ has no units; use &gt;50% of the grid (PEF Jan 2020 Q18).</p>
                         </div>
                     </div>
 
@@ -248,7 +692,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">7. Acid-Catalysed Iodination of Propanone</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-sky-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Know the reaction: $\text{CH}_3\text{COCH}_3 + \text{I}_2 \xrightarrow{\text{H}^+} \text{CH}_3\text{COCH}_2\text{I} + \text{HI}$.</li>
                                     <li>Know the experimental orders: first order in propanone, first order in $\text{H}^+$, <b>zero order in $\text{I}_2$</b>.</li>
@@ -259,8 +703,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Zero order in $\text{I}_2$ is the key deduction — changing $[\text{I}_2]$ does not change rate, so $\text{I}_2$ is <b>not</b> in the RDS. $\text{H}^+$ is a catalyst: it appears in the rate equation but is regenerated.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Zero order in $\text{I}_2$ ⇒ $\text{I}_2$ reacts <b>after</b> the RDS (still in the mechanism). $\text{H}^+$ is a catalyst (in rate eq, regenerated). Species not in the rate equation appear after the RDS (WCH14 Oct 2025 Q11d).</p>
                         </div>
                     </div>
 
@@ -273,7 +717,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">8. Rate-Determining Step ⇄ Rate Equation &amp; Mechanisms</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-purple-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>From mechanism → rate equation: only species in the RDS (and steps before it) appear.</li>
                                     <li>From rate equation → RDS: each concentration term corresponds to a species in the slow step.</li>
@@ -284,8 +728,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">A species that is zero order may still appear in the mechanism — just <b>after</b> the RDS. Catalysts and intermediates never appear in the overall balanced equation, but a catalyst can appear in the rate equation.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Zero order ≠ absent from mechanism. Catalyst: rate equation yes, overall equation no. Intermediate: neither. Label each step slow/fast. Kinetics suggests a <b>possible</b> mechanism, not a unique one.</p>
                         </div>
                     </div>
 
@@ -298,7 +742,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">9. Hydrolysis of Halogenoalkanes — SN1 &amp; SN2 Evidence</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Tertiary halogenoalkane hydrolysis: $\text{rate} = k[\text{R–X}]$ (first order) → <b>SN1</b>, two-step via a carbocation.</li>
                                     <li>Primary halogenoalkane hydrolysis: $\text{rate} = k[\text{R–X}][\text{OH}^-]$ (second order) → <b>SN2</b>, one concerted step.</li>
@@ -309,8 +753,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Don't write $\text{OH}^-$ in the SN1 rate equation — only the halogenoalkane is in the RDS. The kinetic evidence is what <b>distinguishes</b> the two mechanisms; structure (1°/3°) explains why each pathway is favoured.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">SN1: rate $=k[\text{R–X}]$ — no $\text{OH}^-$ (WCH14 Jan 2026 Q3). SN2: rate $=k[\text{R–X}][\text{OH}^-]$; primary — little steric hindrance (Oct 2025 Q6a). Optical: SN1 racemic (slight excess inversion); SN2 clean inversion (Oct 2025 Q6b).</p>
                         </div>
                     </div>
 
@@ -323,7 +767,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">10. Finding $E_a$ — the Arrhenius Equation</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Use the Arrhenius equation $k = A\mathrm{e}^{-E_a/RT}$ (given if needed) and its linear form $\ln k = \ln A - \dfrac{E_a}{R}\cdot\dfrac{1}{T}$.</li>
                                     <li>Plot $\ln k$ (or $\ln$ rate) against $1/T$ — a straight line with gradient $= -E_a/R$.</li>
@@ -334,8 +778,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Temperature must be in <b>kelvin</b> ($+273$). The gradient is <b>negative</b>, so $E_a$ comes out positive — don't report a negative activation energy. Forgetting the J→kJ conversion is the classic lost mark.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Arrhenius: $T$ in K; $\ln k$ vs $1/T$; gradient $=-E_a/R$; $E_a=-\text{grad}\times R$ then ÷1000 → kJ. Do <b>not</b> invert the gradient (WCH14 Oct 2025 Q2; Jan 2026 Q13b). No units on the $\ln k$ axis (PEF Jan 2020 Q18).</p>
                         </div>
                     </div>
 
@@ -348,7 +792,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">11. Solid (Heterogeneous) Catalysts in Industry</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li>Explain that a solid catalyst provides a <b>surface</b> on which gaseous reactants adsorb.</li>
                                     <li>Adsorption weakens bonds in the reactants, lowering $E_a$ and increasing rate.</li>
@@ -359,8 +803,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">A catalyst speeds up the <b>forward and reverse</b> reactions equally — equilibrium is reached faster but the position and $K$ are unchanged. Use the word <b>adsorption</b> (surface), not absorption (bulk).</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Catalyst speeds fwd &amp; rev equally → $K$ and position unchanged (not yield). Use <b>adsorption</b> (surface), not absorption. Only temperature changes $K$ — a catalyst does not.</p>
                         </div>
                     </div>
 
@@ -373,7 +817,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-3">12. Core Practicals — Iodine–Propanone, Iodine Clock &amp; $E_a$</h3>
                             <div class="space-y-2">
-                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">🎯 5 Key Learning Goals:</span>
+                                <span class="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">5 Key Learning Goals:</span>
                                 <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
                                     <li><b>CP 9a:</b> follow the iodine–propanone reaction by titration — timed samples, quench, titrate excess $\text{I}_2$ with thiosulfate.</li>
                                     <li><b>CP 9b (Harcourt–Esson clock):</b> $\text{H}_2\text{O}_2 + 2\text{I}^- + 2\text{H}^+ \rightarrow \text{I}_2 + 2\text{H}_2\text{O}$ with a little thiosulfate + starch.</li>
@@ -384,8 +828,8 @@
                             </div>
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
-                            <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">In the clock reaction the thiosulfate must be <b>small and constant</b> so reactant concentrations barely change during the timed interval. Add starch near the end-point of a thiosulfate titration, not at the start.</p>
+                            <span class="font-bold text-amber-400 block uppercase text-[10px]">IAL Examiner Watch-Outs:</span>
+                            <p class="leading-relaxed text-[11px]">Clock (CP 9b): thiosulfate <b>small and constant</b>; starch near end-point not at $t=0$; $1/t\propto$ initial rate. CP 9a: quench before titrate. CP 10: water bath, $T$ in K. Paper cue: WCH14 Oct 2025 Q11 iodine clock + RDS.</p>
                         </div>
                     </div>
 
@@ -410,10 +854,10 @@
                 </div>
 
                 <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
-                    <button onclick="window.switchE1Mode('explorer')" id="e1-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-sky-600 text-white font-bold text-xs transition shadow">📚 Module 1: Concept Inspector</button>
-                    <button onclick="window.switchE1Mode('map')" id="e1-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-sky-300 text-xs transition">🗺️ Module 2: Order Deducer</button>
-                    <button onclick="window.switchE1Mode('quiz')" id="e1-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-sky-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
-                    <button onclick="window.switchE1Mode('traps')" id="e1-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-sky-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                    <button onclick="window.switchE1Mode('explorer')" id="e1-mode-btn-explorer" class="lab-chip-active px-3.5 py-1.5 text-xs">Module 1: Concept Inspector</button>
+                    <button onclick="window.switchE1Mode('map')" id="e1-mode-btn-map" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 2: Order Deducer</button>
+                    <button onclick="window.switchE1Mode('quiz')" id="e1-mode-btn-quiz" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE1Mode('traps')" id="e1-mode-btn-traps" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 4: Trap Pairs Lab</button>
                 </div>
 
                 <!-- MODULE 1: INSPECTOR -->
@@ -435,7 +879,7 @@
                             <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{rate} = k[A]^m[B]^n$</div>
                             <p class="text-slate-300 text-[11px]"><b>$k$</b> = rate constant (depends on temperature &amp; catalyst). <b>$m$, $n$</b> = orders (0, 1 or 2), found <b>experimentally</b>. The rate equation links rate to the concentrations of the species that control the slow step.</p>
                             <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Identify each symbol in $\text{rate}=k[A]^m[B]^n$.</li><li>State that orders are experimental, not from stoichiometry.</li><li>Recognise that only some reactants may appear.</li></ul></div>
-                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Never deduce $m,n$ from balancing coefficients.</li><li>A reactant absent from the rate equation is zero order.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Never deduce $m,n$ from balancing coefficients (reaction-kinetics-a2).</li><li>Absent from rate equation = zero order — may still react after the RDS (WCH14 Oct 2025 Q11d).</li></ul></div>
                         </div>
                         <div id="e1-card-2" class="hidden space-y-3">
                             <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">2. Order &amp; overall order</span>
@@ -449,7 +893,7 @@
                             <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{rate} = k[A]^m \Rightarrow k = \dfrac{\text{rate}}{[A]^m}$</div>
                             <p class="text-slate-300 text-[11px]">Derive units by rearranging. Zero order: $\text{mol dm}^{-3}\text{ s}^{-1}$. First order: $\text{s}^{-1}$. Second order: $\text{mol}^{-1}\text{ dm}^{3}\text{ s}^{-1}$. Third order: $\text{mol}^{-2}\text{ dm}^{6}\text{ s}^{-1}$.</p>
                             <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Derive $k$ units for overall orders 0, 1, 2, 3.</li><li>Substitute rate ($\text{mol dm}^{-3}\text{ s}^{-1}$) and concentration ($\text{mol dm}^{-3}$) correctly.</li></ul></div>
-                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Units of $k$ change with overall order — a common 1-mark gift.</li><li>First order $k$ has units $\text{s}^{-1}$ (concentration cancels).</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Units of $k$ change with overall order — rearrange and handle units separately.</li><li>0th: mol dm$^{-3}$ s$^{-1}$; 1st: s$^{-1}$; 2nd: mol$^{-1}$ dm$^3$ s$^{-1}$; 3rd: mol$^{-2}$ dm$^6$ s$^{-1}$.</li></ul></div>
                         </div>
                         <div id="e1-card-4" class="hidden space-y-3">
                             <span class="text-sky-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">4. The initial-rate method</span>
@@ -492,7 +936,7 @@
                 <!-- MODULE 2: ORDER DEDUCER -->
                 <div id="e1-mode-map" class="hidden space-y-4">
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
-                        <span class="font-bold text-sky-300 uppercase">🗺️ Order Deducer — predict the order from the concentration effect</span>
+                        <span class="font-bold text-sky-300 uppercase">Order Deducer — predict the order from the concentration effect</span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
                                 <label class="block text-slate-400 mb-1 font-bold">1. $[A]$ is multiplied by:</label>
@@ -516,7 +960,7 @@
                                 </select>
                             </div>
                             <div class="flex items-end">
-                                <button onclick="window.deduceOrder()" class="w-full py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded">✨ Deduce Order</button>
+                                <button onclick="window.deduceOrder()" class="w-full py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded">Deduce Order</button>
                             </div>
                         </div>
                         <div id="e1-deduce-result" class="pt-2"></div>
@@ -527,8 +971,8 @@
                 <div id="e1-mode-quiz" class="hidden space-y-4">
                     <div id="e1-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="font-bold text-sky-300">🎯 Rate Equations &amp; Order — Fill-in-the-Blanks</span>
-                            <button id="e1-toggle-all-btn" onclick="window.toggleActiveRecall('e1-quiz-container', 'e1-toggle-all-btn')" class="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-800 rounded hover:bg-sky-900 transition">👁️ Reveal All Blanks</button>
+                            <span class="font-bold text-sky-300">Rate Equations &amp; Order — Fill-in-the-Blanks</span>
+                            <button id="e1-toggle-all-btn" onclick="window.toggleActiveRecall('e1-quiz-container', 'e1-toggle-all-btn')" class="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-800 rounded hover:bg-sky-900 transition">Reveal All Blanks</button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
@@ -559,13 +1003,24 @@
                                 <span class="text-sky-300 font-bold block">6. Initial-rate method controls</span>
                                 <p>Two things kept constant: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">temperature &amp; other reactant concentrations</span></p>
                             </div>
+
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">7. Units of $k$ (3rd order)</span>
+                                <p>Overall order 3: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">mol$^{-2}$ dm$^{6}$ s$^{-1}$</span></p>
+                                <p>Method: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">rearrange $k=$ rate$/[A]^m[B]^n$; units separately</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-sky-300 font-bold block">8. Clock reaction rate proxy</span>
+                                <p>Rate proxy: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$1/t$ to fixed colour change</span></p>
+                                <p>Thiosulfate must be: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">small and constant each run</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- MODULE 4: TRAPS -->
                 <div id="e1-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
-                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — Rate Equations</span>
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">High-Yield Trap Pairs — Rate Equations</span>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
                             <span class="font-bold text-amber-300 block">Trap 1: Stoichiometry vs experiment</span>
@@ -596,14 +1051,14 @@
                         <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Engine 2 · Learning Suite</span>
                         <h2 class="text-xl font-bold text-white mt-1">Concentration–Time &amp; Rate–Concentration Graphs, Half-life (Spec 11.2, 11.5)</h2>
                     </div>
-                    <span class="px-3 py-1 bg-emerald-950 text-emerald-300 rounded-lg border border-emerald-800 text-xs font-mono">7 concepts mapped</span>
+                    <span class="px-3 py-1 bg-emerald-950 text-emerald-300 rounded-lg border border-emerald-800 text-xs font-mono">8 concepts mapped</span>
                 </div>
 
                 <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
-                    <button onclick="window.switchE2Mode('explorer')" id="e2-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs transition shadow">📚 Module 1: Graph Inspector</button>
-                    <button onclick="window.switchE2Mode('map')" id="e2-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 text-xs transition">🗺️ Module 2: Graph Identifier</button>
-                    <button onclick="window.switchE2Mode('quiz')" id="e2-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
-                    <button onclick="window.switchE2Mode('traps')" id="e2-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-emerald-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                    <button onclick="window.switchE2Mode('explorer')" id="e2-mode-btn-explorer" class="lab-chip-active px-3.5 py-1.5 text-xs">Module 1: Graph Inspector</button>
+                    <button onclick="window.switchE2Mode('map')" id="e2-mode-btn-map" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 2: Graph Identifier</button>
+                    <button onclick="window.switchE2Mode('quiz')" id="e2-mode-btn-quiz" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE2Mode('traps')" id="e2-mode-btn-traps" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 4: Trap Pairs Lab</button>
                 </div>
 
                 <!-- MODULE 1: INSPECTOR -->
@@ -622,7 +1077,7 @@
 
                         <!-- Combined concentration–time comparison graph -->
                         <div class="space-y-1.5">
-                            <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">📈 Concentration–time profiles for the three orders</span>
+                            <span class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">Concentration–time profiles for the three orders</span>
                             <svg viewBox="0 0 520 300" class="w-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Concentration versus time for zero, first and second order reactions">
                                 <rect x="0" y="0" width="520" height="300" rx="10" fill="#0f172a"/>
                                 <!-- horizontal gridlines -->
@@ -789,7 +1244,7 @@
                 <!-- MODULE 2: GRAPH IDENTIFIER -->
                 <div id="e2-mode-map" class="hidden space-y-4">
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
-                        <span class="font-bold text-emerald-300 uppercase">🗺️ Graph Identifier — match the observation to an order</span>
+                        <span class="font-bold text-emerald-300 uppercase">Graph Identifier — match the observation to an order</span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
                                 <label class="block text-slate-400 mb-1 font-bold">1. Graph type:</label>
@@ -810,7 +1265,7 @@
                                 </select>
                             </div>
                             <div class="flex items-end">
-                                <button onclick="window.identifyGraph()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded">✨ Identify Order</button>
+                                <button onclick="window.identifyGraph()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded"> Identify Order</button>
                             </div>
                         </div>
                         <div id="e2-identify-result" class="pt-2"></div>
@@ -821,8 +1276,8 @@
                 <div id="e2-mode-quiz" class="hidden space-y-4">
                     <div id="e2-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="font-bold text-emerald-300">🎯 Graphs &amp; Half-life — Fill-in-the-Blanks</span>
-                            <button id="e2-toggle-all-btn" onclick="window.toggleActiveRecall('e2-quiz-container', 'e2-toggle-all-btn')" class="px-3 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded hover:bg-emerald-900 transition">👁️ Reveal All Blanks</button>
+                            <span class="font-bold text-emerald-300">Graphs &amp; Half-life — Fill-in-the-Blanks</span>
+                            <button id="e2-toggle-all-btn" onclick="window.toggleActiveRecall('e2-quiz-container', 'e2-toggle-all-btn')" class="px-3 py-1 bg-emerald-950 text-emerald-300 border border-emerald-800 rounded hover:bg-emerald-900 transition">Reveal All Blanks</button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
@@ -850,13 +1305,25 @@
                                 <span class="text-emerald-300 font-bold block">6. Initial rate from a curve</span>
                                 <p>Method: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">tangent at $t=0$, take gradient</span></p>
                             </div>
+
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">Arrhenius axes checklist</span>
+                                <p>$x$-axis: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$1/T$ (K$^{-1}$)</span></p>
+                                <p>$y$-axis: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">$\ln k$ (no units)</span></p>
+                                <p>Gradient equals: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">$-E_a/R$</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-emerald-300 font-bold block">PEF graph traps</span>
+                                <p>Grid scale: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">points fill &gt;50% of grid (PEF Jan 2020 Q18)</span></p>
+                                <p>$k$ vs $K$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">$k$ = rate constant; $K$ = equilibrium — never mix</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- MODULE 4: TRAPS -->
                 <div id="e2-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
-                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — Graphs &amp; Half-life</span>
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">High-Yield Trap Pairs — Graphs &amp; Half-life</span>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
                             <span class="font-bold text-amber-300 block">Trap 1: First vs second order decay</span>
@@ -887,14 +1354,14 @@
                         <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Engine 3 · Learning Suite</span>
                         <h2 class="text-xl font-bold text-white mt-1">Reaction Mechanisms, the RDS &amp; SN1/SN2 Evidence (Spec 11.6 – 11.9)</h2>
                     </div>
-                    <span class="px-3 py-1 bg-amber-950 text-amber-300 rounded-lg border border-amber-800 text-xs font-mono">7 concepts mapped</span>
+                    <span class="px-3 py-1 bg-amber-950 text-amber-300 rounded-lg border border-amber-800 text-xs font-mono">8 concepts mapped</span>
                 </div>
 
                 <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
-                    <button onclick="window.switchE3Mode('explorer')" id="e3-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-amber-600 text-white font-bold text-xs transition shadow">📚 Module 1: Mechanism Inspector</button>
-                    <button onclick="window.switchE3Mode('map')" id="e3-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-300 text-xs transition">🗺️ Module 2: RDS Deducer</button>
-                    <button onclick="window.switchE3Mode('quiz')" id="e3-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
-                    <button onclick="window.switchE3Mode('traps')" id="e3-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                    <button onclick="window.switchE3Mode('explorer')" id="e3-mode-btn-explorer" class="lab-chip-active px-3.5 py-1.5 text-xs">Module 1: Mechanism Inspector</button>
+                    <button onclick="window.switchE3Mode('map')" id="e3-mode-btn-map" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 2: RDS Deducer</button>
+                    <button onclick="window.switchE3Mode('quiz')" id="e3-mode-btn-quiz" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE3Mode('traps')" id="e3-mode-btn-traps" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 4: Trap Pairs Lab</button>
                 </div>
 
                 <!-- MODULE 1: INSPECTOR -->
@@ -907,6 +1374,7 @@
                         <button onclick="window.selectE3(5)" id="e3-btn-5" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>5. Propanone mechanism</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">11.6</span></button>
                         <button onclick="window.selectE3(6)" id="e3-btn-6" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>6. SN1 evidence (3°)</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">11.9</span></button>
                         <button onclick="window.selectE3(7)" id="e3-btn-7" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>7. SN2 evidence (1°)</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">11.9</span></button>
+                        <button onclick="window.selectE3(8)" id="e3-btn-8" class="p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center"><span>8. SN1 stereochemistry</span><span class="px-1.5 py-0.5 bg-slate-800 text-[10px] rounded font-mono">11.9</span></button>
                     </div>
 
                     <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-xl p-5 text-xs space-y-4">
@@ -936,7 +1404,7 @@
                             <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{CH}_3\text{COCH}_3 + \text{I}_2 \xrightarrow{\text{H}^+} \text{CH}_3\text{COCH}_2\text{I} + \text{HI}$</div>
                             <p class="text-slate-300 text-[11px]">Experiment: first order in propanone, first order in $\text{H}^+$, <b>zero order in $\text{I}_2$</b>. So $\text{rate} = k[\text{CH}_3\text{COCH}_3][\text{H}^+]$. Iodine concentration does not affect the rate — it reacts after the RDS. $\text{H}^+$ is a catalyst (regenerated).</p>
                             <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>State the orders and the rate equation for this reaction.</li><li>Explain the significance of zero order in $\text{I}_2$.</li></ul></div>
-                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>This is a favourite exam context — memorise the rate equation and the "zero order in iodine" conclusion.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Memorise rate $=k[\text{CH}_3\text{COCH}_3][\text{H}^+]$ and zero order in $\text{I}_2$. Missing from rate equation → after RDS (Oct 2025 Q11).</li></ul></div>
                         </div>
                         <div id="e3-card-5" class="hidden space-y-3">
                             <span class="text-amber-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">5. A mechanism for propanone iodination</span>
@@ -950,14 +1418,22 @@
                             <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$(\text{CH}_3)_3\text{CBr} + \text{OH}^- \rightarrow (\text{CH}_3)_3\text{COH} + \text{Br}^-$<br>$\text{rate} = k[(\text{CH}_3)_3\text{CBr}]$</div>
                             <p class="text-slate-300 text-[11px]">First order — only the halogenoalkane is in the RDS. Mechanism: slow ionisation to a planar carbocation + $\text{Br}^-$, then fast attack by $\text{OH}^-$. This two-step pathway is <b>SN1</b>. Favoured for 3° because the carbocation is stable.</p>
                             <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Link a first-order rate equation to an SN1 mechanism.</li><li>Describe the carbocation intermediate and its planar shape.</li></ul></div>
-                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>$\text{OH}^-$ is absent from the rate equation — do not include it in the RDS.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>$\text{OH}^-$ absent from SN1 rate equation (WCH14 Jan 2026 Q3). Secondary + rate $=k[\text{R–X}]$ ⇒ SN1.</li></ul></div>
                         </div>
                         <div id="e3-card-7" class="hidden space-y-3">
                             <span class="text-amber-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">7. SN2 evidence — primary halogenoalkane</span>
                             <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">$\text{CH}_3\text{CH}_2\text{Br} + \text{OH}^- \rightarrow \text{CH}_3\text{CH}_2\text{OH} + \text{Br}^-$<br>$\text{rate} = k[\text{CH}_3\text{CH}_2\text{Br}][\text{OH}^-]$</div>
                             <p class="text-slate-300 text-[11px]">Second order — both species in the RDS. Mechanism: a single concerted step where $\text{OH}^-$ attacks as $\text{Br}^-$ leaves (one transition state). This is <b>SN2</b>. Favoured for 1° because there is little steric hindrance.</p>
                             <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Link a second-order rate equation to an SN2 mechanism.</li><li>Contrast the one-step SN2 with the two-step SN1.</li></ul></div>
-                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>The kinetic evidence (order) is what <b>distinguishes</b> SN1 from SN2 — state it explicitly.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Kinetics distinguishes SN1/SN2. Primary + little steric hindrance ⇒ SN2 (Oct 2025 Q6a). SN1 optical: racemic / slight excess inversion — not pure inversion (Oct 2025 Q6b).</li></ul></div>
+                        </div>
+
+                        <div id="e3-card-8" class="hidden space-y-3">
+                            <span class="text-amber-300 font-bold block font-mono text-sm border-b border-slate-800 pb-2">8. SN1 stereochemistry — optical outcome</span>
+                            <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800">planar $\text{R}^+$ $\rightarrow$ attack from either face $\rightarrow$ racemic mixture<br><span class="text-[11px] text-slate-400">often slight excess of inversion product</span></div>
+                            <p class="text-slate-300 text-[11px]">In SN1 the slow step forms a <b>planar carbocation</b>. The nucleophile can attack from either face, so a single-enantiomer starting material gives a <b>racemic mixture</b>. Boards often award a further mark for <b>slight excess of inversion</b> (leaving group partially blocks one face). SN2 is different: backside attack gives <b>clean inversion</b> only (WCH14 Oct 2025 Q6).</p>
+                            <div class="mt-2 p-2.5 bg-sky-950/40 border border-sky-900/50 rounded-lg"><b class="text-sky-300 text-[11px]">Learning goals</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Link planar $\text{R}^+$ to attack from either face.</li><li>State SN1 product stereochemistry: racemic mixture (often slight excess inversion).</li><li>Contrast with SN2: clean inversion only.</li><li>Combine stereochemistry with kinetic evidence for the mechanism.</li></ul></div>
+                            <div class="mt-2 p-2.5 bg-rose-950/30 border border-rose-900/40 rounded-lg"><b class="text-rose-300 text-[11px]">Examiner tips</b><ul class="list-disc ml-4 mt-1 text-slate-300 text-[11px] space-y-0.5"><li>Do not write "pure inversion" for SN1 — that is SN2 (WCH14 Oct 2025 Q6b).</li><li>"Racemic / mixture of enantiomers" scores; "slight excess inversion" is the fuller answer when asked.</li><li>Primary R–X rarely form stable carbocations — prefer SN2 language for 1° (Oct 2025 Q6a).</li></ul></div>
                         </div>
                     </div>
                 </div>
@@ -965,7 +1441,7 @@
                 <!-- MODULE 2: RDS DEDUCER -->
                 <div id="e3-mode-map" class="hidden space-y-4">
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
-                        <span class="font-bold text-amber-300 uppercase">🗺️ RDS Deducer — which species are in the slow step?</span>
+                        <span class="font-bold text-amber-300 uppercase">RDS Deducer — which species are in the slow step?</span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
                                 <label class="block text-slate-400 mb-1 font-bold">1. Pick a rate equation:</label>
@@ -977,7 +1453,7 @@
                                 </select>
                             </div>
                             <div class="flex items-end">
-                                <button onclick="window.deduceRDS()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded">✨ Deduce RDS &amp; Mechanism</button>
+                                <button onclick="window.deduceRDS()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded">Deduce RDS &amp; Mechanism</button>
                             </div>
                         </div>
                         <div id="e3-rds-result" class="pt-2"></div>
@@ -988,8 +1464,8 @@
                 <div id="e3-mode-quiz" class="hidden space-y-4">
                     <div id="e3-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="font-bold text-amber-300">🎯 Mechanisms &amp; RDS — Fill-in-the-Blanks</span>
-                            <button id="e3-toggle-all-btn" onclick="window.toggleActiveRecall('e3-quiz-container', 'e3-toggle-all-btn')" class="px-3 py-1 bg-amber-950 text-amber-300 border border-amber-800 rounded hover:bg-amber-900 transition">👁️ Reveal All Blanks</button>
+                            <span class="font-bold text-amber-300">Mechanisms &amp; RDS — Fill-in-the-Blanks</span>
+                            <button id="e3-toggle-all-btn" onclick="window.toggleActiveRecall('e3-quiz-container', 'e3-toggle-all-btn')" class="px-3 py-1 bg-amber-950 text-amber-300 border border-amber-800 rounded hover:bg-amber-900 transition">Reveal All Blanks</button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
@@ -1020,13 +1496,25 @@
                                 <span class="text-amber-300 font-bold block">6. $\text{H}^+$ in propanone iodination</span>
                                 <p>Role: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">catalyst (used then regenerated)</span></p>
                             </div>
+
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-amber-300 font-bold block">7. SN1 optical outcome</span>
+                                <p>Carbocation shape: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">planar</span></p>
+                                <p>Product mixture: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">racemic (often slight excess inversion)</span></p>
+                                <p>SN2 contrast: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">clean inversion only</span></p>
+                            </div>
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-amber-300 font-bold block">8. Secondary R–X, rate = k[R–X]</span>
+                                <p>Mechanism: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">SN1 (nucleophile not in RDS)</span></p>
+                                <p>Bank cue: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">WCH14 Jan 2026 Q3 pattern</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- MODULE 4: TRAPS -->
                 <div id="e3-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
-                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — Mechanisms &amp; RDS</span>
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">High-Yield Trap Pairs — Mechanisms &amp; RDS</span>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
                             <span class="font-bold text-amber-300 block">Trap 1: SN1 vs SN2 rate equations</span>
@@ -1043,6 +1531,11 @@
                         <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
                             <span class="font-bold text-amber-300 block">Trap 4: "The" mechanism</span>
                             <p class="text-slate-300 text-[11px] leading-relaxed">Kinetics suggests a <b>possible</b> mechanism, not a unique one. Write "a possible mechanism consistent with the rate equation" and make the steps sum correctly.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
+                            <span class="font-bold text-amber-300 block">Trap 5: SN1 optical outcome (WCH14 Oct 2025 Q6)</span>
+                            <p class="text-slate-300 text-[11px] leading-relaxed"><b>Wrong:</b> "pure inversion" for SN1.<br><b>Right:</b> racemic mixture from planar $\text{R}^+$; often <b>slight excess inversion</b>. SN2 = clean inversion. Pair with rate-equation evidence.</p>
                         </div>
                     </div>
                 </div>
@@ -1061,10 +1554,10 @@
                 </div>
 
                 <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
-                    <button onclick="window.switchE4Mode('explorer')" id="e4-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-violet-600 text-white font-bold text-xs transition shadow">📚 Module 1: Method Inspector</button>
-                    <button onclick="window.switchE4Mode('map')" id="e4-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-violet-300 text-xs transition">🗺️ Module 2: Method Selector</button>
-                    <button onclick="window.switchE4Mode('quiz')" id="e4-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-violet-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
-                    <button onclick="window.switchE4Mode('traps')" id="e4-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-violet-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                    <button onclick="window.switchE4Mode('explorer')" id="e4-mode-btn-explorer" class="lab-chip-active px-3.5 py-1.5 text-xs">Module 1: Method Inspector</button>
+                    <button onclick="window.switchE4Mode('map')" id="e4-mode-btn-map" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 2: Method Selector</button>
+                    <button onclick="window.switchE4Mode('quiz')" id="e4-mode-btn-quiz" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE4Mode('traps')" id="e4-mode-btn-traps" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 4: Trap Pairs Lab</button>
                 </div>
 
                 <!-- MODULE 1: INSPECTOR -->
@@ -1136,7 +1629,7 @@
                 <!-- MODULE 2: METHOD SELECTOR -->
                 <div id="e4-mode-map" class="hidden space-y-4">
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
-                        <span class="font-bold text-violet-300 uppercase">🗺️ Method Selector — pick the best way to follow a reaction</span>
+                        <span class="font-bold text-violet-300 uppercase">Method Selector — pick the best way to follow a reaction</span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
                                 <label class="block text-slate-400 mb-1 font-bold">1. What changes in the reaction?</label>
@@ -1150,7 +1643,7 @@
                                 </select>
                             </div>
                             <div class="flex items-end">
-                                <button onclick="window.suggestMethod()" class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded">✨ Suggest Method</button>
+                                <button onclick="window.suggestMethod()" class="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded"> Suggest Method</button>
                             </div>
                         </div>
                         <div id="e4-method-result" class="pt-2"></div>
@@ -1161,8 +1654,8 @@
                 <div id="e4-mode-quiz" class="hidden space-y-4">
                     <div id="e4-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="font-bold text-violet-300">🎯 Methods &amp; Practicals — Fill-in-the-Blanks</span>
-                            <button id="e4-toggle-all-btn" onclick="window.toggleActiveRecall('e4-quiz-container', 'e4-toggle-all-btn')" class="px-3 py-1 bg-violet-950 text-violet-300 border border-violet-800 rounded hover:bg-violet-900 transition">👁️ Reveal All Blanks</button>
+                            <span class="font-bold text-violet-300">Methods &amp; Practicals — Fill-in-the-Blanks</span>
+                            <button id="e4-toggle-all-btn" onclick="window.toggleActiveRecall('e4-quiz-container', 'e4-toggle-all-btn')" class="px-3 py-1 bg-violet-950 text-violet-300 border border-violet-800 rounded hover:bg-violet-900 transition">Reveal All Blanks</button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
@@ -1191,13 +1684,20 @@
                                 <p>Plot: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$\ln k$ vs $1/T$</span></p>
                                 <p>Gradient equals: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">$-E_a/R$</span></p>
                             </div>
+
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-violet-300 font-bold block">Iodine clock controls</span>
+                                <p>Why thiosulfate small: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">so [reactants] barely change in the timed interval</span></p>
+                                <p>Starch timing: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">near end-point, not at $t=0$</span></p>
+                                <p>Paper cue: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">WCH14 Oct 2025 Q11</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- MODULE 4: TRAPS -->
                 <div id="e4-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
-                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — Methods &amp; Practicals</span>
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">High-Yield Trap Pairs — Methods &amp; Practicals</span>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
                             <span class="font-bold text-amber-300 block">Trap 1: Mass loss vs gas syringe</span>
@@ -1232,10 +1732,10 @@
                 </div>
 
                 <div class="flex flex-wrap gap-2 text-xs border-b border-slate-800 pb-3">
-                    <button onclick="window.switchE5Mode('explorer')" id="e5-mode-btn-explorer" class="px-3.5 py-1.5 rounded-lg bg-rose-600 text-white font-bold text-xs transition shadow">📚 Module 1: Catalysis Inspector</button>
-                    <button onclick="window.switchE5Mode('map')" id="e5-mode-btn-map" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-300 text-xs transition">🗺️ Module 2: Catalyst Matcher</button>
-                    <button onclick="window.switchE5Mode('quiz')" id="e5-mode-btn-quiz" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-300 text-xs transition">🎯 Module 3: Fill-in-the-Blanks</button>
-                    <button onclick="window.switchE5Mode('traps')" id="e5-mode-btn-traps" class="px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-rose-300 text-xs transition">⚡ Module 4: Trap Pairs Lab</button>
+                    <button onclick="window.switchE5Mode('explorer')" id="e5-mode-btn-explorer" class="lab-chip-active px-3.5 py-1.5 text-xs">Module 1: Catalysis Inspector</button>
+                    <button onclick="window.switchE5Mode('map')" id="e5-mode-btn-map" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 2: Catalyst Matcher</button>
+                    <button onclick="window.switchE5Mode('quiz')" id="e5-mode-btn-quiz" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 3: Fill-in-the-Blanks</button>
+                    <button onclick="window.switchE5Mode('traps')" id="e5-mode-btn-traps" class="lab-chip-idle px-3.5 py-1.5 text-xs">Module 4: Trap Pairs Lab</button>
                 </div>
 
                 <!-- MODULE 1: INSPECTOR -->
@@ -1290,7 +1790,7 @@
                 <!-- MODULE 2: CATALYST MATCHER -->
                 <div id="e5-mode-map" class="hidden space-y-4">
                     <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3 text-xs">
-                        <span class="font-bold text-rose-300 uppercase">🗺️ Catalyst Matcher — name the industrial catalyst</span>
+                        <span class="font-bold text-rose-300 uppercase">Catalyst Matcher — name the industrial catalyst</span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div>
                                 <label class="block text-slate-400 mb-1 font-bold">1. Pick a process:</label>
@@ -1303,7 +1803,7 @@
                                 </select>
                             </div>
                             <div class="flex items-end">
-                                <button onclick="window.matchCatalyst()" class="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded">✨ Reveal Catalyst</button>
+                                <button onclick="window.matchCatalyst()" class="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded"> Reveal Catalyst</button>
                             </div>
                         </div>
                         <div id="e5-catalyst-result" class="pt-2"></div>
@@ -1314,8 +1814,8 @@
                 <div id="e5-mode-quiz" class="hidden space-y-4">
                     <div id="e5-quiz-container" class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4 text-xs font-mono">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                            <span class="font-bold text-rose-300">🎯 Catalysis — Fill-in-the-Blanks</span>
-                            <button id="e5-toggle-all-btn" onclick="window.toggleActiveRecall('e5-quiz-container', 'e5-toggle-all-btn')" class="px-3 py-1 bg-rose-950 text-rose-300 border border-rose-800 rounded hover:bg-rose-900 transition">👁️ Reveal All Blanks</button>
+                            <span class="font-bold text-rose-300">Catalysis — Fill-in-the-Blanks</span>
+                            <button id="e5-toggle-all-btn" onclick="window.toggleActiveRecall('e5-quiz-container', 'e5-toggle-all-btn')" class="px-3 py-1 bg-rose-950 text-rose-300 border border-rose-800 rounded hover:bg-rose-900 transition">Reveal All Blanks</button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
@@ -1344,13 +1844,21 @@
                                 <span class="text-rose-300 font-bold block">6. Effect on $E_a$</span>
                                 <p>A catalyst: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">lowers $E_a$ (alternative pathway)</span></p>
                             </div>
+
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+                                <span class="text-rose-300 font-bold block">Arrhenius calculation blanks</span>
+                                <p>$E_a$ from gradient: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-emerald-300 rounded">$E_a=-$gradient$\times R$</span></p>
+                                <p>$R$: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">8.31 J K$^{-1}$ mol$^{-1}$</span></p>
+                                <p>J → kJ: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-rose-300 rounded">divide by 1000</span></p>
+                                <p>Common error: <span onclick="window.toggleSingleBlur(this)" class="blur-answer px-2 py-0.5 bg-slate-800 text-amber-300 rounded">inverting the gradient (Oct 2025 Q2)</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- MODULE 4: TRAPS -->
                 <div id="e5-mode-traps" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-4">
-                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">⚡ High-Yield Trap Pairs — Catalysis</span>
+                    <span class="font-bold text-amber-300 uppercase block border-b border-slate-800 pb-1">High-Yield Trap Pairs — Catalysis</span>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="p-3.5 bg-slate-900 rounded-lg border border-amber-800/80 space-y-2">
                             <span class="font-bold text-amber-300 block">Trap 1: Adsorption vs absorption</span>
@@ -1385,7 +1893,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Two-temperature calculator -->
                     <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3 text-xs">
-                        <span class="font-bold text-sky-300 uppercase block">🧮 Method A — Two-Temperature Calculator</span>
+                        <span class="font-bold text-sky-300 uppercase block">Method A — Two-Temperature Calculator</span>
                         <p class="text-slate-400 text-[11px]">Uses $\ln\dfrac{k_2}{k_1} = \dfrac{E_a}{R}\left(\dfrac{1}{T_1} - \dfrac{1}{T_2}\right)$. Enter temperatures in °C (converted to K automatically).</p>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="block text-slate-400 mb-1 font-bold">$k_1$ (any consistent unit)</label><input id="ea-k1" type="number" step="any" value="2.5" class="w-full bg-slate-900 border border-slate-700 text-sky-300 rounded p-2 font-mono"></div>
@@ -1393,18 +1901,18 @@
                             <div><label class="block text-slate-400 mb-1 font-bold">$k_2$ (same unit)</label><input id="ea-k2" type="number" step="any" value="9.8" class="w-full bg-slate-900 border border-slate-700 text-emerald-300 rounded p-2 font-mono"></div>
                             <div><label class="block text-slate-400 mb-1 font-bold">$T_2$ (°C)</label><input id="ea-t2" type="number" step="any" value="45" class="w-full bg-slate-900 border border-slate-700 text-emerald-300 rounded p-2 font-mono"></div>
                         </div>
-                        <button onclick="window.calcEaTwoTemp()" class="w-full py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded">✨ Calculate $E_a$</button>
+                        <button onclick="window.calcEaTwoTemp()" class="w-full py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded"> Calculate $E_a$</button>
                         <div id="ea-twotemp-result" class="pt-1"></div>
                     </div>
 
                     <!-- Gradient calculator -->
                     <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3 text-xs">
-                        <span class="font-bold text-emerald-300 uppercase block">📈 Method B — Gradient Calculator</span>
+                        <span class="font-bold text-emerald-300 uppercase block">Method B — Gradient Calculator</span>
                         <p class="text-slate-400 text-[11px]">Uses $E_a = -\text{gradient} \times R$. Enter the gradient of your $\ln k$ vs $1/T$ plot (it will be negative, in K).</p>
                         <div class="grid grid-cols-1 gap-3">
                             <div><label class="block text-slate-400 mb-1 font-bold">Gradient of $\ln k$ vs $1/T$ (K)</label><input id="ea-grad" type="number" step="any" value="-6120" class="w-full bg-slate-900 border border-slate-700 text-emerald-300 rounded p-2 font-mono"></div>
                         </div>
-                        <button onclick="window.calcEaGradient()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded">✨ Calculate $E_a$</button>
+                        <button onclick="window.calcEaGradient()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded"> Calculate $E_a$</button>
                         <div id="ea-gradient-result" class="pt-1"></div>
                     </div>
                 </div>
@@ -1412,7 +1920,7 @@
                 <!-- Interactive Arrhenius plot -->
                 <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3 text-xs">
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-                        <span class="font-bold text-amber-300 uppercase">📉 Interactive Arrhenius Plot — drag $E_a$ and watch the gradient change</span>
+                        <span class="font-bold text-amber-300 uppercase">Interactive Arrhenius Plot — drag $E_a$ and watch the gradient change</span>
                         <span class="text-slate-400 font-mono">$\ln k = \ln A - \dfrac{E_a}{R}\cdot\dfrac{1}{T}$</span>
                     </div>
                     <div class="flex items-center gap-3">
@@ -1468,7 +1976,7 @@
 
                 <!-- Worked example -->
                 <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-2 text-xs">
-                    <span class="font-bold text-violet-300 uppercase block">📝 Worked Example (Method A)</span>
+                    <span class="font-bold text-violet-300 uppercase block">Worked Example (Method A)</span>
                     <p class="text-slate-300 text-[11px] leading-relaxed">A reaction has $k_1 = 2.5\times10^{-3}\ \text{s}^{-1}$ at $25^\circ\text{C}$ and $k_2 = 9.8\times10^{-3}\ \text{s}^{-1}$ at $45^\circ\text{C}$. Find $E_a$.</p>
                     <div class="p-3 bg-slate-900 rounded font-mono text-emerald-300 border border-slate-800 text-[11px] leading-relaxed">
                         $T_1 = 298\ \text{K},\; T_2 = 318\ \text{K}$<br>
@@ -1501,7 +2009,7 @@
                 <!-- Rate Eq & Order -->
                 <details id="rev-rateeq" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
                     <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
-                        <span class="font-bold text-sm"><span class="text-sky-300">📐 Rate Equations &amp; Order</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
+                        <span class="font-bold text-sm"><span class="text-sky-300">Rate Equations &amp; Order</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
                         <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
                     </summary>
                     <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
@@ -1526,7 +2034,7 @@
                 <!-- Graphs & t½ -->
                 <details id="rev-graphs" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
                     <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
-                        <span class="font-bold text-sm"><span class="text-emerald-300">📈 Graphs &amp; Half-life</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
+                        <span class="font-bold text-sm"><span class="text-emerald-300">Graphs &amp; Half-life</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
                         <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
                     </summary>
                     <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
@@ -1551,7 +2059,7 @@
                 <!-- Mechanisms & RDS -->
                 <details id="rev-mech" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
                     <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
-                        <span class="font-bold text-sm"><span class="text-amber-300">🔬 Mechanisms &amp; the RDS</span> <span class="text-slate-500 font-mono text-xs ml-2">5 items</span></span>
+                        <span class="font-bold text-sm"><span class="text-amber-300">Mechanisms &amp; the RDS</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
                         <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
                     </summary>
                     <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
@@ -1566,6 +2074,8 @@
                                     <tr class="align-top"><td class="p-2.5 font-bold text-amber-300">3</td><td class="p-2.5 font-bold text-slate-200">3° R–X hydrolysis</td><td class="p-2.5 font-mono text-emerald-300/95">$\text{rate}=k[\text{R–X}]$</td><td class="p-2.5">SN1, carbocation, 2 steps</td><td class="p-2.5 text-amber-200/90 text-[10px]">No $\text{OH}^-$ in the rate equation</td></tr>
                                     <tr class="align-top"><td class="p-2.5 font-bold text-amber-300">4</td><td class="p-2.5 font-bold text-slate-200">1° R–X hydrolysis</td><td class="p-2.5 font-mono text-emerald-300/95">$\text{rate}=k[\text{R–X}][\text{OH}^-]$</td><td class="p-2.5">SN2, concerted, 1 step</td><td class="p-2.5 text-amber-200/90 text-[10px]">Kinetic evidence distinguishes SN1/SN2</td></tr>
                                     <tr class="align-top"><td class="p-2.5 font-bold text-amber-300">5</td><td class="p-2.5 font-bold text-slate-200">Mechanism check</td><td class="p-2.5 font-mono text-emerald-300/95">steps sum to overall eqn</td><td class="p-2.5">Intermediates cancel</td><td class="p-2.5 text-amber-200/90 text-[10px]">Label each step slow / fast</td></tr>
+                                    <tr class="align-top"><td class="p-2.5 font-bold text-amber-300">6</td><td class="p-2.5 font-bold text-slate-200">SN1 stereochemistry</td><td class="p-2.5 font-mono text-emerald-300/95">planar $\text{R}^+$ → either face</td><td class="p-2.5">Racemic; often slight excess inversion</td><td class="p-2.5 text-amber-200/90 text-[10px]">Not pure inversion (SN2) · Oct 2025 Q6</td></tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -1575,7 +2085,7 @@
                 <!-- Methods & Practicals -->
                 <details id="rev-methods" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
                     <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
-                        <span class="font-bold text-sm"><span class="text-violet-300">🧪 Methods &amp; Core Practicals</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
+                        <span class="font-bold text-sm"><span class="text-violet-300">Methods &amp; Core Practicals</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
                         <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
                     </summary>
                     <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
@@ -1600,7 +2110,7 @@
                 <!-- Catalysis & Ea -->
                 <details id="rev-catalysis" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
                     <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
-                        <span class="font-bold text-sm"><span class="text-rose-300">⚗️ Catalysis &amp; the Arrhenius Equation</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
+                        <span class="font-bold text-sm"><span class="text-rose-300">Catalysis &amp; the Arrhenius Equation</span> <span class="text-slate-500 font-mono text-xs ml-2">6 items</span></span>
                         <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
                     </summary>
                     <div class="px-3 pb-4 pt-1 space-y-3 border-t border-slate-800/80">
@@ -1625,7 +2135,7 @@
                 <!-- Master Trap Checklist -->
                 <details id="rev-traps" class="group bg-slate-950/60 border border-slate-800 rounded-xl" open>
                     <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between gap-3 select-none">
-                        <span class="font-bold text-sm"><span class="text-rose-300">⚠️ Master Trap Checklist</span> <span class="text-slate-500 font-mono text-xs ml-2">cross-cutting</span></span>
+                        <span class="font-bold text-sm"><span class="text-rose-300">Master Trap Checklist</span> <span class="text-slate-500 font-mono text-xs ml-2">cross-cutting</span></span>
                         <span class="text-slate-500 text-xs group-open:rotate-180 transition">▼</span>
                     </summary>
                     <div class="px-4 pb-4 pt-2 border-t border-slate-800/80">
@@ -1650,6 +2160,13 @@
                             <li>A catalyst does not change $K$, the equilibrium position, or the yield.</li>
                             <li>Use <b>adsorption</b> for heterogeneous catalysis.</li>
                             <li>Arrhenius: $T$ in kelvin; gradient $=-E_a/R$; convert J→kJ.</li>
+                            <li><b>Arrhenius axes:</b> $\ln k$ (no units) vs $1/T$; do not swap; fill &gt;50% of grid (PEF Jan 2020 Q18).</li>
+                            <li><b>Gradient:</b> $E_a=-$grad$\times R$ — do not invert (WCH14 Oct 2025 Q2; Jan 2026 Q13b).</li>
+                            <li><b>$k$ vs $K$:</b> rate vs equilibrium constant — never use Le Chatelier for $k(T)$ (PEF Jan 2020 Q18).</li>
+                            <li><b>SN1 optical:</b> racemic / slight excess inversion — not clean inversion (Oct 2025 Q6b).</li>
+                            <li><b>Secondary + rate $=k[\text{R–X}]$:</b> SN1 (Jan 2026 Q3).</li>
+                            <li><b>Iodine clock:</b> thiosulfate small &amp; constant; missing from rate equation → after RDS (Oct 2025 Q11).</li>
+
                         </ul>
                     </div>
                 </details>
@@ -1661,9 +2178,9 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-8">
+    <footer class="lab-chrome border-t py-4 mt-8">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
-            IAL Chemistry Topic 11: Kinetics II — Master Studio · WCH14 · Built to the Edexcel Spec 11.1–11.13 · Single-file revision suite
+            IAL Chemistry Topic 11: Kinetics II — Master Studio · WCH14 · Spec 11.1–11.13 · apple-lab · wiki-pull WCH14 banks + PEF Jan 2020 + reaction-kinetics-a2
         </div>
     </footer>
 
@@ -1692,9 +2209,9 @@
                 if (sec) { if (t === tabId) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
                 if (btn) {
                     if (t === tabId) {
-                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-sky-400 font-bold border-b-2 border-sky-400 bg-sky-950/40 transition';
+                        btn.className = 'tab-btn tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs';
                     } else {
-                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent transition';
+                        btn.className = 'tab-btn tab-btn-idle py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs';
                     }
                 }
             });
@@ -1713,7 +2230,7 @@
             var isRevealed = false;
             answers.forEach(function(a) { if (a.classList.contains('revealed')) isRevealed = true; });
             answers.forEach(function(a) { if (isRevealed) a.classList.remove('revealed'); else a.classList.add('revealed'); });
-            if (btn) btn.innerText = isRevealed ? '👁️ Reveal All Blanks' : '🙈 Hide All Blanks';
+            if (btn) btn.innerText = isRevealed ? 'Reveal All Blanks' : 'Hide All Blanks';
         };
 
         // ---------- Generic engine mode switcher ----------
@@ -1726,9 +2243,9 @@
                     if (el) { if (m === mode) el.classList.remove('hidden'); else el.classList.add('hidden'); }
                     if (btn) {
                         if (m === mode) {
-                            btn.className = 'px-3.5 py-1.5 rounded-lg ' + accent + '-600 text-white font-bold text-xs transition shadow';
+                            btn.className = 'lab-chip-active px-3.5 py-1.5 text-xs';
                         } else {
-                            btn.className = 'px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-' + accent + '-300 text-xs transition';
+                            btn.className = 'lab-chip-idle px-3.5 py-1.5 text-xs';
                         }
                     }
                 });
@@ -1756,7 +2273,7 @@
         var OFF = 'p-2.5 rounded-lg border border-slate-800 bg-slate-900/80 text-slate-400 hover:text-slate-200 text-left transition text-xs w-full flex justify-between items-center';
         window.selectE1 = makeCardSelector('e1', 8, 'p-2.5 rounded-lg border border-sky-500 bg-sky-950/70 text-sky-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
         window.selectE2 = makeCardSelector('e2', 7, 'p-2.5 rounded-lg border border-emerald-500 bg-emerald-950/70 text-emerald-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
-        window.selectE3 = makeCardSelector('e3', 7, 'p-2.5 rounded-lg border border-amber-500 bg-amber-950/70 text-amber-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
+        window.selectE3 = makeCardSelector('e3', 8, 'p-2.5 rounded-lg border border-amber-500 bg-amber-950/70 text-amber-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
         window.selectE4 = makeCardSelector('e4', 7, 'p-2.5 rounded-lg border border-violet-500 bg-violet-950/70 text-violet-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
         window.selectE5 = makeCardSelector('e5', 5, 'p-2.5 rounded-lg border border-rose-500 bg-rose-950/70 text-rose-300 font-bold text-left transition text-xs w-full flex justify-between items-center', OFF);
 

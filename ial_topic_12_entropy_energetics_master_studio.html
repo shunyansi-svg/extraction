@@ -9,31 +9,239 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
     <style>
-        .tab-btn-active {
-            border-bottom: 3px solid #fbbf24;
-            color: #fbbf24;
-            font-weight: 700;
-            background-color: rgba(251, 191, 36, 0.12);
+        :root {
+            --bg: #0c1118;
+            --surface: #161d28;
+            --accent: #3dd6c6;
+            --accent-ink: #06201c;
+            --text: #eef2f7;
+            --muted: #8b95a8;
+            --line: rgba(255, 255, 255, 0.08);
+            --spring: cubic-bezier(0.32, 0.72, 0.22, 1);
+            --frost: blur(20px) saturate(1.7);
+            --font: -apple-system, "SF Pro Text", "Segoe UI", "PingFang HK", "Noto Sans HK", system-ui, sans-serif;
+            --font-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Consolas, monospace;
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+            --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(1400px 620px at 80% -14%, rgba(61, 214, 198, 0.10), transparent 60%),
+                radial-gradient(1000px 500px at 4% 116%, rgba(70, 130, 210, 0.08), transparent 60%),
+                linear-gradient(178deg, #0d131c 0%, #0a0e15 55%, #080c12 100%);
+            background-attachment: fixed;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+        /* Ambient energy field — the signature. Slow-drifting teal/blue aurora
+           behind a soft vignette so the page reads as one living surface. */
+        .ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .ambient .blob { position: absolute; border-radius: 50%; will-change: transform; }
+        .ambient .blob--teal { width: 46vmax; height: 46vmax; left: -8vmax; top: -14vmax;
+            background: radial-gradient(circle at 32% 34%, rgba(61,214,198,.16), rgba(61,214,198,.05) 46%, transparent 72%);
+            animation: driftA 26s ease-in-out infinite alternate; }
+        .ambient .blob--blue { width: 42vmax; height: 42vmax; right: -10vmax; top: 8vmax;
+            background: radial-gradient(circle at 60% 40%, rgba(70,130,210,.14), rgba(70,130,210,.04) 48%, transparent 74%);
+            animation: driftB 32s ease-in-out infinite alternate; }
+        .ambient .blob--deep { width: 38vmax; height: 38vmax; left: 28vmax; bottom: -16vmax;
+            background: radial-gradient(circle at 50% 30%, rgba(90,150,220,.10), rgba(90,150,220,.03) 50%, transparent 76%);
+            animation: driftC 38s ease-in-out infinite alternate; }
+        .ambient .vignette { position: absolute; inset: 0;
+            background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(4,7,12,.55) 100%); }
+        @keyframes driftA { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(9vmax,7vmax,0) scale(1.08); } }
+        @keyframes driftB { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-8vmax,6vmax,0) scale(1.1); } }
+        @keyframes driftC { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(6vmax,-7vmax,0) scale(1.06); } }
+        @media (prefers-reduced-motion: reduce) { .ambient .blob { animation: none !important; } }
+
+        /* Content stacking — above ambient */
+        main { position: relative; z-index: 1; }
+        header, nav, footer { position: sticky; z-index: 40; }
+        nav { z-index: 30; }
+
+        /* Cohesive cards — teal-tinted top glow + teal hairline + inset highlight */
+        main .bg-slate-900.border.border-slate-800.rounded-xl,
+        main .bg-slate-900.border.border-slate-800.rounded-lg,
+        main .bg-slate-950.border.border-slate-800.rounded-xl,
+        main .bg-slate-950.border.border-slate-800.rounded-lg,
+        main details.bg-slate-950\/60 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.045), transparent 34%),
+                color-mix(in srgb, var(--surface) 90%, transparent) !important;
+            border-color: color-mix(in srgb, var(--line) 70%, rgba(61,214,198,.10)) !important;
+            box-shadow: var(--inset-top), var(--shadow-md);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        main .bg-slate-950.border.border-slate-800.rounded-xl.p-5,
+        main .bg-slate-950.border.border-slate-800.rounded-lg.p-5 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.035), transparent 26%),
+                color-mix(in srgb, var(--surface) 78%, #000) !important;
+            border-color: color-mix(in srgb, var(--line) 75%, transparent) !important;
+            box-shadow: var(--inset-top);
+        }
+        /* border-color fallback for narrow borders */
+        main .border-slate-800 { border-color: var(--line) !important; }
+        main .border-slate-700 { border-color: var(--line) !important; }
+
+        /* Tab content fade-in on switch */
+        main > section { animation: tabIn 0.34s var(--spring) both; }
+        @keyframes tabIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Floating pill nav */
+        nav {
+            background: transparent;
+            border-bottom: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 0.6rem 1rem 0.4rem;
+        }
+        nav > div {
+            max-width: 100%;
+            width: fit-content;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.3rem;
+            background: color-mix(in srgb, var(--surface) 82%, transparent);
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            box-shadow: var(--inset-top), 0 10px 30px rgba(0,0,0,0.35);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        nav button {
+            transition: color 0.2s var(--spring), background-color 0.2s var(--spring),
+                        box-shadow 0.2s var(--spring), transform 0.15s var(--spring);
+            min-height: 40px;
+            border-radius: 9999px;
+            border: none;
+            white-space: nowrap;
+        }
+        nav button:active { transform: scale(0.96); }
+
+        /* Header chrome — frosted surface */
+        header {
+            background: color-mix(in srgb, var(--surface) 88%, transparent);
+            border-color: var(--line) !important;
+            box-shadow: var(--inset-top), 0 8px 28px rgba(0,0,0,0.25);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+
+        /* Keep the JS class hooks (tab-btn-active/idle, mode chips) working — map amber→teal */
+        .tab-btn-active {
+            color: var(--accent-ink) !important;
+            font-weight: 700 !important;
+            background: var(--accent) !important;
+            border-bottom: none !important;
+            box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+        #syllabus-button, nav button[onclick*="switchTab"] { border-radius: 9999px; }
+
+        /* Mode chips (switchMode uses bg-sky/emerald/amber/violet/rose-600) → teal accent */
+        main button[class*="bg-sky-600"],
+        main button[class*="bg-emerald-600"],
+        main button[class*="bg-amber-600"],
+        main button[class*="bg-violet-600"],
+        main button[class*="bg-rose-600"] {
+            background: var(--accent) !important;
+            color: var(--accent-ink) !important;
+            border-radius: 9999px !important;
+            border: none !important;
+            box-shadow: var(--inset-top), 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+            font-weight: 700 !important;
+            transition: transform 0.15s var(--spring), filter 0.15s ease;
+        }
+        main button[class*="bg-sky-600"]:active,
+        main button[class*="bg-emerald-600"]:active,
+        main button[class*="bg-amber-600"]:active,
+        main button[class*="bg-violet-600"]:active,
+        main button[class*="bg-rose-600"]:active { transform: scale(0.97); }
+        main button.bg-slate-900.border.border-slate-800 {
+            border-radius: 9999px !important;
+            border-color: var(--line) !important;
+            background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+            min-height: 40px;
+            transition: transform 0.15s var(--spring), color 0.15s ease, border-color 0.15s ease;
+        }
+        main button.bg-slate-900.border.border-slate-800:hover { color: var(--accent) !important; border-color: color-mix(in srgb,var(--accent) 45%,transparent) !important; }
+        main button.bg-slate-900.border.border-slate-800:active { transform: scale(0.97); }
+
+        /* Selects / inputs */
+        main select, main input[type="number"], main input[type="text"] {
+            background: color-mix(in srgb, var(--surface) 92%, #000) !important;
+            border-color: var(--line) !important;
+            color: var(--text) !important;
+            border-radius: 0.75rem !important;
+            font-variant-numeric: tabular-nums;
+        }
+        main select:focus, main input:focus {
+            border-color: color-mix(in srgb, var(--accent) 55%, transparent) !important;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+        }
+
+        /* Sky chrome → teal (decorative accents, not chem pedagogy) */
+        main .text-sky-400, main .text-sky-300 { color: var(--accent) !important; }
+        main .bg-sky-950, main .bg-sky-950\/40, main .bg-sky-950\/70 { background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important; }
+        main .border-sky-800, main .border-sky-900\/50, main .border-sky-500 { border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important; }
+
+        /* Data tables */
+        main table { font-variant-numeric: tabular-nums; }
+        main thead { background: color-mix(in srgb, var(--surface) 95%, #000) !important; }
+        main .font-mono, main [class*="font-mono"] { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+        /* Amber/rose pedagogy preserved (watch-outs, examiner tips) */
+        main .bg-amber-950\/40, main .bg-amber-950\/60, main .border-amber-800\/60, main .border-amber-800,
+        main .text-amber-200, main .text-amber-300, main .text-amber-400,
+        main .bg-rose-950\/20, main .bg-rose-950\/30, main .bg-rose-950\/60, main .border-rose-900\/40,
+        main .bg-rose-950\/30, main .text-rose-300, main .text-rose-200 { /* keep Tailwind pedagogy colours */ }
+
         .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #121820; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3a4556; border-radius: 3px; }
         .blur-answer {
             filter: blur(6px);
-            transition: filter 0.25s ease, background-color 0.25s ease;
+            transition: filter 0.25s var(--spring), background-color 0.25s ease;
             user-select: none;
             cursor: pointer;
         }
         .blur-answer:hover, .blur-answer.revealed {
             filter: blur(0);
             user-select: auto;
-            background-color: rgba(251, 191, 36, 0.18) !important;
+            background-color: color-mix(in srgb, var(--accent) 18%, transparent) !important;
         }
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
         .bar-anim { transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
         .rl-flash { animation: rlflash 0.9s ease; }
-        @keyframes rlflash { 0% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.7); } 100% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0); } }
+        @keyframes rlflash { 0% { box-shadow: 0 0 0 2px rgba(61,214,198,0.7); } 100% { box-shadow: 0 0 0 2px rgba(61,214,198,0); } }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            main > section { animation: none !important; }
+            nav button:active, main button:active { transform: none !important; }
+        }
+        @media (prefers-reduced-transparency: reduce) {
+            header, nav > div, main .bg-slate-900.border.border-slate-800.rounded-xl,
+            main .bg-slate-950.border.border-slate-800.rounded-xl {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: var(--surface) !important;
+            }
+        }
     </style>
     <script>
         function safeInitKaTeX() {
@@ -51,8 +259,8 @@
         }
         window.safeInitKaTeX = safeInitKaTeX;
 
-        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-amber-400 font-bold border-b-2 border-amber-400 bg-amber-950/40 transition flex items-center gap-1.5 rounded-t-md";
-        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md";
+        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition";
+        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition";
 
         window.switchTab = function(tabId) {
             const tabs = ['syllabus', 'entropy', 'feasibility', 'bornhaber', 'covalency', 'solution', 'solver', 'review'];
@@ -610,12 +818,26 @@
         });
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col" style="background:transparent">
+    <div class="ambient" aria-hidden="true">
+        <div class="blob blob--teal"></div>
+        <div class="blob blob--blue"></div>
+        <div class="blob blob--deep"></div>
+        <div class="vignette"></div>
+    </div>
+    <header class="sticky top-0 z-40" style="border-bottom:1px solid var(--line)">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-            <div>
-                <h1 class="text-lg font-extrabold tracking-tight text-amber-400">IAL Topic 12: Entropy and Energetics — Master Studio</h1>
-                <p class="text-[11px] text-slate-400 mt-0.5">WCH13/01 · Unit 4 · Syllabus <span class="text-amber-300 font-mono">12.1–12.19</span> (12A Entropy + 12B Lattice Energy) · English exam wording</p>
+            <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg border" style="background:color-mix(in srgb,var(--accent) 15%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3v3"></path><path d="M6.21 5.21 8.3 7.3"></path><path d="M17.79 5.21 15.7 7.3"></path>
+                        <path d="M12 9a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"></path><path d="M12 12v3l2 2"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight" style="color:var(--accent)">IAL Topic 12: Entropy and Energetics — Master Studio</h1>
+                    <p class="text-[11px] text-slate-400 mt-0.5">WCH13/14 · Unit 4 · Syllabus <span class="text-sky-300 font-mono">12.1–12.19</span> (12A Entropy + 12B Lattice Energy) · English exam wording</p>
+                </div>
             </div>
             <div class="flex flex-wrap gap-1.5 text-[10px]">
                 <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">ΔS concepts</span>
@@ -627,16 +849,16 @@
         </div>
     </header>
 
-    <nav class="bg-slate-900/95 border-b border-slate-800 text-xs font-medium sticky top-[57px] z-30 backdrop-blur-md shadow-md">
+    <nav class="sticky top-[57px] z-30" aria-label="Studio sections" style="background:transparent;border-bottom:none;box-shadow:none;backdrop-filter:none">
         <div class="max-w-7xl mx-auto px-3 sm:px-4 py-1.5 flex flex-wrap items-stretch gap-x-0.5 gap-y-1">
-            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-amber-400 font-bold border-b-2 border-amber-400 bg-amber-950/40 transition flex items-center gap-1.5 rounded-t-md"><span>📚 1. Syllabus</span></button>
-            <button onclick="switchTab('entropy')" id="btn-entropy" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>⚡ 2. Entropy</span></button>
-            <button onclick="switchTab('feasibility')" id="btn-feasibility" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🧮 3. ΔS &amp; Feasibility</span></button>
-            <button onclick="switchTab('bornhaber')" id="btn-bornhaber" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🏗️ 4. Born–Haber</span></button>
-            <button onclick="switchTab('covalency')" id="btn-covalency" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🔬 5. Covalency</span></button>
-            <button onclick="switchTab('solution')" id="btn-solution" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>💧 6. Solution</span></button>
-            <button onclick="switchTab('solver')" id="btn-solver" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🛠️ 7. Solver</span></button>
-            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-amber-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>📋 8. Final Review</span></button>
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition"><span>1. Syllabus</span></button>
+            <button onclick="switchTab('entropy')" id="btn-entropy" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>2. Entropy</span></button>
+            <button onclick="switchTab('feasibility')" id="btn-feasibility" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>3. ΔS &amp; Feasibility</span></button>
+            <button onclick="switchTab('bornhaber')" id="btn-bornhaber" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>4. Born–Haber</span></button>
+            <button onclick="switchTab('covalency')" id="btn-covalency" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>5. Covalency</span></button>
+            <button onclick="switchTab('solution')" id="btn-solution" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>6. Solution</span></button>
+            <button onclick="switchTab('solver')" id="btn-solver" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>7. Solver</span></button>
+            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>8. Final Review</span></button>
         </div>
     </nav>
 
@@ -646,9 +868,9 @@
         <section id="tab-syllabus" class="space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
                 <div class="border-b border-slate-800 pb-4 mb-6">
-                    <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Syllabus Master Overview</span>
                     <h2 class="text-xl font-bold text-white mt-1">Topic 12 Entropy &amp; Energetics · Learning Points &amp; Mark Scheme Secrets (Spec 12.1 – 12.19)</h2>
-                    <p class="text-xs text-slate-400 mt-1">Every assessment point elaborated with key learning goals and IAL examiner watch-outs. WCH13/01 · Unit 4.</p>
+                    <p class="text-xs text-slate-400 mt-1">Every assessment point elaborated with key learning goals and IAL examiner watch-outs. WCH13/14 · Unit 4.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -672,7 +894,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">“Exothermic = spontaneous” is a guaranteed lost mark — quote an endothermic counter-example. Say “dispersal of energy <b>quanta</b>”, not just “energy spreads out”, for the full definition.</p>
+                            <p class="leading-relaxed text-[11px]">“Exothermic = spontaneous” is a guaranteed lost mark — quote an endothermic counter-example. Say “dispersal of energy <b>quanta</b>”, not just “energy spreads out”, for the full definition. When explaining a <b>negative</b> ΔS sign, never write bare “entropy decreases” — the MS demands <b>order/disorder</b> or <b>particle numbers</b> (e.g. “gas → solid, fewer ways to arrange the particles”). Paper cue: WCH14 Jun 2026 Q20a gave ΔS<sub>system</sub> = <b>−507.6 J K⁻¹ mol⁻¹</b> for a gas→solid step.</p>
                         </div>
                     </div>
 
@@ -764,7 +986,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">ΔH is tabulated in <b>kJ</b>, ΔS in <b>J</b> — convert ΔH × 1000 before dividing, or your ΔS<sub>surr</sub> is 1000× too small. This single slip costs more marks than any concept in the topic.</p>
+                            <p class="leading-relaxed text-[11px]">ΔH is tabulated in <b>kJ</b>, ΔS in <b>J</b> — convert ΔH × 1000 before dividing, or your ΔS<sub>surr</sub> is 1000× too small. This single slip costs more marks than any concept in the topic. The recurring 3-mark temperature argument: M1 S<sub>surr</sub> becomes <b>less negative / smaller in magnitude</b> as T rises (dividing −ΔH by a larger T) — not bare “smaller”; M2 <b>ΔS<sub>system</sub> barely changes</b> with T; M3 so <b>ΔS<sub>total</sub> increases</b>. Paper cue: WCH14 Jun 2026 Q20a(iv) — ΔS<sub>surr</sub> = +4724.8 J mol⁻¹ K⁻¹, ΔS<sub>total</sub> = <b>+4217 J mol⁻¹ K⁻¹</b>.</p>
                         </div>
                     </div>
 
@@ -788,7 +1010,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Mark schemes (Jan 2026, Oct 2025) award T* via ΔS<sub>total</sub> = 0. “Feasible” ≠ “fast” — say nothing about rate unless asked. Test all four sign combinations in Engine B’s workbench.</p>
+                            <p class="leading-relaxed text-[11px]">Mark schemes (Jan 2026, Oct 2025) award T* via ΔS<sub>total</sub> = 0. “Feasible” ≠ “fast” — say nothing about rate unless asked. Test all four sign combinations in Engine B’s workbench. T* = ΔH/ΔS<sub>sys</sub> with <b>ΔH in J</b> — a 0.273 vs 273 K mix-up is a 2/3 mark call. Remember ΔS<sub>total</sub> = <b>R ln K</b>: if K &lt; 1, ΔS<sub>total</sub> &lt; 0 → equilibrium lies <b>left</b> (reactants predominate) — state the position consequence, not just “K is small”.</p>
                         </div>
                     </div>
 
@@ -841,7 +1063,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Every definition must say “<b>one mole</b>” and name the states. Some data books give lattice energy as the exothermic formation — check the sign convention in the question before calculating.</p>
+                            <p class="leading-relaxed text-[11px]">Every definition must say “<b>one mole</b>” and name the states (gaseous ions). Some data books give lattice energy as the exothermic formation — check the sign convention in the question before calculating. MS keyword discipline: lattice energy = heat <b>released</b> when gaseous ions form 1 mol solid — REJECT “substance”/“energy required”; Δ<sub>hyd</sub>H must say <b>gaseous ions</b> (not atoms/molecules) dissolving to <b>infinite dilution</b> — REJECT “1 mol of water”.</p>
                         </div>
                     </div>
 
@@ -864,7 +1086,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Forgetting to <b>double</b> Δ<sub>at</sub>H and EA for the halogen (Cl₂ → 2Cl) is the classic MgCl₂ slip. EA₂ for oxygen is <b>endothermic</b> (+) — O⁻ repels the second electron. Solve cycles live in Engine C.</p>
+                            <p class="leading-relaxed text-[11px]">Forgetting to <b>double</b> Δ<sub>at</sub>H and EA for the halogen (Cl₂ → 2Cl) is the classic MgCl₂ slip. EA₂ for oxygen is <b>endothermic</b> (+) — O⁻ repels the second electron. Solve cycles live in Engine C. MS error menu (Na₂O worked): wrong sign on formation, forgetting ×2 for <b>both</b> atomisation AND ionisation, sign-flipped EA, or halved atomisation — <b>two errors → 0 overall</b>; units penalised once. Paper cue: WCH14 Jun 2026 Q20b(vi) — LE = −4690 − 1092 − (−311) = <b>−5471 kJ mol⁻¹</b>.</p>
                         </div>
                     </div>
 
@@ -887,7 +1109,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Name both players: “small, highly charged <b>cation</b> polarises the large <b>anion</b>”. Compare pairs (NaCl vs AgCl; LiF vs LiI) — the gap grows with anion size and cation charge density.</p>
+                            <p class="leading-relaxed text-[11px]">Name both players: “small, highly charged <b>cation</b> polarises the large <b>anion</b>”. Compare pairs (NaCl vs AgCl; LiF vs LiI) — the gap grows with anion size and cation charge density. MS phrasing: experimental LE <b>more negative / more exothermic</b> than theoretical (not bare “greater/less”), because the theoretical model is <b>pure ionic</b> (point charges / perfect spheres / no distortion). Paper cue: WCH14 Jun 2026 Q20b(iii) — Δ<sub>hyd</sub>H(Al³⁺) &gt; Δ<sub>hyd</sub>H(Cl⁻) via <b>higher charge</b>, not “polarising power”.</p>
                         </div>
                     </div>
 
@@ -910,7 +1132,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Sign discipline: LE enters as a positive (dissociation) term; both hydration values are negative. A positive Δ<sub>sol</sub>H does <b>not</b> mean insoluble — entropy can still drive dissolving (NaCl!).</p>
+                            <p class="leading-relaxed text-[11px]">Sign discipline: LE enters as a positive (dissociation) term; both hydration values are negative. A positive Δ<sub>sol</sub>H does <b>not</b> mean insoluble — entropy can still drive dissolving (NaCl!). For “why no temperature change?” (NaCl, Δ<sub>sol</sub>H ≈ +1 kJ mol⁻¹): the change is <b>too small / slightly endothermic</b> for the thermometer (±0.5 °C graduations too large) — REJECT any “temperature increase”. Solubility (3-mark QWC): name Δ<sub>hyd</sub>H, compare its <b>size</b> to lattice energy, and note ΔS<sub>total</sub> can still drive dissolving even if Δ<sub>sol</sub>H &gt; 0.</p>
                         </div>
                     </div>
 
@@ -933,7 +1155,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Given-data questions want the <b>calculation</b> (ΔS<sub>total</sub> sign), then the trend discussion. Do not write “like dissolves like” — use energy + entropy language. Explore real salts in Engine E.</p>
+                            <p class="leading-relaxed text-[11px]">Given-data questions want the <b>calculation</b> (ΔS<sub>total</sub> sign), then the trend discussion. Do not write “like dissolves like” — use energy + entropy language. Explore real salts in Engine E. Group 2 solubility: hydroxides more soluble down the group because ΔS<sub>total</sub> gets <b>less negative / more positive</b> Ca(OH)₂ → Ba(OH)₂ (ALLOW reverse argument). Calorimetry of dissolving (WCH16): to get a bigger ΔT use <b>more solute / less water</b> — REJECT “repeat”, “lid/insulation” (reaction calorimetry, not this), “distilled water”; when ΔT is small the <b>thermometer</b> is the limiting instrument.</p>
                         </div>
                     </div>
 
@@ -1074,6 +1296,8 @@
                         <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Counting solids/liquids for ΔS sign.<br><span class="text-slate-300">Gas moles dominate; C(s) + O₂(g) → CO₂(g) is ≈0.</span></div>
                         <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> “Entropy of the universe can decrease.”<br><span class="text-slate-300">Total entropy always increases for a feasible change — the system’s may fall.</span></div>
                         <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Elements have zero entropy.<br><span class="text-slate-300">Only perfect crystals at 0 K. O₂(g) at 298 K has a real, positive S°.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> Bare “entropy decreases” to explain a negative ΔS.<br><span class="text-slate-300">MS wants order/disorder or particle numbers: “gas → solid, fewer arrangements”.</span></div>
+                        <div class="p-3 bg-rose-950/20 border border-rose-900/40 rounded-xl"><b class="text-rose-300">Trap:</b> ΔS in J added to ΔH in kJ.<br><span class="text-slate-300">Convert ΔH ×1000 (or ΔS ÷1000) before combining in the Gibbs/ΔS_total route.</span></div>
                     </div>
                 </div>
             </div>
@@ -1780,6 +2004,7 @@
                         <li>Covalency: cation polarises anion (never reversed); gap = covalent character.</li>
                         <li>ΔhydH always exothermic; ΔsolH can be either sign; +ΔsolH ≠ insoluble.</li>
                         <li>Group 2: hydroxides ↑ solubility down; sulfates ↓.</li>
+                        <li><b>WCH14 Jun 2026 Q20</b> (AlCl₃, 18 marks) is the model full question: ΔS<sub>sys</sub> = −507.6, ΔS<sub>total</sub> = +4217, LE = −5471 kJ mol⁻¹ — practise the whole chain.</li>
                     </ul>
                 </details>
             </div>
@@ -1788,7 +2013,7 @@
     </main>
 
     <footer class="border-t border-slate-800 py-4 text-center text-[10px] text-slate-500">
-        IAL Topic 12: Entropy and Energetics — Master Studio · WCH13 · 12.1–12.19 · Single-file Master Studio standard
+        IAL Topic 12: Entropy and Energetics — Master Studio · WCH14 (Unit 4) · 12.1–12.19 · apple-dark-ambient-lab · wiki-pull WCH14 banks + entropy-lattice-hydration MS + WCH16 practical
     </footer>
 </body>
 </html>

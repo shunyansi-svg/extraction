@@ -12,30 +12,204 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
     <style>
-        body { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
-        .font-display { font-family: 'Space Grotesk', sans-serif; }
-        .font-mono, code, input, select { font-family: 'IBM Plex Mono', monospace; }
-        #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-        header, nav, main, footer { position: relative; z-index: 1; }
-        .tab-btn-active {
-            border-bottom: 3px solid #fb923c;
-            color: #fb923c;
-            font-weight: 700;
-            background-color: rgba(251, 146, 60, 0.10);
+        :root {
+            --bg: #0c1118;
+            --surface: #161d28;
+            --accent: #3dd6c6;
+            --accent-ink: #06201c;
+            --text: #eef2f7;
+            --muted: #8b95a8;
+            --line: rgba(255, 255, 255, 0.08);
+            --spring: cubic-bezier(0.32, 0.72, 0.22, 1);
+            --frost: blur(20px) saturate(1.7);
+            --font: -apple-system, "SF Pro Text", "Segoe UI", "PingFang HK", "Noto Sans HK", system-ui, sans-serif;
+            --font-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Consolas, monospace;
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+            --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(1400px 620px at 80% -14%, rgba(61, 214, 198, 0.10), transparent 60%),
+                radial-gradient(1000px 500px at 4% 116%, rgba(70, 130, 210, 0.08), transparent 60%),
+                linear-gradient(178deg, #0d131c 0%, #0a0e15 55%, #080c12 100%);
+            background-attachment: fixed;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono, code, input, select { font-family: var(--font-mono); }
+        .ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .ambient .blob { position: absolute; border-radius: 50%; will-change: transform; }
+        .ambient .blob--teal { width: 46vmax; height: 46vmax; left: -8vmax; top: -14vmax;
+            background: radial-gradient(circle at 32% 34%, rgba(61,214,198,.16), rgba(61,214,198,.05) 46%, transparent 72%);
+            animation: driftA 26s ease-in-out infinite alternate; }
+        .ambient .blob--blue { width: 42vmax; height: 42vmax; right: -10vmax; top: 8vmax;
+            background: radial-gradient(circle at 60% 40%, rgba(70,130,210,.14), rgba(70,130,210,.04) 48%, transparent 74%);
+            animation: driftB 32s ease-in-out infinite alternate; }
+        .ambient .blob--deep { width: 38vmax; height: 38vmax; left: 28vmax; bottom: -16vmax;
+            background: radial-gradient(circle at 50% 30%, rgba(90,150,220,.10), rgba(90,150,220,.03) 50%, transparent 76%);
+            animation: driftC 38s ease-in-out infinite alternate; }
+        .ambient .vignette { position: absolute; inset: 0;
+            background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(4,7,12,.55) 100%); }
+        @keyframes driftA { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(9vmax,7vmax,0) scale(1.08); } }
+        @keyframes driftB { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-8vmax,6vmax,0) scale(1.1); } }
+        @keyframes driftC { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(6vmax,-7vmax,0) scale(1.06); } }
+        @media (prefers-reduced-motion: reduce) { .ambient .blob { animation: none !important; } }
+        #bg-canvas { display: none; }
+
+        main { position: relative; z-index: 1; }
+        header, nav, footer { position: sticky; z-index: 40; }
+        nav { z-index: 30; }
+
+        main .bg-slate-900.border.border-slate-800.rounded-xl,
+        main .bg-slate-900.border.border-slate-800.rounded-lg,
+        main .bg-slate-950.border.border-slate-800.rounded-xl,
+        main .bg-slate-950.border.border-slate-800.rounded-lg,
+        main details.bg-slate-950\/60 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.045), transparent 34%),
+                color-mix(in srgb, var(--surface) 90%, transparent) !important;
+            border-color: color-mix(in srgb, var(--line) 70%, rgba(61,214,198,.10)) !important;
+            box-shadow: var(--inset-top), var(--shadow-md);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        main .bg-slate-950.border.border-slate-800.rounded-xl.p-5,
+        main .bg-slate-950.border.border-slate-800.rounded-lg.p-5 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.035), transparent 26%),
+                color-mix(in srgb, var(--surface) 78%, #000) !important;
+            border-color: color-mix(in srgb, var(--line) 75%, transparent) !important;
+            box-shadow: var(--inset-top);
+        }
+        main .border-slate-800 { border-color: var(--line) !important; }
+        main .border-slate-700 { border-color: var(--line) !important; }
+
+        main > section { animation: tabIn 0.34s var(--spring) both; }
+        @keyframes tabIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        nav {
+            background: transparent;
+            border-bottom: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 0.6rem 1rem 0.4rem;
+        }
+        nav > div {
+            max-width: 100%;
+            width: fit-content;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.3rem;
+            background: color-mix(in srgb, var(--surface) 82%, transparent);
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            box-shadow: var(--inset-top), 0 10px 30px rgba(0,0,0,0.35);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        nav button {
+            transition: color 0.2s var(--spring), background-color 0.2s var(--spring),
+                        box-shadow 0.2s var(--spring), transform 0.15s var(--spring);
+            min-height: 40px;
+            border-radius: 9999px;
+            border: none;
+            white-space: nowrap;
+        }
+        nav button:active { transform: scale(0.96); }
+
+        header {
+            background: color-mix(in srgb, var(--surface) 88%, transparent);
+            border-color: var(--line) !important;
+            box-shadow: var(--inset-top), 0 8px 28px rgba(0,0,0,0.25);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+
+        .tab-btn-active {
+            color: var(--accent-ink) !important;
+            font-weight: 700 !important;
+            background: var(--accent) !important;
+            border-bottom: none !important;
+            box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+        nav button[onclick*="switchTab"] { border-radius: 9999px; }
+
+        main button[class*="bg-sky-600"],
+        main button[class*="bg-emerald-600"],
+        main button[class*="bg-amber-600"],
+        main button[class*="bg-violet-600"],
+        main button[class*="bg-orange-600"],
+        main button[class*="bg-rose-600"] {
+            background: var(--accent) !important;
+            color: var(--accent-ink) !important;
+            border-radius: 9999px !important;
+            border: none !important;
+            box-shadow: var(--inset-top), 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+            font-weight: 700 !important;
+            transition: transform 0.15s var(--spring), filter 0.15s ease;
+        }
+        main button[class*="bg-sky-600"]:active,
+        main button[class*="bg-emerald-600"]:active,
+        main button[class*="bg-amber-600"]:active,
+        main button[class*="bg-violet-600"]:active,
+        main button[class*="bg-orange-600"]:active,
+        main button[class*="bg-rose-600"]:active { transform: scale(0.97); }
+        main button.bg-slate-900.border.border-slate-800 {
+            border-radius: 9999px !important;
+            border-color: var(--line) !important;
+            background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+            min-height: 40px;
+            transition: transform 0.15s var(--spring), color 0.15s ease, border-color 0.15s ease;
+        }
+        main button.bg-slate-900.border.border-slate-800:hover { color: var(--accent) !important; border-color: color-mix(in srgb,var(--accent) 45%,transparent) !important; }
+        main button.bg-slate-900.border.border-slate-800:active { transform: scale(0.97); }
+
+        main select, main input[type="number"], main input[type="text"] {
+            background: color-mix(in srgb, var(--surface) 92%, #000) !important;
+            border-color: var(--line) !important;
+            color: var(--text) !important;
+            border-radius: 0.75rem !important;
+            font-variant-numeric: tabular-nums;
+        }
+        main select:focus, main input:focus {
+            border-color: color-mix(in srgb, var(--accent) 55%, transparent) !important;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+        }
+
+        main .text-sky-400, main .text-sky-300 { color: var(--accent) !important; }
+        main .bg-sky-950, main .bg-sky-950\/40, main .bg-sky-950\/70 { background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important; }
+        main .border-sky-800, main .border-sky-900\/50, main .border-sky-500 { border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important; }
+
+        main table { font-variant-numeric: tabular-nums; }
+        main thead { background: color-mix(in srgb, var(--surface) 95%, #000) !important; }
+        main .font-mono, main [class*="font-mono"] { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+        main .bg-amber-950\/40, main .bg-amber-950\/60, main .border-amber-800\/60, main .border-amber-800,
+        main .text-amber-200, main .text-amber-300, main .text-amber-400,
+        main .bg-rose-950\/20, main .bg-rose-950\/30, main .bg-rose-950\/60, main .border-rose-900\/40,
+        main .text-rose-300, main .text-rose-200 { /* keep Tailwind pedagogy colours */ }
+
         .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #121820; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3a4556; border-radius: 3px; }
         .blur-answer {
             filter: blur(6px);
-            transition: filter 0.25s ease, background-color 0.25s ease;
+            transition: filter 0.25s var(--spring), background-color 0.25s ease;
             user-select: none;
             cursor: pointer;
         }
         .blur-answer:hover, .blur-answer.revealed {
             filter: blur(0);
             user-select: auto;
-            background-color: rgba(251, 146, 60, 0.16) !important;
+            background-color: color-mix(in srgb, var(--accent) 18%, transparent) !important;
         }
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
@@ -44,10 +218,30 @@
         .press-btn { transition: transform 0.08s ease, box-shadow 0.15s ease, background-color 0.15s ease; }
         .press-btn:active { transform: scale(0.96); }
         .card-hover { transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
-        .card-hover:hover { transform: translateY(-2px); border-color: rgba(251,146,60,0.35); box-shadow: 0 12px 32px -12px rgba(0,0,0,0.55); }
+        .card-hover:hover { transform: translateY(-2px); border-color: rgba(61,214,198,0.35); box-shadow: 0 12px 32px -12px rgba(0,0,0,0.55); }
         .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
         .reveal.revealed { opacity: 1; transform: translateY(0); }
         .mech-step { transition: opacity 0.3s ease, transform 0.3s ease; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            main > section { animation: none !important; }
+            nav button:active, main button:active { transform: none !important; }
+        }
+        @media (prefers-reduced-transparency: reduce) {
+            header, nav > div, main .bg-slate-900.border.border-slate-800.rounded-xl,
+            main .bg-slate-950.border.border-slate-800.rounded-xl {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: var(--surface) !important;
+            }
+        }
     </style>
     <script>
         function safeInitKaTeX() {
@@ -65,8 +259,8 @@
         }
         window.safeInitKaTeX = safeInitKaTeX;
 
-        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold border-b-2 border-orange-400 bg-orange-950/40 transition flex items-center gap-1.5 rounded-t-md";
-        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md";
+        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition";
+        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition";
         let curTab = 'syllabus';
 
         window.switchTab = function(tabId) {
@@ -374,16 +568,22 @@
         });
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
-    <canvas id="bg-canvas"></canvas>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col" style="background:transparent">
+    <div class="ambient" aria-hidden="true">
+        <div class="blob blob--teal"></div>
+        <div class="blob blob--blue"></div>
+        <div class="blob blob--deep"></div>
+        <div class="vignette"></div>
+    </div>
+    <canvas id="bg-canvas" style="display:none"></canvas>
 
-    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+    <header class="sticky top-0 z-40" style="border-bottom:1px solid var(--line)">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div class="flex items-center gap-3">
                 <canvas id="benzene-canvas" class="shrink-0"></canvas>
                 <div>
-                    <h1 class="font-display text-lg font-bold tracking-tight text-orange-400">IAL Topic 18: Organic Chemistry — Arenes Master Studio</h1>
-                    <p class="text-[11px] text-slate-400 mt-0.5">WCH15/01 · Unit 5 · Paper 5 · Syllabus <span class="text-orange-300 font-mono">18.1–18.6</span> · Benzene, electrophilic substitution &amp; phenol · English exam wording</p>
+                    <h1 class="font-display text-lg font-bold tracking-tight" style="color:var(--accent)">IAL Topic 18: Organic Chemistry — Arenes Master Studio</h1>
+                    <p class="text-[11px] text-slate-400 mt-0.5">WCH15 · Unit 5 · Paper 5 · Syllabus <span class="text-sky-300 font-mono">18.1–18.6</span> · Benzene, electrophilic substitution &amp; phenol · English exam wording</p>
                 </div>
             </div>
             <div class="flex flex-wrap gap-1.5 text-[10px]">
@@ -394,15 +594,15 @@
         </div>
     </header>
 
-    <nav class="bg-slate-900/95 border-b border-slate-800 text-xs font-medium sticky top-[88px] z-30 backdrop-blur-md shadow-md">
+    <nav class="sticky top-[88px] z-30" aria-label="Studio sections" style="background:transparent;border-bottom:none;box-shadow:none;backdrop-filter:none">
         <div class="max-w-7xl mx-auto px-3 sm:px-4 py-1.5 flex flex-wrap items-stretch gap-x-0.5 gap-y-1">
-            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold border-b-2 border-orange-400 bg-orange-950/40 transition flex items-center gap-1.5 rounded-t-md"><span>📚 1. Syllabus</span></button>
-            <button onclick="switchTab('structure')" id="btn-structure" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🛡️ 2. Structure &amp; Stability</span></button>
-            <button onclick="switchTab('mechanism')" id="btn-mechanism" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>⚡ 3. Mechanism</span></button>
-            <button onclick="switchTab('summary')" id="btn-summary" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🧪 4. 10-Reaction Summary</span></button>
-            <button onclick="switchTab('phenol')" id="btn-phenol" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🌸 5. Phenol</span></button>
-            <button onclick="switchTab('pathfinder')" id="btn-pathfinder" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🧭 6. Pathfinder</span></button>
-            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>📋 7. Final Review</span></button>
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition"><span>1. Syllabus</span></button>
+            <button onclick="switchTab('structure')" id="btn-structure" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>2. Structure &amp; Stability</span></button>
+            <button onclick="switchTab('mechanism')" id="btn-mechanism" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>3. Mechanism</span></button>
+            <button onclick="switchTab('summary')" id="btn-summary" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>4. 10-Reaction Summary</span></button>
+            <button onclick="switchTab('phenol')" id="btn-phenol" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>5. Phenol</span></button>
+            <button onclick="switchTab('pathfinder')" id="btn-pathfinder" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>6. Pathfinder</span></button>
+            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>7. Final Review</span></button>
         </div>
     </nav>
 
@@ -412,7 +612,7 @@
         <section id="tab-syllabus" class="space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
                 <div class="border-b border-slate-800 pb-4 mb-6">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Syllabus Master Overview</span>
                     <h2 class="font-display text-xl font-bold text-white mt-1">Topic 18 Arenes · Learning Points &amp; Mark Scheme Secrets (Spec 18.1 – 18.6)</h2>
                     <p class="text-xs text-slate-400 mt-1">Every in-scope assessment point elaborated with key learning goals and IAL examiner watch-outs. Common uses of the compounds mentioned are also expected.</p>
                 </div>
@@ -438,7 +638,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Quote the <b>152 kJ mol⁻¹</b> stabilisation and the <b>equal bond lengths</b> — vague “more stable” answers lose marks. The hypothetical value is 3 × cyclohexene, not “three double bonds”.</p>
+                            <p class="leading-relaxed text-[11px]">Quote the <b>152 kJ mol⁻¹</b> stabilisation and the <b>equal bond lengths</b> — vague “more stable” answers lose marks. The hypothetical value is 3 × cyclohexene, not “three double bonds”. Valid evidence = <b>thermochemical, IR, X-ray diffraction</b> — <b>mass spectrometry is NOT</b> evidence for delocalisation (WCH15 Jun 2026 Q9).</p>
                         </div>
                     </div>
 
@@ -531,7 +731,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Examiners want the <b>electrophile generation</b> equation AND the <b>catalyst regeneration</b> step (2023/2024 papers). Forgetting to regenerate the catalyst is the classic lost mark.</p>
+                            <p class="leading-relaxed text-[11px]">Examiners want the <b>electrophile generation</b> equation AND the <b>catalyst regeneration</b> step (2023/2024 papers). Forgetting to regenerate the catalyst is the classic lost mark. Nitration needs <b>conc H₂SO₄ + conc HNO₃</b> to make NO₂⁺ — HCl will <b>not</b> (it gives diazonium elsewhere); Friedel–Crafts uses AlCl₃/FeCl₃ generating e.g. CH₂ClCO⁺ (not +CH₂COCl). Paper cues: WCH15 Jun 2026 Q11c nitration, Q14 benzene synthesis.</p>
                         </div>
                     </div>
 
@@ -554,7 +754,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Two observations score: <b>decolourisation AND white precipitate</b>. The explanation must mention the oxygen lone pair delocalising into the ring — “phenol is more reactive” alone is not enough.</p>
+                            <p class="leading-relaxed text-[11px]">Two observations score: <b>decolourisation AND white precipitate</b>. The explanation must mention the oxygen lone pair delocalising into the ring — “phenol is more reactive” alone is not enough. Paper cue: WCH15 Jun 2026 Q15 (phenol vs hex-1-ene) — both react with electrophiles without a catalyst; hex-1-ene = <b>addition</b> (localised π), phenol = <b>substitution</b> (delocalised ring, kinetically stable).</p>
                         </div>
                     </div>
 
@@ -629,7 +829,7 @@
         <section id="tab-mechanism" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
                 <div class="border-b border-slate-800 pb-4">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Spec 18.5</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Spec 18.5</span>
                     <h2 class="font-display text-xl font-bold text-white mt-1">Electrophilic Substitution — Step-by-Step Mechanism Player</h2>
                     <p class="text-xs text-slate-400 mt-1">Choose a reaction, then walk the three stages: electrophile generation → arenium intermediate → aromaticity restored &amp; catalyst regenerated.</p>
                 </div>
@@ -861,7 +1061,7 @@
         <section id="tab-pathfinder" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
                 <div class="border-b border-slate-800 pb-4">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Interactive toolkit</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Interactive toolkit</span>
                     <h2 class="font-display text-xl font-bold text-white mt-1">Reaction Pathfinder — predict the transformation</h2>
                     <p class="text-xs text-slate-400 mt-1">Pick a starting material and a reagent set; the pathfinder returns the reaction name, type, equation, observation and the examiner trap.</p>
                 </div>
@@ -897,7 +1097,7 @@
         <section id="tab-review" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 sm:p-6 space-y-5">
                 <div class="border-b border-slate-800 pb-4 space-y-2">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Master Final Review</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Master Final Review</span>
                     <h2 class="font-display text-xl font-bold text-white">Topic 18 Arenes · Full recap &amp; trap checklist</h2>
                     <div class="flex flex-wrap gap-2 text-[11px]">
                         <a href="#rev-evidence" class="px-2.5 py-1 rounded-lg bg-sky-950/60 text-sky-300 border border-sky-800">Structure evidence</a>
@@ -963,6 +1163,7 @@
                         <li>Phenol + bromine water: <b>two</b> observations (decolourise + white ppt), no catalyst.</li>
                         <li>Phenol reacts with NaOH; ethanol does not.</li>
                         <li>Substitution preserves the delocalised ring — that’s why it wins over addition.</li>
+                        <li><b>WCH15 Jun 2026</b> arene block: mass spec is <b>not</b> delocalisation evidence (Q9); nitration needs conc H₂SO₄+HNO₃ → NO₂⁺ (Q11c); phenol vs hex-1-ene = substitution vs addition, both no catalyst (Q15). Revise evidence + mechanism + phenol chain.</li>
                     </ul>
                 </details>
             </div>
@@ -970,8 +1171,8 @@
 
     </main>
 
-    <footer class="border-t border-slate-800 py-4 text-center text-[10px] text-slate-500">
-        IAL Topic 18: Organic Chemistry — Arenes Master Studio · WCH15 · Unit 5 · Spec 18.1–18.6 · Single-file Master Studio standard
+    <footer class="border-t py-4 text-center text-[10px] text-slate-500" style="border-color:var(--line)">
+        IAL Topic 18: Organic Chemistry — Arenes Master Studio · WCH15 · Unit 5 · Spec 18.1–18.6 · apple-dark-ambient-lab · wiki-pull WCH15 banks + arene MS keyword bank
     </footer>
 </body>
 </html>

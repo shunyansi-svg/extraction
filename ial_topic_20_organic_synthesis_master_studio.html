@@ -14,61 +14,263 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="safeInitKaTeX()"></script>
 
     <style>
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-        .blur-answer { filter: blur(6px); transition: filter .25s ease, background-color .25s ease; user-select: none; cursor: pointer; }
-        .blur-answer:hover, .blur-answer.revealed { filter: blur(0); user-select: auto; background-color: rgba(251,146,60,.2) !important; }
-        .ambient-bg {
-            background:
-                radial-gradient(1100px 480px at 85% -8%, rgba(251,146,60,.12), transparent 60%),
-                radial-gradient(900px 420px at 5% 108%, rgba(56,189,248,.09), transparent 60%),
-                radial-gradient(700px 380px at 50% 40%, rgba(52,211,153,.05), transparent 60%),
-                #020617;
+        :root {
+            --bg: #0c1118;
+            --surface: #161d28;
+            --accent: #3dd6c6;
+            --accent-ink: #06201c;
+            --text: #eef2f7;
+            --muted: #8b95a8;
+            --line: rgba(255, 255, 255, 0.08);
+            --spring: cubic-bezier(0.32, 0.72, 0.22, 1);
+            --frost: blur(20px) saturate(1.7);
+            --font: -apple-system, "SF Pro Text", "Segoe UI", "PingFang HK", "Noto Sans HK", system-ui, sans-serif;
+            --font-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Consolas, monospace;
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+            --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(1400px 620px at 80% -14%, rgba(61, 214, 198, 0.10), transparent 60%),
+                radial-gradient(1000px 500px at 4% 116%, rgba(70, 130, 210, 0.08), transparent 60%),
+                linear-gradient(178deg, #0d131c 0%, #0a0e15 55%, #080c12 100%);
+            background-attachment: fixed;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+        .ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .ambient .blob { position: absolute; border-radius: 50%; will-change: transform; }
+        .ambient .blob--teal { width: 46vmax; height: 46vmax; left: -8vmax; top: -14vmax;
+            background: radial-gradient(circle at 32% 34%, rgba(61,214,198,.16), rgba(61,214,198,.05) 46%, transparent 72%);
+            animation: driftA 26s ease-in-out infinite alternate; }
+        .ambient .blob--blue { width: 42vmax; height: 42vmax; right: -10vmax; top: 8vmax;
+            background: radial-gradient(circle at 60% 40%, rgba(70,130,210,.14), rgba(70,130,210,.04) 48%, transparent 74%);
+            animation: driftB 32s ease-in-out infinite alternate; }
+        .ambient .blob--deep { width: 38vmax; height: 38vmax; left: 28vmax; bottom: -16vmax;
+            background: radial-gradient(circle at 50% 30%, rgba(90,150,220,.10), rgba(90,150,220,.03) 50%, transparent 76%);
+            animation: driftC 38s ease-in-out infinite alternate; }
+        .ambient .vignette { position: absolute; inset: 0;
+            background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(4,7,12,.55) 100%); }
+        @keyframes driftA { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(9vmax,7vmax,0) scale(1.08); } }
+        @keyframes driftB { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-8vmax,6vmax,0) scale(1.1); } }
+        @keyframes driftC { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(6vmax,-7vmax,0) scale(1.06); } }
+        @media (prefers-reduced-motion: reduce) { .ambient .blob { animation: none !important; } }
+
+        main { position: relative; z-index: 1; }
+        header, nav, footer { position: sticky; z-index: 40; }
+        nav { z-index: 30; }
+
+        main .bg-slate-900.border.border-slate-800.rounded-xl,
+        main .bg-slate-900.border.border-slate-800.rounded-lg,
+        main .bg-slate-950.border.border-slate-800.rounded-xl,
+        main .bg-slate-950.border.border-slate-800.rounded-lg,
+        main details.bg-slate-950\/60 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.045), transparent 34%),
+                color-mix(in srgb, var(--surface) 90%, transparent) !important;
+            border-color: color-mix(in srgb, var(--line) 70%, rgba(61,214,198,.10)) !important;
+            box-shadow: var(--inset-top), var(--shadow-md);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        main .bg-slate-950.border.border-slate-800.rounded-xl.p-5,
+        main .bg-slate-950.border.border-slate-800.rounded-lg.p-5 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.035), transparent 26%),
+                color-mix(in srgb, var(--surface) 78%, #000) !important;
+            border-color: color-mix(in srgb, var(--line) 75%, transparent) !important;
+            box-shadow: var(--inset-top);
+        }
+        main .border-slate-800 { border-color: var(--line) !important; }
+        main .border-slate-700 { border-color: var(--line) !important; }
+
+        main > section { animation: tabIn 0.34s var(--spring) both; }
+        @keyframes tabIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        nav {
+            background: transparent;
+            border-bottom: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 0.6rem 1rem 0.4rem;
+        }
+        nav > div {
+            max-width: 100%;
+            width: fit-content;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.3rem;
+            background: color-mix(in srgb, var(--surface) 82%, transparent);
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            box-shadow: var(--inset-top), 0 10px 30px rgba(0,0,0,0.35);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        nav button {
+            transition: color 0.2s var(--spring), background-color 0.2s var(--spring),
+                        box-shadow 0.2s var(--spring), transform 0.15s var(--spring);
+            min-height: 40px;
+            border-radius: 9999px;
+            border: none;
+            white-space: nowrap;
+        }
+        nav button:active { transform: scale(0.96); }
+
+        header {
+            background: color-mix(in srgb, var(--surface) 88%, transparent);
+            border-color: var(--line) !important;
+            box-shadow: var(--inset-top), 0 8px 28px rgba(0,0,0,0.25);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+
+        .tab-btn-active, nav button.text-orange-300 {
+            color: var(--accent-ink) !important;
+            font-weight: 700 !important;
+            background: var(--accent) !important;
+            border-bottom: none !important;
+            box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+        nav button[class*="tab-btn"] { border-radius: 9999px; }
+
+        main button[class*="bg-sky-600"],
+        main button[class*="bg-emerald-600"],
+        main button[class*="bg-amber-600"],
+        main button[class*="bg-violet-600"],
+        main button[class*="bg-orange-600"],
+        main button[class*="bg-rose-600"] {
+            background: var(--accent) !important;
+            color: var(--accent-ink) !important;
+            border-radius: 9999px !important;
+            border: none !important;
+            box-shadow: var(--inset-top), 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+            font-weight: 700 !important;
+            transition: transform 0.15s var(--spring), filter 0.15s ease;
+        }
+        main button[class*="bg-sky-600"]:active,
+        main button[class*="bg-emerald-600"]:active,
+        main button[class*="bg-amber-600"]:active,
+        main button[class*="bg-violet-600"]:active,
+        main button[class*="bg-orange-600"]:active,
+        main button[class*="bg-rose-600"]:active { transform: scale(0.97); }
+        main button.bg-slate-900.border.border-slate-800 {
+            border-radius: 9999px !important;
+            border-color: var(--line) !important;
+            background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+            min-height: 40px;
+            transition: transform 0.15s var(--spring), color 0.15s ease, border-color 0.15s ease;
+        }
+        main button.bg-slate-900.border.border-slate-800:hover { color: var(--accent) !important; border-color: color-mix(in srgb,var(--accent) 45%,transparent) !important; }
+        main button.bg-slate-900.border.border-slate-800:active { transform: scale(0.97); }
+
+        main select, main input[type="number"], main input[type="text"] {
+            background: color-mix(in srgb, var(--surface) 92%, #000) !important;
+            border-color: var(--line) !important;
+            color: var(--text) !important;
+            border-radius: 0.75rem !important;
+            font-variant-numeric: tabular-nums;
+        }
+        main select:focus, main input:focus {
+            border-color: color-mix(in srgb, var(--accent) 55%, transparent) !important;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+        }
+
+        main .text-sky-400, main .text-sky-300 { color: var(--accent) !important; }
+        main .bg-sky-950, main .bg-sky-950\/40, main .bg-sky-950\/70 { background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important; }
+        main .border-sky-800, main .border-sky-900\/50, main .border-sky-500 { border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important; }
+
+        main table { font-variant-numeric: tabular-nums; }
+        main thead { background: color-mix(in srgb, var(--surface) 95%, #000) !important; }
+        main .font-mono, main [class*="font-mono"] { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+        main .bg-amber-950\/40, main .bg-amber-950\/60, main .border-amber-800\/60, main .border-amber-800,
+        main .text-amber-200, main .text-amber-300, main .text-amber-400,
+        main .bg-rose-950\/20, main .bg-rose-950\/30, main .bg-rose-950\/60, main .border-rose-900\/40,
+        main .text-rose-300, main .text-rose-200 { /* keep Tailwind pedagogy colours */ }
+
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #121820; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3a4556; border-radius: 3px; }
+        .blur-answer { filter: blur(6px); transition: filter .25s var(--spring), background-color .25s ease; user-select: none; cursor: pointer; }
+        .blur-answer:hover, .blur-answer.revealed { filter: blur(0); user-select: auto; background-color: color-mix(in srgb, var(--accent) 18%, transparent) !important; }
         details > summary::-webkit-details-marker { display: none; }
         .cycle-chip { transition: transform .15s ease, box-shadow .15s ease; }
         .cycle-chip:hover { transform: translateY(-2px); }
         .step-hidden { display: none; }
         .step-reveal { animation: stepIn .4s ease; }
         @keyframes stepIn { from { opacity:0; transform: translateY(8px);} to { opacity:1; transform: translateY(0);} }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            main > section { animation: none !important; }
+            nav button:active, main button:active { transform: none !important; }
+        }
+        @media (prefers-reduced-transparency: reduce) {
+            header, nav > div, main .bg-slate-900.border.border-slate-800.rounded-xl,
+            main .bg-slate-950.border.border-slate-800.rounded-xl {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: var(--surface) !important;
+            }
+        }
     </style>
 </head>
-<body class="ambient-bg text-slate-100 min-h-screen flex flex-col">
+<body class="ambient-bg text-slate-100 min-h-screen flex flex-col" style="background:transparent">
+    <div class="ambient" aria-hidden="true">
+        <div class="blob blob--teal"></div>
+        <div class="blob blob--blue"></div>
+        <div class="blob blob--deep"></div>
+        <div class="vignette"></div>
+    </div>
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-lg">
+    <header class="sticky top-0 z-40" style="border-bottom:1px solid var(--line)">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-3">
-                <div class="bg-orange-500/20 p-2 rounded-lg border border-orange-500/30">
-                    <span class="text-2xl">🧪</span>
+                <div class="p-2 rounded-lg border" style="background:color-mix(in srgb,var(--accent) 15%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 3h12l4 6-10 13L2 9z"></path><path d="M11 3 8 9l4 13 4-13-3-6"></path><path d="M2 9h20"></path>
+                    </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg font-extrabold tracking-tight text-orange-300">IAL Chemistry Topic 20: Organic Synthesis — Master Studio</h1>
+                    <h1 class="text-lg font-extrabold tracking-tight" style="color:var(--accent)">IAL Chemistry Topic 20: Organic Synthesis — Master Studio</h1>
                     <p class="text-xs text-slate-400">WCH15 · The 4-Cycle Reaction Map, Special Techniques, Grignard &amp; Exam Synthesis Strategy (Spec 20.1 – 20.5)</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-orange-950 text-orange-300 border border-orange-800">Edexcel Spec 20.1 – 20.5</span>
-                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-sky-950 text-sky-300 border border-sky-800">Unit 5 Capstone</span>
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-sky-950 text-sky-300 border border-sky-800">Edexcel Spec 20.1 – 20.5</span>
+                <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800">Unit 5 Capstone</span>
             </div>
         </div>
     </header>
 
     <!-- Navigation Bar (flex-wrap, short labels) -->
-    <nav class="bg-slate-900/90 border-b border-slate-800 sticky top-[57px] z-30 backdrop-blur-md">
+    <nav class="sticky top-[57px] z-30" aria-label="Studio sections" style="background:transparent;border-bottom:none;box-shadow:none;backdrop-filter:none">
         <div class="max-w-7xl mx-auto px-2 flex flex-wrap">
-            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-orange-300 font-bold border-b-2 border-orange-400 bg-orange-950/40 transition">1. Syllabus</button>
-            <button onclick="switchTab('cycle1')" id="btn-cycle1" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">2. Cycle 1</button>
-            <button onclick="switchTab('cycle2')" id="btn-cycle2" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">3. Cycle 2</button>
-            <button onclick="switchTab('cycle3')" id="btn-cycle3" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">4. Cycle 3</button>
-            <button onclick="switchTab('cycle4')" id="btn-cycle4" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">5. Cycle 4</button>
-            <button onclick="switchTab('special')" id="btn-special" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">6. Special + Grignard</button>
-            <button onclick="switchTab('walkthroughs')" id="btn-walkthroughs" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">7. Exam Walkthroughs ★</button>
-            <button onclick="switchTab('practice')" id="btn-practice" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">8. Graded Practice ★</button>
-            <button onclick="switchTab('solver')" id="btn-solver" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">9. Route Solver</button>
-            <button onclick="switchTab('review')" id="btn-review" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition">10. Final Review</button>
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition">1. Syllabus</button>
+            <button onclick="switchTab('cycle1')" id="btn-cycle1" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">2. Cycle 1</button>
+            <button onclick="switchTab('cycle2')" id="btn-cycle2" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">3. Cycle 2</button>
+            <button onclick="switchTab('cycle3')" id="btn-cycle3" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">4. Cycle 3</button>
+            <button onclick="switchTab('cycle4')" id="btn-cycle4" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">5. Cycle 4</button>
+            <button onclick="switchTab('special')" id="btn-special" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">6. Special + Grignard</button>
+            <button onclick="switchTab('walkthroughs')" id="btn-walkthroughs" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">7. Exam Walkthroughs</button>
+            <button onclick="switchTab('practice')" id="btn-practice" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">8. Graded Practice</button>
+            <button onclick="switchTab('solver')" id="btn-solver" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">9. Route Solver</button>
+            <button onclick="switchTab('review')" id="btn-review" class="tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition">10. Final Review</button>
         </div>
     </nav>
 
@@ -79,7 +281,7 @@
         <section id="tab-syllabus" class="space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
                 <div class="border-b border-slate-800 pb-4 mb-6">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Syllabus Master Overview</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Syllabus Master Overview</span>
                     <h2 class="text-xl font-bold text-white mt-1">Topic 20 Learning Points &amp; Mark Scheme Secrets (Spec 20.1 – 20.5)</h2>
                     <p class="text-xs text-slate-400 mt-1">The capstone topic: deduce structures from spectra, extend carbon chains, and plan multi-step syntheses using the 4-cycle reaction map.</p>
                 </div>
@@ -213,7 +415,9 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">A 3° alcohol can <b>only</b> come from Grignard + ketone (Cycle 2 can't make it). This is a classic "which route?" exam answer.</p>
+                            <p class="leading-relaxed text-[11px]">A 3° alcohol can <b>only</b> come from Grignard + ketone (Cycle 2 can't make it). This is a classic "which route?" exam answer. Paper cue: WCH15 Jun 2026 Q5a — (CH₃)₂CHCH₂MgBr gives a specific alcohol; the wrong Grignard always gives the wrong alcohol, so match the alkyl group to the target.
+
+</p>
                         </div>
                     </div>
 
@@ -238,7 +442,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Write <b>reagents AND conditions</b> for every step — marks are split between them. See the Exam Walkthroughs tab for the full method.</p>
+                            <p class="leading-relaxed text-[11px]">Write <b>reagents AND conditions</b> for every step — marks are split between them. See the Exam Walkthroughs tab for the full method. Overall yield = product of step yields (y₁ × y₂ × y₃) — a multi-step route is capped by the weakest step. Paper cue: WCH15 Jun 2026 Q11b — overall yield <b>57%</b> (only-step-1-yield answers lose the mark).</p>
                         </div>
                     </div>
 
@@ -441,7 +645,7 @@
         <section id="tab-walkthroughs" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
                 <div class="border-b border-slate-800 pb-4">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">★ The Heart of the Hub · Real Past-Paper Syntheses</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">★ The Heart of the Hub · Real Past-Paper Syntheses</span>
                     <h2 class="text-xl font-bold text-white mt-1">Exam Walkthroughs — How to Use the 4 Cycles to Crack Synthesis Questions</h2>
                     <p class="text-xs text-slate-400 mt-1">Each walkthrough starts with a real exam question, shows you the <b>thinking strategy</b> (count carbons → map functional groups → pick the cycle), then reveals the solution one step at a time. Read the strategy, try to plan the route yourself, then reveal each step.</p>
                 </div>
@@ -466,7 +670,7 @@
         <section id="tab-practice" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
                 <div class="border-b border-slate-800 pb-4">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">★ Practice · Exam-Style Synthesis Problems</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">★ Practice · Exam-Style Synthesis Problems</span>
                     <h2 class="text-xl font-bold text-white mt-1">Graded Practice — Test Yourself, Then Check the Model Answer</h2>
                     <p class="text-xs text-slate-400 mt-1">Work each problem on paper first, then reveal the mark-scheme-style model answer and grade yourself honestly. The skills mirror real WCH15 exam questions: deducing structures, choosing reagents/conditions, and planning pathways.</p>
                 </div>
@@ -478,7 +682,7 @@
         <section id="tab-solver" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-6">
                 <div class="border-b border-slate-800 pb-4">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Interactive Planner · BFS over the 4 cycles</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Interactive Planner · BFS over the 4 cycles</span>
                     <h2 class="text-xl font-bold text-white mt-1">Synthesis Route Solver</h2>
                     <p class="text-xs text-slate-400 mt-1">Pick a starting functional group and a target. The solver finds the shortest route through the cycle map and shows the reagents &amp; conditions for every step. Use it to check your own route plans.</p>
                 </div>
@@ -504,7 +708,7 @@
         <section id="tab-review" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-4">
                 <div class="border-b border-slate-800 pb-4">
-                    <span class="text-xs font-bold text-orange-400 uppercase tracking-widest">Final Review</span>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest">Final Review</span>
                     <h2 class="text-xl font-bold text-white mt-1">Complete Reaction Inventory &amp; Master Trap Checklist</h2>
                 </div>
                 <div class="flex flex-wrap gap-2 text-xs">
@@ -539,6 +743,7 @@
                             <li><b>Overall yield = y₁ × y₂ × y₃…</b> — fewer steps = higher yield.</li>
                             <li><b>Iodoform is both a −1C tool and a test</b> for CH₃CO– / CH₃CH(OH)–.</li>
                             <li><b>Write reagents AND conditions</b> for every step — marks are split between them.</li>
+                            <li><b>WCH15 Jun 2026</b> synthesis block: Grignard (Q5a) — CH₃CH₂CH(CH₃)MgBr gives a specific alcohol, wrong Grignard → wrong product; overall yield 57% (Q11b) — multiply step yields, don't quote step 1. Revise the Grignard + yield chain.</li>
                         </ul>
                     </div>
                 </details>
@@ -550,9 +755,9 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-8">
+    <footer class="border-t py-4 mt-8" style="border-color:var(--line)">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
-            IAL Chemistry Topic 20: Organic Synthesis — Master Studio · WCH15 · Edexcel Spec 20.1–20.5 · 4-Cycle Reaction Map + Exam Synthesis Strategy
+            IAL Chemistry Topic 20: Organic Synthesis — Master Studio · WCH15 · Edexcel Spec 20.1–20.5 · apple-dark-ambient-lab · wiki-pull WCH15 banks + synthesis MS keyword bank · 4-Cycle Reaction Map + Exam Synthesis Strategy
         </div>
     </footer>
 
@@ -582,9 +787,9 @@
                 if (sec) { if (t === tabId) sec.classList.remove('hidden'); else sec.classList.add('hidden'); }
                 if (btn) {
                     if (t === tabId) {
-                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-orange-300 font-bold border-b-2 border-orange-400 bg-orange-950/40 transition';
+                        btn.className = 'tab-btn tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition';
                     } else {
-                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-orange-300 font-medium border-b-2 border-transparent transition';
+                        btn.className = 'tab-btn py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition';
                     }
                 }
             });

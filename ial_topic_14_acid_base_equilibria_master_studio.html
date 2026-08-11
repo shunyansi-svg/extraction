@@ -12,27 +12,210 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
     <style>
-        body { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
-        .font-display { font-family: 'Space Grotesk', sans-serif; }
-        .font-mono, code, input, select { font-family: 'IBM Plex Mono', monospace; }
-        #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-        header, nav, main, footer { position: relative; z-index: 1; }
-        .tab-btn-active {
-            border-bottom: 3px solid #38bdf8;
-            color: #38bdf8;
-            font-weight: 700;
-            background-color: rgba(56, 189, 248, 0.12);
+        :root {
+            --bg: #0c1118;
+            --surface: #161d28;
+            --accent: #3dd6c6;
+            --accent-ink: #06201c;
+            --text: #eef2f7;
+            --muted: #8b95a8;
+            --line: rgba(255, 255, 255, 0.08);
+            --spring: cubic-bezier(0.32, 0.72, 0.22, 1);
+            --frost: blur(20px) saturate(1.7);
+            --font: -apple-system, "SF Pro Text", "Segoe UI", "PingFang HK", "Noto Sans HK", system-ui, sans-serif;
+            --font-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Consolas, monospace;
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+            --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(1400px 620px at 80% -14%, rgba(61, 214, 198, 0.10), transparent 60%),
+                radial-gradient(1000px 500px at 4% 116%, rgba(70, 130, 210, 0.08), transparent 60%),
+                linear-gradient(178deg, #0d131c 0%, #0a0e15 55%, #080c12 100%);
+            background-attachment: fixed;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono, code, input, select { font-family: var(--font-mono); }
+        /* Ambient energy field */
+        .ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .ambient .blob { position: absolute; border-radius: 50%; will-change: transform; }
+        .ambient .blob--teal { width: 46vmax; height: 46vmax; left: -8vmax; top: -14vmax;
+            background: radial-gradient(circle at 32% 34%, rgba(61,214,198,.16), rgba(61,214,198,.05) 46%, transparent 72%);
+            animation: driftA 26s ease-in-out infinite alternate; }
+        .ambient .blob--blue { width: 42vmax; height: 42vmax; right: -10vmax; top: 8vmax;
+            background: radial-gradient(circle at 60% 40%, rgba(70,130,210,.14), rgba(70,130,210,.04) 48%, transparent 74%);
+            animation: driftB 32s ease-in-out infinite alternate; }
+        .ambient .blob--deep { width: 38vmax; height: 38vmax; left: 28vmax; bottom: -16vmax;
+            background: radial-gradient(circle at 50% 30%, rgba(90,150,220,.10), rgba(90,150,220,.03) 50%, transparent 76%);
+            animation: driftC 38s ease-in-out infinite alternate; }
+        .ambient .vignette { position: absolute; inset: 0;
+            background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(4,7,12,.55) 100%); }
+        @keyframes driftA { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(9vmax,7vmax,0) scale(1.08); } }
+        @keyframes driftB { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-8vmax,6vmax,0) scale(1.1); } }
+        @keyframes driftC { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(6vmax,-7vmax,0) scale(1.06); } }
+        @media (prefers-reduced-motion: reduce) { .ambient .blob { animation: none !important; } }
+        #bg-canvas { display: none; }
+
+        /* Content stacking */
+        main { position: relative; z-index: 1; }
+        header, nav, footer { position: sticky; z-index: 40; }
+        nav { z-index: 30; }
+
+        /* Cohesive cards */
+        main .bg-slate-900.border.border-slate-800.rounded-xl,
+        main .bg-slate-900.border.border-slate-800.rounded-lg,
+        main .bg-slate-950.border.border-slate-800.rounded-xl,
+        main .bg-slate-950.border.border-slate-800.rounded-lg,
+        main details.bg-slate-950\/60 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.045), transparent 34%),
+                color-mix(in srgb, var(--surface) 90%, transparent) !important;
+            border-color: color-mix(in srgb, var(--line) 70%, rgba(61,214,198,.10)) !important;
+            box-shadow: var(--inset-top), var(--shadow-md);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        main .bg-slate-950.border.border-slate-800.rounded-xl.p-5,
+        main .bg-slate-950.border.border-slate-800.rounded-lg.p-5 {
+            background:
+                linear-gradient(180deg, rgba(61,214,198,.035), transparent 26%),
+                color-mix(in srgb, var(--surface) 78%, #000) !important;
+            border-color: color-mix(in srgb, var(--line) 75%, transparent) !important;
+            box-shadow: var(--inset-top);
+        }
+        main .border-slate-800 { border-color: var(--line) !important; }
+        main .border-slate-700 { border-color: var(--line) !important; }
+
+        /* Tab fade-in */
+        main > section { animation: tabIn 0.34s var(--spring) both; }
+        @keyframes tabIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Floating pill nav */
+        nav {
+            background: transparent;
+            border-bottom: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 0.6rem 1rem 0.4rem;
+        }
+        nav > div {
+            max-width: 100%;
+            width: fit-content;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.3rem;
+            background: color-mix(in srgb, var(--surface) 82%, transparent);
+            border: 1px solid var(--line);
+            border-radius: 9999px;
+            box-shadow: var(--inset-top), 0 10px 30px rgba(0,0,0,0.35);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+        nav button {
+            transition: color 0.2s var(--spring), background-color 0.2s var(--spring),
+                        box-shadow 0.2s var(--spring), transform 0.15s var(--spring);
+            min-height: 40px;
+            border-radius: 9999px;
+            border: none;
+            white-space: nowrap;
+        }
+        nav button:active { transform: scale(0.96); }
+
+        /* Header chrome */
+        header {
+            background: color-mix(in srgb, var(--surface) 88%, transparent);
+            border-color: var(--line) !important;
+            box-shadow: var(--inset-top), 0 8px 28px rgba(0,0,0,0.25);
+            backdrop-filter: var(--frost);
+            -webkit-backdrop-filter: var(--frost);
+        }
+
+        /* tab-btn active → teal pill */
+        .tab-btn-active {
+            color: var(--accent-ink) !important;
+            font-weight: 700 !important;
+            background: var(--accent) !important;
+            border-bottom: none !important;
+            box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+        nav button[onclick*="switchTab"] { border-radius: 9999px; }
+
+        /* Mode chips → teal */
+        main button[class*="bg-sky-600"],
+        main button[class*="bg-emerald-600"],
+        main button[class*="bg-amber-600"],
+        main button[class*="bg-violet-600"],
+        main button[class*="bg-rose-600"] {
+            background: var(--accent) !important;
+            color: var(--accent-ink) !important;
+            border-radius: 9999px !important;
+            border: none !important;
+            box-shadow: var(--inset-top), 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+            font-weight: 700 !important;
+            transition: transform 0.15s var(--spring), filter 0.15s ease;
+        }
+        main button[class*="bg-sky-600"]:active,
+        main button[class*="bg-emerald-600"]:active,
+        main button[class*="bg-amber-600"]:active,
+        main button[class*="bg-violet-600"]:active,
+        main button[class*="bg-rose-600"]:active { transform: scale(0.97); }
+        main button.bg-slate-900.border.border-slate-800 {
+            border-radius: 9999px !important;
+            border-color: var(--line) !important;
+            background: color-mix(in srgb, var(--surface) 80%, transparent) !important;
+            min-height: 40px;
+            transition: transform 0.15s var(--spring), color 0.15s ease, border-color 0.15s ease;
+        }
+        main button.bg-slate-900.border.border-slate-800:hover { color: var(--accent) !important; border-color: color-mix(in srgb,var(--accent) 45%,transparent) !important; }
+        main button.bg-slate-900.border.border-slate-800:active { transform: scale(0.97); }
+
+        /* Selects / inputs */
+        main select, main input[type="number"], main input[type="text"] {
+            background: color-mix(in srgb, var(--surface) 92%, #000) !important;
+            border-color: var(--line) !important;
+            color: var(--text) !important;
+            border-radius: 0.75rem !important;
+            font-variant-numeric: tabular-nums;
+        }
+        main select:focus, main input:focus {
+            border-color: color-mix(in srgb, var(--accent) 55%, transparent) !important;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+        }
+
+        /* Sky chrome → teal */
+        main .text-sky-400, main .text-sky-300 { color: var(--accent) !important; }
+        main .bg-sky-950, main .bg-sky-950\/40, main .bg-sky-950\/70 { background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important; }
+        main .border-sky-800, main .border-sky-900\/50, main .border-sky-500 { border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important; }
+
+        /* Data tables */
+        main table { font-variant-numeric: tabular-nums; }
+        main thead { background: color-mix(in srgb, var(--surface) 95%, #000) !important; }
+
+        /* Amber/rose pedagogy preserved */
+        main .bg-amber-950\/40, main .bg-amber-950\/60, main .border-amber-800\/60, main .border-amber-800,
+        main .text-amber-200, main .text-amber-300, main .text-amber-400,
+        main .bg-rose-950\/20, main .bg-rose-950\/30, main .bg-rose-950\/60, main .border-rose-900\/40,
+        main .text-rose-300, main .text-rose-200 { /* keep Tailwind pedagogy colours */ }
+
         .blur-answer {
             filter: blur(6px);
-            transition: filter 0.25s ease, background-color 0.25s ease;
+            transition: filter 0.25s var(--spring), background-color 0.25s ease;
             user-select: none;
             cursor: pointer;
         }
         .blur-answer:hover, .blur-answer.revealed {
             filter: blur(0);
             user-select: auto;
-            background-color: rgba(56, 189, 248, 0.18) !important;
+            background-color: color-mix(in srgb, var(--accent) 18%, transparent) !important;
         }
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
@@ -41,7 +224,7 @@
         .press-btn { transition: transform 0.08s ease, box-shadow 0.15s ease; }
         .press-btn:active { transform: scale(0.95); }
         .card-hover { transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
-        .card-hover:hover { transform: translateY(-2px); border-color: rgba(56,189,248,0.35); box-shadow: 0 12px 32px -12px rgba(0,0,0,0.55); }
+        .card-hover:hover { transform: translateY(-2px); border-color: rgba(61,214,198,0.35); box-shadow: 0 12px 32px -12px rgba(0,0,0,0.55); }
         .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
         .reveal.revealed { opacity: 1; transform: translateY(0); }
         .ph-strip {
@@ -55,6 +238,26 @@
             display: inline-flex; align-items: center; justify-content: center;
             width: 1.35rem; height: 1.35rem; border-radius: 9999px; flex-shrink: 0;
             font-size: 10px; font-weight: 700;
+        }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            main > section { animation: none !important; }
+            nav button:active, main button:active { transform: none !important; }
+        }
+        @media (prefers-reduced-transparency: reduce) {
+            header, nav > div, main .bg-slate-900.border.border-slate-800.rounded-xl,
+            main .bg-slate-950.border.border-slate-800.rounded-xl {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: var(--surface) !important;
+            }
         }
     </style>
     <script>
@@ -73,8 +276,8 @@
         }
         window.safeInitKaTeX = safeInitKaTeX;
 
-        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-sky-400 font-bold border-b-2 border-sky-400 bg-sky-950/40 transition flex items-center gap-1.5 rounded-t-md";
-        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md";
+        const TAB_ACTIVE = "tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition";
+        const TAB_INACTIVE = "py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition";
         let curTab = 'syllabus';
 
         window.switchTab = function(tabId) {
@@ -1151,14 +1354,27 @@
         });
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
-    <canvas id="bg-canvas"></canvas>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col" style="background:transparent">
+    <div class="ambient" aria-hidden="true">
+        <div class="blob blob--teal"></div>
+        <div class="blob blob--blue"></div>
+        <div class="blob blob--deep"></div>
+        <div class="vignette"></div>
+    </div>
+    <canvas id="bg-canvas" style="display:none"></canvas>
 
-    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-40 shadow-lg backdrop-blur-sm">
+    <header class="sticky top-0 z-40" style="border-bottom:1px solid var(--line)">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-            <div>
-                <h1 class="font-display text-lg font-bold tracking-tight text-sky-400">IAL Topic 14: Acid–Base Equilibria — Master Studio</h1>
-                <p class="text-[11px] text-slate-400 mt-0.5">WCH13/01 · Unit 4 · Paper 4 · Syllabus <span class="text-sky-300 font-mono">14.1–14.23</span> · English exam wording</p>
+            <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg border" style="background:color-mix(in srgb,var(--accent) 15%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 8V4"></path><path d="M12 21a6 6 0 0 0 6-6c0-3-2.5-5.5-6-9-3.5 3.5-6 6-6 9a6 6 0 0 0 6 6z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-display text-lg font-bold tracking-tight" style="color:var(--accent)">IAL Topic 14: Acid–Base Equilibria — Master Studio</h1>
+                    <p class="text-[11px] text-slate-400 mt-0.5">WCH14 · Unit 4 · Paper 4 · Syllabus <span class="text-sky-300 font-mono">14.1–14.23</span> · English exam wording</p>
+                </div>
             </div>
             <div class="flex flex-wrap gap-1.5 text-[10px]">
                 <span class="px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">pH &amp; Ka</span>
@@ -1169,16 +1385,16 @@
         </div>
     </header>
 
-    <nav class="bg-slate-900/95 border-b border-slate-800 text-xs font-medium sticky top-[64px] z-30 backdrop-blur-md shadow-md">
+    <nav class="sticky top-[64px] z-30" aria-label="Studio sections" style="background:transparent;border-bottom:none;box-shadow:none;backdrop-filter:none">
         <div class="max-w-7xl mx-auto px-3 sm:px-4 py-1.5 flex flex-wrap items-stretch gap-x-0.5 gap-y-1">
-            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-sky-400 font-bold border-b-2 border-sky-400 bg-sky-950/40 transition flex items-center gap-1.5 rounded-t-md"><span>📚 1. Syllabus</span></button>
-            <button onclick="switchTab('titration')" id="btn-titration" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>⚗️ 2. Titration Lab</span></button>
-            <button onclick="switchTab('phcalc')" id="btn-phcalc" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🧮 3. pH Calculations</span></button>
-            <button onclick="switchTab('ka')" id="btn-ka" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>⚖️ 4. Weak Acids &amp; Ka</span></button>
-            <button onclick="switchTab('buffers')" id="btn-buffers" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🛡️ 5. Buffers</span></button>
-            <button onclick="switchTab('curves')" id="btn-curves" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>📈 6. Curves &amp; Indicators</span></button>
-            <button onclick="switchTab('solver')" id="btn-solver" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>🛠️ 7. Solver</span></button>
-            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 hover:text-sky-300 font-medium border-b-2 border-transparent hover:border-slate-600 transition flex items-center gap-1.5 rounded-t-md"><span>📋 8. Final Review</span></button>
+            <button onclick="switchTab('syllabus')" id="btn-syllabus" class="tab-btn-active py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs font-bold transition"><span>1. Syllabus</span></button>
+            <button onclick="switchTab('titration')" id="btn-titration" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>2. Titration Lab</span></button>
+            <button onclick="switchTab('phcalc')" id="btn-phcalc" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>3. pH Calculations</span></button>
+            <button onclick="switchTab('ka')" id="btn-ka" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>4. Weak Acids &amp; Ka</span></button>
+            <button onclick="switchTab('buffers')" id="btn-buffers" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>5. Buffers</span></button>
+            <button onclick="switchTab('curves')" id="btn-curves" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>6. Curves &amp; Indicators</span></button>
+            <button onclick="switchTab('solver')" id="btn-solver" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>7. Solver</span></button>
+            <button onclick="switchTab('review')" id="btn-review" class="py-2 px-3 sm:px-3.5 text-[11px] sm:text-xs text-slate-400 font-medium transition"><span>8. Final Review</span></button>
         </div>
     </nav>
 
@@ -1303,7 +1519,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">State the assumptions when the question asks — they are mark points, not decoration. Shortcut pH = ½(pKa − log c) is fine in working, but be ready to show where it comes from.</p>
+                            <p class="leading-relaxed text-[11px]">State the assumptions when the question asks — they are mark points, not decoration. Shortcut pH = ½(pKa − log c) is fine in working, but be ready to show where it comes from. The three weak-acid assumptions: (1) [HA]<sub>eq</sub> ≈ [HA]<sub>initial</sub>, (2) [H⁺] = [A⁻] (ignore H⁺ from water), (3) second dissociation negligible — <b>not</b> bare “dissociation is partial”. Marking chain: M1 x² = Ka×[HA], M2 [H⁺] = √(…) to 3 s.f. (TE on M2 only if pH &lt; 7), M3 pH = −log[H⁺]. <b>pH = −log Ka is a classic 2-mark loss</b> (pKa ≠ pH). Paper cue: WCH14 Jun 2026 Q3 — treat CH₃COOH as <b>weak</b>, [H⁺]²/Ka, not strong.</p>
                         </div>
                     </div>
 
@@ -1326,7 +1542,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Putting [OH⁻] straight into −log gives pOH, not pH — the most common error on strong-base questions. Golden procedure (Paper 4 digest): [OH⁻] → pOH → pH = 14 − pOH.</p>
+                            <p class="leading-relaxed text-[11px]">Putting [OH⁻] straight into −log gives pOH, not pH — the most common error on strong-base questions. Golden procedure (Paper 4 digest): [OH⁻] → pOH → pH = 14 − pOH. <b>Diprotic base:</b> Ba(OH)₂ gives 2 OH⁻ — compute pOH from 2×[Ba(OH)₂] first (WCH14 Jun 2026 Q4: pH = <b>13.18</b>). <b>Total-volume trap:</b> when acid meets base and one is in excess, divide [OH⁻] (or [H⁺]) by the <b>total</b> mixed volume — dividing by acid-only/base-only/volume-difference all lose a mark.</p>
                         </div>
                     </div>
 
@@ -1394,7 +1610,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">Paper 4 staple (Jan 2024 Q6, Q19ciii): methyl orange for strong acid/weak base, phenolphthalein for weak acid/strong base — with the reason “range lies within the steep section”. Test it live in the Titration Lab.</p>
+                            <p class="leading-relaxed text-[11px]">Paper 4 staple (Jan 2024 Q6, Q19ciii): methyl orange for strong acid/weak base, phenolphthalein for weak acid/strong base — with the reason “range lies within the steep section”. Test it live in the Titration Lab. WCH14 Jun 2026 Q8a: <b>phenol red</b> for weak acid/strong base (bromophenol blue / bromocresol green / methyl orange are wrong range). Equivalence pH ≠ 7: weak acid + strong base → pH &gt; 7 because the <b>conjugate base reacts with water</b> (CH₃CH₂COO⁻ + H₂O → CH₃CH₂COOH + OH⁻) — give the equation for all 3 marks.</p>
                         </div>
                     </div>
 
@@ -1440,7 +1656,7 @@
                         </div>
                         <div class="p-3 bg-amber-950/40 border border-amber-800/60 rounded-lg text-xs text-amber-200 space-y-1">
                             <span class="font-bold text-amber-400 block uppercase text-[10px]">💡 IAL Examiner Watch-Outs:</span>
-                            <p class="leading-relaxed text-[11px]">pH = pKa at half-equivalence is one of the highest-frequency one-liners in Paper 4 (Jan 2024 Q19ci). In preparation questions, show the ratio step before converting to mass.</p>
+                            <p class="leading-relaxed text-[11px]">pH = pKa at half-equivalence is one of the highest-frequency one-liners in Paper 4 (Jan 2024 Q19ci). In preparation questions, show the ratio step before converting to mass. Buffer-mechanism 3-marker (acidic buffer + OH⁻): (1) large <b>reservoir</b> of CH₃COOH present, (2) CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O removes OH⁻, (3) [acid]:[salt] ratio stays <b>almost unchanged</b> → pH almost constant. REJECT “pH stays constant”. Paper cue: WCH14 Jun 2026 Q6 — 0.2 mol CH₃COOH + 0.1 mol Mg(OH)₂ makes a buffer; Q7 — buffer pH needs [CH₃CH₂COOH] &gt; [CH₃CH₂COO⁻], not pH = pKa.</p>
                         </div>
                     </div>
 
@@ -2329,6 +2545,7 @@
                         <li>Indicator range must sit inside the vertical jump; weak/weak → pH meter.</li>
                         <li>Half-equivalence: pH = pKa — read Ka straight off the curve.</li>
                         <li>Blood: H₂CO₃/HCO₃⁻, pH 7.4, both removal equations.</li>
+                        <li><b>WCH14 Jun 2026</b> acid-base block: Q2 pH 2.0 ([H⁺]=0.01 not 0.1), Q4 diprotic Ba(OH)₂ → 13.18, Q7 buffer needs [acid]&gt;[salt], Q8a phenol red indicator. Revise the whole chain.</li>
                     </ul>
                 </details>
             </div>
@@ -2336,8 +2553,8 @@
 
     </main>
 
-    <footer class="border-t border-slate-800 py-4 text-center text-[10px] text-slate-500">
-        IAL Chemistry Topic 14: Acid–Base Equilibria Master Studio · WCH13 Unit 4 · Paper 4 · Spec 14.1–14.23 · Single-file Master Studio standard
+    <footer class="border-t py-4 text-center text-[10px] text-slate-500" style="border-color:var(--line)">
+        IAL Chemistry Topic 14: Acid–Base Equilibria Master Studio · WCH14 Unit 4 · Paper 4 · Spec 14.1–14.23 · apple-dark-ambient-lab · wiki-pull WCH14 banks + acid-base MS keyword bank + WCH16 practical
     </footer>
 </body>
 </html>
