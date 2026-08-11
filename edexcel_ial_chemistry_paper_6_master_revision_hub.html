@@ -139,7 +139,7 @@
                     <i class="fa-solid fa-flask-vial text-xs"></i> <span>Core Practicals & Qual</span>
                 </button>
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (16)</span>
                 </button>
                 <button                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
                     <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (100)</span>
@@ -433,7 +433,60 @@
                 truth: "Mass loss can be due to water of crystallisation OR gas evolution ($\\text{CO}_2, \\text{NO}_2, \\text{O}_2$). Re-heat to constant mass to confirm completion!",
                 keywords: "Heat to constant mass, confirms complete decomposition"
             }
-        ];
+        ,
+{
+  title: "11. Halide Test: Nitric Acid, NOT Hydrochloric Acid",
+  topic: "Qualitative Analysis - Testing for Halide Ions",
+  badge: "WCH16 PEF",
+  misconception: "Using dilute hydrochloric acid (HCl) to acidify the halide test solution before adding silver nitrate.",
+  truth: "The acid must be nitric acid. HCl itself contains chloride ions, so if you acidify with HCl the silver nitrate will ALWAYS give a positive (white) precipitate - a false positive. With nitric acid: AgCl = white ppt (soluble in dilute NH3), AgBr = cream ppt (soluble in CONC. NH3 only), AgI = yellow ppt (insoluble in NH3). Always justify the choice of acid.",
+  keywords: "halide test, nitric acid not HCl, AgCl white, AgBr cream, AgI yellow, silver nitrate, ammonia, sulfate test, barium ions, white precipitate, justify acid"
+}
+,
+{
+  title: "12. NH4+ Ion vs NH3 Gas Are DIFFERENT Tests",
+  topic: "Qualitative Analysis - Testing for the Ammonium Ion",
+  badge: "WCH16 PEF",
+  misconception: "Simply adding NaOH to the sample and saying 'ammonia is produced' is enough evidence for the ammonium ion.",
+  truth: "To test for the NH4+ ION you must add NaOH(aq) AND WARM the mixture (heating is essential to drive off the gas), then test the evolved GAS with damp red litmus paper - it turns blue. You must state that the GAS is tested, not just the solution.",
+  keywords: "ammonium ion NH4+, ammonia gas, NaOH, warm, heat essential, damp red litmus turns blue, evolved gas, test the gas"
+}
+,
+{
+  title: "13. Metal Ion Flame/Colour Confusions",
+  topic: "Qualitative Analysis - Metal Ion Identification",
+  badge: "WCH16 PEF",
+  misconception: "Confusing flame/colour observations: saying barium is blue-green, or mixing up Ca2+ and Cu2+, or the colours of Fe3+ and Mn2+ precipitates.",
+  truth: "K+ = LILAC flame; Ba2+ = PALE GREEN (barium is NOT blue-green - blue-green is COPPER ions); Ca2+ = red/orange-red; Co2+ gives a BLUE precipitate turning PINK on standing; Cu2+ pale blue -> deep blue [Cu(NH3)4]2+ with excess NH3 -> yellow [CuCl4]2- with conc. HCl; Fe(OH)3 = RED-BROWN precipitate whereas Mn(OH)2 = OFF-WHITE (which DARKENS on standing).",
+  keywords: "metal ions, flame test, K lilac, Ba pale green, Ca red, Co blue to pink, Cu deep blue, CuCl4 yellow, Fe(OH)3 red-brown, Mn(OH)2 off-white darkens"
+}
+,
+{
+  title: "14. Starch Indicator & Manganate(VII) Endpoint",
+  topic: "Quantitative Analysis - Titration Endpoints",
+  badge: "WCH16 PEF",
+  misconception: "Treating starch as an acid-base indicator and adding it at the start, or expecting the manganate end-point to go from a colour to a colour.",
+  truth: "Starch is a REDOX indicator (iodine-starch complex), NOT an acid-base indicator. Blue-black -> colourless. Add the starch only just BEFORE the end-point, when the iodine colour has faded to pale yellow/straw. For potassium manganate(VII) titrations the end-point is colourless -> faint permanent PALE PINK (first excess MnO4-).",
+  keywords: "starch indicator, iodine thiosulfate, blue-black to colourless, add starch near end-point, pale straw colour, manganate(VII), colourless to faint pink, not acid-base"
+}
+,
+{
+  title: "15. Recrystallisation & Melting-Point Purity",
+  topic: "Organic Techniques - Recrystallisation & Purity",
+  badge: "WCH16 PEF",
+  misconception: "Dissolving the crude product in lots of solvent, or missing which step removes which impurity, and thinking impurities raise the melting point.",
+  truth: "Dissolve the crude product in the MINIMUM amount of HOT solvent. HOT filtration removes INSOLUBLE impurities. Washing with COLD solvent removes SOLUBLE impurities - cold because lower solubility means LESS product loss. A pure solid has a SHARP melting-point range; impurities DEPRESS and WIDEN the range.",
+  keywords: "recrystallisation, minimum hot solvent, hot filtration insoluble impurities, cold wash soluble impurities, less product loss, melting point sharp, impurities depress and widen"
+}
+,
+{
+  title: "16. Smaller Titre = GREATER Uncertainty; Concordance Rules",
+  topic: "Quantitative Analysis - Titration Errors & Precision",
+  badge: "WCH16 PEF",
+  misconception: "Thinking a small titre is an advantage, or not knowing the exact concordance/apparatus-reading rules.",
+  truth: "A SMALLER titre means a GREATER percentage uncertainty - a disadvantage, not an advantage. Concordant titres lie within 0.10 cm3 of each other (a range of 0.20 cm3). A burette reads to 0.05 cm3 and titre values should be recorded to 2 decimal places (2 dp).",
+  keywords: "smaller titre, greater percentage uncertainty, disadvantage, concordant within 0.10 cm3, range 0.20 cm3, burette 0.05 cm3, record 2 dp"
+}];
 
         // 50 Flashcards Array
         const FLASHCARDS_DATA = [

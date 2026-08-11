@@ -149,7 +149,7 @@
                     <i class="fa-solid fa-list-check text-xs"></i> <span>Syllabus Explorer</span>
                 </button>
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (16)</span>
                 </button>
                 
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
@@ -502,7 +502,60 @@
                 truth: "In solid metals, ONLY delocalised electrons move! For isoelectronic species (Na⁺ vs F⁻), Na⁺ is SMALLER because it has MORE PROTONS (11 vs 9), pulling 10 electrons closer to nucleus.",
                 keywords: "Delocalised electrons carry charge; higher nuclear charge pulls electrons closer"
             }
-        ];
+        ,
+{
+  title: "11. Relative Atomic Mass (Aᵣ) — Definition Word-for-Word",
+  topic: "Topic 2: Atomic Structure",
+  badge: "Definitions & Equations",
+  misconception: "Students give a shortened Aᵣ definition — e.g. 'average mass of an atom compared to carbon-12' — and drop the 'mean/weighted average' idea or the '1/12 of a carbon-12 atom' reference.",
+  truth: "The mark scheme wants BOTH parts. Aᵣ is: 'the mean/average mass of an atom (of an element) relative to 1/12 of the mass of a carbon-12 atom.' If you leave out 'mean' or omit the '1/12 of carbon-12' comparison, you lose credit. Learn it word-for-word.",
+  keywords: "relative atomic mass, Ar, carbon-12, 1/12, mean, weighted average, definition"
+}
+,
+{
+  title: "12. Mass Spectrometry — Stage Functions & Ions",
+  topic: "Topic 2: Atomic Structure",
+  badge: "Definitions & Equations",
+  misconception: "Students call the ionisation stage 'electron affinity' or confuse the accelerator and deflector fields — and forget to state the charge on molecular ions.",
+  truth: "Ionisation uses electron bombardment (NOT an 'electron affinity' process — that is a different concept). Acceleration is done by an electric field; deflection is done by a magnetic field. The molecular ion M⁺ has a relative mass equal to Mᵣ of the molecule. Always write the charge on the ion (e.g. M⁺, ²⁺). Deflection depends on mass (and charge), NOT on abundance.",
+  keywords: "mass spectrometry, ionisation, electron bombardment, accelerator, electric field, deflector, magnetic field, molecular ion, M+, Mr, charge, deflection, abundance"
+}
+,
+{
+  title: "13. Cl₂ Mass Spectrum — THREE Peaks, Not Two",
+  topic: "Topic 2: Atomic Structure",
+  badge: "Spot the Trap",
+  misconception: "Students draw Cl₂ as two molecular-ion peaks (³⁵Cl–³⁵Cl and ³⁷Cl–³⁷Cl) in a 3:1 ratio, forgetting the mixed-isotope ³⁵Cl–³⁷Cl peak.",
+  truth: "Cl₂ has THREE molecular-ion peaks at m/z 70, 72 and 74, in the ratio 9 : 6 : 1 (from ³⁵Cl₂⁺, ³⁵Cl³⁷Cl⁺ and ³⁷Cl₂⁺). The 3:1 ratio refers to ATOMIC Cl, not molecular Cl₂. Similarly, ClF₃⁺ gives peaks at 92 : 94 ≈ 3 : 1, and Br₂ gives ⁷⁹Br₂⁺ and ⁷⁹Br⁸¹Br⁺ around 75% : 25%.",
+  keywords: "Cl2, mass spectrum, peaks, m/z 70 72 74, 9:6:1, mixed isotope, 35Cl37Cl, ClF3, 92 94, Br2, isotope ratio"
+}
+,
+{
+  title: "14. Cu²⁺ Electron Configuration — 4s AND 3d",
+  topic: "Topic 2: Atomic Structure",
+  badge: "Spot the Trap",
+  misconception: "For Cu²⁺ students remove both electrons from the 3d sub-shell, or write Cl with extra 3d/4s electrons.",
+  truth: "Cu is [Ar] 3d¹⁰ 4s¹. When Cu²⁺ forms, electrons are removed from the 4s sub-shell FIRST (it is higher in energy once occupied), so Cu²⁺ = [Ar] 3d⁹ — one lost from 4s and one from 3d, NOT both from d. Also, chlorine is 1s² 2s² 2p⁶ 3s² 3p⁵ — do NOT add 3d or 4s electrons.",
+  keywords: "Cu, Cu2+, electron configuration, 3d, 4s, [Ar] 3d9, chlorine, 1s2 2s2 2p6 3s2 3p5, ionisation from 4s"
+}
+,
+{
+  title: "15. Polarisation & Molecular Polarity — Getting the Direction Right",
+  topic: "Topic 3: Bonding",
+  badge: "Spot the Trap",
+  misconception: "Students reverse which ion polarises which, confuse 'polarity' with 'polarisability', and misdraw the dative bond in Al₂Cl₆.",
+  truth: "A SMALL, HIGHLY-CHARGED cation (e.g. Be²⁺, small radius + high charge density) has the most polarising power — it distorts the electron cloud of the anion. SF₆ is a 3-D octahedral, symmetric molecule: the S–F bonds are polar but they cancel, so SF₆ overall is NON-polar. In Al₂Cl₆ the dative/coordinate bond points from Cl → Al (the lone pair is on Cl), and there is NO Al–Al bond.",
+  keywords: "polarisation, polarising power, small highly charged cation, charge density, SF6, octahedral, non-polar, Al2Cl6, dative bond, Cl to Al, no Al-Al"
+}
+,
+{
+  title: "16. Ionic Conduction — Mobile IONS, Not Electrons",
+  topic: "Topic 3: Bonding",
+  badge: "Spot the Trap",
+  misconception: "Students say ionic compounds conduct because of 'delocalised electrons' (mixed up with metals), or claim the solid conducts.",
+  truth: "Ionic compounds conduct when molten or in aqueous solution because the IONS are free to move — mobile charged IONS carry current, NOT delocalised electrons (that is metallic bonding). In the SOLID state there are no mobile charge carriers, so an ionic solid does NOT conduct electricity.",
+  keywords: "ionic, conductivity, mobile ions, molten, aqueous, delocalised electrons, metallic, solid, no conduction, charge carriers"
+}];
 
         /* ==================== 50 FLASHCARDS DECK DATA (10 PER TOPIC) ==================== */
         const QUIZ_DATA = [

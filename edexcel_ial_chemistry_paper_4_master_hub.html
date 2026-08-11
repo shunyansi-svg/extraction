@@ -145,7 +145,7 @@
                     <i class="fa-solid fa-list-check text-xs"></i> <span>Syllabus Explorer</span>
                 </button>
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (16)</span>
                 </button>
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
                     <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (100)</span>
@@ -509,7 +509,18 @@
                 truth: "The rate constant <i>k</i> is INDEPENDENT of concentration and pressure. <i>k</i> changes ONLY when TEMPERATURE changes (or when a catalyst lowers <i>E</i><sub>a</sub> in Arrhenius equation, but at fixed temp <i>k</i> is fixed for a given system).",
                 keywords: "k changes ONLY with temperature"
             }
-        ];
+        ,
+{ title: "21. Diprotic Base pH - Find pOH First", topic: "Acids, Bases & Buffer", badge: "PEF", misconception: "Treating a dibasic base (e.g. Na2CO3) like a strong monobasic one and taking pH straight from the OH- concentration, so the pH comes out far too low.", truth: "For a diprotic/divalent base, [OH-] is double the base concentration - calculate pOH = -log[OH-] FIRST, then convert with pH = 14 - pOH. Skipping the pOH step (or halving the hydroxide) is the single most common error here (Jun 2023).", keywords: "diprotic, dibasic, pOH, pH=14-pOH, hydroxide concentration, Jun 2023" }
+,
+{ title: "22. CH3COOH Is WEAK - Use Ka, Not Full Dissociation", topic: "Acids, Bases & Buffer", badge: "PEF", misconception: "Treating ethanoic acid as if it fully dissociates - writing [H+] = [CH3COOH]initial, or describing the equilibrium in terms of 'pH' and complete break-up.", truth: "CH3COOH is a WEAK acid: use Ka = [H+][CH3COO-]/[CH3COOH]. Describe 'dissociation'/'ionisation' and 'partially dissociates' - credited, but emphasise how FEW molecules actually dissociate (only a tiny fraction), never imply complete ionisation.", keywords: "weak acid, Ka, partial dissociation, ethanoic acid, equilibrium, ionisation" }
+,
+{ title: "23. Buffer pH = pKa ONLY When [Acid] = [Salt]", topic: "Acids, Bases & Buffer", badge: "PEF", misconception: "Assuming the buffer pH always equals pKa, or that a buffer's pH never changes at all when small amounts of acid/base are added.", truth: "pH = pKa holds ONLY when [acid] = [salt] (equal concentrations). Use the Ka expression (substituting [H+] = Ka.[acid]/[salt]) rather than Henderson-Hasselbalch, which is error-prone - the [acid]/[salt] ratio is very often reversed. A buffer 'resists pH change' is not the same as 'pH never changes'.", keywords: "buffer, pKa, equal concentrations, Henderson-Hasselbalch, Ka expression, resists pH change" }
+,
+{ title: "24. Kp Uses Partial Pressures - NEVER Square Brackets", topic: "Equilibrium & Kp", badge: "PEF", misconception: "Writing Kp expressions with concentration notation [ ], or using moles instead of partial pressures; also using Mr(O2) = 16 so oxygen gives 7/16 instead of 7/32.", truth: "Kp is built from PARTIAL PRESSURES only - never square brackets (that is Kc). For Kc with gaseous species, the statement 'volumes cancel' earns the final mark. When converting equilibrium moles to masses, remember oxygen Mr = 32 (not 16), so 7 mol O2 = 7/32 g, not 7/16.", keywords: "Kp, partial pressures, square brackets, Kc volumes cancel, oxygen Mr 32, 7/32" }
+,
+{ title: "25. Nucleophile Attack on Planar Carbonyl -> Racemic", topic: "Organic Mechanisms", badge: "PEF", misconception: "Saying racemic mixture forms from SN2 inversion, or adding 'SN2' to a nucleophilic-addition mechanism and still expecting the mark.", truth: "Attack on a planar carbonyl group occurs from BOTH sides with equal probability, giving a racemic mixture (no optical activity). SN2 inversion is different - it flips optical rotation to the OPPOSITE direction, NOT racemic. Writing 'SN2' alongside 'nucleophilic addition' NEGATES the mark.", keywords: "nucleophilic addition, planar carbonyl, racemic, both sides, SN2 inversion, optical rotation opposite" }
+,
+{ title: "26. NMR - Peaks = Environments, Areas Not Heights", topic: "Organic Analysis (NMR)", badge: "PEF", misconception: "Counting peaks as protons, using peak HEIGHT for integration, drawing multiplet splitting in low-resolution 'stick' spectra, or being unsure what '4 splits' means.", truth: "Number of NMR peaks = number of proton environments. For integration use the RELATIVE AREA under each peak - never 'height'. The n+1 rule gives a quartet at 4 splits (acceptable wording). Low-resolution 1H NMR is drawn as single UNSPLIT peaks (no coupling shown).", keywords: "NMR, environments, n+1 rule, quartet 4 splits, relative area, not height, low-resolution unsplit" }];
 
         /* ==================== 50 FLASHCARDS DATASET (10 PER TOPIC) ==================== */
         const FLASHCARDS_DATA = [

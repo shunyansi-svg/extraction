@@ -139,7 +139,7 @@
                     <i class="fa-solid fa-list-check text-xs"></i> <span>Syllabus Explorer</span>
                 </button>
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (16)</span>
                 </button>
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-sky-400 transition-colors">
                     <i class="fa-solid fa-layer-group text-purple-400 text-xs"></i> <span>3D Flashcards (100)</span>
@@ -463,7 +463,60 @@
                 truth: "Scandium forms $\\text{Sc}^{3+}$ ($3d^0$, empty d-subshell) and Zinc forms $\\text{Zn}^{2+}$ ($3d^{10}$, full d-subshell). Neither forms a stable ion with an INCOMPLETELY FILLED d-orbital!",
                 keywords: "No stable ion with partially filled d-orbital"
             }
-        ];
+        ,
+{
+  title: "11. Colour Origin: d-d Electron Transition (Not a Single Orbital Split)",
+  topic: "Transition Metals & Colour",
+  badge: "Keywords",
+  misconception: "A 'd orbital splits' into two energy levels, and colour arises because the complex emits light when an electron drops back down.",
+  truth: "The d-SUBSHELL splits (plural) into two sets of d-orbitals of different energy. Visible light is ABSORBED to promote an electron from a lower to a higher d-orbital energy level (dE = h.nu). The complementary (transmitted/reflected) colour is seen. Coloured complexes ABSORB light; flame tests EMIT it.",
+  keywords: "d-d transition, d-subshell splits, two sets of d-orbitals, dE = h.nu, absorb vs emit, complementary colour"
+}
+,
+{
+  title: "12. Full d Sub-shell -> No Colour (No d-d Transition Possible)",
+  topic: "Transition Metals & Colour",
+  badge: "Keywords",
+  misconception: "A complex is colourless because 'a d orbital is full', so no electron can move.",
+  truth: "When ALL d orbitals are full (e.g. Ag+ = [Kr]4d10), no d-d transition is possible, so no visible light is absorbed and the complex is colourless. Distinguish a full d SUB-SHELL (all five orbitals full, e.g. 4d10) from a full single d orbital.",
+  keywords: "full d sub-shell, 4d10, Ag+, no d-d transition, colourless, full orbital vs full sub-shell"
+}
+,
+{
+  title: "13. Transition Element = ION with a Partially Filled d Sub-shell",
+  topic: "Transition Metals",
+  badge: "Keywords",
+  misconception: "Any d-block metal (including Zn and Sc) counts as a transition element, and ions lose 3d electrons before 4s.",
+  truth: "A transition element forms at least one stable ion with a PARTIALLY FILLED d sub-shell. Zn and Sc are NOT transition elements. When forming ions, 4s electrons are lost BEFORE 3d electrons: Mn2+ = [Ar]3d5 and Fe2+ = [Ar]3d6.",
+  keywords: "partially filled d sub-shell, Zn and Sc not transition metals, 4s lost before 3d, Mn2+ 3d5, Fe2+ 3d6"
+}
+,
+{
+  title: "14. Salt Bridge Carries Ions, NOT Electrons",
+  topic: "Electrochemical Cells",
+  badge: "Keywords",
+  misconception: "The salt bridge carries electrons to complete the circuit, acting like a wire.",
+  truth: "The salt bridge must contain ions (saturated KNO3 or KCl). Its function is to allow ION flow, complete the circuit and balance charge in the half-cells - it does NOT carry electrons and is NOT a wire.",
+  keywords: "salt bridge, saturated KNO3/KCl, ion flow, complete circuit, balance charge, no electron flow"
+}
+,
+{
+  title: "15. Benzene Delocalisation Evidence - Compare to the TRIENE, Not Cyclohexene",
+  topic: "Arene / Benzene",
+  badge: "Keywords",
+  misconception: "Benzene's low reactivity is shown by comparing its hydrogenation enthalpy to cyclohexene, and it undergoes addition bromination without a catalyst.",
+  truth: "Benzene's hydrogenation is LESS exothermic than the THEORETICAL 1,3,5-triene (compare to the triene, NOT cyclohexene). X-ray shows all C-C equal in length, but LONGER than the C=C of cyclohexene. Bromine needs a CATALYST and the reaction is SUBSTITUTION, not addition.",
+  keywords: "hydrogenation enthalpy, 1,3,5-triene, less exothermic, equal C-C length, longer than C=C, catalyst, substitution not addition"
+}
+,
+{
+  title: "16. Amine Basicity Order - Alkyl Groups Release Electron Density",
+  topic: "Amines & Basicity",
+  badge: "Keywords",
+  misconception: "Aromatic amines are strong bases and alkyl groups make the N atom itself 'more negative'.",
+  truth: "Basicity order: ALIPHATIC amines > ammonia > AROMATIC amines. Alkyl groups are electron-RELEASING: they donate electron density towards the N, making the lone pair more available, so the amine is a stronger base. In aryl amines the N lone pair is delocalised into the ring, so it is weaker. Do NOT say N 'becomes more negative'.",
+  keywords: "aliphatic > ammonia > aromatic, electron-releasing alkyl, lone pair availability, lone pair delocalised into ring, weaker base"
+}];
 
         // 100 Flashcards Array
         const FLASHCARDS_DATA = [

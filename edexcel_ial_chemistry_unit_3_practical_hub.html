@@ -152,7 +152,7 @@
                     <i class="fa-solid fa-flask text-xs"></i> <span>Core Practicals Explorer</span>
                 </button>
                 <button onclick="switchTab('pitfalls')" id="tab-pitfalls" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (10)</span>
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xs"></i> <span>Examiner Pitfalls (16)</span>
                 </button>
                 
                 <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn px-4 py-2.5 whitespace-nowrap flex items-center space-x-2 text-slate-400 hover:text-cyan-400 transition-colors">
@@ -558,7 +558,60 @@
                 truth: "Drying agents DO NOT dissolve! They absorb water. When wet, drying agent clumps together. Liquid is FULLY DRY when drying agent remains FREE-FLOWING / POWDERY on swirling and liquid turns CLEAR.",
                 keywords: "Remains free-flowing/powdery, liquid turns from cloudy to clear"
             }
-        ];
+        ,
+{
+  title: "11. Flame Test Technique: Put the Sample IN the Flame, Not 'Burnt'",
+  topic: "Testing for Ions",
+  badge: "EXAMINER FAVOURITE",
+  misconception: "'The sample is burnt in the flame' or holding the wire just below the flame - or testing with a wire that already carries contaminant ions.",
+  truth: "Place the sample ON/in the flame, not just near it. Concentrated HCl is added first to form a volatile metal chloride (so ions vaporise easily). Open the Bunsen air-hole so the flame is blue/non-luminous (the colour is clearly visible against it). Use a clean nichrome or platinum wire (never copper - copper itself gives a green-blue flame) dipped in acid and flamed to remove contamination. Colours: Na+ yellow/golden-yellow; K+ lilac; Ba2+ pale green; Ca2+ red/orange-red; Mg2+ gives NO colour.",
+  keywords: "flame test, volatile chloride, blue flame, nichrome, platinum, copper, sodium yellow, potassium lilac, barium pale green, calcium red, magnesium no colour"
+}
+,
+{
+  title: "12. Matching Each Indicator to Its Colour Change",
+  topic: "Acid-Base Titrations",
+  badge: "COMMON DROP",
+  misconception: "Students confuse the two indicators - e.g. saying methyl orange turns red at the end-point, or mixing up the alkaline/acid colours of methyl orange with phenolphthalein.",
+  truth: "Methyl orange: yellow in alkaline -> orange at the end-point (NOT red - red means strongly acidic, past the end-point). Phenolphthalein: colourless in acid -> pink at the end-point (faint pink). Don't swap them: methyl orange is yellow->orange, phenolphthalein is colourless->pink.",
+  keywords: "methyl orange, yellow orange, phenolphthalein, colourless pink, end-point, indicator colours"
+}
+,
+{
+  title: "13. Mass in q = mc delta T is the Mass of the SOLUTION, Not the Sample",
+  topic: "Calorimetry / Enthalpy",
+  badge: "RECURRING MARK",
+  misconception: "Using the mass of the solid sample (e.g. 0.086 g of Mg) in q = mc delta T, or ignoring that the thermometer is read twice.",
+  truth: "In q = mc delta T, m is the mass of the SOLUTION (the water/acid the heat goes into, e.g. 50.0 g of solution), NOT the mass of the solid reacted (e.g. not 0.086 g Mg). Because the thermometer is read twice (initial + final temperature), the percentage uncertainty in temperature is doubled (x2) compared with a single reading.",
+  keywords: "q=mc delta T, mass of solution, not solid sample, 50 g, thermometer read twice, percentage uncertainty x2"
+}
+,
+{
+  title: "14. Concordant Titres and the 25 -> 250 cm3 Volumetric-Flask Factor",
+  topic: "Titration Calculations",
+  badge: "RECURRING DROP",
+  misconception: "Using all titres (including wild ones) in the mean, or forgetting to multiply by the dilution factor when a solution is made up to 250 cm3 in a volumetric flask.",
+  truth: "Concordant titres are within 0.10 cm3 of each other (so the range is <= 0.20 cm3). Only use the concordant values to calculate the mean; ignore the rough/outlier titre. If a substance is dissolved and made up to 250 cm3 in a volumetric flask and only 25 cm3 is pipetted for each titration, the final answer must be multiplied by x10 (250 / 25) - this factor is a recurring dropped mark.",
+  keywords: "concordant titres, within 0.10 cm3, range 0.20 cm3, mean, volumetric flask, x10 dilution factor, 25 to 250 cm3"
+}
+,
+{
+  title: "15. Reflux vs Distillation, Condenser Water In From the Bottom, Separating Funnel Layers",
+  topic: "Organic Preparation / Purification",
+  badge: "EXAMINER FAVOURITE",
+  misconception: "Confusing reflux with distillation, or thinking condenser water flows top-to-bottom, or draining the wrong layer from a separating funnel.",
+  truth: "Reflux is used to heat a mixture for a long time to complete a reaction (e.g. complete oxidation of ethanol to ethanoic acid - vapours condense and fall back). Distillation is used to boil off and COLLECT the product. In the condenser, water flows in from the BOTTOM (upward) to keep it full of coolant. In a separating funnel: the more DENSE liquid forms the lower layer and is run out through the tap; open the tap AND the stopper to allow draining.",
+  keywords: "reflux, complete oxidation, distillation collect product, condenser water bottom to top, separating funnel, denser lower layer, tap and stopper"
+}
+,
+{
+  title: "16. Drying Agents: Cloudy -> Clear, and Copper Sulfate is NOT a Drying Agent",
+  topic: "Drying / Purification",
+  badge: "COMMON DROP",
+  misconception: "Writing 'copper sulfate is used to dry the liquid', or expecting the observation to be 'colourless', or thinking anti-bumping granules stop the liquid boiling.",
+  truth: "Drying agents are anhydrous salts such as MgSO4, Na2SO4 or CaO - they absorb water. The observation when a liquid is dried is that it goes from CLOUDY to CLEAR (not 'colourless' - clear is not the same as colourless). Anhydrous copper sulfate is NOT a drying agent; it is used to TEST for water (white -> blue when hydrated). Anti-bumping granules provide sites for bubble formation so the liquid boils smoothly.",
+  keywords: "drying agent, anhydrous magnesium sulfate, sodium sulfate, calcium oxide, cloudy to clear, copper sulfate tests for water, anti-bumping granules, smooth boiling"
+}];
 
         /* ==================== 50 FLASHCARDS DECK DATA (10 PER PRACTICAL CATEGORY) ==================== */
         const QUIZ_DATA = [
