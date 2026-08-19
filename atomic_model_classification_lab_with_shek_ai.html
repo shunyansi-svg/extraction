@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomic Model Classification Lab</title>
+    <style>
+:root {
+    --bg: #0c1118;
+    --surface: #161d28;
+    --surface-glass: rgba(22, 29, 40, 0.72);
+    --surface-hover: rgba(255, 255, 255, 0.06);
+    --accent: #3dd6c6;
+    --accent-ink: #06201c;
+    --accent-dim: rgba(61, 214, 198, 0.12);
+    --accent-glow: rgba(61, 214, 198, 0.35);
+    --shek-purple: #a855f7;
+    --shek-purple-glow: rgba(168, 85, 247, 0.35);
+    --shek-purple-dim: rgba(168, 85, 247, 0.15);
+    --text: #eef2f7;
+    --muted: #8b95a8;
+    --line: rgba(255, 255, 255, 0.08);
+    --line-highlight: rgba(255, 255, 255, 0.14);
+    --success: #34d399;
+    --success-bg: rgba(52, 211, 153, 0.18);
+    --error: #f87171;
+    --error-bg: rgba(248, 113, 113, 0.18);
+    --spring: cubic-bezier(0.32, 0.72, 0.22, 1);
+    --blur: blur(20px) saturate(1.7);
+    --font: -apple-system, "SF Pro Text", "SF Pro Display", "Segoe UI", "PingFang HK", "Noto Sans HK", sans-serif;
+    --font-mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 10px;
+    --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 0 24px rgba(61, 214, 198, 0.25);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font);
+    background-color: var(--bg);
+    background-image: 
+        radial-gradient(circle at 18% 18%, rgba(61, 214, 198, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 82% 82%, rgba(20, 80, 160, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(12, 17, 24, 0.5) 0%, var(--bg) 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    min-height: 100dvh;
+    padding: 16px 16px 32px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Accessibility Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding: 10px 18px;
+    border-radius: 9999px;
+    font-weight: 600;
+    z-index: 1000;
+    text-decoration: none;
+    transition: top 0.25s var(--spring);
+    box-shadow: var(--shadow-glow);
+}
+
+.skip-link:focus {
+    top: 16px;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+header {
+    width: 100%;
+    max-width: 860px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 12px 16px 16px;
+    position: relative;
+}
+
+.top-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.left-controls, .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(61, 214, 198, 0.25);
+    border-radius: 9999px;
+    font-size: 0.82em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.brand-badge svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+/* SHEK Interactive App Button Styling */
+.shek-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(61, 214, 198, 0.2));
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: 9999px;
+    font-size: 0.82em;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #e9d5ff;
+    cursor: pointer;
+    transition: all 0.25s var(--spring);
+    box-shadow: 0 0 12px var(--shek-purple-glow);
+    text-transform: uppercase;
+    user-select: none;
+}
+
+.shek-btn:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(61, 214, 198, 0.35));
+    border-color: rgba(168, 85, 247, 0.7);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 20px var(--shek-purple-glow), 0 0 10px rgba(61, 214, 198, 0.3);
+    color: #ffffff;
+}
+
+.shek-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.shek-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--accent);
+    animation: gemGlow 3s infinite alternate;
+}
+
+@keyframes gemGlow {
+    0% { filter: drop-shadow(0 0 2px var(--accent)); transform: rotate(0deg); }
+    100% { filter: drop-shadow(0 0 8px #c084fc); transform: rotate(15deg); }
+}
+
+/* Segmented Control / Tabs */
+.segmented-control {
+    display: inline-flex;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--line);
+    border-radius: 9999px;
+    padding: 3px;
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+}
+
+.segmented-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 6px 14px;
+    font-size: 0.82em;
+    font-weight: 600;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s var(--spring);
+    user-select: none;
+}
+
+.segmented-btn.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: inset 0 1px 0 var(--line-highlight), 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.segmented-btn:active {
+    transform: scale(0.97);
+}
+
+header h1 {
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+    font-weight: 700;
+    margin: 4px 0 8px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+header h1 svg {
+    width: 28px;
+    height: 28px;
+    fill: var(--accent);
+}
+
+header p {
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 0.96em;
+    line-height: 1.55;
+}
+
+header p b {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Score Board Pill */
+#score-board {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 20px;
+    background: var(--surface-glass);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--line);
+    box-shadow: inset 0 1px 0 var(--line-highlight), 0 4px 16px rgba(0, 0, 0, 0.25);
+    border-radius: 9999px;
+    font-size: 0.95em;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+}
+
+#score-board .metric-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#score-board .metric-label {
+    color: var(--muted);
+    font-size: 0.88em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+#score-board .metric-value {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+#score-board #timer {
+    display: inline-block;
+    min-width: 2.2ch;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    transition: color 0.2s ease;
+}
+
+#score-board #timer.urgent {
+    color: var(--error);
+    animation: urgentPulse 1s ease-in-out infinite;
+}
+
+/* Main Experiment Stage Panel */
+#game-container {
+    position: relative;
+    width: min(88vw, 820px);
+    height: 48vh;
+    min-height: 320px;
+    max-height: 520px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: radial-gradient(ellipse at 50% 35%, rgba(22, 38, 58, 0.85) 0%, rgba(15, 22, 32, 0.95) 75%);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 1px 0 var(--line-highlight), var(--shadow-md);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+/* Decorative Lab Stage Background Grid */
+#game-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+#model-display {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.atom {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: inset -4px -4px 8px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.4);
+    will-change: transform, opacity;
+}
+
+.bond {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(210, 220, 235, 0.85), rgba(140, 160, 185, 0.95));
+    border-radius: 6px;
+    transform-origin: center center;
+    z-index: 1;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
+.bucket-area {
+    display: flex;
+    gap: 20px;
+    width: min(88vw, 820px);
+    justify-content: center;
+}
+
+.bucket {
+    flex: 1;
+    padding: 18px 16px;
+    min-width: 140px;
+    min-height: 110px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    background: var(--surface-glass);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    box-shadow: inset 0 1px 0 var(--line-highlight), 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s var(--spring), border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    text-align: center;
+}
+
+.bucket:hover:not(.disabled) {
+    transform: translateY(-4px);
+    background: rgba(30, 40, 56, 0.85);
+    border-color: rgba(61, 214, 198, 0.4);
+    box-shadow: inset 0 1px 0 var(--line-highlight), 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--accent-glow);
+}
+
+.bucket:active:not(.disabled) {
+    transform: translateY(-1px) scale(0.97);
+}
+
+.bucket.disabled {
+    pointer-events: none;
+    opacity: 0.65;
+}
+
+.bucket.correct-flash {
+    border-color: var(--success);
+    background: var(--success-bg);
+    box-shadow: 0 0 24px rgba(52, 211, 153, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.bucket.wrong-flash {
+    border-color: var(--error);
+    background: var(--error-bg);
+    animation: shake 0.4s var(--spring);
+}
+
+.bucket-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bucket-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bucket h3 {
+    margin: 0;
+    font-size: 1.05em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.bucket .hint {
+    font-size: 0.78em;
+    color: var(--muted);
+    line-height: 1.35;
+    margin-top: 2px;
+}
+
+/* Modals & Overlays */
+#game-over {
+    position: absolute;
+    inset: 20px;
+    margin: auto;
+    width: min(90%, 460px);
+    height: fit-content;
+    text-align: center;
+    background: rgba(22, 29, 40, 0.92);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    color: var(--text);
+    padding: 36px 32px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    box-shadow: inset 0 1px 0 var(--line-highlight), var(--shadow-md);
+    display: none;
+    z-index: 100;
+    animation: modalPop 0.4s var(--spring) forwards;
+}
+
+#game-over h2 {
+    margin: 0 0 8px;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+#game-over p {
+    color: var(--muted);
+    margin: 0 0 24px;
+    font-size: 0.95em;
+}
+
+#game-over #final-score {
+    color: var(--accent);
+    font-weight: 800;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 1.25em;
+}
+
+/* SHEK App Window Overlay & Window Modal */
+.shek-app-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 12, 18, 0.68);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--spring);
+}
+
+.shek-app-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.shek-app-window {
+    width: min(94vw, 1000px);
+    height: min(85vh, 720px);
+    background: rgba(18, 25, 38, 0.97);
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 40px var(--shek-purple-glow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+    transition: opacity 0.28s var(--spring), transform 0.28s var(--spring), width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+}
+
+.shek-app-backdrop.active .shek-app-window {
+    opacity: 1;
+    transform: none;
+}
+
+.shek-app-window.maximized {
+    width: 98vw;
+    height: 96vh;
+    border-radius: var(--radius-sm);
+}
+
+/* App Title Bar */
+.shek-titlebar {
+    height: 48px;
+    background: rgba(12, 17, 26, 0.85);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    user-select: none;
+}
+
+.shek-titlebar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.shek-window-dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.shek-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.shek-dot:hover {
+    filter: brightness(1.2);
+    transform: scale(1.1);
+}
+
+.shek-dot.close { background-color: #ff5f56; border: 1px solid #e0443e; }
+.shek-dot.minimize { background-color: #ffbd2e; border: 1px solid #dea123; }
+.shek-dot.maximize { background-color: #27c93f; border: 1px solid #1aab29; }
+
+.shek-app-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+}
+
+.shek-app-title svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--accent);
+}
+
+.shek-titlebar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.shek-online-pill {
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(61, 214, 198, 0.28);
+    border-radius: 9999px;
+    padding: 4px 10px;
+}
+
+/* App Body — official Google widget is trapped in this box */
+.shek-app-body {
+    flex: 1;
+    position: relative;
+    background:
+        linear-gradient(180deg, rgba(168, 85, 247, 0.06), transparent 28%),
+        #0e131d;
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateZ(0);
+    isolation: isolate;
+}
+
+#shek-widget {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    overflow: hidden !important;
+}
+
+.shek-loader {
+    position: absolute;
+    inset: 0;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.shek-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.shek-spinner {
+    width: 42px;
+    height: 42px;
+    border: 3px solid rgba(168, 85, 247, 0.2);
+    border-top-color: var(--accent);
+    border-right-color: var(--shek-purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.shek-loader p {
+    font-size: 0.9em;
+    color: var(--muted);
+    margin: 0;
+}
+
+.shek-inline-error {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 32px 28px;
+    text-align: center;
+}
+
+.shek-inline-error.visible {
+    display: flex;
+}
+
+.shek-inline-error h3 {
+    margin: 0;
+    font-size: 1.15em;
+}
+
+.shek-inline-error p {
+    margin: 0;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.55;
+    font-size: 0.92em;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 32px;
+    min-height: 48px;
+    font-size: 1.05em;
+    font-weight: 600;
+    font-family: var(--font);
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow: var(--shadow-glow);
+    transition: transform 0.2s var(--spring), box-shadow 0.2s ease, filter 0.2s ease;
+    user-select: none;
+    text-decoration: none;
+}
+
+.btn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-2px);
+    box-shadow: 0 0 32px rgba(61, 214, 198, 0.45);
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+/* Animations */
+@keyframes particleEnter {
+    0% {
+        transform: scale(0) translateY(8px);
+        opacity: 0;
+        filter: drop-shadow(0 0 0px var(--accent));
+    }
+    70% {
+        transform: scale(1.08) translateY(-2px);
+        opacity: 1;
+        filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+        filter: drop-shadow(0 0 4px rgba(0,0,0,0.4));
+    }
+}
+
+.animate-pop {
+    animation: particleEnter 0.42s var(--spring) forwards;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+@keyframes urgentPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Toast Notification Capsule */
+.toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translate(-50%, -16px);
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 0.95em;
+    font-weight: 600;
+    z-index: 2000;
+    max-width: min(92vw, 640px);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s var(--spring), transform 0.25s var(--spring);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--line);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.toast.success {
+    background: rgba(52, 211, 153, 0.9);
+    color: #042f2e;
+    border-color: rgba(52, 211, 153, 0.4);
+}
+
+.toast.error {
+    background: rgba(248, 113, 113, 0.92);
+    color: #450a0a;
+    border-color: rgba(248, 113, 113, 0.4);
+}
+
+/* Idle State Screen Overlay */
+#idle-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--muted);
+    text-align: center;
+    padding: 0 24px;
+    pointer-events: none;
+}
+
+#idle-hint .idle-icon {
+    width: 56px;
+    height: 56px;
+    color: var(--accent);
+    opacity: 0.8;
+}
+
+#idle-hint p {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 0.95em;
+}
+
+#idle-hint b {
+    color: var(--text);
+}
+
+#start-screen {
+    margin-top: 10px;
+}
+
+/* Fallbacks for prefers-reduced-motion & prefers-reduced-transparency */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .segmented-control, #score-board, #game-container, .bucket, #game-over, .toast, .shek-app-window {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background-color: var(--surface) !important;
+    }
+}
+
+/* Mobile & Tablet Adjustments */
+@media (max-width: 768px) {
+    .top-bar {
+        justify-content: center;
+    }
+
+    #game-container {
+        width: 95vw;
+        height: 42vh;
+        min-height: 280px;
+    }
+
+    .bucket-area {
+        width: 95vw;
+        gap: 10px;
+        flex-direction: column;
+    }
+
+    .bucket {
+        width: 100%;
+        min-height: 72px;
+        padding: 12px 14px;
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+        gap: 14px;
+    }
+
+    .bucket-header {
+        min-width: 110px;
+    }
+
+    .bucket .hint {
+        margin-top: 0;
+    }
+
+    header h1 {
+        font-size: 1.35em;
+    }
+
+    header p {
+        font-size: 0.88em;
+    }
+
+    .shek-app-window {
+        width: 100vw;
+        height: 100dvh;
+        border-radius: 0;
+    }
+
+    .shek-app-backdrop {
+        padding: 0;
+    }
+}
+    </style>
+    <script src="https://cloud.google.com/ai/gen-app-builder/client?hl=en_US"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header id="main-content">
+        <div class="top-bar">
+            <div class="left-controls">
+                <div class="brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    <span>Chemistry Dark Lab</span>
+                </div>
+                <!-- SHEK Google Gem App Trigger Button -->
+                <button class="shek-btn" id="btn-shek" onclick="openShekApp()" aria-label="Open SHEK Google Gem App">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
+                    <span>SHEK</span>
+                </button>
+            </div>
+            
+            <div class="right-controls">
+                <div class="segmented-control" role="tablist" aria-label="Language options">
+                    <button class="segmented-btn active" id="lang-en" onclick="setLanguage('en')" role="tab" aria-selected="true">EN</button>
+                    <button class="segmented-btn" id="lang-zh" onclick="setLanguage('zh')" role="tab" aria-selected="false">繁</button>
+                </div>
+            </div>
+        </div>
+        
+        <h1 id="ui-title">
+            <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-9 9c0 4.97 4.03 9 9 9 4.97 0 9-4.03 9-9 0-4.97-4.03-9-9-9zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm-1-11h2v6h-2zm0 8h2v2h-2z"/></svg>
+            <span id="title-text">Atomic Model Classification Lab</span>
+        </h1>
+        <p id="ui-desc">Observe the arrangement of colored spheres (atoms). Click a bucket below to classify it as <b id="lbl-elem">Element</b>, <b id="lbl-comp">Compound</b>, or <b id="lbl-mixt">Mixture</b>.</p>
+    </header>
+
+    <div id="score-board">
+        <div class="metric-item">
+            <span class="metric-label" id="lbl-score">Score:</span>
+            <span class="metric-value" id="score">0</span>
+        </div>
+        <span style="color: var(--line-highlight)">|</span>
+        <div class="metric-item">
+            <span class="metric-label" id="lbl-timer">Time:</span>
+            <span class="metric-value"><span id="timer">60</span>s</span>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <div id="model-display"></div>
+        <div id="idle-hint">
+            <svg class="idle-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 6h-2c0-2.21-1.79-4-4-4S9 3.79 9 6H7c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 15H7V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h2v11z"/>
+            </svg>
+            <p id="idle-text"><b>Ready to classify?</b><br>Press <b>Start Experiment</b>, then decide: Element, Compound or Mixture?</p>
+        </div>
+
+        <div id="game-over">
+            <h2 id="go-title">Experiment Complete!</h2>
+            <p><span id="go-score-txt">Your final score is:</span> <span id="final-score">0</span></p>
+            <button class="btn" onclick="startGame()">
+                <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                <span id="btn-replay">Play Again</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="bucket-area">
+        <div id="bucket-element" class="bucket" onclick="checkAnswer('element')">
+            <div class="bucket-header">
+                <div class="bucket-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <h3 id="b1-title">Element</h3>
+            </div>
+            <span class="hint" id="b1-hint">Single atoms or diatomic molecules (e.g. O₂)</span>
+        </div>
+        <div id="bucket-compound" class="bucket" onclick="checkAnswer('compound')">
+            <div class="bucket-header">
+                <div class="bucket-icon">
+                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                </div>
+                <h3 id="b2-title">Compound</h3>
+            </div>
+            <span class="hint" id="b2-hint">Molecules made of different atoms bonded together</span>
+        </div>
+        <div id="bucket-mixture" class="bucket" onclick="checkAnswer('mixture')">
+            <div class="bucket-header">
+                <div class="bucket-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><circle cx="12" cy="7" r="2"/></svg>
+                </div>
+                <h3 id="b3-title">Mixture</h3>
+            </div>
+            <span class="hint" id="b3-hint">Different substances mixed together (no chemical bonding)</span>
+        </div>
+    </div>
+
+    <div id="start-screen">
+        <button class="btn" onclick="startGame()">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <span id="btn-start">Start Experiment</span>
+        </button>
+    </div>
+
+    <div id="shek-app-backdrop" class="shek-app-backdrop" onclick="handleBackdropClick(event)">
+        <div class="shek-app-window maximized" id="shek-app-window" role="dialog" aria-labelledby="shek-title-text">
+            <div class="shek-titlebar">
+                <div class="shek-titlebar-left">
+                    <div class="shek-window-dots">
+                        <div class="shek-dot close" onclick="closeShekApp()" title="Close App"></div>
+                        <div class="shek-dot minimize" onclick="closeShekApp()" title="Minimize"></div>
+                        <div class="shek-dot maximize" onclick="toggleShekMaximize()" title="Maximize / Restore"></div>
+                    </div>
+                    <div class="shek-app-title">
+                        <svg viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
+                        <span id="shek-title-text">SHEK Google Gem</span>
+                    </div>
+                </div>
+                <div class="shek-titlebar-right">
+                    <span class="shek-online-pill" id="shek-online-pill">In-app</span>
+                </div>
+            </div>
+            
+            <div class="shek-app-body">
+                <div id="shek-loader" class="shek-loader">
+                    <div class="shek-spinner"></div>
+                    <p id="shek-loading-text">Connecting to SHEK AI Agent...</p>
+                </div>
+                <gen-search-widget
+                    id="shek-widget"
+                    configId="a8414e92-1a1d-4305-a9c2-de6502f48fd0"
+                    placeholder="Ask SHEK..."
+                    alwaysOpened>
+                </gen-search-widget>
+                <div id="shek-inline-error" class="shek-inline-error" hidden>
+                    <h3 id="shek-error-title">SHEK cannot load in this file</h3>
+                    <p id="shek-error-text">Google only allows this Gem on an allowed domain. Serve this page from localhost or GitHub Pages, then add that host under Vertex AI → Integration → Widget.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const GEM_CONFIG_ID = "a8414e92-1a1d-4305-a9c2-de6502f48fd0";
+const GEM_URL = "https://vertexaisearch.cloud.google.com/home/cid/a8414e92-1a1d-4305-a9c2-de6502f48fd0/r/agent/9150495032860620070/session/-?hl=en_US";
+const SHEK_WIDGET_CSS = `
+:host {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    overflow: hidden !important;
+}
+.locked,
+[class*="locked"] {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+.backdrop { display: none !important; }
+.content {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+}
+`;
+
+/* SHEK App Control Logic */
+function containShekWidget(widget) {
+    if (!widget || widget.dataset.contained === '1') return;
+    const apply = () => {
+        const root = widget.shadowRoot;
+        if (!root) return false;
+        if (!root.getElementById('shek-contain-style')) {
+            const style = document.createElement('style');
+            style.id = 'shek-contain-style';
+            style.textContent = SHEK_WIDGET_CSS;
+            root.prepend(style);
+        }
+        widget.dataset.contained = '1';
+        return true;
+    };
+    if (apply()) return;
+    customElements.whenDefined('gen-search-widget').then(() => {
+        requestAnimationFrame(apply);
+    }).catch(() => {});
+}
+
+function hideShekLoader() {
+    const loader = document.getElementById('shek-loader');
+    if (!loader) return;
+    loader.classList.add('hidden');
+    setTimeout(() => { loader.style.display = 'none'; }, 280);
+}
+
+function showShekInlineError() {
+    const err = document.getElementById('shek-inline-error');
+    const widget = document.getElementById('shek-widget');
+    hideShekLoader();
+    if (widget) widget.style.visibility = 'hidden';
+    if (err) {
+        err.hidden = false;
+        err.classList.add('visible');
+    }
+}
+
+function widgetLooksReady(widget) {
+    if (!widget) return false;
+    if (widget.shadowRoot && widget.shadowRoot.childElementCount > 0) return true;
+    if (widget.childElementCount > 0) return true;
+    return widget.getBoundingClientRect().height > 80;
+}
+
+function openShekApp() {
+    const backdrop = document.getElementById('shek-app-backdrop');
+    const loader = document.getElementById('shek-loader');
+    const widget = document.getElementById('shek-widget');
+    const err = document.getElementById('shek-inline-error');
+
+    if (err) {
+        err.hidden = true;
+        err.classList.remove('visible');
+    }
+    if (widget) widget.style.visibility = '';
+    if (loader) {
+        loader.style.display = 'flex';
+        loader.classList.remove('hidden');
+    }
+
+    containShekWidget(widget);
+    backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    let tries = 0;
+    const poll = setInterval(() => {
+        tries += 1;
+        containShekWidget(widget);
+        const ready = widgetLooksReady(widget);
+        if (ready) {
+            hideShekLoader();
+            clearInterval(poll);
+            return;
+        }
+        if (tries >= 14) {
+            clearInterval(poll);
+            if (!ready) showShekInlineError();
+            else hideShekLoader();
+        }
+    }, 350);
+}
+
+function closeShekApp() {
+    const backdrop = document.getElementById('shek-app-backdrop');
+    backdrop.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function toggleShekMaximize() {
+    document.getElementById('shek-app-window').classList.toggle('maximized');
+}
+
+function handleBackdropClick(e) {
+    if (e.target.id === 'shek-app-backdrop') closeShekApp();
+}
+
+// Close app window on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeShekApp();
+    }
+});
+
+/* Original Chemistry Lab Logic */
+const ATOM_COLORS = {
+    H: '#f0f0f0',
+    C: '#404040',
+    N: '#3050f8',
+    O: '#ff0d0d',
+    F: '#90e050',
+    Cl: '#1ff01f',
+    Na: '#ab5cf2',
+    Fe: '#e06633',
+    Cu: '#c88033',
+    Au: '#ffd123',
+    S: '#ffff30',
+};
+
+const ATOM_RADII = {
+    H: 13,
+    F: 16,
+    Cl: 18,
+    C: 18,
+    N: 20,
+    O: 20,
+    S: 20,
+    Fe: 19,
+    Cu: 19,
+    Au: 19,
+    Na: 22,
+};
+
+const ATOM_DISPLAY_SCALE = 1.45;
+
+function getElementRadius(elementKey) {
+    return ATOM_RADII[elementKey] || 18;
+}
+
+function getElementColor(elementKey) {
+    return ATOM_COLORS[elementKey];
+}
+
+function makeAtom(element, x = null, y = null) {
+    const atom = { element, r: getElementRadius(element) };
+    if (x !== null) {
+        atom.x = x;
+        atom.y = y ?? 0;
+    }
+    return atom;
+}
+
+const COMPOUND_STRUCTURES = [
+    {
+        name: 'Water (H₂O)',
+        build() {
+            const O = makeAtom('O', 0, 0);
+            const H1 = makeAtom('H');
+            const H2 = makeAtom('H');
+            placeBonded(O, H1, 104);
+            placeBonded(O, H2, -104);
+            return { atoms: [O, H1, H2], bonds: [[0, 1], [0, 2]] };
+        },
+    },
+    {
+        name: 'Carbon Dioxide (CO₂)',
+        build() {
+            const C = makeAtom('C', 0, 0);
+            const O1 = makeAtom('O');
+            const O2 = makeAtom('O');
+            placeBonded(C, O1, 180);
+            placeBonded(C, O2, 0);
+            return { atoms: [C, O1, O2], bonds: [[0, 1], [0, 2]] };
+        },
+    },
+    {
+        name: 'Ammonia (NH₃)',
+        build() {
+            const N = makeAtom('N', 0, 0);
+            const H1 = makeAtom('H');
+            const H2 = makeAtom('H');
+            const H3 = makeAtom('H');
+            placeBonded(N, H1, 200);
+            placeBonded(N, H2, 320);
+            placeBonded(N, H3, 80);
+            return { atoms: [N, H1, H2, H3], bonds: [[0, 1], [0, 2], [0, 3]] };
+        },
+    },
+    {
+        name: 'Methane (CH₄)',
+        build() {
+            const C = makeAtom('C', 0, 0);
+            const H1 = makeAtom('H');
+            const H2 = makeAtom('H');
+            const H3 = makeAtom('H');
+            const H4 = makeAtom('H');
+            placeBonded(C, H1, 225);
+            placeBonded(C, H2, 315);
+            placeBonded(C, H3, 45);
+            placeBonded(C, H4, 135);
+            return { atoms: [C, H1, H2, H3, H4], bonds: [[0, 1], [0, 2], [0, 3], [0, 4]] };
+        },
+    },
+    {
+        name: 'Hydrogen Chloride (HCl)',
+        build() {
+            const H = makeAtom('H', 0, 0);
+            const Cl = makeAtom('Cl');
+            placeBonded(H, Cl, 0);
+            return { atoms: [H, Cl], bonds: [[0, 1]] };
+        },
+    },
+    {
+        name: 'Sulfur Dioxide (SO₂)',
+        build() {
+            const S = makeAtom('S', 0, 0);
+            const O1 = makeAtom('O');
+            const O2 = makeAtom('O');
+            placeBonded(S, O1, 150);
+            placeBonded(S, O2, 30);
+            return { atoms: [S, O1, O2], bonds: [[0, 1], [0, 2]] };
+        },
+    },
+    {
+        name: 'Sodium Chloride (NaCl)',
+        build() {
+            const Na = makeAtom('Na', 0, 0);
+            const Cl = makeAtom('Cl');
+            placeBonded(Na, Cl, 0);
+            return { atoms: [Na, Cl], bonds: [[0, 1]] };
+        },
+    },
+    {
+        name: 'Sulfur Hexafluoride (SF₆)',
+        build() {
+            const S = makeAtom('S', 0, 0);
+            const F1 = makeAtom('F');
+            const F2 = makeAtom('F');
+            const F3 = makeAtom('F');
+            const F4 = makeAtom('F');
+            const F5 = makeAtom('F');
+            const F6 = makeAtom('F');
+            placeBonded(S, F1, -90);
+            placeBonded(S, F2, 90);
+            placeBonded(S, F3, 0);
+            placeBonded(S, F4, 180);
+            placeBonded(S, F5, -45);
+            placeBonded(S, F6, 135);
+            return {
+                atoms: [S, F1, F2, F3, F4, F5, F6],
+                bonds: [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6]],
+            };
+        },
+    },
+];
+
+const BOND_OVERLAP = 3;
+
+function placeBonded(center, satellite, angleDeg) {
+    const dist = center.r + satellite.r - BOND_OVERLAP;
+    const rad = (angleDeg * Math.PI) / 180;
+    satellite.x = center.x + dist * Math.cos(rad);
+    satellite.y = center.y + dist * Math.sin(rad);
+}
+
+const MONOATOMIC_ELEMENTS = [
+    { element: 'Fe', label: 'Iron' },
+    { element: 'Cu', label: 'Copper' },
+    { element: 'Au', label: 'Gold' },
+    { element: 'S', label: 'Sulfur' },
+];
+
+const DIATOMIC_ELEMENTS = [
+    { element: 'O', label: 'Oxygen (O₂)' },
+    { element: 'N', label: 'Nitrogen (N₂)' },
+    { element: 'H', label: 'Hydrogen (H₂)' },
+    { element: 'Cl', label: 'Chlorine (Cl₂)' },
+    { element: 'F', label: 'Fluorine (F₂)' },
+];
+
+const ALL_ELEMENTS = [...MONOATOMIC_ELEMENTS, ...DIATOMIC_ELEMENTS];
+
+const GAME_DURATION = 60;
+
+const FEEDBACK = {
+    element: 'An element contains only one type of atom. Monatomic elements show independent atoms of the same color. Diatomic elements show two identical atoms bonded together (e.g. O₂).',
+    compound: 'A compound consists of atoms of different elements chemically bonded together to form identical molecules.',
+    mixture: 'A mixture contains two or more different substances (elements with elements, compounds with compounds, or elements with compounds) that are physically mixed but not chemically bonded.',
+};
+
+let score = 0;
+let timer = GAME_DURATION;
+let timerInterval = null;
+let currentAnswer = null;
+let isPlaying = false;
+let questionCount = 0;
+let currentLang = 'en';
+
+const display = document.getElementById('model-display');
+const scoreEl = document.getElementById('score');
+const timerEl = document.getElementById('timer');
+const gameOverEl = document.getElementById('game-over');
+const finalScoreEl = document.getElementById('final-score');
+const startScreen = document.getElementById('start-screen');
+const buckets = document.querySelectorAll('.bucket');
+const idleHint = document.getElementById('idle-hint');
+
+function rand(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function pickTwoDifferent(arr, keyFn = item => item) {
+    const first = pick(arr);
+    let second = pick(arr);
+    while (keyFn(second) === keyFn(first) && arr.length > 1) second = pick(arr);
+    return [first, second];
+}
+
+function isDiatomic(typeInfo) {
+    return DIATOMIC_ELEMENTS.some(d => d.element === typeInfo.element);
+}
+
+function buildDiatomic(elementKey) {
+    const r = getElementRadius(elementKey);
+    const A = { element: elementKey, r, x: 0, y: 0 };
+    const B = { element: elementKey, r };
+    placeBonded(A, B, 0);
+    return { atoms: [A, B], bonds: [[0, 1]] };
+}
+
+function clearDisplay() {
+    display.innerHTML = '';
+}
+
+function createAtom(x, y, radius, color, delay = 0, zIndex = 2) {
+    const atom = document.createElement('div');
+    atom.className = 'atom animate-pop';
+    atom.style.width = `${radius * 2}px`;
+    atom.style.height = `${radius * 2}px`;
+    atom.style.left = `${x - radius}px`;
+    atom.style.top = `${y - radius}px`;
+    atom.style.zIndex = zIndex;
+    atom.style.background = `radial-gradient(circle at 35% 35%, ${lighten(color, 40)}, ${color} 55%, ${darken(color, 25)})`;
+    atom.style.animationDelay = `${delay}ms`;
+    display.appendChild(atom);
+    return atom;
+}
+
+function createBond(x1, y1, r1, x2, y2, r2, delay = 0) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len;
+    const uy = dy / len;
+    const startX = x1 + ux * (r1 - BOND_OVERLAP);
+    const startY = y1 + uy * (r1 - BOND_OVERLAP);
+    const endX = x2 - ux * (r2 - BOND_OVERLAP);
+    const endY = y2 - uy * (r2 - BOND_OVERLAP);
+    const bondLen = Math.hypot(endX - startX, endY - startY);
+    const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+    const midX = (startX + endX) / 2;
+    const midY = (startY + endY) / 2;
+
+    const bond = document.createElement('div');
+    bond.className = 'bond animate-pop';
+    bond.style.width = `${bondLen}px`;
+    bond.style.height = '10px';
+    bond.style.left = `${midX - bondLen / 2}px`;
+    bond.style.top = `${midY - 5}px`;
+    bond.style.transform = `rotate(${angle}deg)`;
+    bond.style.animationDelay = `${delay}ms`;
+    display.appendChild(bond);
+}
+
+function getMoleculeBounds(atoms) {
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    atoms.forEach(a => {
+        minX = Math.min(minX, a.x - a.r);
+        minY = Math.min(minY, a.y - a.r);
+        maxX = Math.max(maxX, a.x + a.r);
+        maxY = Math.max(maxY, a.y + a.r);
+    });
+    return { minX, minY, maxX, maxY, w: maxX - minX, h: maxY - minY };
+}
+
+function renderMolecule(atoms, bonds, offsetX, offsetY, scale, baseDelay = 0, rotationDeg = 0) {
+    const rot = (rotationDeg * Math.PI) / 180;
+    const cos = Math.cos(rot);
+    const sin = Math.sin(rot);
+    const placed = atoms.map(a => {
+        const rx = a.x * cos - a.y * sin;
+        const ry = a.x * sin + a.y * cos;
+        return {
+            element: a.element,
+            r: getElementRadius(a.element) * scale,
+            x: offsetX + rx * scale,
+            y: offsetY + ry * scale,
+        };
+    });
+
+    bonds.forEach(([i, j], idx) => {
+        const a = placed[i];
+        const b = placed[j];
+        createBond(a.x, a.y, a.r, b.x, b.y, b.r, baseDelay + idx * 15);
+    });
+
+    placed.forEach((a, i) => {
+        createAtom(a.x, a.y, a.r, getElementColor(a.element), baseDelay + 30 + i * 25, 3);
+    });
+}
+
+function lighten(hex, pct) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = Math.min(255, ((n >> 16) & 0xff) + pct);
+    const g = Math.min(255, ((n >> 8) & 0xff) + pct);
+    const b = Math.min(255, (n & 0xff) + pct);
+    return `rgb(${r},${g},${b})`;
+}
+
+function darken(hex, pct) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = Math.max(0, ((n >> 16) & 0xff) - pct);
+    const g = Math.max(0, ((n >> 8) & 0xff) - pct);
+    const b = Math.max(0, (n & 0xff) - pct);
+    return `rgb(${r},${g},${b})`;
+}
+
+function renderScatteredSingleAtoms(rect, elementKey, count, minSeparation, zone = 'full', baseDelay = 0) {
+    const color = getElementColor(elementKey);
+    const radius = getElementRadius(elementKey) * ATOM_DISPLAY_SCALE;
+    const positions = scatterPositions(rect, count, minSeparation, zone, false);
+    positions.forEach((pos, i) => {
+        createAtom(pos.x, pos.y, radius, color, baseDelay + i * 45);
+    });
+}
+
+function renderScatteredDiatomic(rect, elementKey, count, minSeparation, zone = 'full', baseDelay = 0) {
+    const template = buildDiatomic(elementKey);
+    const bounds = getMoleculeBounds(template.atoms);
+    const scale = ATOM_DISPLAY_SCALE;
+    const minSep = Math.max(minSeparation, bounds.w * scale + 12);
+    const positions = scatterPositions(rect, count, minSep, zone, false);
+    let delay = baseDelay;
+    positions.forEach(pos => {
+        const mol = buildDiatomic(elementKey);
+        renderMolecule(mol.atoms, mol.bonds, pos.x, pos.y, scale, delay, pos.rotation);
+        delay += 85;
+    });
+}
+
+function renderScatteredMolecules(rect, structure, count, zone = 'full', baseDelay = 0) {
+    const template = structure.build();
+    const bounds = getMoleculeBounds(template.atoms);
+    const scale = ATOM_DISPLAY_SCALE;
+    const minSep = Math.max(bounds.w, bounds.h) * scale * 0.8 + 18;
+    const positions = scatterPositions(rect, count, minSep, zone, false);
+    let delay = baseDelay;
+    positions.forEach(pos => {
+        const { atoms, bonds } = structure.build();
+        renderMolecule(atoms, bonds, pos.x, pos.y, scale, delay, pos.rotation);
+        delay += 85;
+    });
+}
+
+function renderElementGroup(rect, typeInfo, zone, baseDelay = 0) {
+    if (isDiatomic(typeInfo)) {
+        const count = Math.floor(rand(4, 7));
+        renderScatteredDiatomic(rect, typeInfo.element, count, 70, zone, baseDelay);
+    } else {
+        const count = Math.floor(rand(5, 9));
+        renderScatteredSingleAtoms(rect, typeInfo.element, count, 62, zone, baseDelay);
+    }
+}
+
+function renderElement() {
+    const rect = display.getBoundingClientRect();
+    const isDi = Math.random() < 0.5;
+    const type = pick(isDi ? DIATOMIC_ELEMENTS : MONOATOMIC_ELEMENTS);
+    renderElementGroup(rect, type, 'full');
+    const label = isDi ? type.label : `${type.label} (monatomic)`;
+    return { type: 'element', label };
+}
+
+function scatterPositions(rect, count, minSeparation, zone = 'full', varyScale = true) {
+    const margin = 55;
+    const zones = {
+        full: { xMin: margin, xMax: rect.width - margin, yMin: margin, yMax: rect.height - margin },
+        left: { xMin: margin, xMax: rect.width * 0.46, yMin: margin, yMax: rect.height - margin },
+        right: { xMin: rect.width * 0.54, xMax: rect.width - margin, yMin: margin, yMax: rect.height - margin },
+    };
+    const z = zones[zone];
+    const positions = [];
+
+    for (let i = 0; i < count; i++) {
+        let x, y, attempts = 0;
+        do {
+            x = rand(z.xMin, z.xMax);
+            y = rand(z.yMin, z.yMax);
+            attempts++;
+        } while (
+            attempts < 60 &&
+            positions.some(p => Math.hypot(p.x - x, p.y - y) < minSeparation)
+        );
+        positions.push({
+            x,
+            y,
+            rotation: rand(0, 360),
+            scale: varyScale ? rand(0.88, 1.12) : 1,
+        });
+    }
+    return positions;
+}
+
+function renderCompound() {
+    const rect = display.getBoundingClientRect();
+    const structure = pick(COMPOUND_STRUCTURES);
+    const count = Math.floor(rand(4, 7));
+    renderScatteredMolecules(rect, structure, count, 'full');
+    return { type: 'compound', label: structure.name };
+}
+
+function renderMixtureOfElements() {
+    const rect = display.getBoundingClientRect();
+    const [typeA, typeB] = pickTwoDifferent(ALL_ELEMENTS, t => t.element);
+
+    renderElementGroup(rect, typeA, 'left');
+    renderElementGroup(rect, typeB, 'right', 180);
+
+    const nameA = isDiatomic(typeA) ? typeA.label : `${typeA.label} (monatomic)`;
+    const nameB = isDiatomic(typeB) ? typeB.label : `${typeB.label} (monatomic)`;
+    return { type: 'mixture', label: `${nameA} mixed with ${nameB}` };
+}
+
+function renderMixtureOfElementAndCompound() {
+    const rect = display.getBoundingClientRect();
+    const elementType = pick(ALL_ELEMENTS);
+    const compound = pick(COMPOUND_STRUCTURES);
+    const count = Math.floor(rand(2, 4));
+
+    renderElementGroup(rect, elementType, 'left');
+    renderScatteredMolecules(rect, compound, count, 'right', 200);
+
+    const elementName = isDiatomic(elementType) ? elementType.label : `${elementType.label} (monatomic)`;
+    return { type: 'mixture', label: `${elementName} mixed with ${compound.name}` };
+}
+
+function renderMixtureOfCompounds() {
+    const rect = display.getBoundingClientRect();
+    const [structA, structB] = pickTwoDifferent(COMPOUND_STRUCTURES, s => s.name);
+    const countA = Math.floor(rand(2, 4));
+    const countB = Math.floor(rand(2, 4));
+
+    renderScatteredMolecules(rect, structA, countA, 'left');
+    renderScatteredMolecules(rect, structB, countB, 'right', 180);
+
+    return { type: 'mixture', label: `${structA.name} mixed with ${structB.name}` };
+}
+
+function renderMixture() {
+    const mode = pick(['elements', 'compounds', 'elementCompound']);
+    if (mode === 'elements') return renderMixtureOfElements();
+    if (mode === 'compounds') return renderMixtureOfCompounds();
+    return renderMixtureOfElementAndCompound();
+}
+
+const RENDERERS = {
+    element: renderElement,
+    compound: renderCompound,
+    mixture: renderMixture,
+};
+
+function nextQuestion() {
+    if (!isPlaying) return;
+
+    clearDisplay();
+    buckets.forEach(b => b.classList.remove('correct-flash', 'wrong-flash', 'disabled'));
+
+    const types = ['element', 'compound', 'mixture'];
+    const chosen = pick(types);
+    currentAnswer = RENDERERS[chosen]();
+    questionCount++;
+}
+
+function showToast(message, isSuccess) {
+    let toast = document.getElementById('feedback-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'feedback-toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.className = isSuccess ? 'toast success' : 'toast error';
+    requestAnimationFrame(() => toast.classList.add('show'));
+    clearTimeout(toast._hide);
+    toast._hide = setTimeout(() => { toast.classList.remove('show'); }, 1800);
+}
+
+function checkAnswer(userChoice) {
+    if (!isPlaying || !currentAnswer) return;
+
+    const bucket = document.getElementById(`bucket-${userChoice}`);
+    const correct = userChoice === currentAnswer.type;
+
+    buckets.forEach(b => b.classList.add('disabled'));
+
+    if (correct) {
+        score += 10;
+        scoreEl.textContent = score;
+        bucket.classList.add('correct-flash');
+        showToast(currentLang === 'zh' ? `✓ 正確！這是 ${labelFor(currentAnswer.type)}。` : `✓ Correct! This is a ${labelFor(currentAnswer.type)}.`, true);
+    } else {
+        bucket.classList.add('wrong-flash');
+        const correctBucket = document.getElementById(`bucket-${currentAnswer.type}`);
+        correctBucket.classList.add('correct-flash');
+        showToast(currentLang === 'zh' ? `✗ 這是 ${labelFor(currentAnswer.type)}。` : `✗ This is a ${labelFor(currentAnswer.type)}. ${FEEDBACK[currentAnswer.type]}`, false);
+    }
+
+    setTimeout(nextQuestion, 1200);
+}
+
+function labelFor(type) {
+    if (currentLang === 'zh') {
+        return { element: '元素', compound: '化合物', mixture: '混合物' }[type];
+    }
+    return { element: 'Element', compound: 'Compound', mixture: 'Mixture' }[type];
+}
+
+function endGame() {
+    isPlaying = false;
+    clearInterval(timerInterval);
+    finalScoreEl.textContent = score;
+    gameOverEl.style.display = 'block';
+    buckets.forEach(b => b.classList.add('disabled'));
+}
+
+function startGame() {
+    score = 0;
+    timer = GAME_DURATION;
+    questionCount = 0;
+    isPlaying = true;
+    currentAnswer = null;
+
+    scoreEl.textContent = '0';
+    timerEl.textContent = timer;
+    gameOverEl.style.display = 'none';
+    startScreen.style.display = 'none';
+    if (idleHint) idleHint.style.display = 'none';
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timer--;
+        timerEl.textContent = timer;
+        timerEl.classList.toggle('urgent', timer <= 10);
+        if (timer <= 0) endGame();
+    }, 1000);
+
+    nextQuestion();
+}
+
+/* Language Switcher Helper */
+function setLanguage(lang) {
+    currentLang = lang;
+    const isZh = lang === 'zh';
+    
+    document.getElementById('lang-en').classList.toggle('active', !isZh);
+    document.getElementById('lang-zh').classList.toggle('active', isZh);
+    document.getElementById('lang-en').setAttribute('aria-selected', !isZh);
+    document.getElementById('lang-zh').setAttribute('aria-selected', isZh);
+
+    document.getElementById('title-text').textContent = isZh ? '原子模型分類實驗室' : 'Atomic Model Classification Lab';
+    document.getElementById('ui-desc').innerHTML = isZh ? 
+        '觀察圓球（原子）的排列方式。點擊下方類別將其分類為<b>元素</b>、<b>化合物</b>或<b>混合物</b>。' : 
+        'Observe the arrangement of colored spheres (atoms). Click a bucket below to classify it as <b>Element</b>, <b>Compound</b>, or <b>Mixture</b>.';
+    
+    document.getElementById('lbl-elem').textContent = isZh ? '元素' : 'Element';
+    document.getElementById('lbl-comp').textContent = isZh ? '化合物' : 'Compound';
+    document.getElementById('lbl-mixt').textContent = isZh ? '混合物' : 'Mixture';
+    
+    document.getElementById('lbl-score').textContent = isZh ? '得分:' : 'Score:';
+    document.getElementById('lbl-timer').textContent = isZh ? '時間:' : 'Time:';
+    
+    document.getElementById('b1-title').textContent = isZh ? '元素' : 'Element';
+    document.getElementById('b1-hint').textContent = isZh ? '單原子或同核雙原子分子 (例如 O₂)' : 'Single atoms or diatomic molecules (e.g. O₂)';
+    
+    document.getElementById('b2-title').textContent = isZh ? '化合物' : 'Compound';
+    document.getElementById('b2-hint').textContent = isZh ? '由不同原子化學結合而成的分子' : 'Molecules made of different atoms bonded together';
+    
+    document.getElementById('b3-title').textContent = isZh ? '混合物' : 'Mixture';
+    document.getElementById('b3-hint').textContent = isZh ? '不同物質混合在一起 (無化學鍵連結)' : 'Different substances mixed together (no chemical bonding)';
+
+    document.getElementById('idle-text').innerHTML = isZh ? 
+        '<b>準備好開始實驗了嗎？</b><br>按<b>開始實驗</b>，然後判斷：元素、化合物還是混合物？' : 
+        '<b>Ready to classify?</b><br>Press <b>Start Experiment</b>, then decide: Element, Compound or Mixture?';
+    
+    document.getElementById('btn-start').textContent = isZh ? '開始實驗' : 'Start Experiment';
+    document.getElementById('btn-replay').textContent = isZh ? '再玩一次' : 'Play Again';
+    document.getElementById('go-title').textContent = isZh ? '實驗完成！' : 'Experiment Complete!';
+    document.getElementById('go-score-txt').textContent = isZh ? '你的最終得分是：' : 'Your final score is:';
+
+    /* SHEK App text localization */
+    document.getElementById('shek-title-text').textContent = isZh ? 'SHEK 智能助手 (Google Gem)' : 'SHEK Google Gem';
+    document.getElementById('shek-loading-text').textContent = isZh ? '正在連線至 SHEK AI 助手...' : 'Connecting to SHEK AI Agent...';
+    document.getElementById('shek-online-pill').textContent = isZh ? '應用內' : 'In-app';
+    document.getElementById('shek-error-title').textContent = isZh ? '此檔案無法載入 SHEK' : 'SHEK cannot load in this file';
+    document.getElementById('shek-error-text').textContent = isZh
+        ? 'Google 只允許在已授權網域載入此 Gem。請用 localhost 或 GitHub Pages 開啟此頁，並在 Vertex AI → Integration → Widget 加入該網域。'
+        : 'Google only allows this Gem on an allowed domain. Serve this page from localhost or GitHub Pages, then add that host under Vertex AI → Integration → Widget.';
+}
+
+window.checkAnswer = checkAnswer;
+window.startGame = startGame;
+window.setLanguage = setLanguage;
+window.openShekApp = openShekApp;
+window.closeShekApp = closeShekApp;
+window.toggleShekMaximize = toggleShekMaximize;
+window.handleBackdropClick = handleBackdropClick;
+    </script>
+</body>
+</html>
