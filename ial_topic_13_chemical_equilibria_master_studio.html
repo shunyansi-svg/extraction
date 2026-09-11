@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover.0">
     <title>IAL Chemistry Topic 13: Chemical Equilibria Master Studio</title>
 
     <!-- Tailwind CSS CDN -->
@@ -247,6 +247,29 @@
                 background: var(--surface) !important;
             }
         }
+    
+        /* === MOBILE UX LAYER (chrome/behaviour only - no content changes) === */
+        :root{--hdr:112px;--hdr1:57px}
+        html{scroll-padding-top:calc(var(--hdr) + 10px)}
+        .toc-strip{display:none;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0 6px;margin-bottom:2px}
+        .toc-strip::-webkit-scrollbar{display:none}
+        .toc-chip{flex-shrink:0;font-size:10px;line-height:1;padding:7px 11px;border-radius:9999px;border:1px solid rgba(51,65,85,.9);background:rgba(15,23,42,.85);color:#94a3b8;font-weight:600;white-space:nowrap;cursor:pointer}
+        #equil-graph-canvas { touch-action: pan-y; }
+        #backTop{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:70;width:44px;height:44px;border-radius:9999px;border:1px solid rgba(56,189,248,.35);background:rgba(8,14,26,.92);color:#7dd3fc;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .25s,transform .25s}
+        #backTop.show{opacity:1;pointer-events:auto;transform:none}
+        #scrollProg{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,#0ea5e9,#38bdf8);z-index:80;pointer-events:none}
+        @media (max-width:1023.98px){
+            header,nav.sticky{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+            nav.sticky{background-color:rgba(9,14,26,.97)!important;top:var(--hdr1,57px)!important}
+            header{background-color:rgba(9,14,26,.97)!important;padding-top:env(safe-area-inset-top)}
+            nav.sticky>div{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+            nav.sticky>div::-webkit-scrollbar{display:none}
+            nav.sticky>div>button{flex-shrink:0}
+            select,input[type="number"]{font-size:16px!important}
+            .toc-strip{display:flex}
+            .glow{animation-play-state:paused}
+        }
+        @media (prefers-reduced-motion:reduce){#backTop{transition:none}html{scroll-behavior:auto}}
     </style>
 </head>
 <body class="ambient-bg text-slate-100 min-h-screen flex flex-col" style="background:transparent">
@@ -1455,7 +1478,8 @@
                 }
             });
             if (tabId === 'graphstudio') { setTimeout(initGraphStudio, 60); }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo(0, 0); /* mobile-ux: immediate reset - smooth often drops on iOS */
+            if (typeof window.MOBILE_UX !== 'undefined') { window.MOBILE_UX.syncHeader(); window.MOBILE_UX.centerNav(tabId); }
             setTimeout(safeInitKaTeX, 60);
         }
         window.switchTab = switchTab;
@@ -1878,6 +1902,124 @@
             window.selectE1(1); window.selectE2(1); window.selectE3(1);
             setTimeout(safeInitKaTeX, 120);
         });
-    </script>
+    
+        /* === MOBILE_UX boot layer (chrome-only; no content changes) === */
+        window.MOBILE_UX = {
+          jumpTo(el){ /* rect-math scrollTo - smooth scrollIntoView no-ops on some mobile engines */
+            const hdr=document.querySelector('header'), n=document.querySelector('nav.sticky');
+            const off=(hdr?hdr.offsetHeight:0)+(n?n.offsetHeight:20)+14;
+            const y=Math.max(0, Math.round(el.getBoundingClientRect().top+window.scrollY-off));
+            window.scrollTo({top:y, behavior:'smooth'});
+            setTimeout(()=>{ if(Math.abs(window.scrollY-y)>48) window.scrollTo(0,y); },420);
+          },
+          phone(){ return window.innerWidth < 768; },
+          syncHeader(){
+            const h=document.querySelector('header'), n=document.querySelector('nav.sticky');
+            if(h) document.documentElement.style.setProperty('--hdr1', h.offsetHeight+'px');
+            if(h&&n) document.documentElement.style.setProperty('--hdr', (h.offsetHeight+n.offsetHeight)+'px');
+          },
+          watchHeader(){ /* keep --hdr exact as web fonts / KaTeX settle */
+            const h=document.querySelector('header'), n=document.querySelector('nav.sticky');
+            if(window.ResizeObserver){ const ro=new ResizeObserver(()=>this.syncHeader());
+              if(h) ro.observe(h); if(n) ro.observe(n); }
+            [800,2000,4000].forEach(ms=>setTimeout(()=>this.syncHeader(),ms));
+          },
+          centerNav(id){
+            const strip=document.querySelector('nav.sticky > div');
+            const btn=document.getElementById('btn-'+id);
+            if(strip && btn && getComputedStyle(strip).flexWrap==='nowrap')
+              strip.scrollTo({left: btn.offsetLeft - strip.clientWidth/2 + btn.offsetWidth/2, behavior:'smooth'});
+          },
+          chip(text,targetId,title){
+            const b=document.createElement('button');
+            b.type='button'; b.className='toc-chip'; b.textContent=text;
+            if(title) b.title=title;
+            b.addEventListener('click',()=>{
+              const t=document.getElementById(targetId); if(!t) return;
+              const d=(t.tagName==='DETAILS')?t:t.closest('details'); if(d) d.open=true;
+              window.MOBILE_UX.jumpTo(t);
+            });
+            return b;
+          },
+          buildToc(){
+            const mk=(secId)=>{
+              const sec=document.getElementById(secId); if(!sec||sec.querySelector('.toc-strip')) return;
+              const heads=[...sec.querySelectorAll('h3')].filter(h=>h.offsetParent!==null||true);
+              if(heads.length<4) return;
+              const use=heads.slice(0,16);
+              const strip=document.createElement('div'); strip.className='toc-strip'; strip.setAttribute('aria-hidden','true');
+              use.forEach((h,i)=>{
+                if(!h.id) h.id=secId.slice(4)+'-sec-'+i;
+                h.style.scrollMarginTop='calc(var(--hdr) + 12px)';
+                let label=h.textContent.trim().replace(/\s+/g,' ');
+                const card=h.closest('div[class*="rounded"]');
+                if(card){ const badge=card.querySelector('span[class*="font-mono"]');
+                  if(badge){ const b=badge.textContent.trim(); if(b.length>0&&b.length<16) label=b+' '+label; } }
+                if(label.length>34) label=label.slice(0,33)+'...';
+                strip.appendChild(window.MOBILE_UX.chip(label,h.id,h.textContent.trim()));
+              });
+              sec.insertBefore(strip,sec.firstElementChild);
+            };
+            mk('tab-syllabus');
+            const rev=document.getElementById('tab-review');
+            if(rev && !rev.querySelector('.toc-strip')){
+              const strips=document.createElement('div'); strips.className='toc-strip'; strips.setAttribute('aria-hidden','true');
+              rev.querySelectorAll('details[id^="rev-"]').forEach(d=>{
+                const s=d.querySelector('summary'); if(!s) return;
+                d.style.scrollMarginTop='calc(var(--hdr) + 12px)';
+                let label=s.textContent.trim().replace(/\s+/g,' ');
+                if(label.length>34) label=label.slice(0,33)+'...';
+                strips.appendChild(window.MOBILE_UX.chip(label,d.id,s.textContent.trim()));
+              });
+              if(strips.children.length) rev.insertBefore(strips,rev.firstElementChild);
+            }
+          },
+          collapseDetailsOnPhone(){
+            if(!this.phone()) return;
+            document.querySelectorAll('#tab-review details[open], #tab-syllabus details[open]')
+              .forEach(d=>d.removeAttribute('open'));
+          },
+          installChrome(){
+            if(document.getElementById('backTop')) return;
+            const bar=document.createElement('div'); bar.id='scrollProg'; document.body.appendChild(bar);
+            const up=document.createElement('button'); up.id='backTop'; up.type='button';
+            up.setAttribute('aria-label','Back to top'); up.textContent='\u2191';
+            up.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>{ if(window.scrollY>24) window.scrollTo(0,0); },420); });
+            document.body.appendChild(up);
+            const upd=()=>{ const max=document.documentElement.scrollHeight-innerHeight, y=window.scrollY;
+              bar.style.width=(max>0?(y/max)*100:0)+'%';
+              up.classList.toggle('show', y>innerHeight*1.2); };
+            window.addEventListener('scroll',()=>{ if(window.__mobRaf) return;
+              window.__mobRaf=requestAnimationFrame(()=>{window.__mobRaf=0;upd();}); },{passive:true});
+            upd();
+          },
+          openDetailsForHash(){
+            const el=document.getElementById(location.hash.slice(1));
+            if(el){ const d=(el.tagName==='DETAILS')?el:el.closest('details'); if(d) d.open=true; }
+          },
+          init(){
+            this.syncHeader(); this.watchHeader(); this.buildToc(); this.collapseDetailsOnPhone(); this.installChrome();
+            window.addEventListener('resize',()=>{ this.syncHeader();
+              const a=document.querySelector('.tab-btn-active'); if(a&&a.id) this.centerNav(a.id.replace('btn-','')); });
+            window.addEventListener('hashchange',()=>this.openDetailsForHash());
+            document.querySelectorAll('a[href^="#"]').forEach(x=>x.addEventListener('click',()=>this.openDetailsForHash()));
+          }
+        };
+        if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>window.MOBILE_UX.init());
+        else window.MOBILE_UX.init();
+
+/* mobile-ux retrofit: exact --hdr as fonts settle + retry TOC build for deferred-render grids */
+(function(){
+  const M = window.MOBILE_UX || (typeof MOBILE_UX!=='undefined' ? MOBILE_UX : null);
+  if(!M) return;
+  if(!M.watchHeaderInstalled){
+    M.watchHeaderInstalled = true;
+    const hs = document.querySelectorAll('header, nav.sticky, #mainNav');
+    if(window.ResizeObserver){ const ro=new ResizeObserver(()=>M.syncHeader()); hs.forEach(x=>ro.observe(x)); }
+    [800,2000,4000,6000].forEach(ms=>setTimeout(()=>M.syncHeader(),ms));
+  }
+  [1500,4000].forEach(ms=>setTimeout(()=>{ if(M.buildToc) M.buildToc(); },ms));
+})();
+</script>
 </body>
 </html>
