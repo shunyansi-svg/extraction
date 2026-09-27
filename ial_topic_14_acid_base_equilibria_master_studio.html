@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>IAL Topic 14: Acid–Base Equilibria — Master Studio (WCH13)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1496,6 +1496,116 @@
   [1500,4000].forEach(ms=>setTimeout(()=>{ if(M.buildToc) M.buildToc(); },ms));
 })();
 </script>
+<style id="mux-style" data-mux-version="1.4.0">
+/* ===== MUX mobile layer v1.4.0 ===== */
+html, body { overflow-x: clip; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+footer { position: static !important; }
+nav, nav > div { max-width: 100% !important; }
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+@media (max-width: 1023.98px) {
+  /* Collapse the original header instead of display:none so studio JS that
+     measures header.offsetHeight (MOBILE_UX.syncHeader -> --hdr) still gets 44. */
+  header {
+    position: static !important; top: auto !important;
+    height: calc(44px + env(safe-area-inset-top)) !important;
+    min-height: 0 !important;
+    max-height: calc(44px + env(safe-area-inset-top)) !important;
+    padding: 0 !important; margin: 0 !important; border: 0 !important;
+    overflow: hidden !important; visibility: hidden !important; pointer-events: none !important;
+    background: transparent !important; box-shadow: none !important;
+    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  }
+  nav { display: none !important; }
+  html { scroll-padding-top: calc(56px + env(safe-area-inset-top)) !important; }
+  body { padding-bottom: calc(58px + env(safe-area-inset-bottom)) !important; }
+  .tab-btn, .glossary-subtab-btn, .toc-chip { min-height: 40px; }
+  #backTop { bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
+}
+
+@media (min-width: 1024px) {
+  #mux-topbar, #mux-tabbar, #mux-sheet, #mux-top { display: none !important; }
+}
+
+#mux-topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  display: none; align-items: center; gap: 8px;
+  height: calc(44px + env(safe-area-inset-top));
+  padding: env(safe-area-inset-top) 12px 0;
+  background: #0b1220; border-bottom: 1px solid rgba(148,163,184,.18);
+}
+#mux-topbar .mux-title {
+  flex: 1 1 auto; min-width: 0; margin: 0;
+  font-size: 14px; font-weight: 700; line-height: 44px; letter-spacing: 0;
+  color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#mux-topbar .mux-prog {
+  flex: 0 0 auto; padding: 2px 8px; border-radius: 9999px;
+  font-size: 11px; font-weight: 700; line-height: 16px; white-space: nowrap;
+  color: #7dd3fc; background: rgba(8,51,68,.6); border: 1px solid rgba(56,189,248,.28);
+}
+#mux-tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+  display: none; align-items: stretch;
+  height: calc(58px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(9,14,26,.98); border-top: 1px solid rgba(148,163,184,.2);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+#mux-tabbar button {
+  flex: 1 1 0; min-width: 0; min-height: 44px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  padding: 6px 2px; margin: 0; border: 0; background: none; cursor: pointer;
+  font-family: inherit; color: #94a3b8; -webkit-tap-highlight-color: transparent;
+}
+#mux-tabbar button.mux-active { color: #38bdf8; }
+#mux-tabbar .mux-ico { display: block; width: 20px; height: 20px; font-size: 18px; line-height: 20px; }
+#mux-tabbar .mux-ico svg { width: 20px; height: 20px; display: block; }
+#mux-tabbar .mux-lbl {
+  display: block; max-width: 100%; font-size: 10px; line-height: 1.15; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#mux-sheet { position: fixed; inset: 0; z-index: 950; display: none; }
+#mux-sheet.mux-open { display: block; }
+#mux-sheet .mux-veil { position: absolute; inset: 0; background: rgba(2,6,23,.62); }
+#mux-sheet .mux-panel {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  max-height: 72vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  background: #0b1220; border-top: 1px solid rgba(148,163,184,.22);
+  border-radius: 14px 14px 0 0;
+  padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
+}
+#mux-sheet .mux-panel h2 {
+  margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: #64748b;
+}
+#mux-sheet .mux-panel button {
+  display: flex; width: 100%; align-items: center; gap: 10px;
+  min-height: 48px; margin: 0 0 8px; padding: 10px 12px;
+  background: #0f172a; border: 1px solid rgba(148,163,184,.16); border-radius: 10px;
+  color: #e2e8f0; font-family: inherit; font-size: 14px; text-align: left; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#mux-sheet .mux-panel button.mux-active { border-color: rgba(56,189,248,.55); color: #7dd3fc; }
+#mux-sheet .mux-panel .mux-ico { flex: 0 0 20px; width: 20px; height: 20px; font-size: 18px; color: #7dd3fc; }
+#mux-sheet .mux-panel .mux-ico svg { width: 20px; height: 20px; display: block; }
+#mux-top {
+  position: fixed; right: 12px; bottom: calc(70px + env(safe-area-inset-bottom)); z-index: 920;
+  display: none; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 0; border-radius: 9999px;
+  border: 1px solid rgba(56,189,248,.35); background: rgba(8,14,26,.92); color: #7dd3fc;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+#mux-top.mux-show { display: flex; }
+#mux-top svg { width: 20px; height: 20px; }
+@media (max-width: 1023.98px) {
+  #mux-topbar, #mux-tabbar { display: flex; }
+}
+/* ===== /MUX mobile layer ===== */
+</style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col" style="background:transparent">
     <div class="ambient" aria-hidden="true">
@@ -2721,5 +2831,409 @@
     <footer class="border-t py-4 text-center text-[10px] text-slate-500" style="border-color:var(--line)">
         IAL Chemistry Topic 14: Acid–Base Equilibria Master Studio · WCH14 Unit 4 · Paper 4 · Spec 14.1–14.23 · apple-dark-ambient-lab · wiki-pull WCH14 banks + acid-base MS keyword bank + WCH16 practical
     </footer>
+<script id="mux-script" data-mux-version="1.4.0">
+(function () {
+  'use strict';
+  try {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    if (typeof document.querySelector !== 'function') return;
+    var de = document.documentElement;
+    if (!de || !de.style || typeof de.style.setProperty !== 'function') return;
+    if (window.__MUX__) return;
+
+    var PRIMARY = 4;
+    var state = { tabs: [], sig: null, current: 0, hashDone: false };
+    window.__MUX__ = state;
+
+    var GLYPH = {
+      list: '<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+      alert: '<path d="M12 9v4.5M12 17.2h.01M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+      help: '<circle cx="12" cy="12" r="9"/><path d="M9.2 9.3a3 3 0 0 1 5.8 1c0 2-3 2.7-3 4.2M12 17.6h.01"/>',
+      book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+      pen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+      chat: '<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 21l1.9-4.6a8.4 8.4 0 0 1-.9-4A8.4 8.4 0 0 1 12.4 4h.2A8.4 8.4 0 0 1 21 11.5z"/>',
+      check: '<path d="M9 11.5 12 14.5 21.5 5"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+      flask: '<path d="M9 3h6M10 3v6.2L4.6 18.4A2 2 0 0 0 6.3 21.4h11.4a2 2 0 0 0 1.7-3L14 9.2V3"/>',
+      battery: '<rect x="2" y="7" width="16" height="10" rx="2.5"/><path d="M22 11v2"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.2 2"/>',
+      branch: '<circle cx="6.5" cy="5" r="2.2"/><circle cx="6.5" cy="19" r="2.2"/><circle cx="17.5" cy="9" r="2.2"/><path d="M6.5 7.2v9.6M17.5 11.2a6 6 0 0 1-6 6h-3"/>',
+      grid: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>',
+      shapes: '<circle cx="7" cy="17" r="3.2"/><rect x="13" y="3.5" width="7" height="7" rx="1.5"/><path d="M13 14.5 8.8 8.2"/>',
+      chart: '<path d="M3.5 3.5v17h17"/><path d="M7.5 15.5 11 10.8l3 2.9 4.5-6.4"/>',
+      calc: '<rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M8 6.8h8M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5h.01"/>',
+      atom: '<circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(120 12 12)"/>',
+      dot: '<circle cx="12" cy="12" r="4"/>',
+      more: '<circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/>',
+      up: '<path d="M12 19V5.5M5.5 12 12 5.5 18.5 12"/>'
+    };
+
+    function svg(name) {
+      var body = GLYPH[name] || GLYPH.dot;
+      var fill = (name === 'more' || name === 'dot') ? 'currentColor' : 'none';
+      var stroke = (name === 'more' || name === 'dot') ? 'none' : 'currentColor';
+      return '<svg viewBox="0 0 24 24" fill="' + fill + '" stroke="' + stroke +
+        '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
+    }
+
+    var ICON_RULES = [
+      [/syllabus|spec|learning point|overview/i, 'list'],
+      [/pitfall|trap|examiner|watch[- ]?out|caution/i, 'alert'],
+      [/misconception|myth/i, 'chat'],
+      [/quiz|mcq|q&a|question|practice problem/i, 'help'],
+      [/flashcard|card deck|\bcards?\b/i, 'grid'],
+      [/glossary|vocab|definition|term/i, 'book'],
+      [/essay|written|6[- ]mark|long answer/i, 'pen'],
+      [/review|recap|summary|inventory|checklist/i, 'check'],
+      [/practical|lab\b|core practical|titrat/i, 'flask'],
+      [/cell|electro|electrode|battery|fuel/i, 'battery'],
+      [/kinetic|rate|speed|clock|time/i, 'clock'],
+      [/synthesis|route|pathway|cycle|mechanis|grignard/i, 'branch'],
+      [/matrix|table|comparison|data table/i, 'grid'],
+      [/diagram|structure|shape|orbital|lattice|bond/i, 'shapes'],
+      [/graph|chart|trend|curve|energet/i, 'chart'],
+      [/calc|solver|engine|math|equation|amount/i, 'calc'],
+      [/atom|periodic|element/i, 'atom']
+    ];
+
+    function iconFor(rawLabel) {
+      for (var i = 0; i < ICON_RULES.length; i++) if (ICON_RULES[i][0].test(rawLabel)) return ICON_RULES[i][1];
+      return 'dot';
+    }
+
+    var STOP = {
+      'the': 1, 'a': 1, 'an': 1, 'and': 1, 'or': 1, 'of': 1, 'for': 1, 'to': 1, 'in': 1, 'on': 1,
+      '&': 1, '+': 1, 'web': 1, 'lab': 1, 'core': 1, 'master': 1, 'common': 1, 'complete': 1,
+      'full': 1, 'student': 1, 'internet': 1, 'community': 1, 'model': 1, 'models': 1, 'mark': 1,
+      'scheme': 1, 'key': 1, 'main': 1, 'special': 1, 'final': 1, 'practical': 1,
+      'specification': 1, 'spec': 1, 'chemistry': 1, 'topic': 1, 'ial': 1, 'edexcel': 1,
+      'interactive': 1, 'explorer': 1, 'suite': 1, 'part': 1, 'section': 1, 'new': 1, 'all': 1,
+      'le': 1, 'la': 1, 'de': 1, 'vs': 1, 'per': 1, 'non': 1, 'intro': 1, 'introduction': 1,
+      'paper': 1, 'papers': 1, 'unit': 1, 'units': 1, 'walkthrough': 1
+    };
+    var SHORTEN = {
+      'misconceptions': 'Myths', 'misconception': 'Myths', 'flashcards': 'Cards', 'flashcard': 'Cards',
+      'examiner': 'Pitfalls', 'questions': 'Qs', 'question': 'Qs',
+      'intermolecular': 'IMF', 'halogenoalkanes': 'Haloalkanes', 'halogenoalkane': 'Haloalkane',
+      'spectroscopy': 'Spectra', 'walkthroughs': 'Walkthru'
+    };
+
+    // Two-letter tokens are only usable when they are real chemistry shorthand,
+    // otherwise "Le Chatelier" collapses to "Le" and "M-B Curves" to "MB".
+    var CHEM2 = { kc: 1, kp: 1, ph: 1, ez: 1, ea: 1, ka: 1, kb: 1, kw: 1, mr: 1, mcq: 1 };
+    var EMOJI = /[\u{1F000}-\u{1FAFF}\u{2300}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/gu;
+
+    function candidates(raw) {
+      var s = String(raw || '').replace(EMOJI, ' ')
+        .replace(/\([^)]*\)/g, ' ').replace(/\[[^\]]*\]/g, ' ');
+      var lead = s.match(/^\s*(\d+)\s*[.)\-:]/);
+      s = s.replace(/^\s*\d+\s*[.)\-:]\s*/, ' ').replace(/\s+/g, ' ').trim();
+      var words = [], digits = [];
+      s.split(' ').forEach(function (w) {
+        if (!w) return;
+        if (/^\d+$/.test(w)) { digits.push(w); return; }
+        if (/^\d/.test(w)) return;
+        var k = w.replace(/[^A-Za-z0-9&+\-]/g, '');
+        var low = k.toLowerCase();
+        if (!k || STOP[low]) return;
+        if (SHORTEN[low]) k = SHORTEN[low];
+        if (k.length < 3 && !CHEM2[k.toLowerCase()]) return;
+        if (words.indexOf(k) < 0) words.push(k);
+      });
+      if (!words.length) return ['Tab'];
+      var out = words.slice();
+      if (digits.length) out.push(words[0] + ' ' + digits[0]);
+      if (words.length > 1) out.push(words[0] + ' ' + words[1]);
+      if (lead) out.push(lead[1] + '. ' + words[0]);
+      return out;
+    }
+
+    // Bar slots are narrow, so a repeated word ("Cycle" four times over) is worse
+    // than a slightly longer one. Walk the candidate list until a label is unique.
+    function assignLabels(tabs) {
+      // How many tabs share the same lead word. When a set is really a numbered
+      // series (Cycle 1..4) every member should carry its number, not just the
+      // ones that lost the dedupe race.
+      var leadCount = {};
+      tabs.forEach(function (t) {
+        var w = (t.cands[0] || '').toLowerCase();
+        if (w) leadCount[w] = (leadCount[w] || 0) + 1;
+      });
+      var used = {};
+      for (var i = 0; i < tabs.length; i++) {
+        var t = tabs[i], cands = t.cands.slice(), pick = cands[0];
+        var numbered = cands.some(function (c) { return /^\D.*\s\d+$/.test(c); });
+        if (cands.length > 1 && numbered && leadCount[(cands[0] || '').toLowerCase()] > 1) cands.shift();
+        pick = cands[0];
+        for (var c = 0; c < cands.length; c++) {
+          var v = cands[c].length > 11 ? cands[c].slice(0, 11) : cands[c];
+          if (!used[v.toLowerCase()]) { pick = v; break; }
+          pick = v;
+        }
+        if (used[pick.toLowerCase()]) pick = (i + 1) + '. ' + pick;
+        if (pick.length > 11) pick = pick.slice(0, 11);
+        used[pick.toLowerCase()] = 1;
+        t.label = pick;
+      }
+    }
+
+    function keyOf(t) {
+      var oc = t.el.getAttribute('onclick') || '';
+      var m = oc.match(/\(\s*['"]([^'"]+)['"]\s*\)/);
+      if (m && m[1]) return m[1];
+      var id = t.el.id || '';
+      if (id) return id.replace(/^(tab|btn)-/, '');
+      var slug = String(t.raw || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug.slice(0, 24) || 'tab';
+    }
+
+    function isActiveEl(el) {
+      var c = typeof el.className === 'string' ? el.className : ((el.getAttribute && el.getAttribute('class')) || '');
+      if (/(^|\s)(tab-active|tab-btn-active|active|mux-active)(\s|$)/.test(c)) return true;
+      if (el.getAttribute && el.getAttribute('aria-selected') === 'true') return true;
+      if (el.hasAttribute && el.hasAttribute('aria-current')) return true;
+      return false;
+    }
+
+    function iconMarkup(t) {
+      var src = t.el.querySelector ? t.el.querySelector('svg, i[class*="fa-"]') : null;
+      if (src) {
+        var clone = src.cloneNode(true);
+        clone.removeAttribute('width'); clone.removeAttribute('height');
+        if (clone.tagName && clone.tagName.toLowerCase() === 'i') clone.setAttribute('style', 'font-size:18px');
+        return '<span class="mux-ico">' + clone.outerHTML + '</span>';
+      }
+      return '<span class="mux-ico">' + svg(t.icon) + '</span>';
+    }
+
+    function collect() {
+      var nav = document.querySelector('nav');
+      if (!nav || !nav.querySelectorAll) return [];
+      var nodes = nav.querySelectorAll('button, a[href]');
+      var out = [];
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        var raw = (el.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!raw) continue;
+        out.push({ el: el, raw: raw, icon: iconFor(raw), cands: candidates(raw), label: '', key: null });
+      }
+      for (var j = 0; j < out.length; j++) out[j].key = keyOf(out[j]);
+      assignLabels(out);
+      return out;
+    }
+
+    function el(id) { return document.getElementById(id); }
+
+    function makeBar() {
+      var h1 = document.querySelector('header h1') || document.querySelector('h1');
+      var title = h1 ? (h1.textContent || '').replace(/\s+/g, ' ').trim() : '';
+      if (!title) title = document.title || 'Sections';
+
+      var top = document.createElement('div');
+      top.id = 'mux-topbar';
+      var p = document.createElement('p');
+      p.className = 'mux-title';
+      p.textContent = title;
+      top.appendChild(p);
+
+      // unit_2 keeps a live mastery readout in the header we are about to hide on
+      // phones; mirror it into the compact bar so that number is not lost.
+      // Every other file's progress pill is already desktop-only.
+      var progSrc = document.getElementById('mastery-percentage');
+      if (progSrc) {
+        var pill = document.createElement('span');
+        pill.className = 'mux-prog';
+        top.appendChild(pill);
+        state.syncProg = function () {
+          var v = (progSrc.textContent || '').replace(/\s+/g, ' ').trim();
+          if (v && pill.textContent !== v) pill.textContent = v;
+        };
+        state.syncProg();
+        if (window.MutationObserver) {
+          try {
+            new MutationObserver(state.syncProg)
+              .observe(progSrc, { childList: true, characterData: true, subtree: true });
+          } catch (e) {}
+        }
+      }
+
+      var bar = document.createElement('div');
+      bar.id = 'mux-tabbar';
+      bar.setAttribute('role', 'navigation');
+      bar.setAttribute('aria-label', 'Page sections');
+
+      var sheet = document.createElement('div');
+      sheet.id = 'mux-sheet';
+      sheet.setAttribute('role', 'dialog');
+      sheet.setAttribute('aria-modal', 'true');
+      sheet.setAttribute('aria-label', 'All sections');
+      var veil = document.createElement('div');
+      veil.className = 'mux-veil';
+      var panel = document.createElement('div');
+      panel.className = 'mux-panel';
+      var heading = document.createElement('h2');
+      heading.textContent = 'All sections';
+      panel.appendChild(heading);
+      sheet.appendChild(veil); sheet.appendChild(panel);
+
+      document.body.appendChild(top);
+      document.body.appendChild(bar);
+      document.body.appendChild(sheet);
+
+      veil.addEventListener('click', closeSheet);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
+
+      var existing = el('backTop');
+      var topBtn = existing;
+      if (!topBtn) {
+        topBtn = document.createElement('button');
+        topBtn.id = 'mux-top';
+        topBtn.type = 'button';
+        topBtn.setAttribute('aria-label', 'Back to top');
+        topBtn.innerHTML = svg('up');
+        topBtn.addEventListener('click', scrollTop);
+        document.body.appendChild(topBtn);
+        window.addEventListener('scroll', function () {
+          topBtn.classList.toggle('mux-show', window.scrollY > 600);
+        }, { passive: true });
+      }
+      return { bar: bar, panel: panel, sheet: sheet };
+    }
+
+    function scrollTop() {
+      try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch (e) { window.scrollTo(0, 0); }
+    }
+
+    function closeSheet() {
+      var s = el('mux-sheet');
+      if (s) s.classList.remove('mux-open');
+    }
+
+    function activate(i, byUser) {
+      var t = state.tabs[i];
+      if (!t) return;
+      state.current = i;
+      try { t.el.click(); } catch (e) {}
+      syncActive();
+      closeSheet();
+      scrollTop();
+      window.requestAnimationFrame(scrollTop);
+      if (byUser !== false) writeHash(t.key);
+    }
+
+    function writeHash(key) {
+      try {
+        if (window.history && window.history.replaceState) window.history.replaceState(null, '', '#mux-' + key);
+      } catch (e) {}
+    }
+
+    function syncActive() {
+      var found = -1;
+      for (var i = 0; i < state.tabs.length; i++) if (isActiveEl(state.tabs[i].el)) { found = i; break; }
+      if (found >= 0) state.current = found;
+      if (state.syncProg) { try { state.syncProg(); } catch (e) {} }
+      var nodes = document.querySelectorAll('#mux-tabbar button[data-mux-i], #mux-sheet button[data-mux-i]');
+      for (var j = 0; j < nodes.length; j++) {
+        var idx = parseInt(nodes[j].getAttribute('data-mux-i'), 10);
+        var on = idx === state.current;
+        nodes[j].classList.toggle('mux-active', on);
+        if (nodes[j].parentNode && nodes[j].parentNode.id === 'mux-tabbar') {
+          if (on) nodes[j].setAttribute('aria-current', 'true'); else nodes[j].removeAttribute('aria-current');
+        }
+      }
+    }
+
+    function render() {
+      var src = collect();
+      if (!src.length) return;
+      var sig = src.map(function (t) { return t.key + ':' + t.raw; }).join('|');
+      if (sig === state.sig) { syncActive(); return; }
+      state.sig = sig;
+      state.tabs = src;
+
+      var refs = state.refs || (state.refs = makeBar());
+      var bar = refs.bar, panel = refs.panel;
+      while (bar.firstChild) bar.removeChild(bar.firstChild);
+      // panel keeps its <h2> heading; drop every previously rendered row
+      while (panel.childNodes.length > 1) panel.removeChild(panel.lastChild);
+
+      function mkBtn(i, full) {
+        var t = src[i];
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('data-mux-i', String(i));
+        b.setAttribute('aria-label', t.raw);
+        b.title = t.raw;
+        b.innerHTML = iconMarkup(t);
+        var lbl = document.createElement('span');
+        lbl.className = 'mux-lbl';
+        lbl.textContent = full ? t.raw : t.label;
+        b.appendChild(lbl);
+        b.addEventListener('click', function () { activate(i, true); });
+        return b;
+      }
+
+      var primary = Math.min(PRIMARY, src.length);
+      for (var i = 0; i < primary; i++) bar.appendChild(mkBtn(i, false));
+
+      if (src.length > PRIMARY) {
+        var more = document.createElement('button');
+        more.type = 'button';
+        more.id = 'mux-more';
+        more.setAttribute('aria-haspopup', 'dialog');
+        more.setAttribute('aria-label', 'More sections');
+        more.innerHTML = '<span class="mux-ico">' + svg('more') + '</span><span class="mux-lbl">More</span>';
+        more.addEventListener('click', function () {
+          var s = el('mux-sheet');
+          if (s) s.classList.toggle('mux-open');
+        });
+        bar.appendChild(more);
+        for (var k = PRIMARY; k < src.length; k++) panel.appendChild(mkBtn(k, true));
+      }
+
+      observe();
+      syncActive();
+    }
+
+    var observers = [];
+    function observe() {
+      for (var i = 0; i < observers.length; i++) { try { observers[i].disconnect(); } catch (e) {} }
+      observers = [];
+      if (!window.MutationObserver) return;
+      var cls = new MutationObserver(function () { syncActive(); });
+      state.tabs.forEach(function (t) {
+        try { cls.observe(t.el, { attributes: true, attributeFilter: ['class', 'aria-selected', 'aria-current'] }); } catch (e) {}
+      });
+      observers.push(cls);
+      var nav = document.querySelector('nav');
+      if (nav) {
+        var kids = new MutationObserver(function () { render(); });
+        try { kids.observe(nav, { childList: true, subtree: true }); } catch (e) {}
+        observers.push(kids);
+      }
+    }
+
+    function applyHashOnce() {
+      if (state.hashDone) return;
+      state.hashDone = true;
+      var h = '';
+      try { h = (window.location && window.location.hash) || ''; } catch (e) {}
+      h = h.replace(/^#/, '');
+      if (h.indexOf('mux-') !== 0) return;
+      var key = h.slice(4);
+      for (var i = 0; i < state.tabs.length; i++) if (state.tabs[i].key === key) { activate(i, false); return; }
+    }
+
+    function boot() { render(); applyHashOnce(); }
+
+    if (document.body) boot();
+    else document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', function () { render(); applyHashOnce(); });
+    window.addEventListener('load', function () { render(); applyHashOnce(); syncActive(); });
+    [400, 1200, 2600].forEach(function (ms) { setTimeout(function () { render(); applyHashOnce(); syncActive(); }, ms); });
+  } catch (err) {
+    try { if (window.console && console.warn) console.warn('[mux] disabled:', err && err.message); } catch (e) {}
+  }
+})();
+</script>
 </body>
 </html>
